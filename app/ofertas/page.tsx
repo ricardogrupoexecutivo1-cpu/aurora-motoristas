@@ -80,14 +80,17 @@ function formatNow() {
   return new Date().toLocaleString("pt-BR");
 }
 
-function buildOfferMessage(driver: Driver, service: {
-  os: string;
-  cliente: string;
-  rota: string;
-  dataHora: string;
-  valor: string;
-  observacao: string;
-}) {
+function buildOfferMessage(
+  driver: Driver,
+  service: {
+    os: string;
+    cliente: string;
+    rota: string;
+    dataHora: string;
+    valor: string;
+    observacao: string;
+  }
+) {
   return `🚗 Aurora Motoristas
 
 Oferta de serviço
@@ -180,9 +183,15 @@ export default function OfertasPage() {
   }, [search]);
 
   const stats = useMemo(() => {
-    const disponiveis = filteredDrivers.filter((driver) => driver.status === "disponivel").length;
-    const ocupados = filteredDrivers.filter((driver) => driver.status === "ocupado").length;
-    const aguardando = logs.filter((item) => item.decision === "aguardando").length;
+    const disponiveis = filteredDrivers.filter(
+      (driver) => driver.status === "disponivel"
+    ).length;
+    const ocupados = filteredDrivers.filter(
+      (driver) => driver.status === "ocupado"
+    ).length;
+    const aguardando = logs.filter(
+      (item) => item.decision === "aguardando"
+    ).length;
     const aceites = logs.filter((item) => item.decision === "aceitou").length;
     const recusas = logs.filter((item) => item.decision === "recusou").length;
 
@@ -224,7 +233,9 @@ export default function OfertasPage() {
     setLogs(nextLogs);
     setOfferStatus("enviado");
     setClosedWith("");
-    setFeedback("Oferta enviada. Agora o primeiro aceite válido fecha o serviço.");
+    setFeedback(
+      "Oferta enviada. Agora o primeiro aceite válido fecha o serviço."
+    );
   }
 
   function sendWhatsAppToDriver(driver: Driver) {
@@ -261,7 +272,9 @@ export default function OfertasPage() {
 
     setOfferStatus("fechado");
     setClosedWith(driver.nome);
-    setFeedback(`Serviço fechado com ${driver.nome}. Os demais ficaram livres para outros chamados.`);
+    setFeedback(
+      `Serviço fechado com ${driver.nome}. Os demais ficaram livres para outros chamados.`
+    );
   }
 
   function refuseOffer(driver: Driver) {
@@ -282,7 +295,9 @@ export default function OfertasPage() {
       )
     );
 
-    setFeedback(`${driver.nome} recusou sem punição. O serviço segue aberto aos demais.`);
+    setFeedback(
+      `${driver.nome} recusou sem punição. O serviço segue aberto aos demais.`
+    );
   }
 
   function resetOffer() {
@@ -302,10 +317,14 @@ export default function OfertasPage() {
         <div style={styles.heroCard}>
           <div style={styles.heroGrid}>
             <div style={styles.heroLeft}>
-              <div style={styles.eyebrow}>AURORA MOTORISTAS • OFERTA DE SERVIÇO</div>
+              <div style={styles.eyebrow}>
+                AURORA MOTORISTAS • OFERTA DE SERVIÇO
+              </div>
+
               <h1 style={styles.heroTitle}>
                 Disparo inteligente da demanda com fechamento no primeiro aceite
               </h1>
+
               <p style={styles.heroText}>
                 Esta tela prepara a oferta para vários motoristas, respeitando a
                 regra de liberdade total de aceite ou recusa, sem punição e com
@@ -427,7 +446,12 @@ export default function OfertasPage() {
                   <span style={styles.dataLabel}>OS</span>
                   <input
                     value={service.os}
-                    onChange={(e) => setService((current) => ({ ...current, os: e.target.value }))}
+                    onChange={(e) =>
+                      setService((current) => ({
+                        ...current,
+                        os: e.target.value,
+                      }))
+                    }
                     style={styles.input}
                   />
                 </div>
@@ -437,7 +461,10 @@ export default function OfertasPage() {
                   <input
                     value={service.cliente}
                     onChange={(e) =>
-                      setService((current) => ({ ...current, cliente: e.target.value }))
+                      setService((current) => ({
+                        ...current,
+                        cliente: e.target.value,
+                      }))
                     }
                     style={styles.input}
                   />
@@ -447,7 +474,12 @@ export default function OfertasPage() {
                   <span style={styles.dataLabel}>Rota</span>
                   <input
                     value={service.rota}
-                    onChange={(e) => setService((current) => ({ ...current, rota: e.target.value }))}
+                    onChange={(e) =>
+                      setService((current) => ({
+                        ...current,
+                        rota: e.target.value,
+                      }))
+                    }
                     style={styles.input}
                   />
                 </div>
@@ -457,7 +489,10 @@ export default function OfertasPage() {
                   <input
                     value={service.dataHora}
                     onChange={(e) =>
-                      setService((current) => ({ ...current, dataHora: e.target.value }))
+                      setService((current) => ({
+                        ...current,
+                        dataHora: e.target.value,
+                      }))
                     }
                     style={styles.input}
                   />
@@ -467,7 +502,12 @@ export default function OfertasPage() {
                   <span style={styles.dataLabel}>Valor</span>
                   <input
                     value={service.valor}
-                    onChange={(e) => setService((current) => ({ ...current, valor: e.target.value }))}
+                    onChange={(e) =>
+                      setService((current) => ({
+                        ...current,
+                        valor: e.target.value,
+                      }))
+                    }
                     style={styles.input}
                   />
                 </div>
@@ -477,7 +517,10 @@ export default function OfertasPage() {
                   <textarea
                     value={service.observacao}
                     onChange={(e) =>
-                      setService((current) => ({ ...current, observacao: e.target.value }))
+                      setService((current) => ({
+                        ...current,
+                        observacao: e.target.value,
+                      }))
                     }
                     style={styles.textarea}
                   />
@@ -485,11 +528,19 @@ export default function OfertasPage() {
               </div>
 
               <div style={styles.actionRow}>
-                <button type="button" style={styles.primaryAction} onClick={sendOffer}>
+                <button
+                  type="button"
+                  style={styles.primaryAction}
+                  onClick={sendOffer}
+                >
                   Disparar oferta
                 </button>
 
-                <button type="button" style={styles.secondaryAction} onClick={resetOffer}>
+                <button
+                  type="button"
+                  style={styles.secondaryAction}
+                  onClick={resetOffer}
+                >
                   Reiniciar
                 </button>
               </div>
@@ -499,7 +550,9 @@ export default function OfertasPage() {
               <div style={styles.sectionHeader}>
                 <div>
                   <span style={styles.sectionEyebrow}>BASE DE MOTORISTAS</span>
-                  <h2 style={styles.sectionTitle}>Selecionar quem vai receber</h2>
+                  <h2 style={styles.sectionTitle}>
+                    Selecionar quem vai receber
+                  </h2>
                 </div>
 
                 <input
@@ -518,21 +571,35 @@ export default function OfertasPage() {
                   return (
                     <article key={driver.id} style={styles.driverCard}>
                       <div style={styles.driverTop}>
-                        <div>
+                        <div style={styles.driverInfo}>
                           <h3 style={styles.driverTitle}>{driver.nome}</h3>
                           <p style={styles.driverSubline}>
                             {driver.base} • {driver.cidade}
                           </p>
-                          <p style={styles.driverSubline}>{driver.categoria}</p>
+                          <p style={styles.driverSubline}>
+                            {driver.categoria}
+                          </p>
                         </div>
 
                         <div style={styles.driverTopRight}>
-                          <span style={{ ...styles.badge, ...getDriverStatusStyle(driver.status) }}>
-                            {driver.status === "disponivel" ? "Disponível" : "Ocupado"}
+                          <span
+                            style={{
+                              ...styles.badge,
+                              ...getDriverStatusStyle(driver.status),
+                            }}
+                          >
+                            {driver.status === "disponivel"
+                              ? "Disponível"
+                              : "Ocupado"}
                           </span>
 
                           {log ? (
-                            <span style={{ ...styles.badge, ...getDecisionStyle(log.decision) }}>
+                            <span
+                              style={{
+                                ...styles.badge,
+                                ...getDecisionStyle(log.decision),
+                              }}
+                            >
                               {log.decision === "aguardando"
                                 ? "Aguardando"
                                 : log.decision === "aceitou"
@@ -611,21 +678,29 @@ export default function OfertasPage() {
                 </div>
 
                 <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Sem volume garantido</strong>
+                  <strong style={styles.ruleItemTitle}>
+                    Sem volume garantido
+                  </strong>
                   <span style={styles.ruleItemText}>
-                    Os serviços são esporádicos e dependem da necessidade real dos clientes.
+                    Os serviços são esporádicos e dependem da necessidade real
+                    dos clientes.
                   </span>
                 </div>
 
                 <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Primeiro aceite leva</strong>
+                  <strong style={styles.ruleItemTitle}>
+                    Primeiro aceite leva
+                  </strong>
                   <span style={styles.ruleItemText}>
-                    O atendimento fica com quem confirmar primeiro de forma válida.
+                    O atendimento fica com quem confirmar primeiro de forma
+                    válida.
                   </span>
                 </div>
 
                 <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Demais ficam livres</strong>
+                  <strong style={styles.ruleItemTitle}>
+                    Demais ficam livres
+                  </strong>
                   <span style={styles.ruleItemText}>
                     Os outros motoristas seguem disponíveis para novos chamados.
                   </span>
@@ -639,23 +714,30 @@ export default function OfertasPage() {
 
               <div style={styles.ruleList}>
                 <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Freelance / eventual</strong>
+                  <strong style={styles.ruleItemTitle}>
+                    Freelance / eventual
+                  </strong>
                   <span style={styles.ruleItemText}>
-                    O sistema parte do modelo de serviços livres, sem garantia de continuidade.
+                    O sistema parte do modelo de serviços livres, sem garantia
+                    de continuidade.
                   </span>
                 </div>
 
                 <div style={styles.ruleItem}>
                   <strong style={styles.ruleItemTitle}>CTB e condução</strong>
                   <span style={styles.ruleItemText}>
-                    O motorista deve conduzir em conformidade com o CTB e com as regras aplicáveis da operação.
+                    O motorista deve conduzir em conformidade com o CTB e com as
+                    regras aplicáveis da operação.
                   </span>
                 </div>
 
                 <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Telemetria quando houver</strong>
+                  <strong style={styles.ruleItemTitle}>
+                    Telemetria quando houver
+                  </strong>
                   <span style={styles.ruleItemText}>
-                    Se o veículo tiver telemetria, a condução deve seguir os parâmetros informados para a operação.
+                    Se o veículo tiver telemetria, a condução deve seguir os
+                    parâmetros informados para a operação.
                   </span>
                 </div>
               </div>
@@ -665,8 +747,9 @@ export default function OfertasPage() {
               <div style={styles.robotTag}>ROBÔ AURORA</div>
               <h2 style={styles.sidebarTitleDark}>Apoio à distribuição</h2>
               <p style={styles.sidebarTextDark}>
-                O Robô Aurora poderá sugerir qual motorista acionar primeiro, ler
-                histórico de aceite, separar base por cidade e reduzir tempo de resposta.
+                O Robô Aurora poderá sugerir qual motorista acionar primeiro,
+                ler histórico de aceite, separar base por cidade e reduzir tempo
+                de resposta.
               </p>
 
               <div style={styles.robotList}>
@@ -715,7 +798,7 @@ const styles: Record<string, React.CSSProperties> = {
   heroSection: {
     position: "relative",
     overflow: "hidden",
-    padding: "32px 20px 18px",
+    padding: "24px 12px 18px",
   },
 
   glowOne: {
@@ -748,15 +831,15 @@ const styles: Record<string, React.CSSProperties> = {
     margin: "0 auto",
     background: "rgba(255,255,255,0.78)",
     border: "1px solid rgba(125, 211, 252, 0.28)",
-    borderRadius: 30,
-    padding: "28px 22px 24px",
+    borderRadius: 24,
+    padding: "20px 14px 18px",
     boxShadow: "0 24px 60px rgba(14, 165, 233, 0.10)",
     backdropFilter: "blur(12px)",
   },
 
   heroGrid: {
     display: "grid",
-    gridTemplateColumns: "minmax(0, 1.15fr) minmax(300px, 0.85fr)",
+    gridTemplateColumns: "1fr",
     gap: 18,
     alignItems: "start",
   },
@@ -777,15 +860,18 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 900,
     letterSpacing: "0.08em",
     marginBottom: 18,
+    flexWrap: "wrap",
+    lineHeight: 1.4,
   },
 
   heroTitle: {
     margin: 0,
-    fontSize: "clamp(1.9rem, 3.7vw, 3.5rem)",
-    lineHeight: 1.03,
+    fontSize: "clamp(1.55rem, 5.2vw, 3.5rem)",
+    lineHeight: 1.05,
     fontWeight: 950,
     letterSpacing: "-0.05em",
     maxWidth: 860,
+    wordBreak: "break-word",
   },
 
   heroText: {
@@ -793,14 +879,14 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: 0,
     maxWidth: 860,
     color: "#334155",
-    fontSize: 16,
-    lineHeight: 1.8,
+    fontSize: 15,
+    lineHeight: 1.75,
   },
 
   heroActions: {
     display: "flex",
     flexWrap: "wrap",
-    gap: 14,
+    gap: 12,
     marginTop: 26,
   },
 
@@ -808,33 +894,35 @@ const styles: Record<string, React.CSSProperties> = {
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    minHeight: 52,
-    padding: "0 22px",
+    minHeight: 48,
+    padding: "0 18px",
     borderRadius: 16,
     textDecoration: "none",
     fontWeight: 900,
     color: "#ffffff",
     background: "linear-gradient(135deg, #06b6d4 0%, #2563eb 100%)",
     boxShadow: "0 14px 30px rgba(37, 99, 235, 0.20)",
+    textAlign: "center",
   },
 
   secondaryButton: {
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    minHeight: 52,
-    padding: "0 22px",
+    minHeight: 48,
+    padding: "0 18px",
     borderRadius: 16,
     textDecoration: "none",
     fontWeight: 900,
     color: "#0f172a",
     background: "rgba(255,255,255,0.85)",
     border: "1px solid rgba(125, 211, 252, 0.34)",
+    textAlign: "center",
   },
 
   heroRightCard: {
-    borderRadius: 26,
-    padding: 22,
+    borderRadius: 22,
+    padding: 18,
     background: "linear-gradient(180deg, #ffffff 0%, #eefaff 100%)",
     border: "1px solid rgba(125, 211, 252, 0.30)",
     boxShadow: "0 18px 44px rgba(8, 47, 73, 0.08)",
@@ -851,8 +939,8 @@ const styles: Record<string, React.CSSProperties> = {
 
   sideTitle: {
     margin: 0,
-    fontSize: 24,
-    lineHeight: 1.08,
+    fontSize: 22,
+    lineHeight: 1.12,
     fontWeight: 900,
     letterSpacing: "-0.03em",
   },
@@ -910,21 +998,22 @@ const styles: Record<string, React.CSSProperties> = {
   statsSection: {
     maxWidth: 1240,
     margin: "0 auto",
-    padding: "8px 20px 4px",
+    padding: "8px 12px 4px",
   },
 
   statsGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: 14,
+    gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+    gap: 12,
   },
 
   statCard: {
     background: "#ffffff",
     borderRadius: 22,
     border: "1px solid rgba(125, 211, 252, 0.24)",
-    padding: 18,
+    padding: 16,
     boxShadow: "0 10px 28px rgba(15, 23, 42, 0.05)",
+    minWidth: 0,
   },
 
   statLabel: {
@@ -937,10 +1026,11 @@ const styles: Record<string, React.CSSProperties> = {
   statValue: {
     display: "block",
     marginTop: 8,
-    fontSize: 30,
+    fontSize: 28,
     lineHeight: 1,
     fontWeight: 900,
     letterSpacing: "-0.04em",
+    wordBreak: "break-word",
   },
 
   statDetail: {
@@ -954,12 +1044,12 @@ const styles: Record<string, React.CSSProperties> = {
   contentSection: {
     maxWidth: 1240,
     margin: "0 auto",
-    padding: "18px 20px 0",
+    padding: "18px 12px 0",
   },
 
   mainGrid: {
     display: "grid",
-    gridTemplateColumns: "minmax(0, 1.35fr) minmax(300px, 0.85fr)",
+    gridTemplateColumns: "1fr",
     gap: 18,
   },
 
@@ -981,8 +1071,9 @@ const styles: Record<string, React.CSSProperties> = {
     background: "linear-gradient(180deg, #ffffff 0%, #eefaff 100%)",
     borderRadius: 24,
     border: "1px solid rgba(125, 211, 252, 0.24)",
-    padding: 20,
+    padding: 16,
     boxShadow: "0 14px 34px rgba(15, 23, 42, 0.04)",
+    minWidth: 0,
   },
 
   sectionHeader: {
@@ -1005,10 +1096,11 @@ const styles: Record<string, React.CSSProperties> = {
 
   sectionTitle: {
     margin: 0,
-    fontSize: "clamp(1.5rem, 2.6vw, 2.3rem)",
+    fontSize: "clamp(1.3rem, 4.5vw, 2.3rem)",
     lineHeight: 1.08,
     fontWeight: 900,
     letterSpacing: "-0.03em",
+    wordBreak: "break-word",
   },
 
   formGrid: {
@@ -1019,7 +1111,8 @@ const styles: Record<string, React.CSSProperties> = {
 
   searchInput: {
     minHeight: 46,
-    minWidth: 320,
+    width: "100%",
+    maxWidth: "100%",
     borderRadius: 14,
     border: "1px solid rgba(125, 211, 252, 0.28)",
     padding: "0 14px",
@@ -1027,10 +1120,12 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#0f172a",
     background: "#ffffff",
     outline: "none",
+    boxSizing: "border-box",
   },
 
   input: {
     minHeight: 44,
+    width: "100%",
     borderRadius: 12,
     border: "1px solid rgba(125, 211, 252, 0.28)",
     padding: "0 12px",
@@ -1038,10 +1133,12 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#0f172a",
     background: "#ffffff",
     outline: "none",
+    boxSizing: "border-box",
   },
 
   textarea: {
     minHeight: 108,
+    width: "100%",
     borderRadius: 12,
     border: "1px solid rgba(125, 211, 252, 0.28)",
     padding: 12,
@@ -1050,6 +1147,7 @@ const styles: Record<string, React.CSSProperties> = {
     background: "#ffffff",
     outline: "none",
     resize: "vertical",
+    boxSizing: "border-box",
   },
 
   dataItem: {
@@ -1060,6 +1158,7 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: 16,
     background: "#ffffff",
     border: "1px solid rgba(125, 211, 252, 0.16)",
+    minWidth: 0,
   },
 
   dataItemWide: {
@@ -1071,6 +1170,7 @@ const styles: Record<string, React.CSSProperties> = {
     background: "#ffffff",
     border: "1px solid rgba(125, 211, 252, 0.16)",
     gridColumn: "1 / -1",
+    minWidth: 0,
   },
 
   dataLabel: {
@@ -1119,10 +1219,11 @@ const styles: Record<string, React.CSSProperties> = {
 
   driverCard: {
     borderRadius: 22,
-    padding: 18,
+    padding: 16,
     background: "#ffffff",
     border: "1px solid rgba(125, 211, 252, 0.18)",
     boxShadow: "0 10px 28px rgba(15, 23, 42, 0.04)",
+    minWidth: 0,
   },
 
   driverTop: {
@@ -1133,10 +1234,16 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "flex-start",
   },
 
+  driverInfo: {
+    minWidth: 0,
+    flex: 1,
+  },
+
   driverTitle: {
     margin: 0,
-    fontSize: 20,
+    fontSize: 19,
     fontWeight: 900,
+    wordBreak: "break-word",
   },
 
   driverSubline: {
@@ -1146,13 +1253,15 @@ const styles: Record<string, React.CSSProperties> = {
     lineHeight: 1.6,
     fontSize: 14,
     fontWeight: 600,
+    wordBreak: "break-word",
   },
 
   driverTopRight: {
     display: "flex",
     flexDirection: "column",
-    alignItems: "flex-end",
+    alignItems: "flex-start",
     gap: 8,
+    width: "100%",
   },
 
   badge: {
@@ -1163,6 +1272,8 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: 999,
     fontSize: 12,
     fontWeight: 800,
+    width: "fit-content",
+    maxWidth: "100%",
   },
 
   driverBottom: {
@@ -1185,12 +1296,14 @@ const styles: Record<string, React.CSSProperties> = {
     border: "1px solid rgba(148, 163, 184, 0.14)",
     fontWeight: 700,
     color: "#0f172a",
+    flexWrap: "wrap",
   },
 
   driverActions: {
     display: "flex",
     flexWrap: "wrap",
     gap: 10,
+    width: "100%",
   },
 
   whatsButton: {
@@ -1238,22 +1351,25 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#164e63",
     fontSize: 13,
     fontWeight: 700,
+    wordBreak: "break-word",
   },
 
   infoCard: {
     background: "linear-gradient(180deg, #ffffff 0%, #f4fbff 100%)",
     borderRadius: 24,
     border: "1px solid rgba(125, 211, 252, 0.24)",
-    padding: 20,
+    padding: 18,
     boxShadow: "0 14px 34px rgba(15, 23, 42, 0.04)",
+    minWidth: 0,
   },
 
   sidebarTitle: {
     margin: 0,
-    fontSize: 24,
+    fontSize: 22,
     lineHeight: 1.08,
     fontWeight: 900,
     color: "#0f172a",
+    wordBreak: "break-word",
   },
 
   ruleList: {
@@ -1288,8 +1404,9 @@ const styles: Record<string, React.CSSProperties> = {
   darkCard: {
     background: "linear-gradient(135deg, #082f49 0%, #0f172a 58%, #172554 100%)",
     borderRadius: 24,
-    padding: 20,
+    padding: 18,
     boxShadow: "0 20px 50px rgba(2, 6, 23, 0.24)",
+    minWidth: 0,
   },
 
   robotTag: {
@@ -1303,10 +1420,11 @@ const styles: Record<string, React.CSSProperties> = {
 
   sidebarTitleDark: {
     margin: 0,
-    fontSize: 24,
+    fontSize: 22,
     lineHeight: 1.08,
     fontWeight: 900,
     color: "#ffffff",
+    wordBreak: "break-word",
   },
 
   sidebarTextDark: {
@@ -1319,7 +1437,7 @@ const styles: Record<string, React.CSSProperties> = {
 
   robotList: {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr",
+    gridTemplateColumns: "1fr",
     gap: 10,
     marginTop: 18,
   },
@@ -1333,14 +1451,16 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: 13,
     fontWeight: 700,
     lineHeight: 1.5,
+    wordBreak: "break-word",
   },
 
   navCard: {
     background: "linear-gradient(180deg, #ffffff 0%, #eefaff 100%)",
     borderRadius: 24,
     border: "1px solid rgba(125, 211, 252, 0.24)",
-    padding: 20,
+    padding: 18,
     boxShadow: "0 14px 34px rgba(15, 23, 42, 0.04)",
+    minWidth: 0,
   },
 
   navList: {
