@@ -451,18 +451,6 @@ export default function Home() {
             />
           </aside>
         </section>
-
-        <div
-          style={{
-            marginTop: 20,
-            textAlign: "center",
-            color: "#94a3b8",
-            fontSize: 13,
-            fontWeight: 700,
-          }}
-        >
-          Sistema em constante atualização • podem ocorrer instabilidades momentâneas
-        </div>
       </div>
     </main>
   );
