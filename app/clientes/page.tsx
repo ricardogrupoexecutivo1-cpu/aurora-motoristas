@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+
 type Cliente = {
   id: string;
   tipo_pessoa: string | null;
@@ -17,28 +21,6 @@ type Cliente = {
   created_at: string | null;
 };
 
-async function getClientes(): Promise<Cliente[]> {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_APP_URL ||
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    "http://localhost:3000";
-
-  try {
-    const response = await fetch(`${baseUrl}/api/clientes`, {
-      cache: "no-store",
-    });
-
-    if (!response.ok) {
-      return [];
-    }
-
-    const data = await response.json();
-    return Array.isArray(data?.clients) ? data.clients : [];
-  } catch {
-    return [];
-  }
-}
-
 function formatDate(value: string | null) {
   if (!value) return "—";
 
@@ -52,8 +34,66 @@ function formatDate(value: string | null) {
   }
 }
 
-export default async function ClientesListPage() {
-  const clientes = await getClientes();
+export default function ClientesListPage() {
+  const [clientes, setClientes] = useState<Cliente[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [busca, setBusca] = useState("");
+  const [erro, setErro] = useState("");
+
+  useEffect(() => {
+    async function carregarClientes() {
+      try {
+        setLoading(true);
+        setErro("");
+
+        const response = await fetch("/api/clientes", {
+          method: "GET",
+          cache: "no-store",
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data?.error || "Não foi possível carregar os clientes.");
+        }
+
+        setClientes(Array.isArray(data?.clients) ? data.clients : []);
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Erro inesperado ao carregar clientes.";
+        setErro(message);
+        setClientes([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    carregarClientes();
+  }, []);
+
+  const clientesFiltrados = useMemo(() => {
+    const termo = busca.trim().toLowerCase();
+
+    if (!termo) return clientes;
+
+    return clientes.filter((cliente) => {
+      const texto = [
+        cliente.nome,
+        cliente.empresa,
+        cliente.cpf_cnpj,
+        cliente.responsavel,
+        cliente.telefone,
+        cliente.email,
+        cliente.cidade,
+        cliente.estado,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      return texto.includes(termo);
+    });
+  }, [clientes, busca]);
 
   return (
     <main
@@ -214,11 +254,63 @@ export default async function ClientesListPage() {
                 fontSize: 14,
               }}
             >
-              {String(clientes.length).padStart(2, "0")} clientes
+              {String(clientesFiltrados.length).padStart(2, "0")} clientes
             </div>
           </div>
 
-          {clientes.length === 0 ? (
+          <div style={{ marginBottom: 16 }}>
+            <input
+              type="text"
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
+              placeholder="Buscar por nome, empresa, CPF/CNPJ, telefone, e-mail, cidade..."
+              style={{
+                width: "100%",
+                height: 50,
+                borderRadius: 16,
+                border: "1px solid #cbd5e1",
+                background: "#f8fbff",
+                padding: "0 16px",
+                fontSize: 15,
+                color: "#0f172a",
+                outline: "none",
+                boxSizing: "border-box",
+              }}
+            />
+          </div>
+
+          {erro ? (
+            <div
+              style={{
+                borderRadius: 18,
+                padding: "14px 16px",
+                border: "1px solid #fecaca",
+                background: "#fef2f2",
+                color: "#991b1b",
+                fontWeight: 700,
+                lineHeight: 1.55,
+                marginBottom: 16,
+              }}
+            >
+              {erro}
+            </div>
+          ) : null}
+
+          {loading ? (
+            <div
+              style={{
+                borderRadius: 22,
+                border: "1px solid #e2e8f0",
+                background: "#f8fbff",
+                padding: 20,
+                color: "#475569",
+                lineHeight: 1.65,
+                fontSize: 15,
+              }}
+            >
+              Carregando clientes...
+            </div>
+          ) : clientesFiltrados.length === 0 ? (
             <div
               style={{
                 borderRadius: 22,
@@ -240,7 +332,7 @@ export default async function ClientesListPage() {
                 gap: 16,
               }}
             >
-              {clientes.map((cliente) => (
+              {clientesFiltrados.map((cliente) => (
                 <article
                   key={cliente.id}
                   style={{
