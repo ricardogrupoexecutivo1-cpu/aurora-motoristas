@@ -66,11 +66,39 @@ function formatCep(value: string) {
   return digits.replace(/^(\d{5})(\d)/, "$1-$2");
 }
 
+function isValidCpf(value: string) {
+  const cpf = onlyDigits(value);
+
+  if (cpf.length !== 11) return false;
+  if (/^(\d)\1{10}$/.test(cpf)) return false;
+
+  let sum = 0;
+  for (let i = 0; i < 9; i += 1) {
+    sum += Number(cpf[i]) * (10 - i);
+  }
+
+  let firstDigit = (sum * 10) % 11;
+  if (firstDigit === 10) firstDigit = 0;
+  if (firstDigit !== Number(cpf[9])) return false;
+
+  sum = 0;
+  for (let i = 0; i < 10; i += 1) {
+    sum += Number(cpf[i]) * (11 - i);
+  }
+
+  let secondDigit = (sum * 10) % 11;
+  if (secondDigit === 10) secondDigit = 0;
+
+  return secondDigit === Number(cpf[10]);
+}
+
 export default function CadastrarMotoristaPage() {
   const [form, setForm] = useState<MotoristaForm>(initialForm);
   const [loading, setLoading] = useState(false);
+  const [loadingCep, setLoadingCep] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [feedbackType, setFeedbackType] = useState<"success" | "error" | "info">("info");
+  const [fonteCep, setFonteCep] = useState("");
 
   function updateField<K extends keyof MotoristaForm>(field: K, value: MotoristaForm[K]) {
     setForm((current) => ({
@@ -79,8 +107,75 @@ export default function CadastrarMotoristaPage() {
     }));
   }
 
+  async function buscarCep() {
+    setFeedback("");
+    setFonteCep("");
+
+    const cep = onlyDigits(form.cep);
+
+    if (cep.length !== 8) {
+      setFeedbackType("error");
+      setFeedback("Informe um CEP válido com 8 dígitos.");
+      return;
+    }
+
+    try {
+      setLoadingCep(true);
+
+      const response = await fetch(`/api/cep?cep=${cep}`, {
+        method: "GET",
+        cache: "no-store",
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.error || "Não foi possível consultar o CEP.");
+      }
+
+      const address = data?.address || {};
+
+      setForm((current) => ({
+        ...current,
+        cep: formatCep(address.cep || cep),
+        endereco: address.endereco || current.endereco,
+        complemento: current.complemento || address.complemento || "",
+        cidade: address.cidade || current.cidade,
+        estado: address.estado || current.estado,
+      }));
+
+      if (address.bairro && !currentHasNeighborhood(form.observacoes)) {
+        // Mantemos bairro como observação por enquanto, sem alterar schema atual.
+        setForm((current) => ({
+          ...current,
+          cep: formatCep(address.cep || cep),
+          endereco: address.endereco || current.endereco,
+          complemento: current.complemento || address.complemento || "",
+          cidade: address.cidade || current.cidade,
+          estado: address.estado || current.estado,
+          observacoes:
+            current.observacoes?.trim()
+              ? current.observacoes
+              : `Bairro: ${address.bairro}`,
+        }));
+      }
+
+      setFonteCep(data?.source || "");
+      setFeedbackType("success");
+      setFeedback("CEP consultado com sucesso. Endereço preenchido automaticamente.");
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Erro inesperado ao consultar CEP.";
+      setFeedbackType("error");
+      setFeedback(message);
+    } finally {
+      setLoadingCep(false);
+    }
+  }
+
   async function salvarMotorista() {
     setFeedback("");
+    setFonteCep("");
 
     if (!form.nome.trim()) {
       setFeedbackType("error");
@@ -91,6 +186,12 @@ export default function CadastrarMotoristaPage() {
     if (!form.telefone.trim()) {
       setFeedbackType("error");
       setFeedback("Informe o telefone principal do motorista.");
+      return;
+    }
+
+    if (form.cpf.trim() && !isValidCpf(form.cpf)) {
+      setFeedbackType("error");
+      setFeedback("O CPF informado é inválido.");
       return;
     }
 
@@ -213,7 +314,7 @@ export default function CadastrarMotoristaPage() {
               letterSpacing: "-0.03em",
             }}
           >
-            Cadastrar motorista com visual claro e leitura forte no mobile
+            Cadastrar motorista com validação de CPF e busca de CEP
           </h1>
 
           <p
@@ -225,34 +326,10 @@ export default function CadastrarMotoristaPage() {
               fontSize: 16,
             }}
           >
-            Cadastre motoristas com dados principais, contato, endereço, CNH,
-            observações e foto. Esta tela foi organizada para facilitar o uso no
-            celular e no desktop, com padrão premium do Aurora Motoristas.
-            Sistema em constante atualização e podem ocorrer instabilidades
-            momentâneas durante melhorias.
+            Cadastre motoristas com dados principais, contato, CNH, endereço e
+            observações. Esta tela agora valida CPF localmente e permite buscar
+            endereço por CEP, mantendo o padrão premium no desktop e no celular.
           </p>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-              gap: 12,
-              marginTop: 18,
-            }}
-          >
-            <MiniHighlight
-              title="Entrada rápida"
-              text="Formulário pensado para cadastro real sem poluição visual."
-            />
-            <MiniHighlight
-              title="Mobile melhorado"
-              text="Leitura mais limpa, blocos consistentes e botões fortes."
-            />
-            <MiniHighlight
-              title="Pronto para crescer"
-              text="Base preparada para foto, filtros e fluxo operacional."
-            />
-          </div>
         </section>
 
         <section
@@ -371,12 +448,68 @@ export default function CadastrarMotoristaPage() {
                 placeholder="Número da CNH"
               />
 
-              <Field
-                label="CEP"
-                value={form.cep}
-                onChange={(value) => updateField("cep", formatCep(value))}
-                placeholder="00000-000"
-              />
+              <div style={{ display: "block" }}>
+                <label
+                  style={{
+                    display: "block",
+                    marginBottom: 8,
+                    fontWeight: 700,
+                    color: "#0f172a",
+                    fontSize: 14,
+                  }}
+                >
+                  CEP
+                </label>
+
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 10,
+                  }}
+                >
+                  <input
+                    type="text"
+                    value={form.cep}
+                    onChange={(e) => updateField("cep", formatCep(e.target.value))}
+                    placeholder="00000-000"
+                    style={{
+                      flex: "1 1 220px",
+                      minWidth: 0,
+                      height: 50,
+                      borderRadius: 16,
+                      border: "1px solid #cbd5e1",
+                      background: "#f8fbff",
+                      padding: "0 16px",
+                      fontSize: 15,
+                      color: "#0f172a",
+                      outline: "none",
+                      boxSizing: "border-box",
+                    }}
+                  />
+
+                  <button
+                    type="button"
+                    onClick={buscarCep}
+                    disabled={loadingCep}
+                    style={{
+                      border: "1px solid #0ea5e9",
+                      cursor: loadingCep ? "not-allowed" : "pointer",
+                      opacity: loadingCep ? 0.7 : 1,
+                      padding: "0 16px",
+                      height: 50,
+                      borderRadius: 16,
+                      background: "#e0f2fe",
+                      color: "#0369a1",
+                      fontWeight: 800,
+                      fontSize: 14,
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {loadingCep ? "Buscando..." : "Buscar CEP"}
+                  </button>
+                </div>
+              </div>
 
               <Field
                 label="Endereço"
@@ -456,25 +589,26 @@ export default function CadastrarMotoristaPage() {
                     feedbackType === "success"
                       ? "1px solid #bbf7d0"
                       : feedbackType === "error"
-                        ? "1px solid #fecaca"
-                        : "1px solid #bae6fd",
+                      ? "1px solid #fecaca"
+                      : "1px solid #bae6fd",
                   background:
                     feedbackType === "success"
                       ? "#f0fdf4"
                       : feedbackType === "error"
-                        ? "#fef2f2"
-                        : "#f0f9ff",
+                      ? "#fef2f2"
+                      : "#f0f9ff",
                   color:
                     feedbackType === "success"
                       ? "#166534"
                       : feedbackType === "error"
-                        ? "#991b1b"
-                        : "#0c4a6e",
+                      ? "#991b1b"
+                      : "#0c4a6e",
                   fontWeight: 700,
                   lineHeight: 1.55,
                 }}
               >
                 {feedback}
+                {fonteCep ? ` Fonte: ${fonteCep}.` : ""}
               </div>
             ) : null}
 
@@ -511,6 +645,7 @@ export default function CadastrarMotoristaPage() {
                 onClick={() => {
                   setForm(initialForm);
                   setFeedback("");
+                  setFonteCep("");
                 }}
                 style={{
                   border: "1px solid #cbd5e1",
@@ -541,8 +676,8 @@ export default function CadastrarMotoristaPage() {
             />
 
             <InfoCard
-              title="Fluxo mais eficiente"
-              text="Use nome, telefone e status ativo como base mínima. CNH, foto e endereço fortalecem a operação e a confiança."
+              title="Validação segura"
+              text="O CPF agora é validado localmente antes do salvamento e o CEP pode preencher o endereço automaticamente."
             />
 
             <InfoCard
@@ -556,6 +691,10 @@ export default function CadastrarMotoristaPage() {
   );
 }
 
+function currentHasNeighborhood(text: string) {
+  return text.toLowerCase().includes("bairro:");
+}
+
 function pillButton(primary: boolean) {
   return {
     textDecoration: "none",
@@ -567,46 +706,6 @@ function pillButton(primary: boolean) {
     fontWeight: 700,
     fontSize: 14,
   } as const;
-}
-
-function MiniHighlight({
-  title,
-  text,
-}: {
-  title: string;
-  text: string;
-}) {
-  return (
-    <div
-      style={{
-        borderRadius: 20,
-        background: "rgba(255,255,255,0.82)",
-        border: "1px solid #dbeafe",
-        padding: 16,
-      }}
-    >
-      <div
-        style={{
-          fontSize: 13,
-          fontWeight: 800,
-          color: "#1d4ed8",
-          marginBottom: 6,
-          textTransform: "uppercase",
-        }}
-      >
-        {title}
-      </div>
-      <div
-        style={{
-          fontSize: 14,
-          color: "#475569",
-          lineHeight: 1.55,
-        }}
-      >
-        {text}
-      </div>
-    </div>
-  );
 }
 
 function Field({
