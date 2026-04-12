@@ -58,15 +58,12 @@ export async function GET(request: Request) {
       );
     }
 
-    // 1) Tenta BrasilAPI primeiro
     try {
       const brasilApiResponse = await fetch(
         `https://brasilapi.com.br/api/cnpj/v1/${cnpj}`,
         {
           method: "GET",
-          headers: {
-            Accept: "application/json",
-          },
+          headers: { Accept: "application/json" },
           cache: "no-store",
         }
       );
@@ -100,15 +97,12 @@ export async function GET(request: Request) {
       // segue para fallback
     }
 
-    // 2) Fallback ReceitaWS
     try {
       const receitaWsResponse = await fetch(
         `https://www.receitaws.com.br/v1/cnpj/${cnpj}`,
         {
           method: "GET",
-          headers: {
-            Accept: "application/json",
-          },
+          headers: { Accept: "application/json" },
           cache: "no-store",
         }
       );
@@ -146,7 +140,7 @@ export async function GET(request: Request) {
         );
       }
     } catch {
-      // fallback falhou também
+      // falhou também
     }
 
     return NextResponse.json(
