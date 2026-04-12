@@ -81,11 +81,15 @@ function formatCep(value: string) {
 export default function ClientesPage() {
   const [form, setForm] = useState<ClienteForm>(initialForm);
   const [loading, setLoading] = useState(false);
+  const [loadingReceita, setLoadingReceita] = useState(false);
   const [feedback, setFeedback] = useState<string>("");
   const [feedbackType, setFeedbackType] = useState<"success" | "error" | "info">("info");
+  const [fonteReceita, setFonteReceita] = useState<string>("");
 
   const tituloPrincipal = useMemo(() => {
-    return form.tipoPessoa === "PJ" ? "Cadastro de clientes empresariais" : "Cadastro de clientes pessoa física";
+    return form.tipoPessoa === "PJ"
+      ? "Cadastro de clientes empresariais"
+      : "Cadastro de clientes pessoa física";
   }, [form.tipoPessoa]);
 
   function updateField<K extends keyof ClienteForm>(field: K, value: ClienteForm[K]) {
@@ -93,6 +97,70 @@ export default function ClientesPage() {
       ...current,
       [field]: value,
     }));
+  }
+
+  async function buscarNaReceita() {
+    setFeedback("");
+    setFonteReceita("");
+
+    if (form.tipoPessoa !== "PJ") {
+      setFeedbackType("info");
+      setFeedback("A busca automática na Receita está disponível no modo PJ com CNPJ.");
+      return;
+    }
+
+    const cnpj = onlyDigits(form.cpfCnpj);
+
+    if (cnpj.length !== 14) {
+      setFeedbackType("error");
+      setFeedback("Informe um CNPJ válido com 14 dígitos para consultar.");
+      return;
+    }
+
+    try {
+      setLoadingReceita(true);
+
+      const response = await fetch(`/api/receita/cnpj?cnpj=${cnpj}`, {
+        method: "GET",
+        cache: "no-store",
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.error || "Não foi possível consultar o CNPJ.");
+      }
+
+      const company = data?.company || {};
+
+      setForm((current) => ({
+        ...current,
+        nome: company.nome || current.nome,
+        empresa: company.empresa || current.empresa,
+        cpfCnpj: formatCpfCnpj(company.cnpj || cnpj),
+        responsavel: company.responsavel || current.responsavel,
+        telefone: company.telefone ? formatPhone(company.telefone) : current.telefone,
+        email: company.email || current.email,
+        cep: company.cep ? formatCep(company.cep) : current.cep,
+        endereco: company.endereco || current.endereco,
+        numero: company.numero || current.numero,
+        bairro: company.bairro || current.bairro,
+        cidade: company.cidade || current.cidade,
+        estado: company.estado || current.estado,
+        observacoes: company.observacoes || current.observacoes,
+      }));
+
+      setFonteReceita(data?.source || "");
+      setFeedbackType("success");
+      setFeedback("CNPJ consultado com sucesso. Dados preenchidos automaticamente.");
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Erro inesperado ao consultar CNPJ.";
+      setFeedbackType("error");
+      setFeedback(message);
+    } finally {
+      setLoadingReceita(false);
+    }
   }
 
   async function salvarCliente() {
@@ -144,6 +212,7 @@ export default function ClientesPage() {
 
       setFeedbackType("success");
       setFeedback("Cliente cadastrado com sucesso na base do Aurora Motoristas.");
+      setFonteReceita("");
       setForm(initialForm);
     } catch (error) {
       const message =
@@ -159,8 +228,7 @@ export default function ClientesPage() {
     <main
       style={{
         minHeight: "100vh",
-        background:
-          "linear-gradient(180deg, #f4faff 0%, #edf6ff 40%, #ffffff 100%)",
+        background: "linear-gradient(180deg, #f4faff 0%, #edf6ff 40%, #ffffff 100%)",
         color: "#0f172a",
       }}
     >
@@ -411,7 +479,11 @@ export default function ClientesPage() {
                 label={form.tipoPessoa === "PJ" ? "Nome fantasia / cliente" : "Nome completo"}
                 value={form.nome}
                 onChange={(value) => updateField("nome", value)}
-                placeholder={form.tipoPessoa === "PJ" ? "Ex.: Aurora Locadora Premium" : "Ex.: Ricardo Leonardo Moreira"}
+                placeholder={
+                  form.tipoPessoa === "PJ"
+                    ? "Ex.: Aurora Locadora Premium"
+                    : "Ex.: Ricardo Leonardo Moreira"
+                }
                 required
               />
 
@@ -422,12 +494,74 @@ export default function ClientesPage() {
                 placeholder="Ex.: Grupo Executivo Service"
               />
 
-              <Field
-                label={form.tipoPessoa === "PJ" ? "CNPJ" : "CPF"}
-                value={form.cpfCnpj}
-                onChange={(value) => updateField("cpfCnpj", formatCpfCnpj(value))}
-                placeholder={form.tipoPessoa === "PJ" ? "00.000.000/0001-00" : "000.000.000-00"}
-              />
+              <div style={{ display: "block" }}>
+                <label
+                  style={{
+                    display: "block",
+                    marginBottom: 8,
+                    fontWeight: 700,
+                    color: "#0f172a",
+                    fontSize: 14,
+                  }}
+                >
+                  {form.tipoPessoa === "PJ" ? "CNPJ" : "CPF"}
+                </label>
+
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 10,
+                  }}
+                >
+                  <input
+                    type="text"
+                    value={form.cpfCnpj}
+                    onChange={(e) => updateField("cpfCnpj", formatCpfCnpj(e.target.value))}
+                    placeholder={
+                      form.tipoPessoa === "PJ"
+                        ? "00.000.000/0001-00"
+                        : "000.000.000-00"
+                    }
+                    style={{
+                      flex: "1 1 220px",
+                      minWidth: 0,
+                      height: 50,
+                      borderRadius: 16,
+                      border: "1px solid #cbd5e1",
+                      background: "#f8fbff",
+                      padding: "0 16px",
+                      fontSize: 15,
+                      color: "#0f172a",
+                      outline: "none",
+                      boxSizing: "border-box",
+                    }}
+                  />
+
+                  {form.tipoPessoa === "PJ" ? (
+                    <button
+                      type="button"
+                      onClick={buscarNaReceita}
+                      disabled={loadingReceita}
+                      style={{
+                        border: "1px solid #0ea5e9",
+                        cursor: loadingReceita ? "not-allowed" : "pointer",
+                        opacity: loadingReceita ? 0.7 : 1,
+                        padding: "0 16px",
+                        height: 50,
+                        borderRadius: 16,
+                        background: "#e0f2fe",
+                        color: "#0369a1",
+                        fontWeight: 800,
+                        fontSize: 14,
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {loadingReceita ? "Buscando..." : "Buscar na Receita"}
+                    </button>
+                  ) : null}
+                </div>
+              </div>
 
               <Field
                 label="Responsável"
@@ -535,25 +669,26 @@ export default function ClientesPage() {
                     feedbackType === "success"
                       ? "1px solid #bbf7d0"
                       : feedbackType === "error"
-                        ? "1px solid #fecaca"
-                        : "1px solid #bae6fd",
+                      ? "1px solid #fecaca"
+                      : "1px solid #bae6fd",
                   background:
                     feedbackType === "success"
                       ? "#f0fdf4"
                       : feedbackType === "error"
-                        ? "#fef2f2"
-                        : "#f0f9ff",
+                      ? "#fef2f2"
+                      : "#f0f9ff",
                   color:
                     feedbackType === "success"
                       ? "#166534"
                       : feedbackType === "error"
-                        ? "#991b1b"
-                        : "#0c4a6e",
+                      ? "#991b1b"
+                      : "#0c4a6e",
                   fontWeight: 700,
                   lineHeight: 1.55,
                 }}
               >
                 {feedback}
+                {fonteReceita ? ` Fonte: ${fonteReceita}.` : ""}
               </div>
             ) : null}
 
@@ -590,6 +725,7 @@ export default function ClientesPage() {
                 onClick={() => {
                   setForm(initialForm);
                   setFeedback("");
+                  setFonteReceita("");
                 }}
                 style={{
                   border: "1px solid #cbd5e1",
@@ -621,7 +757,7 @@ export default function ClientesPage() {
 
             <InfoCard
               title="Estrutura preparada"
-              text="A tela já está pronta para crescer com busca por CPF/CNPJ, leitura de CEP e separação de pessoa física e jurídica."
+              text="A tela agora já suporta busca por CNPJ e preenchimento automático quando a fonte responder."
             />
 
             <InfoCard
