@@ -1,791 +1,774 @@
 "use client";
 
-import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
-import { buscarReceita, limparDocumento } from "@/lib/receita";
+import { useState } from "react";
 
 type EmpresaForm = {
   tipoEmpresa: string;
-  cnpj: string;
   razaoSocial: string;
   nomeFantasia: string;
-  inscricaoEstadual: string;
+  cnpj: string;
   responsavel: string;
-  cpfResponsavel: string;
   telefone: string;
   email: string;
-  site: string;
   cep: string;
-  logradouro: string;
+  endereco: string;
   numero: string;
-  complemento: string;
   bairro: string;
   cidade: string;
   estado: string;
   observacoes: string;
+  ativo: boolean;
 };
 
-const ESTADO_INICIAL: EmpresaForm = {
+const initialForm: EmpresaForm = {
   tipoEmpresa: "Locadora",
-  cnpj: "",
   razaoSocial: "",
   nomeFantasia: "",
-  inscricaoEstadual: "",
+  cnpj: "",
   responsavel: "",
-  cpfResponsavel: "",
   telefone: "",
   email: "",
-  site: "",
   cep: "",
-  logradouro: "",
+  endereco: "",
   numero: "",
-  complemento: "",
   bairro: "",
   cidade: "",
   estado: "",
   observacoes: "",
+  ativo: true,
 };
 
-function aplicarMascaraCNPJ(valor: string) {
-  const digits = valor.replace(/\D/g, "").slice(0, 14);
-
-  if (digits.length <= 2) return digits;
-  if (digits.length <= 5) return digits.replace(/^(\d{2})(\d+)/, "$1.$2");
-  if (digits.length <= 8) return digits.replace(/^(\d{2})(\d{3})(\d+)/, "$1.$2.$3");
-  if (digits.length <= 12) return digits.replace(/^(\d{2})(\d{3})(\d{3})(\d+)/, "$1.$2.$3/$4");
-
-  return digits.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{1,2}).*/, "$1.$2.$3/$4-$5");
+function onlyDigits(value: string) {
+  return value.replace(/\D/g, "");
 }
 
-function aplicarMascaraCPF(valor: string) {
-  const digits = valor.replace(/\D/g, "").slice(0, 11);
+function formatCnpj(value: string) {
+  const digits = onlyDigits(value).slice(0, 14);
 
-  if (digits.length <= 3) return digits;
-  if (digits.length <= 6) return digits.replace(/^(\d{3})(\d+)/, "$1.$2");
-  if (digits.length <= 9) return digits.replace(/^(\d{3})(\d{3})(\d+)/, "$1.$2.$3");
-
-  return digits.replace(/^(\d{3})(\d{3})(\d{3})(\d{1,2}).*/, "$1.$2.$3-$4");
+  return digits
+    .replace(/^(\d{2})(\d)/, "$1.$2")
+    .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+    .replace(/\.(\d{3})(\d)/, ".$1/$2")
+    .replace(/(\d{4})(\d)/, "$1-$2");
 }
 
-function aplicarMascaraTelefone(valor: string) {
-  const digits = valor.replace(/\D/g, "").slice(0, 11);
+function formatPhone(value: string) {
+  const digits = onlyDigits(value).slice(0, 11);
 
-  if (digits.length <= 2) return digits;
-  if (digits.length <= 6) return digits.replace(/^(\d{2})(\d+)/, "($1) $2");
-  if (digits.length <= 10) return digits.replace(/^(\d{2})(\d{4})(\d+)/, "($1) $2-$3");
+  if (digits.length <= 10) {
+    return digits
+      .replace(/^(\d{2})(\d)/, "($1) $2")
+      .replace(/(\d{4})(\d)/, "$1-$2");
+  }
 
-  return digits.replace(/^(\d{2})(\d{5})(\d+)/, "($1) $2-$3");
+  return digits
+    .replace(/^(\d{2})(\d)/, "($1) $2")
+    .replace(/(\d{5})(\d)/, "$1-$2");
 }
 
-function aplicarMascaraCEP(valor: string) {
-  const digits = valor.replace(/\D/g, "").slice(0, 8);
-
-  if (digits.length <= 5) return digits;
-  return digits.replace(/^(\d{5})(\d+)/, "$1-$2");
-}
-
-function Field({
-  label,
-  children,
-}: {
-  label: string;
-  children: ReactNode;
-}) {
-  return (
-    <label style={fieldStyle}>
-      <span style={labelStyle}>{label}</span>
-      {children}
-    </label>
-  );
+function formatCep(value: string) {
+  const digits = onlyDigits(value).slice(0, 8);
+  return digits.replace(/^(\d{5})(\d)/, "$1-$2");
 }
 
 export default function CadastrarEmpresaPage() {
-  const [form, setForm] = useState<EmpresaForm>(ESTADO_INICIAL);
-  const [carregandoReceita, setCarregandoReceita] = useState(false);
-  const [salvando, setSalvando] = useState(false);
-  const [mensagem, setMensagem] = useState("");
-  const [erro, setErro] = useState("");
-  const [isMobile, setIsMobile] = useState(false);
+  const [form, setForm] = useState<EmpresaForm>(initialForm);
+  const [loading, setLoading] = useState(false);
+  const [loadingReceita, setLoadingReceita] = useState(false);
+  const [feedback, setFeedback] = useState("");
+  const [feedbackType, setFeedbackType] = useState<"success" | "error" | "info">("info");
+  const [fonteReceita, setFonteReceita] = useState("");
 
-  useEffect(() => {
-    function handleResize() {
-      setIsMobile(window.innerWidth <= 768);
-    }
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const cnpjLimpo = useMemo(() => limparDocumento(form.cnpj), [form.cnpj]);
-
-  function atualizarCampo<K extends keyof EmpresaForm>(campo: K, valor: EmpresaForm[K]) {
-    setForm((prev) => ({ ...prev, [campo]: valor }));
+  function updateField<K extends keyof EmpresaForm>(field: K, value: EmpresaForm[K]) {
+    setForm((current) => ({
+      ...current,
+      [field]: value,
+    }));
   }
 
-  async function consultarCNPJ() {
-    setMensagem("");
-    setErro("");
+  async function buscarCnpj() {
+    setFeedback("");
+    setFonteReceita("");
 
-    if (cnpjLimpo.length !== 14) {
-      setErro("Digite um CNPJ válido com 14 números para buscar.");
+    const cnpj = onlyDigits(form.cnpj);
+
+    if (cnpj.length !== 14) {
+      setFeedbackType("error");
+      setFeedback("Informe um CNPJ válido com 14 dígitos para consultar.");
       return;
     }
 
     try {
-      setCarregandoReceita(true);
+      setLoadingReceita(true);
 
-      const resultado = await buscarReceita(cnpjLimpo);
+      const response = await fetch(`/api/receita/cnpj?cnpj=${cnpj}`, {
+        method: "GET",
+        cache: "no-store",
+      });
 
-      if (!resultado || "erro" in resultado) {
-        setErro(resultado?.erro || "Não foi possível consultar o CNPJ agora.");
-        return;
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.error || "Não foi possível consultar o CNPJ.");
       }
 
-      setForm((prev) => ({
-        ...prev,
-        razaoSocial: resultado.nome || prev.razaoSocial,
-        nomeFantasia: resultado.fantasia || prev.nomeFantasia,
-        telefone: resultado.telefone ? aplicarMascaraTelefone(resultado.telefone) : prev.telefone,
-        email: resultado.email || prev.email,
-        cep: resultado.cep ? aplicarMascaraCEP(resultado.cep) : prev.cep,
-        logradouro: resultado.logradouro || prev.logradouro,
-        numero: resultado.numero || prev.numero,
-        bairro: resultado.bairro || prev.bairro,
-        cidade: resultado.cidade || prev.cidade,
-        estado: resultado.estado || prev.estado,
+      const company = data?.company || {};
+
+      setForm((current) => ({
+        ...current,
+        cnpj: formatCnpj(company.cnpj || cnpj),
+        razaoSocial: company.empresa || current.razaoSocial,
+        nomeFantasia: company.nome || current.nomeFantasia,
+        responsavel: company.responsavel || current.responsavel,
+        telefone: company.telefone ? formatPhone(company.telefone) : current.telefone,
+        email: company.email || current.email,
+        cep: company.cep ? formatCep(company.cep) : current.cep,
+        endereco: company.endereco || current.endereco,
+        numero: company.numero || current.numero,
+        bairro: company.bairro || current.bairro,
+        cidade: company.cidade || current.cidade,
+        estado: company.estado || current.estado,
+        observacoes: company.observacoes || current.observacoes,
       }));
 
-      setMensagem("Consulta concluída. Você pode editar qualquer dado antes de salvar.");
-    } catch {
-      setErro("Erro ao consultar o CNPJ no momento.");
+      setFonteReceita(data?.source || "");
+      setFeedbackType("success");
+      setFeedback("CNPJ consultado com sucesso. Dados preenchidos automaticamente.");
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Erro inesperado ao consultar CNPJ.";
+      setFeedbackType("error");
+      setFeedback(message);
     } finally {
-      setCarregandoReceita(false);
+      setLoadingReceita(false);
     }
   }
 
-  async function salvar() {
-    setMensagem("");
-    setErro("");
+  async function salvarEmpresa() {
+    setFeedback("");
+    setFonteReceita("");
 
-    if (!form.razaoSocial.trim()) {
-      setErro("Preencha a razão social da empresa.");
+    if (!form.razaoSocial.trim() && !form.nomeFantasia.trim()) {
+      setFeedbackType("error");
+      setFeedback("Informe pelo menos a razão social ou o nome fantasia.");
       return;
     }
 
-    if (cnpjLimpo.length !== 14) {
-      setErro("Preencha um CNPJ válido.");
+    if (!form.telefone.trim() && !form.email.trim()) {
+      setFeedbackType("error");
+      setFeedback("Preencha pelo menos telefone ou e-mail da empresa.");
       return;
     }
 
     try {
-      setSalvando(true);
-
-      const payload = {
-        tipo_empresa: form.tipoEmpresa.trim(),
-        cnpj: cnpjLimpo,
-        razao_social: form.razaoSocial.trim(),
-        nome_fantasia: form.nomeFantasia.trim(),
-        inscricao_estadual: form.inscricaoEstadual.trim(),
-        responsavel: form.responsavel.trim(),
-        cpf_responsavel: limparDocumento(form.cpfResponsavel),
-        telefone: limparDocumento(form.telefone),
-        email: form.email.trim(),
-        site: form.site.trim(),
-        cep: limparDocumento(form.cep),
-        logradouro: form.logradouro.trim(),
-        numero: form.numero.trim(),
-        complemento: form.complemento.trim(),
-        bairro: form.bairro.trim(),
-        cidade: form.cidade.trim(),
-        estado: form.estado.trim(),
-        observacoes: form.observacoes.trim(),
-      };
+      setLoading(true);
 
       const response = await fetch("/api/empresas", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          tipoEmpresa: form.tipoEmpresa,
+          razaoSocial: form.razaoSocial.trim(),
+          nomeFantasia: form.nomeFantasia.trim(),
+          cnpj: onlyDigits(form.cnpj),
+          responsavel: form.responsavel.trim(),
+          telefone: onlyDigits(form.telefone),
+          email: form.email.trim(),
+          cep: onlyDigits(form.cep),
+          endereco: form.endereco.trim(),
+          numero: form.numero.trim(),
+          bairro: form.bairro.trim(),
+          cidade: form.cidade.trim(),
+          estado: form.estado.trim(),
+          observacoes: form.observacoes.trim(),
+          ativo: form.ativo,
+        }),
       });
 
-      const data = await response.json().catch(() => null);
+      const data = await response.json();
 
       if (!response.ok) {
-        setErro(data?.error || data?.message || "Não foi possível salvar a empresa.");
-        return;
+        throw new Error(data?.error || "Não foi possível salvar a empresa.");
       }
 
-      setMensagem("Empresa salva com sucesso.");
-      setForm(ESTADO_INICIAL);
-    } catch {
-      setErro("Erro ao salvar a empresa.");
+      setFeedbackType("success");
+      setFeedback("Empresa cadastrada com sucesso na base do Aurora Motoristas.");
+      setForm(initialForm);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Erro inesperado ao salvar empresa.";
+      setFeedbackType("error");
+      setFeedback(message);
     } finally {
-      setSalvando(false);
+      setLoading(false);
     }
   }
 
   return (
-    <main style={pageStyle}>
-      <div style={ambientGlowTop} />
-      <div style={ambientGlowBottom} />
+    <main
+      style={{
+        minHeight: "100vh",
+        background:
+          "linear-gradient(180deg, #f4faff 0%, #edf6ff 42%, #ffffff 100%)",
+        color: "#0f172a",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: 1240,
+          margin: "0 auto",
+          padding: "20px 16px 48px",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 10,
+            marginBottom: 16,
+          }}
+        >
+          <a href="/" style={pillButton(false)}>
+            Voltar
+          </a>
 
-      <div style={containerStyle}>
-        <header style={heroStyle}>
-          <div style={heroBadge}>Aurora Motoristas • Empresas premium</div>
+          <a href="/" style={pillButton(true)}>
+            Início
+          </a>
 
+          <a href="/guia" style={pillButton(false)}>
+            Guia
+          </a>
+        </div>
+
+        <section
+          style={{
+            borderRadius: 30,
+            border: "1px solid #dbeafe",
+            background:
+              "radial-gradient(circle at top right, rgba(14, 165, 233, 0.18), transparent 24%), linear-gradient(135deg, #ffffff 0%, #f1f8ff 45%, #eef7ff 100%)",
+            boxShadow: "0 24px 70px rgba(15, 23, 42, 0.08)",
+            padding: "24px 18px",
+            marginBottom: 18,
+          }}
+        >
           <div
             style={{
-              ...heroGrid,
-              gridTemplateColumns: isMobile ? "1fr" : "minmax(0, 1.5fr) minmax(260px, 0.8fr)",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "8px 12px",
+              borderRadius: 999,
+              background: "#e0f2fe",
+              border: "1px solid #bae6fd",
+              color: "#0369a1",
+              fontSize: 12,
+              fontWeight: 800,
+              letterSpacing: 0.4,
+              textTransform: "uppercase",
             }}
           >
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              <h1 style={heroTitle}>Cadastrar empresa</h1>
-
-              <p style={heroText}>
-                Cadastro comercial com busca automática por CNPJ, edição total dos campos e visual premium
-                pensado para empresas, locadoras e operação mobile sem quebrar o restante do app.
-              </p>
-
-              <div style={heroPills}>
-                <span style={pillStyle}>CNPJ com busca</span>
-                <span style={pillStyle}>Edição livre</span>
-                <span style={pillStyle}>Padrão premium</span>
-              </div>
-            </div>
-
-            <div style={heroSideCard}>
-              <div style={heroSideNumber}>02</div>
-              <div style={heroSideLabel}>Empresa</div>
-              <div style={heroSideText}>
-                Base empresarial pronta para cadastro, leitura da Receita e evolução segura dentro do app.
-              </div>
-            </div>
-          </div>
-        </header>
-
-        <section style={cardStyle}>
-          <div style={sectionHeaderStyle}>
-            <div>
-              <div style={sectionEyebrow}>Base comercial</div>
-              <h2 style={sectionTitle}>Dados da empresa</h2>
-              <p style={sectionText}>
-                Digite o CNPJ para preencher automaticamente e ajuste qualquer informação se precisar.
-              </p>
-            </div>
+            Aurora Motoristas • Empresas
           </div>
 
+          <h1
+            style={{
+              margin: "16px 0 10px",
+              fontSize: "clamp(30px, 5vw, 48px)",
+              lineHeight: 1.02,
+              letterSpacing: "-0.03em",
+            }}
+          >
+            Cadastro de empresas com leitura forte no mobile e busca por CNPJ
+          </h1>
+
+          <p
+            style={{
+              margin: 0,
+              maxWidth: 920,
+              color: "#334155",
+              lineHeight: 1.7,
+              fontSize: 16,
+            }}
+          >
+            Cadastre empresas, locadoras e operações com visual claro premium,
+            preenchimento mais simples e consulta automática por CNPJ.
+            Sistema em constante atualização e podem ocorrer instabilidades
+            momentâneas durante melhorias.
+          </p>
+        </section>
+
+        <section
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1.6fr) minmax(280px, 0.9fr)",
+            gap: 18,
+          }}
+        >
           <div
             style={{
-              ...formGridStyle,
-              gridTemplateColumns: isMobile ? "1fr" : "repeat(2, minmax(0, 1fr))",
+              background: "#ffffff",
+              border: "1px solid #dbeafe",
+              borderRadius: 28,
+              boxShadow: "0 20px 60px rgba(15, 23, 42, 0.08)",
+              padding: 18,
             }}
           >
-            <Field label="Tipo de empresa">
-              <select
-                value={form.tipoEmpresa}
-                onChange={(e) => atualizarCampo("tipoEmpresa", e.target.value)}
-                style={inputStyle}
-              >
-                <option>Locadora</option>
-                <option>Empresa</option>
-                <option>Agência</option>
-                <option>Parceiro</option>
-                <option>Prestadora de serviços</option>
-              </select>
-            </Field>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexWrap: "wrap",
+                gap: 12,
+                marginBottom: 18,
+              }}
+            >
+              <div>
+                <h2
+                  style={{
+                    margin: 0,
+                    fontSize: 24,
+                    lineHeight: 1.1,
+                  }}
+                >
+                  Dados da empresa
+                </h2>
+                <p
+                  style={{
+                    margin: "8px 0 0",
+                    color: "#475569",
+                    fontSize: 15,
+                    lineHeight: 1.6,
+                  }}
+                >
+                  Estruture a base empresarial antes de ligar clientes, motoristas e serviços.
+                </p>
+              </div>
 
-            <div style={fullWidthStyle}>
-              <div
+              <label
                 style={{
-                  ...cpfBoxStyle,
-                  gridTemplateColumns: isMobile ? "1fr" : "minmax(0, 1fr) 210px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: "10px 14px",
+                  borderRadius: 999,
+                  background: "#f8fafc",
+                  border: "1px solid #e2e8f0",
+                  fontWeight: 800,
+                  color: "#0f172a",
+                  fontSize: 14,
                 }}
               >
-                <Field label="CNPJ">
-                  <input
-                    value={form.cnpj}
-                    onChange={(e) => atualizarCampo("cnpj", aplicarMascaraCNPJ(e.target.value))}
-                    placeholder="00.000.000/0000-00"
-                    style={inputStyle}
-                  />
-                </Field>
-
-                <button
-                  type="button"
-                  onClick={consultarCNPJ}
-                  disabled={carregandoReceita}
-                  style={actionButtonStyle}
-                >
-                  {carregandoReceita ? "Buscando CNPJ..." : "Buscar CNPJ"}
-                </button>
-              </div>
-            </div>
-
-            <Field label="Razão social">
-              <input
-                value={form.razaoSocial}
-                onChange={(e) => atualizarCampo("razaoSocial", e.target.value)}
-                placeholder="Razão social"
-                style={inputStyle}
-              />
-            </Field>
-
-            <Field label="Nome fantasia">
-              <input
-                value={form.nomeFantasia}
-                onChange={(e) => atualizarCampo("nomeFantasia", e.target.value)}
-                placeholder="Nome fantasia"
-                style={inputStyle}
-              />
-            </Field>
-
-            <Field label="Inscrição estadual">
-              <input
-                value={form.inscricaoEstadual}
-                onChange={(e) => atualizarCampo("inscricaoEstadual", e.target.value)}
-                placeholder="Inscrição estadual"
-                style={inputStyle}
-              />
-            </Field>
-
-            <Field label="Responsável">
-              <input
-                value={form.responsavel}
-                onChange={(e) => atualizarCampo("responsavel", e.target.value)}
-                placeholder="Nome do responsável"
-                style={inputStyle}
-              />
-            </Field>
-
-            <Field label="CPF do responsável">
-              <input
-                value={form.cpfResponsavel}
-                onChange={(e) => atualizarCampo("cpfResponsavel", aplicarMascaraCPF(e.target.value))}
-                placeholder="000.000.000-00"
-                style={inputStyle}
-              />
-            </Field>
-
-            <Field label="WhatsApp">
-              <input
-                value={form.telefone}
-                onChange={(e) => atualizarCampo("telefone", aplicarMascaraTelefone(e.target.value))}
-                placeholder="(31) 99999-9999"
-                style={inputStyle}
-              />
-            </Field>
-
-            <Field label="E-mail">
-              <input
-                value={form.email}
-                onChange={(e) => atualizarCampo("email", e.target.value)}
-                placeholder="contato@empresa.com"
-                style={inputStyle}
-              />
-            </Field>
-
-            <Field label="Site">
-              <input
-                value={form.site}
-                onChange={(e) => atualizarCampo("site", e.target.value)}
-                placeholder="https://empresa.com.br"
-                style={inputStyle}
-              />
-            </Field>
-
-            <Field label="CEP">
-              <input
-                value={form.cep}
-                onChange={(e) => atualizarCampo("cep", aplicarMascaraCEP(e.target.value))}
-                placeholder="00000-000"
-                style={inputStyle}
-              />
-            </Field>
-
-            <div style={fullWidthStyle}>
-              <Field label="Logradouro">
                 <input
-                  value={form.logradouro}
-                  onChange={(e) => atualizarCampo("logradouro", e.target.value)}
-                  placeholder="Rua, avenida, alameda..."
-                  style={inputStyle}
+                  type="checkbox"
+                  checked={form.ativo}
+                  onChange={(e) => updateField("ativo", e.target.checked)}
                 />
-              </Field>
+                Ativa na base
+              </label>
             </div>
 
-            <Field label="Número">
-              <input
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+                gap: 14,
+              }}
+            >
+              <Field
+                label="Tipo de empresa"
+                value={form.tipoEmpresa}
+                onChange={(value) => updateField("tipoEmpresa", value)}
+                placeholder="Ex.: Locadora"
+                required
+              />
+
+              <div style={{ display: "block" }}>
+                <label
+                  style={{
+                    display: "block",
+                    marginBottom: 8,
+                    fontWeight: 700,
+                    color: "#0f172a",
+                    fontSize: 14,
+                  }}
+                >
+                  CNPJ
+                </label>
+
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 10,
+                  }}
+                >
+                  <input
+                    type="text"
+                    value={form.cnpj}
+                    onChange={(e) => updateField("cnpj", formatCnpj(e.target.value))}
+                    placeholder="00.000.000/0001-00"
+                    style={{
+                      flex: "1 1 220px",
+                      minWidth: 0,
+                      height: 50,
+                      borderRadius: 16,
+                      border: "1px solid #cbd5e1",
+                      background: "#f8fbff",
+                      padding: "0 16px",
+                      fontSize: 15,
+                      color: "#0f172a",
+                      outline: "none",
+                      boxSizing: "border-box",
+                    }}
+                  />
+
+                  <button
+                    type="button"
+                    onClick={buscarCnpj}
+                    disabled={loadingReceita}
+                    style={{
+                      border: "1px solid #0ea5e9",
+                      cursor: loadingReceita ? "not-allowed" : "pointer",
+                      opacity: loadingReceita ? 0.7 : 1,
+                      padding: "0 16px",
+                      height: 50,
+                      borderRadius: 16,
+                      background: "#e0f2fe",
+                      color: "#0369a1",
+                      fontWeight: 800,
+                      fontSize: 14,
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {loadingReceita ? "Buscando..." : "Buscar na Receita"}
+                  </button>
+                </div>
+              </div>
+
+              <Field
+                label="Razão social"
+                value={form.razaoSocial}
+                onChange={(value) => updateField("razaoSocial", value)}
+                placeholder="Ex.: LET'S RENT A CAR S/A"
+                required
+              />
+
+              <Field
+                label="Nome fantasia"
+                value={form.nomeFantasia}
+                onChange={(value) => updateField("nomeFantasia", value)}
+                placeholder="Ex.: Let's Rent"
+              />
+
+              <Field
+                label="Responsável"
+                value={form.responsavel}
+                onChange={(value) => updateField("responsavel", value)}
+                placeholder="Nome do contato principal"
+              />
+
+              <Field
+                label="Telefone"
+                value={form.telefone}
+                onChange={(value) => updateField("telefone", formatPhone(value))}
+                placeholder="(31) 99999-9999"
+              />
+
+              <Field
+                label="E-mail"
+                value={form.email}
+                onChange={(value) => updateField("email", value)}
+                placeholder="contato@empresa.com"
+                type="email"
+              />
+
+              <Field
+                label="CEP"
+                value={form.cep}
+                onChange={(value) => updateField("cep", formatCep(value))}
+                placeholder="00000-000"
+              />
+
+              <Field
+                label="Endereço"
+                value={form.endereco}
+                onChange={(value) => updateField("endereco", value)}
+                placeholder="Rua, avenida ou rodovia"
+              />
+
+              <Field
+                label="Número"
                 value={form.numero}
-                onChange={(e) => atualizarCampo("numero", e.target.value)}
-                placeholder="123"
-                style={inputStyle}
+                onChange={(value) => updateField("numero", value)}
+                placeholder="Ex.: 120"
               />
-            </Field>
 
-            <Field label="Complemento">
-              <input
-                value={form.complemento}
-                onChange={(e) => atualizarCampo("complemento", e.target.value)}
-                placeholder="Sala, bloco, referência"
-                style={inputStyle}
-              />
-            </Field>
-
-            <Field label="Bairro">
-              <input
+              <Field
+                label="Bairro"
                 value={form.bairro}
-                onChange={(e) => atualizarCampo("bairro", e.target.value)}
-                placeholder="Bairro"
-                style={inputStyle}
+                onChange={(value) => updateField("bairro", value)}
+                placeholder="Ex.: Centro"
               />
-            </Field>
 
-            <Field label="Cidade">
-              <input
+              <Field
+                label="Cidade"
                 value={form.cidade}
-                onChange={(e) => atualizarCampo("cidade", e.target.value)}
-                placeholder="Cidade"
-                style={inputStyle}
+                onChange={(value) => updateField("cidade", value)}
+                placeholder="Ex.: Belo Horizonte"
               />
-            </Field>
 
-            <Field label="Estado">
-              <input
+              <Field
+                label="Estado"
                 value={form.estado}
-                onChange={(e) => atualizarCampo("estado", e.target.value.toUpperCase().slice(0, 2))}
+                onChange={(value) => updateField("estado", value.toUpperCase().slice(0, 2))}
                 placeholder="MG"
-                style={inputStyle}
               />
-            </Field>
+            </div>
 
-            <div style={fullWidthStyle}>
-              <Field label="Observações">
-                <textarea
-                  value={form.observacoes}
-                  onChange={(e) => atualizarCampo("observacoes", e.target.value)}
-                  placeholder="Observações internas e comerciais"
-                  rows={5}
-                  style={{ ...inputStyle, minHeight: 120, resize: "vertical" }}
-                />
-              </Field>
+            <div style={{ marginTop: 14 }}>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: 8,
+                  fontWeight: 700,
+                  color: "#0f172a",
+                  fontSize: 14,
+                }}
+              >
+                Observações
+              </label>
+
+              <textarea
+                value={form.observacoes}
+                onChange={(e) => updateField("observacoes", e.target.value)}
+                placeholder="Observações comerciais, status da operação, segmento, detalhes internos..."
+                rows={5}
+                style={{
+                  width: "100%",
+                  resize: "vertical",
+                  borderRadius: 18,
+                  border: "1px solid #cbd5e1",
+                  background: "#f8fbff",
+                  padding: "14px 16px",
+                  fontSize: 15,
+                  outline: "none",
+                  boxSizing: "border-box",
+                }}
+              />
+            </div>
+
+            {feedback ? (
+              <div
+                style={{
+                  marginTop: 16,
+                  borderRadius: 18,
+                  padding: "14px 16px",
+                  border:
+                    feedbackType === "success"
+                      ? "1px solid #bbf7d0"
+                      : feedbackType === "error"
+                      ? "1px solid #fecaca"
+                      : "1px solid #bae6fd",
+                  background:
+                    feedbackType === "success"
+                      ? "#f0fdf4"
+                      : feedbackType === "error"
+                      ? "#fef2f2"
+                      : "#f0f9ff",
+                  color:
+                    feedbackType === "success"
+                      ? "#166534"
+                      : feedbackType === "error"
+                      ? "#991b1b"
+                      : "#0c4a6e",
+                  fontWeight: 700,
+                  lineHeight: 1.55,
+                }}
+              >
+                {feedback}
+                {fonteReceita ? ` Fonte: ${fonteReceita}.` : ""}
+              </div>
+            ) : null}
+
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 12,
+                marginTop: 18,
+              }}
+            >
+              <button
+                type="button"
+                onClick={salvarEmpresa}
+                disabled={loading}
+                style={{
+                  border: "none",
+                  cursor: loading ? "not-allowed" : "pointer",
+                  opacity: loading ? 0.7 : 1,
+                  padding: "14px 20px",
+                  borderRadius: 16,
+                  background: "linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%)",
+                  color: "#ffffff",
+                  fontWeight: 800,
+                  fontSize: 15,
+                  boxShadow: "0 16px 35px rgba(37, 99, 235, 0.28)",
+                }}
+              >
+                {loading ? "Salvando empresa..." : "Salvar empresa"}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setForm(initialForm);
+                  setFeedback("");
+                  setFonteReceita("");
+                }}
+                style={{
+                  border: "1px solid #cbd5e1",
+                  cursor: "pointer",
+                  padding: "14px 20px",
+                  borderRadius: 16,
+                  background: "#ffffff",
+                  color: "#0f172a",
+                  fontWeight: 800,
+                  fontSize: 15,
+                }}
+              >
+                Limpar formulário
+              </button>
             </div>
           </div>
 
-          {mensagem ? <div style={successStyle}>{mensagem}</div> : null}
-          {erro ? <div style={errorStyle}>{erro}</div> : null}
-
-          <div
+          <aside
             style={{
-              ...footerActionsStyle,
-              flexDirection: isMobile ? "column" : "row",
+              display: "flex",
+              flexDirection: "column",
+              gap: 18,
             }}
           >
-            <button type="button" onClick={salvar} disabled={salvando} style={primaryButtonStyle}>
-              {salvando ? "Salvando..." : "Salvar empresa"}
-            </button>
+            <InfoCard
+              title="Uso recomendado"
+              text="Cadastre primeiro a empresa para estruturar a base que vai receber clientes, motoristas e serviços."
+            />
 
-            <button
-              type="button"
-              onClick={() => {
-                setForm(ESTADO_INICIAL);
-                setMensagem("");
-                setErro("");
-              }}
-              style={ghostButtonStyle}
-            >
-              Limpar formulário
-            </button>
-          </div>
+            <InfoCard
+              title="Consulta por CNPJ"
+              text="A busca automática ajuda a preencher razão social, nome fantasia, contato e endereço sem perder agilidade."
+            />
+
+            <InfoCard
+              title="Padrão Aurora"
+              text="Visual claro premium, leitura forte no celular e navegação mais limpa para uso diário."
+            />
+          </aside>
         </section>
       </div>
     </main>
   );
 }
 
-const pageStyle: CSSProperties = {
-  minHeight: "100vh",
-  background:
-    "radial-gradient(circle at top left, rgba(34,211,238,0.18), transparent 28%), linear-gradient(180deg, #eef6ff 0%, #f8fbff 46%, #f4f7fb 100%)",
-  padding: "24px 16px 40px",
-  position: "relative",
-  overflow: "hidden",
-};
+function pillButton(primary: boolean) {
+  return {
+    textDecoration: "none",
+    padding: "10px 14px",
+    borderRadius: 999,
+    background: primary ? "#eff6ff" : "#ffffff",
+    border: primary ? "1px solid #bfdbfe" : "1px solid #dbeafe",
+    color: primary ? "#1d4ed8" : "#0f172a",
+    fontWeight: 700,
+    fontSize: 14,
+  } as const;
+}
 
-const containerStyle: CSSProperties = {
-  width: "100%",
-  maxWidth: 1180,
-  margin: "0 auto",
-  position: "relative",
-  zIndex: 2,
-};
+function Field({
+  label,
+  value,
+  onChange,
+  placeholder,
+  type = "text",
+  required = false,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+  type?: string;
+  required?: boolean;
+}) {
+  return (
+    <label style={{ display: "block" }}>
+      <span
+        style={{
+          display: "block",
+          marginBottom: 8,
+          fontWeight: 700,
+          color: "#0f172a",
+          fontSize: 14,
+        }}
+      >
+        {label} {required ? <span style={{ color: "#dc2626" }}>*</span> : null}
+      </span>
 
-const ambientGlowTop: CSSProperties = {
-  position: "absolute",
-  top: -120,
-  right: -80,
-  width: 280,
-  height: 280,
-  borderRadius: "50%",
-  background: "rgba(6,182,212,0.14)",
-  filter: "blur(40px)",
-};
+      <input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        style={{
+          width: "100%",
+          height: 50,
+          borderRadius: 16,
+          border: "1px solid #cbd5e1",
+          background: "#f8fbff",
+          padding: "0 16px",
+          fontSize: 15,
+          color: "#0f172a",
+          outline: "none",
+          boxSizing: "border-box",
+        }}
+      />
+    </label>
+  );
+}
 
-const ambientGlowBottom: CSSProperties = {
-  position: "absolute",
-  bottom: -100,
-  left: -60,
-  width: 260,
-  height: 260,
-  borderRadius: "50%",
-  background: "rgba(37,99,235,0.12)",
-  filter: "blur(42px)",
-};
+function InfoCard({ title, text }: { title: string; text: string }) {
+  return (
+    <div
+      style={{
+        background: "#ffffff",
+        border: "1px solid #dbeafe",
+        borderRadius: 24,
+        boxShadow: "0 20px 60px rgba(15, 23, 42, 0.08)",
+        padding: 18,
+      }}
+    >
+      <div
+        style={{
+          fontSize: 13,
+          fontWeight: 800,
+          textTransform: "uppercase",
+          color: "#1d4ed8",
+          marginBottom: 8,
+        }}
+      >
+        {title}
+      </div>
 
-const heroStyle: CSSProperties = {
-  background: "linear-gradient(135deg, rgba(255,255,255,0.94) 0%, rgba(241,248,255,0.96) 100%)",
-  border: "1px solid rgba(148,163,184,0.18)",
-  borderRadius: 32,
-  padding: 24,
-  boxShadow: "0 24px 80px rgba(15,23,42,0.10)",
-  backdropFilter: "blur(12px)",
-  marginBottom: 18,
-};
-
-const heroBadge: CSSProperties = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: 8,
-  minHeight: 34,
-  padding: "8px 14px",
-  borderRadius: 999,
-  background: "rgba(8,145,178,0.10)",
-  color: "#0f766e",
-  border: "1px solid rgba(6,182,212,0.18)",
-  fontSize: 12,
-  fontWeight: 800,
-  letterSpacing: 0.4,
-  textTransform: "uppercase",
-};
-
-const heroGrid: CSSProperties = {
-  display: "grid",
-  gap: 18,
-  marginTop: 18,
-};
-
-const heroTitle: CSSProperties = {
-  margin: 0,
-  fontSize: "clamp(30px, 5vw, 46px)",
-  lineHeight: 1.02,
-  color: "#0f172a",
-  fontWeight: 900,
-  letterSpacing: -1.2,
-};
-
-const heroText: CSSProperties = {
-  margin: 0,
-  fontSize: 15,
-  lineHeight: 1.7,
-  color: "#475569",
-  maxWidth: 720,
-};
-
-const heroPills: CSSProperties = {
-  display: "flex",
-  flexWrap: "wrap",
-  gap: 10,
-};
-
-const pillStyle: CSSProperties = {
-  display: "inline-flex",
-  alignItems: "center",
-  minHeight: 34,
-  padding: "8px 12px",
-  borderRadius: 999,
-  background: "#ffffff",
-  border: "1px solid rgba(148,163,184,0.20)",
-  color: "#0f172a",
-  fontSize: 13,
-  fontWeight: 700,
-  boxShadow: "0 6px 18px rgba(15,23,42,0.05)",
-};
-
-const heroSideCard: CSSProperties = {
-  background: "linear-gradient(180deg, #0f172a 0%, #1e293b 100%)",
-  color: "#ffffff",
-  borderRadius: 28,
-  padding: 22,
-  minHeight: 220,
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-between",
-  boxShadow: "0 20px 40px rgba(15,23,42,0.18)",
-};
-
-const heroSideNumber: CSSProperties = {
-  fontSize: 14,
-  fontWeight: 800,
-  color: "#67e8f9",
-  letterSpacing: 1,
-};
-
-const heroSideLabel: CSSProperties = {
-  fontSize: 26,
-  fontWeight: 900,
-  lineHeight: 1.1,
-};
-
-const heroSideText: CSSProperties = {
-  fontSize: 14,
-  lineHeight: 1.7,
-  color: "rgba(255,255,255,0.82)",
-};
-
-const cardStyle: CSSProperties = {
-  background: "rgba(255,255,255,0.94)",
-  borderRadius: 30,
-  border: "1px solid rgba(148,163,184,0.16)",
-  boxShadow: "0 24px 60px rgba(15,23,42,0.08)",
-  padding: 24,
-  backdropFilter: "blur(12px)",
-};
-
-const sectionHeaderStyle: CSSProperties = {
-  marginBottom: 22,
-};
-
-const sectionEyebrow: CSSProperties = {
-  fontSize: 12,
-  fontWeight: 800,
-  textTransform: "uppercase",
-  letterSpacing: 0.5,
-  color: "#0891b2",
-  marginBottom: 8,
-};
-
-const sectionTitle: CSSProperties = {
-  margin: 0,
-  fontSize: 28,
-  fontWeight: 900,
-  color: "#0f172a",
-  lineHeight: 1.08,
-};
-
-const sectionText: CSSProperties = {
-  margin: "10px 0 0",
-  fontSize: 14,
-  lineHeight: 1.7,
-  color: "#64748b",
-  maxWidth: 760,
-};
-
-const formGridStyle: CSSProperties = {
-  display: "grid",
-  gap: 16,
-};
-
-const fullWidthStyle: CSSProperties = {
-  gridColumn: "1 / -1",
-};
-
-const cpfBoxStyle: CSSProperties = {
-  display: "grid",
-  gap: 12,
-  alignItems: "end",
-};
-
-const fieldStyle: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  gap: 8,
-};
-
-const labelStyle: CSSProperties = {
-  fontSize: 14,
-  fontWeight: 800,
-  color: "#0f172a",
-};
-
-const inputStyle: CSSProperties = {
-  width: "100%",
-  minHeight: 54,
-  borderRadius: 18,
-  border: "1px solid rgba(148,163,184,0.24)",
-  background: "linear-gradient(180deg, #ffffff 0%, #f8fbff 100%)",
-  padding: "14px 16px",
-  fontSize: 15,
-  color: "#0f172a",
-  outline: "none",
-  boxSizing: "border-box",
-  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.9)",
-};
-
-const actionButtonStyle: CSSProperties = {
-  minHeight: 54,
-  borderRadius: 18,
-  border: "1px solid rgba(6,182,212,0.20)",
-  background: "linear-gradient(135deg, #ecfeff 0%, #dbeafe 100%)",
-  color: "#0f172a",
-  fontSize: 15,
-  fontWeight: 800,
-  cursor: "pointer",
-  padding: "0 18px",
-  boxShadow: "0 10px 24px rgba(6,182,212,0.12)",
-};
-
-const successStyle: CSSProperties = {
-  marginTop: 18,
-  background: "linear-gradient(135deg, #ecfeff 0%, #f0fdfa 100%)",
-  color: "#155e75",
-  border: "1px solid rgba(34,211,238,0.25)",
-  padding: 14,
-  borderRadius: 18,
-  fontSize: 14,
-  fontWeight: 700,
-};
-
-const errorStyle: CSSProperties = {
-  marginTop: 18,
-  background: "linear-gradient(135deg, #fff1f2 0%, #fef2f2 100%)",
-  color: "#991b1b",
-  border: "1px solid rgba(248,113,113,0.28)",
-  padding: 14,
-  borderRadius: 18,
-  fontSize: 14,
-  fontWeight: 700,
-};
-
-const footerActionsStyle: CSSProperties = {
-  display: "flex",
-  gap: 12,
-  flexWrap: "wrap",
-  marginTop: 24,
-};
-
-const primaryButtonStyle: CSSProperties = {
-  minHeight: 56,
-  borderRadius: 18,
-  border: "none",
-  padding: "14px 22px",
-  fontSize: 15,
-  fontWeight: 900,
-  cursor: "pointer",
-  background: "linear-gradient(135deg, #06b6d4 0%, #2563eb 100%)",
-  color: "#ffffff",
-  boxShadow: "0 18px 32px rgba(37,99,235,0.20)",
-};
-
-const ghostButtonStyle: CSSProperties = {
-  minHeight: 56,
-  borderRadius: 18,
-  border: "1px solid rgba(148,163,184,0.24)",
-  padding: "14px 22px",
-  fontSize: 15,
-  fontWeight: 800,
-  cursor: "pointer",
-  background: "rgba(255,255,255,0.86)",
-  color: "#0f172a",
-};
+      <div
+        style={{
+          color: "#475569",
+          lineHeight: 1.65,
+          fontSize: 15,
+        }}
+      >
+        {text}
+      </div>
+    </div>
+  );
+}
