@@ -15,16 +15,16 @@ export default function Home() {
       destaque: true,
     },
     {
+      titulo: "Empresas",
+      descricao:
+        "Base empresarial com cadastro, leitura por CNPJ e listagem pronta para uso real.",
+      href: "/empresas",
+    },
+    {
       titulo: "Clientes",
       descricao:
         "Base comercial com cadastro, busca por CNPJ, salvamento real e listagem pronta para uso.",
       href: "/clientes",
-    },
-    {
-      titulo: "Ofertas de serviço",
-      descricao:
-        "Área para acompanhar oportunidades e fluxo inicial de operação.",
-      href: "/ofertas",
     },
     {
       titulo: "Operação",
@@ -156,6 +156,10 @@ export default function Home() {
 
             <a href="/guia" style={secondaryButton}>
               Ver guia completo
+            </a>
+
+            <a href="/empresas" style={ghostButton}>
+              Ver empresas
             </a>
 
             <a href="/clientes" style={ghostButton}>
