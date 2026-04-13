@@ -15,6 +15,12 @@ export default function Home() {
       destaque: true,
     },
     {
+      titulo: "Clientes",
+      descricao:
+        "Base comercial com cadastro, busca por CNPJ, salvamento real e listagem pronta para uso.",
+      href: "/clientes",
+    },
+    {
       titulo: "Ofertas de serviço",
       descricao:
         "Área para acompanhar oportunidades e fluxo inicial de operação.",
@@ -152,8 +158,8 @@ export default function Home() {
               Ver guia completo
             </a>
 
-            <a href="/motoristas/cadastrar" style={ghostButton}>
-              Cadastrar motorista
+            <a href="/clientes" style={ghostButton}>
+              Ver clientes
             </a>
           </div>
 
