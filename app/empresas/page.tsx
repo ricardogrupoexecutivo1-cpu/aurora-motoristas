@@ -1,97 +1,50 @@
 "use client";
 
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type Empresa = {
   id: string;
-  tipo_empresa?: string | null;
-  cnpj: string;
-  razao_social: string;
-  nome_fantasia?: string | null;
-  inscricao_estadual?: string | null;
-  responsavel?: string | null;
-  cpf_responsavel?: string | null;
-  telefone?: string | null;
-  email?: string | null;
-  site?: string | null;
-  cep?: string | null;
-  logradouro?: string | null;
-  numero?: string | null;
-  complemento?: string | null;
-  bairro?: string | null;
-  cidade?: string | null;
-  estado?: string | null;
-  observacoes?: string | null;
-  created_at?: string | null;
-  updated_at?: string | null;
+  tipo_empresa: string | null;
+  razao_social: string | null;
+  nome_fantasia: string | null;
+  cnpj: string | null;
+  responsavel: string | null;
+  telefone: string | null;
+  email: string | null;
+  cep: string | null;
+  endereco: string | null;
+  numero: string | null;
+  bairro: string | null;
+  cidade: string | null;
+  estado: string | null;
+  observacoes: string | null;
+  ativo: boolean | null;
+  created_at: string | null;
 };
 
-type ApiResponse = {
-  success?: boolean;
-  message?: string;
-  error?: string;
-  empresas?: Empresa[];
-  total?: number;
-};
+function formatDate(value: string | null) {
+  if (!value) return "—";
 
-function formatarCNPJ(valor?: string | null) {
-  const digits = String(valor || "").replace(/\D/g, "").slice(0, 14);
-
-  if (!digits) return "—";
-  if (digits.length <= 2) return digits;
-  if (digits.length <= 5) return digits.replace(/^(\d{2})(\d+)/, "$1.$2");
-  if (digits.length <= 8) return digits.replace(/^(\d{2})(\d{3})(\d+)/, "$1.$2.$3");
-  if (digits.length <= 12) return digits.replace(/^(\d{2})(\d{3})(\d{3})(\d+)/, "$1.$2.$3/$4");
-
-  return digits.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{1,2}).*/, "$1.$2.$3/$4-$5");
+  try {
+    return new Intl.DateTimeFormat("pt-BR", {
+      dateStyle: "short",
+      timeStyle: "short",
+    }).format(new Date(value));
+  } catch {
+    return value;
+  }
 }
 
-function formatarTelefone(valor?: string | null) {
-  const digits = String(valor || "").replace(/\D/g, "").slice(0, 11);
-
-  if (!digits) return "—";
-  if (digits.length <= 2) return digits;
-  if (digits.length <= 6) return digits.replace(/^(\d{2})(\d+)/, "($1) $2");
-  if (digits.length <= 10) return digits.replace(/^(\d{2})(\d{4})(\d+)/, "($1) $2-$3");
-
-  return digits.replace(/^(\d{2})(\d{5})(\d+)/, "($1) $2-$3");
-}
-
-function formatarData(valor?: string | null) {
-  if (!valor) return "—";
-
-  const data = new Date(valor);
-
-  if (Number.isNaN(data.getTime())) return "—";
-
-  return new Intl.DateTimeFormat("pt-BR", {
-    dateStyle: "short",
-    timeStyle: "short",
-  }).format(data);
-}
-
-export default function EmpresasPage() {
+export default function EmpresasListPage() {
   const [empresas, setEmpresas] = useState<Empresa[]>([]);
-  const [carregando, setCarregando] = useState(true);
-  const [erro, setErro] = useState("");
+  const [loading, setLoading] = useState(true);
   const [busca, setBusca] = useState("");
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    function handleResize() {
-      setIsMobile(window.innerWidth <= 768);
-    }
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const [erro, setErro] = useState("");
 
   useEffect(() => {
     async function carregarEmpresas() {
       try {
-        setCarregando(true);
+        setLoading(true);
         setErro("");
 
         const response = await fetch("/api/empresas", {
@@ -99,30 +52,26 @@ export default function EmpresasPage() {
           cache: "no-store",
         });
 
-        const rawText = await response.text();
-        let data: ApiResponse | null = null;
-
-        try {
-          data = rawText ? (JSON.parse(rawText) as ApiResponse) : null;
-        } catch {
-          data = null;
-        }
+        const data = await response.json();
 
         if (!response.ok) {
-          setErro(
-            data?.error ||
-              data?.message ||
-              rawText ||
-              `Falha ao carregar empresas. HTTP ${response.status} ${response.statusText}`,
-          );
-          return;
+          throw new Error(data?.error || "Não foi possível carregar as empresas.");
         }
 
-        setEmpresas(Array.isArray(data?.empresas) ? data!.empresas! : []);
+        const lista = Array.isArray(data?.companies)
+          ? data.companies
+          : Array.isArray(data?.empresas)
+            ? data.empresas
+            : [];
+
+        setEmpresas(lista);
       } catch (error) {
-        setErro(error instanceof Error ? error.message : "Erro ao carregar empresas.");
+        const message =
+          error instanceof Error ? error.message : "Erro inesperado ao carregar empresas.";
+        setErro(message);
+        setEmpresas([]);
       } finally {
-        setCarregando(false);
+        setLoading(false);
       }
     }
 
@@ -135,11 +84,11 @@ export default function EmpresasPage() {
     if (!termo) return empresas;
 
     return empresas.filter((empresa) => {
-      const base = [
+      const texto = [
         empresa.tipo_empresa,
-        empresa.cnpj,
         empresa.razao_social,
         empresa.nome_fantasia,
+        empresa.cnpj,
         empresa.responsavel,
         empresa.telefone,
         empresa.email,
@@ -150,146 +99,356 @@ export default function EmpresasPage() {
         .join(" ")
         .toLowerCase();
 
-      return base.includes(termo);
+      return texto.includes(termo);
     });
-  }, [busca, empresas]);
+  }, [empresas, busca]);
 
   return (
-    <main style={pageStyle}>
-      <div style={ambientGlowTop} />
-      <div style={ambientGlowBottom} />
+    <main
+      style={{
+        minHeight: "100vh",
+        background:
+          "linear-gradient(180deg, #f4faff 0%, #edf6ff 42%, #ffffff 100%)",
+        color: "#0f172a",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: 1240,
+          margin: "0 auto",
+          padding: "20px 16px 48px",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 10,
+            marginBottom: 16,
+          }}
+        >
+          <a href="/" style={pillButton(false)}>
+            Voltar
+          </a>
 
-      <div style={containerStyle}>
-        <header style={heroStyle}>
-          <div style={heroBadge}>Aurora Motoristas • Empresas premium</div>
+          <a href="/" style={pillButton(true)}>
+            Início
+          </a>
 
+          <a href="/empresas/cadastrar" style={pillButton(false)}>
+            Nova empresa
+          </a>
+        </div>
+
+        <section
+          style={{
+            borderRadius: 30,
+            border: "1px solid #dbeafe",
+            background:
+              "radial-gradient(circle at top right, rgba(14, 165, 233, 0.18), transparent 24%), linear-gradient(135deg, #ffffff 0%, #f1f8ff 45%, #eef7ff 100%)",
+            boxShadow: "0 24px 70px rgba(15, 23, 42, 0.08)",
+            padding: "24px 18px",
+            marginBottom: 18,
+          }}
+        >
           <div
             style={{
-              ...heroGrid,
-              gridTemplateColumns: isMobile ? "1fr" : "minmax(0, 1.5fr) minmax(260px, 0.8fr)",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "8px 12px",
+              borderRadius: 999,
+              background: "#e0f2fe",
+              border: "1px solid #bae6fd",
+              color: "#0369a1",
+              fontSize: 12,
+              fontWeight: 800,
+              letterSpacing: 0.4,
+              textTransform: "uppercase",
             }}
           >
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              <h1 style={heroTitle}>Empresas cadastradas</h1>
-
-              <p style={heroText}>
-                Visualize a base real de empresas já salvas no Aurora Motoristas, com busca rápida,
-                leitura elegante e foco total em operação premium no desktop e no celular.
-              </p>
-
-              <div style={heroPills}>
-                <span style={pillStyle}>Base real</span>
-                <span style={pillStyle}>Busca rápida</span>
-                <span style={pillStyle}>Visual premium</span>
-              </div>
-            </div>
-
-            <div style={heroSideCard}>
-              <div style={heroSideNumber}>
-                {carregando ? "..." : String(empresasFiltradas.length).padStart(2, "0")}
-              </div>
-              <div style={heroSideLabel}>Empresas</div>
-              <div style={heroSideText}>
-                Total filtrado da base empresarial, pronto para conferência e evolução sem misturar com o
-                projeto grandão.
-              </div>
-            </div>
+            Aurora Motoristas • Empresas
           </div>
-        </header>
 
-        <section style={cardStyle}>
+          <h1
+            style={{
+              margin: "16px 0 10px",
+              fontSize: "clamp(30px, 5vw, 48px)",
+              lineHeight: 1.02,
+              letterSpacing: "-0.03em",
+            }}
+          >
+            Base empresarial da operação
+          </h1>
+
+          <p
+            style={{
+              margin: 0,
+              maxWidth: 900,
+              color: "#334155",
+              lineHeight: 1.7,
+              fontSize: 16,
+            }}
+          >
+            Visualize a base real de empresas, locadoras e operações já cadastradas
+            no Aurora Motoristas. Esta área ajuda a estruturar o lado comercial e
+            operacional do sistema.
+          </p>
+
           <div
             style={{
-              ...toolbarStyle,
-              flexDirection: isMobile ? "column" : "row",
-              alignItems: isMobile ? "stretch" : "center",
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+              gap: 12,
+              marginTop: 18,
+            }}
+          >
+            <MiniInfo title="Base real" text="Leitura direta das empresas salvas." />
+            <MiniInfo title="Operação" text="Empresas prontas para fluxo comercial real." />
+            <MiniInfo title="Expansão" text="Estrutura pronta para vínculos futuros." />
+          </div>
+        </section>
+
+        <section
+          style={{
+            background: "#ffffff",
+            border: "1px solid #dbeafe",
+            borderRadius: 28,
+            boxShadow: "0 20px 60px rgba(15, 23, 42, 0.08)",
+            padding: 18,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: 12,
+              marginBottom: 18,
             }}
           >
             <div>
-              <div style={sectionEyebrow}>Base empresarial</div>
-              <h2 style={sectionTitle}>Lista de empresas</h2>
-              <p style={sectionText}>
-                Consulte por razão social, nome fantasia, CNPJ, responsável, telefone, cidade ou estado.
-              </p>
+              <div
+                style={{
+                  fontSize: 13,
+                  fontWeight: 800,
+                  textTransform: "uppercase",
+                  color: "#1d4ed8",
+                  marginBottom: 6,
+                }}
+              >
+                Lista de empresas
+              </div>
+              <h2
+                style={{
+                  margin: 0,
+                  fontSize: 28,
+                  lineHeight: 1.1,
+                }}
+              >
+                Empresas cadastradas
+              </h2>
             </div>
 
-            <div style={{ width: isMobile ? "100%" : 360 }}>
-              <input
-                value={busca}
-                onChange={(e) => setBusca(e.target.value)}
-                placeholder="Buscar empresa..."
-                style={inputStyle}
-              />
+            <div
+              style={{
+                borderRadius: 999,
+                background: "#eff6ff",
+                border: "1px solid #bfdbfe",
+                color: "#1d4ed8",
+                fontWeight: 800,
+                padding: "10px 14px",
+                fontSize: 14,
+              }}
+            >
+              {String(empresasFiltradas.length).padStart(2, "0")} empresas
             </div>
           </div>
 
-          {erro ? <div style={errorStyle}>{erro}</div> : null}
+          <div style={{ marginBottom: 16 }}>
+            <input
+              type="text"
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
+              placeholder="Buscar por razão social, nome fantasia, CNPJ, contato, cidade..."
+              style={{
+                width: "100%",
+                height: 50,
+                borderRadius: 16,
+                border: "1px solid #cbd5e1",
+                background: "#f8fbff",
+                padding: "0 16px",
+                fontSize: 15,
+                color: "#0f172a",
+                outline: "none",
+                boxSizing: "border-box",
+              }}
+            />
+          </div>
 
-          {carregando ? (
-            <div style={loadingCardStyle}>Carregando empresas...</div>
+          {erro ? (
+            <div
+              style={{
+                borderRadius: 18,
+                padding: "14px 16px",
+                border: "1px solid #fecaca",
+                background: "#fef2f2",
+                color: "#991b1b",
+                fontWeight: 700,
+                lineHeight: 1.55,
+                marginBottom: 16,
+              }}
+            >
+              {erro}
+            </div>
+          ) : null}
+
+          {loading ? (
+            <div
+              style={{
+                borderRadius: 22,
+                border: "1px solid #e2e8f0",
+                background: "#f8fbff",
+                padding: 20,
+                color: "#475569",
+                lineHeight: 1.65,
+                fontSize: 15,
+              }}
+            >
+              Carregando empresas...
+            </div>
           ) : empresasFiltradas.length === 0 ? (
-            <div style={emptyCardStyle}>
-              {busca.trim()
-                ? "Nenhuma empresa encontrada para essa busca."
-                : "Nenhuma empresa cadastrada ainda."}
+            <div
+              style={{
+                borderRadius: 22,
+                border: "1px solid #e2e8f0",
+                background: "#f8fbff",
+                padding: 20,
+                color: "#475569",
+                lineHeight: 1.65,
+                fontSize: 15,
+              }}
+            >
+              Nenhuma empresa cadastrada ainda.
             </div>
           ) : (
-            <div style={listStyle}>
-              {empresasFiltradas.map((empresa) => {
-                const endereco = [
-                  empresa.logradouro,
-                  empresa.numero,
-                  empresa.bairro,
-                  empresa.cidade,
-                  empresa.estado,
-                ]
-                  .filter(Boolean)
-                  .join(" • ");
-
-                return (
-                  <article key={empresa.id} style={itemCardStyle}>
-                    <div
-                      style={{
-                        ...itemHeaderStyle,
-                        flexDirection: isMobile ? "column" : "row",
-                        alignItems: isMobile ? "flex-start" : "center",
-                      }}
-                    >
-                      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                        <div style={itemNameStyle}>
-                          {empresa.nome_fantasia || empresa.razao_social || "Sem nome"}
-                        </div>
-                        <div style={itemMetaLineStyle}>
-                          CNPJ: {formatarCNPJ(empresa.cnpj)} • Tipo: {empresa.tipo_empresa || "—"}
-                        </div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+                gap: 16,
+              }}
+            >
+              {empresasFiltradas.map((empresa) => (
+                <article
+                  key={empresa.id}
+                  style={{
+                    borderRadius: 24,
+                    border: "1px solid #e2e8f0",
+                    background: "#f8fbff",
+                    padding: 18,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 10,
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      gap: 10,
+                      alignItems: "start",
+                    }}
+                  >
+                    <div>
+                      <div
+                        style={{
+                          color: "#1d4ed8",
+                          fontSize: 12,
+                          fontWeight: 800,
+                          textTransform: "uppercase",
+                          marginBottom: 6,
+                        }}
+                      >
+                        {empresa.tipo_empresa || "Empresa"}
                       </div>
-
-                      <div style={statusPillStyle}>Ativa na base</div>
+                      <h3
+                        style={{
+                          margin: 0,
+                          fontSize: 22,
+                          lineHeight: 1.1,
+                          color: "#0f172a",
+                        }}
+                      >
+                        {empresa.nome_fantasia || empresa.razao_social || "Sem nome"}
+                      </h3>
                     </div>
 
                     <div
                       style={{
-                        ...detailsGridStyle,
-                        gridTemplateColumns: isMobile ? "1fr" : "repeat(2, minmax(0, 1fr))",
+                        borderRadius: 999,
+                        background: empresa.ativo === false ? "#fee2e2" : "#dcfce7",
+                        color: empresa.ativo === false ? "#991b1b" : "#166534",
+                        fontWeight: 800,
+                        fontSize: 12,
+                        padding: "6px 10px",
+                        whiteSpace: "nowrap",
                       }}
                     >
-                      <Detail label="Razão social" value={empresa.razao_social || "—"} />
-                      <Detail label="Nome fantasia" value={empresa.nome_fantasia || "—"} />
-                      <Detail label="Responsável" value={empresa.responsavel || "—"} />
-                      <Detail label="CPF responsável" value={empresa.cpf_responsavel || "—"} />
-                      <Detail label="Telefone" value={formatarTelefone(empresa.telefone)} />
-                      <Detail label="E-mail" value={empresa.email || "—"} />
-                      <Detail label="Site" value={empresa.site || "—"} />
-                      <Detail label="Inscrição estadual" value={empresa.inscricao_estadual || "—"} />
-                      <Detail label="CEP" value={empresa.cep || "—"} />
-                      <Detail label="Endereço" value={endereco || "—"} />
-                      <Detail label="Complemento" value={empresa.complemento || "—"} />
-                      <Detail label="Observações" value={empresa.observacoes || "—"} />
-                      <Detail label="Criado em" value={formatarData(empresa.created_at)} />
+                      {empresa.ativo === false ? "Inativa" : "Ativa"}
                     </div>
-                  </article>
-                );
-              })}
+                  </div>
+
+                  <InfoLine label="Razão social" value={empresa.razao_social} />
+                  <InfoLine label="CNPJ" value={empresa.cnpj} />
+                  <InfoLine label="Responsável" value={empresa.responsavel} />
+                  <InfoLine label="Telefone" value={empresa.telefone} />
+                  <InfoLine label="E-mail" value={empresa.email} />
+                  <InfoLine
+                    label="Cidade"
+                    value={
+                      empresa.cidade || empresa.estado
+                        ? `${empresa.cidade || "—"}${empresa.estado ? ` • ${empresa.estado}` : ""}`
+                        : null
+                    }
+                  />
+                  <InfoLine label="Criado em" value={formatDate(empresa.created_at)} />
+
+                  {empresa.observacoes ? (
+                    <div
+                      style={{
+                        marginTop: 4,
+                        borderRadius: 16,
+                        background: "#ffffff",
+                        border: "1px solid #e2e8f0",
+                        padding: 12,
+                      }}
+                    >
+                      <div
+                        style={{
+                          color: "#1d4ed8",
+                          fontSize: 12,
+                          fontWeight: 800,
+                          textTransform: "uppercase",
+                          marginBottom: 6,
+                        }}
+                      >
+                        Observações
+                      </div>
+                      <div
+                        style={{
+                          color: "#475569",
+                          fontSize: 14,
+                          lineHeight: 1.6,
+                        }}
+                      >
+                        {empresa.observacoes}
+                      </div>
+                    </div>
+                  ) : null}
+                </article>
+              ))}
             </div>
           )}
         </section>
@@ -298,329 +457,89 @@ export default function EmpresasPage() {
   );
 }
 
-function Detail({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
+function pillButton(primary: boolean) {
+  return {
+    textDecoration: "none",
+    padding: "10px 14px",
+    borderRadius: 999,
+    background: primary ? "#eff6ff" : "#ffffff",
+    border: primary ? "1px solid #bfdbfe" : "1px solid #dbeafe",
+    color: primary ? "#1d4ed8" : "#0f172a",
+    fontWeight: 700,
+    fontSize: 14,
+  } as const;
+}
+
+function MiniInfo({ title, text }: { title: string; text: string }) {
   return (
-    <div style={detailCardStyle}>
-      <div style={detailLabelStyle}>{label}</div>
-      <div style={detailValueStyle}>{value}</div>
+    <div
+      style={{
+        borderRadius: 20,
+        background: "rgba(255,255,255,0.82)",
+        border: "1px solid #dbeafe",
+        padding: 16,
+      }}
+    >
+      <div
+        style={{
+          fontSize: 13,
+          fontWeight: 800,
+          color: "#1d4ed8",
+          marginBottom: 6,
+          textTransform: "uppercase",
+        }}
+      >
+        {title}
+      </div>
+      <div
+        style={{
+          fontSize: 14,
+          color: "#475569",
+          lineHeight: 1.55,
+        }}
+      >
+        {text}
+      </div>
     </div>
   );
 }
 
-const pageStyle: CSSProperties = {
-  minHeight: "100vh",
-  background:
-    "radial-gradient(circle at top left, rgba(34,211,238,0.18), transparent 28%), linear-gradient(180deg, #eef6ff 0%, #f8fbff 46%, #f4f7fb 100%)",
-  padding: "24px 16px 40px",
-  position: "relative",
-  overflow: "hidden",
-};
-
-const containerStyle: CSSProperties = {
-  width: "100%",
-  maxWidth: 1180,
-  margin: "0 auto",
-  position: "relative",
-  zIndex: 2,
-};
-
-const ambientGlowTop: CSSProperties = {
-  position: "absolute",
-  top: -120,
-  right: -80,
-  width: 280,
-  height: 280,
-  borderRadius: "50%",
-  background: "rgba(6,182,212,0.14)",
-  filter: "blur(40px)",
-};
-
-const ambientGlowBottom: CSSProperties = {
-  position: "absolute",
-  bottom: -100,
-  left: -60,
-  width: 260,
-  height: 260,
-  borderRadius: "50%",
-  background: "rgba(37,99,235,0.12)",
-  filter: "blur(42px)",
-};
-
-const heroStyle: CSSProperties = {
-  background: "linear-gradient(135deg, rgba(255,255,255,0.94) 0%, rgba(241,248,255,0.96) 100%)",
-  border: "1px solid rgba(148,163,184,0.18)",
-  borderRadius: 32,
-  padding: 24,
-  boxShadow: "0 24px 80px rgba(15,23,42,0.10)",
-  backdropFilter: "blur(12px)",
-  marginBottom: 18,
-};
-
-const heroBadge: CSSProperties = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: 8,
-  minHeight: 34,
-  padding: "8px 14px",
-  borderRadius: 999,
-  background: "rgba(8,145,178,0.10)",
-  color: "#0f766e",
-  border: "1px solid rgba(6,182,212,0.18)",
-  fontSize: 12,
-  fontWeight: 800,
-  letterSpacing: 0.4,
-  textTransform: "uppercase",
-};
-
-const heroGrid: CSSProperties = {
-  display: "grid",
-  gap: 18,
-  marginTop: 18,
-};
-
-const heroTitle: CSSProperties = {
-  margin: 0,
-  fontSize: "clamp(30px, 5vw, 46px)",
-  lineHeight: 1.02,
-  color: "#0f172a",
-  fontWeight: 900,
-  letterSpacing: -1.2,
-};
-
-const heroText: CSSProperties = {
-  margin: 0,
-  fontSize: 15,
-  lineHeight: 1.7,
-  color: "#475569",
-  maxWidth: 720,
-};
-
-const heroPills: CSSProperties = {
-  display: "flex",
-  flexWrap: "wrap",
-  gap: 10,
-};
-
-const pillStyle: CSSProperties = {
-  display: "inline-flex",
-  alignItems: "center",
-  minHeight: 34,
-  padding: "8px 12px",
-  borderRadius: 999,
-  background: "#ffffff",
-  border: "1px solid rgba(148,163,184,0.20)",
-  color: "#0f172a",
-  fontSize: 13,
-  fontWeight: 700,
-  boxShadow: "0 6px 18px rgba(15,23,42,0.05)",
-};
-
-const heroSideCard: CSSProperties = {
-  background: "linear-gradient(180deg, #0f172a 0%, #1e293b 100%)",
-  color: "#ffffff",
-  borderRadius: 28,
-  padding: 22,
-  minHeight: 220,
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-between",
-  boxShadow: "0 20px 40px rgba(15,23,42,0.18)",
-};
-
-const heroSideNumber: CSSProperties = {
-  fontSize: 38,
-  fontWeight: 900,
-  color: "#67e8f9",
-  letterSpacing: 1,
-};
-
-const heroSideLabel: CSSProperties = {
-  fontSize: 26,
-  fontWeight: 900,
-  lineHeight: 1.1,
-};
-
-const heroSideText: CSSProperties = {
-  fontSize: 14,
-  lineHeight: 1.7,
-  color: "rgba(255,255,255,0.82)",
-};
-
-const cardStyle: CSSProperties = {
-  background: "rgba(255,255,255,0.94)",
-  borderRadius: 30,
-  border: "1px solid rgba(148,163,184,0.16)",
-  boxShadow: "0 24px 60px rgba(15,23,42,0.08)",
-  padding: 24,
-  backdropFilter: "blur(12px)",
-};
-
-const toolbarStyle: CSSProperties = {
-  display: "flex",
-  justifyContent: "space-between",
-  gap: 16,
-  marginBottom: 22,
-};
-
-const sectionEyebrow: CSSProperties = {
-  fontSize: 12,
-  fontWeight: 800,
-  textTransform: "uppercase",
-  letterSpacing: 0.5,
-  color: "#0891b2",
-  marginBottom: 8,
-};
-
-const sectionTitle: CSSProperties = {
-  margin: 0,
-  fontSize: 28,
-  fontWeight: 900,
-  color: "#0f172a",
-  lineHeight: 1.08,
-};
-
-const sectionText: CSSProperties = {
-  margin: "10px 0 0",
-  fontSize: 14,
-  lineHeight: 1.7,
-  color: "#64748b",
-  maxWidth: 760,
-};
-
-const inputStyle: CSSProperties = {
-  width: "100%",
-  minHeight: 54,
-  borderRadius: 18,
-  border: "1px solid rgba(148,163,184,0.24)",
-  background: "linear-gradient(180deg, #ffffff 0%, #f8fbff 100%)",
-  padding: "14px 16px",
-  fontSize: 15,
-  color: "#0f172a",
-  outline: "none",
-  boxSizing: "border-box",
-  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.9)",
-};
-
-const errorStyle: CSSProperties = {
-  marginBottom: 18,
-  background: "linear-gradient(135deg, #fff1f2 0%, #fef2f2 100%)",
-  color: "#991b1b",
-  border: "1px solid rgba(248,113,113,0.28)",
-  padding: 14,
-  borderRadius: 18,
-  fontSize: 14,
-  fontWeight: 700,
-  whiteSpace: "pre-wrap",
-  wordBreak: "break-word",
-};
-
-const loadingCardStyle: CSSProperties = {
-  minHeight: 120,
-  borderRadius: 24,
-  border: "1px dashed rgba(148,163,184,0.28)",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  color: "#475569",
-  fontSize: 15,
-  fontWeight: 700,
-  background: "rgba(248,250,252,0.72)",
-};
-
-const emptyCardStyle: CSSProperties = {
-  minHeight: 120,
-  borderRadius: 24,
-  border: "1px dashed rgba(148,163,184,0.28)",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  color: "#475569",
-  fontSize: 15,
-  fontWeight: 700,
-  background: "rgba(248,250,252,0.72)",
-  textAlign: "center",
-  padding: 20,
-};
-
-const listStyle: CSSProperties = {
-  display: "grid",
-  gap: 16,
-};
-
-const itemCardStyle: CSSProperties = {
-  borderRadius: 24,
-  border: "1px solid rgba(148,163,184,0.16)",
-  background: "linear-gradient(180deg, #ffffff 0%, #f8fbff 100%)",
-  padding: 18,
-  boxShadow: "0 12px 28px rgba(15,23,42,0.06)",
-};
-
-const itemHeaderStyle: CSSProperties = {
-  display: "flex",
-  justifyContent: "space-between",
-  gap: 12,
-  marginBottom: 16,
-};
-
-const itemNameStyle: CSSProperties = {
-  fontSize: 22,
-  fontWeight: 900,
-  color: "#0f172a",
-  lineHeight: 1.1,
-};
-
-const itemMetaLineStyle: CSSProperties = {
-  fontSize: 13,
-  color: "#64748b",
-  lineHeight: 1.6,
-};
-
-const statusPillStyle: CSSProperties = {
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  minHeight: 36,
-  padding: "8px 12px",
-  borderRadius: 999,
-  background: "rgba(6,182,212,0.10)",
-  color: "#0f766e",
-  border: "1px solid rgba(6,182,212,0.18)",
-  fontSize: 12,
-  fontWeight: 800,
-  whiteSpace: "nowrap",
-};
-
-const detailsGridStyle: CSSProperties = {
-  display: "grid",
-  gap: 12,
-};
-
-const detailCardStyle: CSSProperties = {
-  borderRadius: 18,
-  border: "1px solid rgba(148,163,184,0.14)",
-  background: "#ffffff",
-  padding: 14,
-};
-
-const detailLabelStyle: CSSProperties = {
-  fontSize: 12,
-  fontWeight: 800,
-  textTransform: "uppercase",
-  letterSpacing: 0.4,
-  color: "#0891b2",
-  marginBottom: 6,
-};
-
-const detailValueStyle: CSSProperties = {
-  fontSize: 14,
-  lineHeight: 1.6,
-  color: "#0f172a",
-  whiteSpace: "pre-wrap",
-  wordBreak: "break-word",
-};
+function InfoLine({
+  label,
+  value,
+}: {
+  label: string;
+  value: string | null;
+}) {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "88px 1fr",
+        gap: 10,
+        alignItems: "start",
+      }}
+    >
+      <div
+        style={{
+          color: "#1d4ed8",
+          fontSize: 12,
+          fontWeight: 800,
+          textTransform: "uppercase",
+        }}
+      >
+        {label}
+      </div>
+      <div
+        style={{
+          color: "#334155",
+          fontSize: 14,
+          lineHeight: 1.55,
+          wordBreak: "break-word",
+        }}
+      >
+        {value || "—"}
+      </div>
+    </div>
+  );
+}
