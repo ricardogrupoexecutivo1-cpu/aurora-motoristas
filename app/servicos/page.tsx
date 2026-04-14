@@ -1,1152 +1,1414 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-type ServiceStage =
-  | "Cotação"
-  | "Em andamento"
-  | "Aguardando pagamento"
-  | "Pago";
-
-type ServiceItem = {
+type ServiceRow = {
   id: string;
-  osSistema: string;
-  empresa: string;
-  cliente: string;
-  motorista: string;
-  servico: string;
-  origem: string;
-  destino: string;
-  data: string;
-  km: number;
-  valorTotal: number;
-  valorMotorista: number;
-  despesas: number;
-  etapa: ServiceStage;
-  observacao: string;
+  os_sistema?: string | null;
+  os_cliente?: string | null;
+  oc_cliente?: string | null;
+  os?: string | null;
+  empresa?: string | null;
+  empresa_operadora?: string | null;
+  contratante?: string | null;
+  cliente?: string | null;
+  cliente_final?: string | null;
+  contato_cliente_final?: string | null;
+  telefone_cliente_final?: string | null;
+  motorista?: string | null;
+  servico?: string | null;
+  tipo_servico?: string | null;
+  modo_cobranca?: string | null;
+  origem?: string | null;
+  destino?: string | null;
+  endereco_retirada?: string | null;
+  endereco_entrega?: string | null;
+  endereco_informado_por?: string | null;
+  placa_veiculo?: string | null;
+  data_servico?: string | null;
+  km?: number | null;
+  km_total?: number | null;
+  valor_total?: number | null;
+  valor_cobranca?: number | null;
+  valor_por_km?: number | null;
+  valor_motorista?: number | null;
+  adiantamento_motorista?: number | null;
+  despesas?: number | null;
+  despesas_motorista?: number | null;
+  pedagio?: number | null;
+  estacionamento?: number | null;
+  alimentacao?: number | null;
+  reembolso?: number | null;
+  diaria?: number | null;
+  fechamento_motorista?: number | null;
+  margem_bruta?: number | null;
+  margem_operacao?: number | null;
+  etapa?: string | null;
+  origem_base?: string | null;
+  observacao?: string | null;
+  observacoes?: string | null;
+  checklist_obrigatorio?: boolean | null;
+  checklist_instrucoes?: string | null;
+  pago?: boolean | null;
+  pago_em?: string | null;
+  visivel_motorista?: boolean | null;
+  status?: string | null;
+  created_at?: string | null;
+  updated_at?: string | null;
 };
 
-const initialServices: ServiceItem[] = [
-  {
-    id: "SER-0001",
-    osSistema: "OS-2026-000151",
-    empresa: "Aurora Locadoras Premium",
-    cliente: "Operação Aeroporto Premium",
-    motorista: "Ricardo Moreira",
-    servico: "Lagoa Santa x Savassi",
-    origem: "Lagoa Santa",
-    destino: "Savassi",
-    data: "10/04/2026",
-    km: 42,
-    valorTotal: 540,
-    valorMotorista: 220,
-    despesas: 60,
-    etapa: "Cotação",
-    observacao: "Cotação em análise com possibilidade de ajuste de valor.",
-  },
-  {
-    id: "SER-0002",
-    osSistema: "OS-2026-000152",
-    empresa: "Aurora Locadoras Premium",
-    cliente: "Cliente Executivo BH",
-    motorista: "Carlos Henrique",
-    servico: "BH x São Paulo",
-    origem: "Belo Horizonte",
-    destino: "São Paulo",
-    data: "10/04/2026",
-    km: 586,
-    valorTotal: 1700,
-    valorMotorista: 500,
-    despesas: 200,
-    etapa: "Em andamento",
-    observacao: "Operação ativa com pedágios e apoio logístico.",
-  },
-  {
-    id: "SER-0003",
-    osSistema: "OS-2026-000153",
-    empresa: "Aurora Locadoras Premium",
-    cliente: "Evento Nacional",
-    motorista: "João Pedro",
-    servico: "BH x Confins",
-    origem: "Belo Horizonte",
-    destino: "Confins",
-    data: "10/04/2026",
-    km: 41,
-    valorTotal: 400,
-    valorMotorista: 150,
-    despesas: 50,
-    etapa: "Aguardando pagamento",
-    observacao: "Serviço concluído, aguardando baixa financeira.",
-  },
-  {
-    id: "SER-0004",
-    osSistema: "OS-2026-000154",
-    empresa: "Grupo Executivo Mobilidade",
-    cliente: "Contrato Corporativo Nacional",
-    motorista: "Maria Fernanda",
-    servico: "Contagem x Savassi",
-    origem: "Contagem",
-    destino: "Savassi",
-    data: "09/04/2026",
-    km: 28,
-    valorTotal: 680,
-    valorMotorista: 260,
-    despesas: 50,
-    etapa: "Pago",
-    observacao:
-      "Pagamento realizado. Este item deve sair da visão operacional do motorista.",
-  },
-];
+type ApiResponse = {
+  success?: boolean;
+  services?: ServiceRow[];
+  total?: number;
+  message?: string;
+};
 
-function formatCurrency(value: number) {
-  return value.toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  });
+const moeda = new Intl.NumberFormat("pt-BR", {
+  style: "currency",
+  currency: "BRL",
+});
+
+function formatCurrency(value?: number | null) {
+  return moeda.format(Number(value || 0));
 }
 
-function getStageStyle(stage: ServiceStage): React.CSSProperties {
-  if (stage === "Cotação") {
+function formatDate(value?: string | null) {
+  if (!value) return "Sem data";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString("pt-BR");
+}
+
+function formatDateTime(value?: string | null) {
+  if (!value) return "—";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleString("pt-BR");
+}
+
+function normalize(value?: string | null) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
+function isPago(service: ServiceRow) {
+  return normalize(service.status) === "pago" || service.pago === true;
+}
+
+function isHistoricoProtegido(service: ServiceRow) {
+  return isPago(service) || service.visivel_motorista === false;
+}
+
+function isServicoAtivo(service: ServiceRow) {
+  return !isHistoricoProtegido(service);
+}
+
+function getDisplayEmpresa(service: ServiceRow) {
+  return (
+    service.empresa ||
+    service.contratante ||
+    service.empresa_operadora ||
+    "Não informado"
+  );
+}
+
+function getDisplayCliente(service: ServiceRow) {
+  return service.cliente || service.cliente_final || "Não informado";
+}
+
+function getDisplayOS(service: ServiceRow) {
+  return service.os_sistema || service.os || service.os_cliente || "Sem OS";
+}
+
+function getDisplayObservacao(service: ServiceRow) {
+  return service.observacoes || service.observacao || "Sem observações.";
+}
+
+function getStatusLabel(service: ServiceRow) {
+  if (isPago(service)) return "Pago";
+  const status = normalize(service.status);
+  if (status === "aguardando_pagamento") return "Aguardando pagamento";
+  if (status === "pendente") return "Pendente";
+  if (service.status) return service.status;
+  return "Sem status";
+}
+
+function getTipoServicoLabel(tipo?: string | null) {
+  const value = normalize(tipo);
+  if (value === "busca_veiculo") return "Busca de veículo";
+  if (value === "entrega_veiculo") return "Entrega de veículo";
+  if (value === "transporte_executivo") return "Transporte executivo";
+  if (value === "transfer") return "Transfer";
+  return tipo || "Não informado";
+}
+
+function getStatusStyles(service: ServiceRow) {
+  if (isPago(service)) {
     return {
-      background: "rgba(6, 182, 212, 0.10)",
-      color: "#0e7490",
-      border: "1px solid rgba(6, 182, 212, 0.18)",
+      bg: "#dcfce7",
+      color: "#166534",
+      border: "#86efac",
+      label: "Pago",
     };
   }
 
-  if (stage === "Em andamento") {
+  const status = normalize(service.status);
+
+  if (status === "aguardando_pagamento") {
     return {
-      background: "rgba(37, 99, 235, 0.10)",
-      color: "#1d4ed8",
-      border: "1px solid rgba(37, 99, 235, 0.18)",
+      bg: "#fef3c7",
+      color: "#92400e",
+      border: "#fcd34d",
+      label: "Aguardando pagamento",
     };
   }
 
-  if (stage === "Aguardando pagamento") {
+  if (status === "pendente") {
     return {
-      background: "rgba(245, 158, 11, 0.12)",
-      color: "#b45309",
-      border: "1px solid rgba(245, 158, 11, 0.22)",
+      bg: "#e0f2fe",
+      color: "#075985",
+      border: "#7dd3fc",
+      label: "Pendente",
     };
   }
 
   return {
-    background: "rgba(16, 185, 129, 0.12)",
-    color: "#047857",
-    border: "1px solid rgba(16, 185, 129, 0.22)",
+    bg: "#e2e8f0",
+    color: "#334155",
+    border: "#cbd5e1",
+    label: getStatusLabel(service),
   };
 }
 
 export default function ServicosPage() {
-  const [services, setServices] = useState<ServiceItem[]>(initialServices);
+  const [services, setServices] = useState<ServiceRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [statusText, setStatusText] = useState("Carregando serviços...");
   const [search, setSearch] = useState("");
-  const [mostrarPagos, setMostrarPagos] = useState(false);
+  const [aba, setAba] = useState<"ativos" | "historico">("ativos");
+  const [statusFilter, setStatusFilter] = useState("todos");
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
 
-  function advanceStage(serviceId: string) {
-    setServices((current) =>
-      current.map((item) => {
-        if (item.id !== serviceId) {
-          return item;
-        }
+  async function carregarServicos(message?: string) {
+    try {
+      setLoading(true);
+      setStatusText(message || "Atualizando leitura...");
 
-        if (item.etapa === "Cotação") {
-          return {
-            ...item,
-            etapa: "Em andamento",
-            observacao: "Cotação aprovada. Serviço liberado para operação.",
-          };
-        }
+      const response = await fetch("/api/services", {
+        method: "GET",
+        cache: "no-store",
+      });
 
-        if (item.etapa === "Em andamento") {
-          return {
-            ...item,
-            etapa: "Aguardando pagamento",
-            observacao:
-              "Serviço concluído operacionalmente. Aguardando baixa financeira.",
-          };
-        }
+      const data: ApiResponse = await response.json();
 
-        if (item.etapa === "Aguardando pagamento") {
-          return {
-            ...item,
-            etapa: "Pago",
-            observacao:
-              "Pagamento confirmado. O serviço deve sair da visão operacional do motorista.",
-          };
-        }
+      if (!response.ok || !data?.success) {
+        throw new Error(data?.message || "Falha ao carregar serviços.");
+      }
 
-        return item;
-      })
-    );
-  }
+      const rows = Array.isArray(data.services) ? data.services : [];
+      rows.sort((a, b) => {
+        const dateA = new Date(a.updated_at || a.created_at || 0).getTime();
+        const dateB = new Date(b.updated_at || b.created_at || 0).getTime();
+        return dateB - dateA;
+      });
 
-  function reopenService(serviceId: string) {
-    setServices((current) =>
-      current.map((item) => {
-        if (item.id !== serviceId) {
-          return item;
-        }
-
-        if (item.etapa === "Pago") {
-          return {
-            ...item,
-            etapa: "Aguardando pagamento",
-            observacao:
-              "Baixa revertida para conferência administrativa. Serviço voltou para validação financeira.",
-          };
-        }
-
-        if (item.etapa === "Aguardando pagamento") {
-          return {
-            ...item,
-            etapa: "Em andamento",
-            observacao:
-              "Serviço retornado para análise operacional antes da baixa.",
-          };
-        }
-
-        if (item.etapa === "Em andamento") {
-          return {
-            ...item,
-            etapa: "Cotação",
-            observacao: "Serviço retornado para etapa comercial.",
-          };
-        }
-
-        return item;
-      })
-    );
-  }
-
-  const filteredServices = useMemo(() => {
-    return services
-      .filter((item) => (mostrarPagos ? true : item.etapa !== "Pago"))
-      .filter((item) =>
-        `${item.id} ${item.osSistema} ${item.empresa} ${item.cliente} ${item.motorista} ${item.servico} ${item.etapa}`
-          .toLowerCase()
-          .includes(search.toLowerCase())
+      setServices(rows);
+      setStatusText(
+        rows.length > 0
+          ? `${rows.length} serviço(s) carregado(s) com sucesso.`
+          : "Nenhum serviço encontrado na base."
       );
-  }, [services, search, mostrarPagos]);
+    } catch (error) {
+      const messageText =
+        error instanceof Error ? error.message : "Erro ao carregar serviços.";
+      setStatusText(messageText);
+      setServices([]);
+    } finally {
+      setLoading(false);
+    }
+  }
 
-  const stats = useMemo(() => {
-    const visiveisMotorista = services.filter((item) => item.etapa !== "Pago").length;
-    const pagos = services.filter((item) => item.etapa === "Pago").length;
-    const aguardando = services.filter(
-      (item) => item.etapa === "Aguardando pagamento"
-    ).length;
-    const emAndamento = services.filter(
-      (item) => item.etapa === "Em andamento"
-    ).length;
-
-    return {
-      total: services.length,
-      visiveisMotorista,
-      pagos,
-      aguardando,
-      emAndamento,
+  async function atualizarStatusRapido(
+    service: ServiceRow,
+    novoStatus: "pendente" | "aguardando_pagamento" | "pago"
+  ) {
+    const payload = {
+      id: service.id,
+      status: novoStatus,
+      pago: novoStatus === "pago",
+      pago_em: novoStatus === "pago" ? new Date().toISOString() : null,
+      visivel_motorista: novoStatus === "pago" ? false : true,
+      updated_at: new Date().toISOString(),
     };
-  }, [services]);
+
+    try {
+      setUpdatingId(service.id);
+      setStatusText(`Atualizando status de ${getDisplayOS(service)}...`);
+
+      const response = await fetch("/api/services", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok || data?.success === false) {
+        throw new Error(data?.message || "Falha ao atualizar status.");
+      }
+
+      setServices((prev) =>
+        prev.map((item) =>
+          item.id === service.id
+            ? {
+                ...item,
+                status: novoStatus,
+                pago: novoStatus === "pago",
+                pago_em: novoStatus === "pago" ? payload.pago_em : null,
+                visivel_motorista: novoStatus === "pago" ? false : true,
+                updated_at: payload.updated_at,
+              }
+            : item
+        )
+      );
+
+      if (novoStatus === "pago") {
+        setAba("historico");
+      } else {
+        setAba("ativos");
+      }
+
+      setStatusText(
+        `Status de ${getDisplayOS(service)} atualizado para ${novoStatus}.`
+      );
+    } catch (error) {
+      const messageText =
+        error instanceof Error ? error.message : "Erro ao atualizar status.";
+      setStatusText(messageText);
+      alert(messageText);
+    } finally {
+      setUpdatingId(null);
+    }
+  }
+
+  useEffect(() => {
+    carregarServicos();
+  }, []);
+
+  const ativos = useMemo(
+    () => services.filter((service) => isServicoAtivo(service)),
+    [services]
+  );
+
+  const historico = useMemo(
+    () => services.filter((service) => isHistoricoProtegido(service)),
+    [services]
+  );
+
+  const listaBase = aba === "ativos" ? ativos : historico;
+
+  const listaFiltrada = useMemo(() => {
+    const termo = normalize(search);
+
+    return listaBase.filter((service) => {
+      const statusNorm = normalize(service.status);
+
+      const passaStatus =
+        statusFilter === "todos"
+          ? true
+          : statusFilter === "pago"
+          ? isPago(service)
+          : statusFilter === "aguardando_pagamento"
+          ? statusNorm === "aguardando_pagamento"
+          : statusFilter === "pendente"
+          ? statusNorm === "pendente"
+          : true;
+
+      if (!passaStatus) return false;
+
+      if (!termo) return true;
+
+      const searchable = [
+        getDisplayOS(service),
+        getDisplayEmpresa(service),
+        getDisplayCliente(service),
+        service.motorista,
+        service.servico,
+        service.origem,
+        service.destino,
+        service.placa_veiculo,
+        service.contato_cliente_final,
+        service.telefone_cliente_final,
+        getDisplayObservacao(service),
+      ]
+        .filter(Boolean)
+        .join(" ");
+
+      return normalize(searchable).includes(termo);
+    });
+  }, [listaBase, search, statusFilter]);
+
+  const totalServicos = services.length;
+  const totalAtivos = ativos.length;
+  const totalHistorico = historico.length;
+  const totalPendentes = services.filter(
+    (service) => normalize(service.status) === "pendente"
+  ).length;
+  const totalAguardandoPagamento = services.filter(
+    (service) => normalize(service.status) === "aguardando_pagamento"
+  ).length;
+  const totalPagos = services.filter((service) => isPago(service)).length;
+
+  const somaCobrancaVisao = listaBase.reduce(
+    (acc, service) => acc + Number(service.valor_cobranca ?? service.valor_total ?? 0),
+    0
+  );
+
+  const somaMargemVisao = listaBase.reduce(
+    (acc, service) => acc + Number(service.margem_operacao ?? service.margem_bruta ?? 0),
+    0
+  );
 
   return (
-    <main style={styles.page}>
-      <section style={styles.heroSection}>
-        <div style={styles.glowOne} />
-        <div style={styles.glowTwo} />
+    <main
+      style={{
+        minHeight: "100vh",
+        background:
+          "linear-gradient(180deg, #f4f8fc 0%, #eef4fb 45%, #f6f8fb 100%)",
+        padding: "24px 16px 48px",
+        fontFamily: "Arial, sans-serif",
+        color: "#123047",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: 1320,
+          margin: "0 auto",
+          display: "flex",
+          flexDirection: "column",
+          gap: 18,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 12,
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+            <Link href="/" style={topLinkStyle}>
+              Voltar
+            </Link>
 
-        <div style={styles.heroCard}>
-          <div style={styles.heroGrid}>
-            <div style={styles.heroLeft}>
-              <div style={styles.eyebrow}>AURORA MOTORISTAS • SERVIÇOS</div>
-              <h1 style={styles.heroTitle}>
-                Serviços com fluxo real entre operação, pagamento e blindagem
-              </h1>
-              <p style={styles.heroText}>
-                Esta área agora controla a trilha operacional do serviço. Aqui o
-                item nasce na cotação, entra em andamento, segue para pagamento e,
-                quando pago, sai da visão operacional para respeitar a blindagem do sistema.
-              </p>
+            <Link href="/servicos/novo" style={topPrimaryStyle}>
+              Novo serviço
+            </Link>
+          </div>
 
-              <div style={styles.heroActions}>
-                <Link href="/operacao" style={styles.secondaryButton}>
-                  Voltar para operação
-                </Link>
+          <button onClick={() => carregarServicos()} style={topButtonStyle}>
+            Atualizar leitura
+          </button>
+        </div>
 
-                <Link href="/pagamentos" style={styles.primaryButton}>
-                  Ir para pagamentos
-                </Link>
+        <section
+          style={{
+            background: "rgba(255,255,255,0.92)",
+            backdropFilter: "blur(8px)",
+            borderRadius: 28,
+            padding: 24,
+            boxShadow: "0 24px 60px rgba(15, 23, 42, 0.08)",
+            border: "1px solid #e7eef6",
+          }}
+        >
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <span style={chipBlue}>Aurora Motoristas</span>
+
+            <h1
+              style={{
+                margin: 0,
+                fontSize: 34,
+                lineHeight: 1.05,
+                color: "#0f172a",
+              }}
+            >
+              Serviços cadastrados
+            </h1>
+
+            <p
+              style={{
+                margin: 0,
+                color: "#4b6478",
+                fontSize: 15,
+                lineHeight: 1.7,
+                maxWidth: 980,
+              }}
+            >
+              Visão operacional premium com separação entre serviços ativos e
+              histórico interno protegido. Quando um serviço é marcado como pago
+              ou fica com <strong>visível para motorista = não</strong>, ele sai
+              da visão operacional e permanece preservado no histórico interno.
+            </p>
+
+            <div
+              style={{
+                marginTop: 4,
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 10,
+              }}
+            >
+              <span style={chipNeutral}>
+                {loading ? "Atualizando..." : statusText}
+              </span>
+
+              <span style={chipWarning}>
+                Sistema em constante atualização e podem ocorrer instabilidades
+                momentâneas.
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <section
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+            gap: 14,
+          }}
+        >
+          <StatCard label="Serviços ativos" value={String(totalAtivos)} help="Visíveis na operação" />
+          <StatCard label="Histórico protegido" value={String(totalHistorico)} help="Pagos ou ocultos do motorista" />
+          <StatCard label="Pendentes" value={String(totalPendentes)} help="Aguardando execução" />
+          <StatCard label="Aguardando pagamento" value={String(totalAguardandoPagamento)} help="Execução feita sem baixa final" />
+          <StatCard label="Pagos" value={String(totalPagos)} help="Baixados no histórico" />
+          <StatCard label="Base total" value={String(totalServicos)} help="Tudo salvo no Supabase" />
+        </section>
+
+        <section
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1.4fr) minmax(320px, 0.6fr)",
+            gap: 16,
+            alignItems: "start",
+          }}
+        >
+          <div
+            style={{
+              background: "#ffffff",
+              borderRadius: 26,
+              padding: 18,
+              border: "1px solid #e7eef6",
+              boxShadow: "0 20px 45px rgba(15, 23, 42, 0.06)",
+              display: "flex",
+              flexDirection: "column",
+              gap: 16,
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 10,
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+                <button
+                  onClick={() => setAba("ativos")}
+                  style={{
+                    ...pillButtonBase,
+                    background: aba === "ativos" ? "#0ea5e9" : "#eff6ff",
+                    color: aba === "ativos" ? "#ffffff" : "#0f172a",
+                    boxShadow:
+                      aba === "ativos"
+                        ? "0 12px 26px rgba(14, 165, 233, 0.20)"
+                        : "none",
+                  }}
+                >
+                  Serviços ativos
+                </button>
+
+                <button
+                  onClick={() => setAba("historico")}
+                  style={{
+                    ...pillButtonBase,
+                    background: aba === "historico" ? "#0ea5e9" : "#eff6ff",
+                    color: aba === "historico" ? "#ffffff" : "#0f172a",
+                    boxShadow:
+                      aba === "historico"
+                        ? "0 12px 26px rgba(14, 165, 233, 0.20)"
+                        : "none",
+                  }}
+                >
+                  Histórico interno protegido
+                </button>
+              </div>
+
+              <div
+                style={{
+                  color: "#5b7488",
+                  fontSize: 13,
+                  fontWeight: 700,
+                }}
+              >
+                {aba === "ativos"
+                  ? "Aqui ficam apenas os serviços ainda visíveis na operação."
+                  : "Aqui ficam os serviços pagos ou ocultos da visão do motorista."}
               </div>
             </div>
 
-            <div style={styles.heroRightCard}>
-              <span style={styles.sideKicker}>FLUXO VIVO</span>
-              <h2 style={styles.sideTitle}>Agora serviços deixam de ser tela solta</h2>
-              <p style={styles.sideText}>
-                O módulo passa a conduzir a operação real e prepara o caminho
-                para integração futura com banco, baixa automática e histórico protegido.
-              </p>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "2fr 1fr",
+                gap: 12,
+              }}
+            >
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Buscar OS, contratante, cliente, motorista, rota, placa..."
+                style={searchInputStyle}
+              />
 
-              <div style={styles.sidePills}>
-                <div style={styles.sidePill}>Cotação → andamento</div>
-                <div style={styles.sidePill}>Andamento → pagamento</div>
-                <div style={styles.sidePill}>Pago → sai do motorista</div>
-              </div>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                style={searchInputStyle}
+              >
+                <option value="todos">Todos</option>
+                <option value="pendente">Pendentes</option>
+                <option value="aguardando_pagamento">Aguardando pagamento</option>
+                <option value="pago">Pagos</option>
+              </select>
             </div>
-          </div>
 
-          <div style={styles.noticeBox}>
-            Sistema em constante atualização. Esta tela já respeita a lógica:
-            serviço pago não precisa continuar exposto na visão operacional do motorista.
-          </div>
-        </div>
-      </section>
+            {loading ? (
+              <EmptyState text="Carregando serviços..." />
+            ) : listaFiltrada.length === 0 ? (
+              <EmptyState
+                text={
+                  aba === "ativos"
+                    ? "Nenhum serviço ativo encontrado com os filtros atuais."
+                    : "Nenhum item encontrado no histórico protegido com os filtros atuais."
+                }
+              />
+            ) : (
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(330px, 1fr))",
+                  gap: 14,
+                }}
+              >
+                {listaFiltrada.map((service) => {
+                  const statusBadge = getStatusStyles(service);
+                  const historicoProtegido = isHistoricoProtegido(service);
+                  const disabled = updatingId === service.id;
 
-      <section style={styles.statsSection}>
-        <div style={styles.statsGrid}>
-          <article style={styles.statCard}>
-            <span style={styles.statLabel}>Total de serviços</span>
-            <strong style={styles.statValue}>{stats.total}</strong>
-            <span style={styles.statDetail}>Base completa</span>
-          </article>
+                  return (
+                    <article
+                      key={service.id}
+                      style={{
+                        background: "#fcfdff",
+                        border: "1px solid #e7eef6",
+                        borderRadius: 24,
+                        padding: 18,
+                        boxShadow: "0 16px 34px rgba(15, 23, 42, 0.05)",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 14,
+                        position: "relative",
+                        overflow: "hidden",
+                      }}
+                    >
+                      <div
+                        style={{
+                          position: "absolute",
+                          inset: "0 auto 0 0",
+                          width: 6,
+                          background: historicoProtegido ? "#fb923c" : "#0ea5e9",
+                        }}
+                      />
 
-          <article style={styles.statCard}>
-            <span style={styles.statLabel}>Visíveis ao motorista</span>
-            <strong style={styles.statValue}>{stats.visiveisMotorista}</strong>
-            <span style={styles.statDetail}>Sem itens pagos</span>
-          </article>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "flex-start",
+                          gap: 12,
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 6,
+                            paddingLeft: 6,
+                          }}
+                        >
+                          <span style={chipSoftBlue}>
+                            {getTipoServicoLabel(service.tipo_servico)}
+                          </span>
 
-          <article style={styles.statCard}>
-            <span style={styles.statLabel}>Em andamento</span>
-            <strong style={styles.statValue}>{stats.emAndamento}</strong>
-            <span style={styles.statDetail}>Operação ativa</span>
-          </article>
-
-          <article style={styles.statCard}>
-            <span style={styles.statLabel}>Aguardando pagamento</span>
-            <strong style={styles.statValue}>{stats.aguardando}</strong>
-            <span style={styles.statDetail}>Ponto de baixa</span>
-          </article>
-        </div>
-      </section>
-
-      <section style={styles.contentSection}>
-        <div style={styles.mainGrid}>
-          <div style={styles.leftColumn}>
-            <div style={styles.serviceCard}>
-              <div style={styles.sectionHeader}>
-                <div>
-                  <span style={styles.sectionEyebrow}>OPERAÇÃO DE SERVIÇOS</span>
-                  <h2 style={styles.sectionTitle}>Fluxo editável do serviço</h2>
-                </div>
-
-                <div style={styles.filterArea}>
-                  <label style={styles.checkboxWrap}>
-                    <input
-                      type="checkbox"
-                      checked={mostrarPagos}
-                      onChange={(e) => setMostrarPagos(e.target.checked)}
-                    />
-                    <span>Mostrar pagos</span>
-                  </label>
-
-                  <input
-                    placeholder="Buscar por OS, empresa, cliente, motorista ou etapa"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    style={styles.searchInput}
-                  />
-                </div>
-              </div>
-
-              <div style={styles.serviceList}>
-                {filteredServices.length === 0 ? (
-                  <div style={styles.emptyState}>
-                    Nenhum serviço encontrado para este filtro.
-                  </div>
-                ) : (
-                  filteredServices.map((item) => (
-                    <article key={item.id} style={styles.serviceItemCard}>
-                      <div style={styles.serviceTop}>
-                        <div>
-                          <h3 style={styles.serviceTitle}>{item.servico}</h3>
-                          <p style={styles.serviceSubline}>
-                            {item.osSistema} • {item.data} • {item.empresa}
-                          </p>
-                        </div>
-
-                        <div style={styles.serviceTopRight}>
-                          <strong style={styles.serviceValue}>
-                            {formatCurrency(item.valorTotal)}
+                          <strong
+                            style={{
+                              fontSize: 20,
+                              lineHeight: 1.25,
+                              color: "#0f172a",
+                            }}
+                          >
+                            {service.servico || "Serviço sem título"}
                           </strong>
-                          <span style={{ ...styles.badge, ...getStageStyle(item.etapa) }}>
-                            {item.etapa}
+
+                          <span
+                            style={{
+                              color: "#5b7488",
+                              fontSize: 13,
+                              fontWeight: 700,
+                            }}
+                          >
+                            {getDisplayOS(service)} • {formatDate(service.data_servico)}
                           </span>
                         </div>
+
+                        <span
+                          style={{
+                            alignSelf: "flex-start",
+                            background: statusBadge.bg,
+                            color: statusBadge.color,
+                            border: `1px solid ${statusBadge.border}`,
+                            borderRadius: 999,
+                            padding: "8px 12px",
+                            fontWeight: 800,
+                            fontSize: 12,
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {statusBadge.label}
+                        </span>
                       </div>
 
-                      <div style={styles.serviceGrid}>
-                        <div style={styles.dataItem}>
-                          <span style={styles.dataLabel}>Cliente</span>
-                          <strong style={styles.dataValue}>{item.cliente}</strong>
-                        </div>
-
-                        <div style={styles.dataItem}>
-                          <span style={styles.dataLabel}>Motorista</span>
-                          <strong style={styles.dataValue}>{item.motorista}</strong>
-                        </div>
-
-                        <div style={styles.dataItem}>
-                          <span style={styles.dataLabel}>Origem</span>
-                          <strong style={styles.dataValue}>{item.origem}</strong>
-                        </div>
-
-                        <div style={styles.dataItem}>
-                          <span style={styles.dataLabel}>Destino</span>
-                          <strong style={styles.dataValue}>{item.destino}</strong>
-                        </div>
-
-                        <div style={styles.dataItem}>
-                          <span style={styles.dataLabel}>KM</span>
-                          <strong style={styles.dataValue}>{item.km} km</strong>
-                        </div>
-
-                        <div style={styles.dataItem}>
-                          <span style={styles.dataLabel}>Valor motorista</span>
-                          <strong style={styles.dataValue}>
-                            {formatCurrency(item.valorMotorista)}
-                          </strong>
-                        </div>
-
-                        <div style={styles.dataItem}>
-                          <span style={styles.dataLabel}>Despesas</span>
-                          <strong style={styles.dataValue}>
-                            {formatCurrency(item.despesas)}
-                          </strong>
-                        </div>
-
-                        <div style={styles.dataItemWide}>
-                          <span style={styles.dataLabel}>Observação</span>
-                          <strong style={styles.dataValue}>{item.observacao}</strong>
-                        </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexWrap: "wrap",
+                          gap: 8,
+                          paddingLeft: 6,
+                        }}
+                      >
+                        <span style={miniTag}>
+                          {historicoProtegido ? "Histórico protegido" : "Ativo"}
+                        </span>
+                        <span style={miniTag}>
+                          {service.modo_cobranca === "por_km"
+                            ? "Por KM"
+                            : "Fechado total"}
+                        </span>
+                        <span style={miniTag}>
+                          Visível ao motorista:{" "}
+                          {service.visivel_motorista === false ? "Não" : "Sim"}
+                        </span>
                       </div>
 
-                      <div style={styles.actionRow}>
-                        {item.etapa !== "Pago" ? (
-                          <button
-                            type="button"
-                            onClick={() => advanceStage(item.id)}
-                            style={styles.primaryAction}
-                          >
-                            {item.etapa === "Cotação" && "Aprovar e iniciar"}
-                            {item.etapa === "Em andamento" && "Concluir serviço"}
-                            {item.etapa === "Aguardando pagamento" && "Confirmar pagamento"}
-                          </button>
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                          gap: 10,
+                        }}
+                      >
+                        <Info label="Contratante" value={getDisplayEmpresa(service)} />
+                        <Info label="Cliente final" value={getDisplayCliente(service)} />
+                        <Info label="Motorista" value={service.motorista || "Não informado"} />
+                        <Info label="Placa" value={service.placa_veiculo || "Não informada"} />
+                        <Info label="KM" value={String(service.km_total ?? service.km ?? 0)} />
+                        <Info
+                          label="Valor por KM"
+                          value={formatCurrency(service.valor_por_km ?? 0)}
+                        />
+                        <Info
+                          label="Cobrança contratante"
+                          value={formatCurrency(
+                            service.valor_cobranca ?? service.valor_total ?? 0
+                          )}
+                        />
+                        <Info
+                          label="Valor motorista"
+                          value={formatCurrency(service.valor_motorista ?? 0)}
+                        />
+                        <Info
+                          label="Despesas motorista"
+                          value={formatCurrency(
+                            service.despesas_motorista ??
+                              service.despesas ??
+                              service.reembolso ??
+                              0
+                          )}
+                        />
+                        <Info
+                          label="Fechamento motorista"
+                          value={formatCurrency(service.fechamento_motorista ?? 0)}
+                        />
+                        <Info
+                          label="Margem"
+                          value={formatCurrency(
+                            service.margem_operacao ?? service.margem_bruta ?? 0
+                          )}
+                        />
+                        <Info
+                          label="Contato final"
+                          value={service.contato_cliente_final || "Não informado"}
+                        />
+                      </div>
+
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "1fr 1fr",
+                          gap: 10,
+                        }}
+                      >
+                        <WideInfo
+                          label="Retirada"
+                          value={service.endereco_retirada || service.origem || "Não informada"}
+                        />
+                        <WideInfo
+                          label="Entrega"
+                          value={service.endereco_entrega || service.destino || "Não informada"}
+                        />
+                      </div>
+
+                      <div
+                        style={{
+                          borderRadius: 18,
+                          background: historicoProtegido ? "#fff7ed" : "#eff6ff",
+                          border: `1px solid ${
+                            historicoProtegido ? "#fed7aa" : "#bfdbfe"
+                          }`,
+                          padding: 14,
+                          color: "#435b6e",
+                          fontSize: 13,
+                          lineHeight: 1.7,
+                        }}
+                      >
+                        {historicoProtegido ? (
+                          <>
+                            <strong style={{ color: "#9a3412" }}>
+                              Baixa concluída:
+                            </strong>{" "}
+                            esta operação já saiu da visão do motorista e segue
+                            preservada apenas para controle interno.
+                          </>
                         ) : (
-                          <div style={styles.doneBox}>
-                            Pago confirmado. Este item já deve sair da visão operacional do motorista.
-                          </div>
+                          <>
+                            <strong style={{ color: "#1d4ed8" }}>
+                              Operação ativa:
+                            </strong>{" "}
+                            este serviço ainda está em fluxo operacional e
+                            permanece na camada ativa do sistema.
+                          </>
                         )}
+                      </div>
 
-                        {item.etapa !== "Cotação" && (
+                      <div
+                        style={{
+                          borderRadius: 16,
+                          background: "#f8fbff",
+                          border: "1px solid #e5edf5",
+                          padding: 14,
+                          color: "#435b6e",
+                          fontSize: 14,
+                          lineHeight: 1.6,
+                        }}
+                      >
+                        <strong style={{ color: "#123047" }}>Observações:</strong>{" "}
+                        {getDisplayObservacao(service)}
+                      </div>
+
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                          gap: 10,
+                        }}
+                      >
+                        <Info label="WhatsApp contato final" value={service.telefone_cliente_final || "Não informado"} />
+                        <Info label="Pago" value={isPago(service) ? "Sim" : "Não"} />
+                        <Info
+                          label="Pago em"
+                          value={service.pago_em ? formatDateTime(service.pago_em) : "—"}
+                        />
+                        <Info
+                          label="Atualizado em"
+                          value={formatDateTime(service.updated_at)}
+                        />
+                      </div>
+
+                      <div
+                        style={{
+                          borderRadius: 18,
+                          background: "#ffffff",
+                          border: "1px solid #e7eef6",
+                          padding: 14,
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 10,
+                        }}
+                      >
+                        <div
+                          style={{
+                            fontSize: 13,
+                            fontWeight: 800,
+                            color: "#123047",
+                          }}
+                        >
+                          Ação rápida de status
+                        </div>
+
+                        <div
+                          style={{
+                            display: "flex",
+                            flexWrap: "wrap",
+                            gap: 10,
+                          }}
+                        >
                           <button
                             type="button"
-                            onClick={() => reopenService(item.id)}
-                            style={styles.secondaryAction}
+                            disabled={disabled}
+                            onClick={() =>
+                              atualizarStatusRapido(service, "pendente")
+                            }
+                            style={{
+                              ...quickActionStyle,
+                              opacity: disabled ? 0.6 : 1,
+                            }}
                           >
-                            Voltar etapa
+                            Pendente
                           </button>
-                        )}
+
+                          <button
+                            type="button"
+                            disabled={disabled}
+                            onClick={() =>
+                              atualizarStatusRapido(
+                                service,
+                                "aguardando_pagamento"
+                              )
+                            }
+                            style={{
+                              ...quickActionStyle,
+                              opacity: disabled ? 0.6 : 1,
+                            }}
+                          >
+                            Aguardando pagamento
+                          </button>
+
+                          <button
+                            type="button"
+                            disabled={disabled}
+                            onClick={() => atualizarStatusRapido(service, "pago")}
+                            style={{
+                              ...quickActionPrimaryStyle,
+                              opacity: disabled ? 0.6 : 1,
+                            }}
+                          >
+                            Marcar como pago
+                          </button>
+                        </div>
+
+                        <div
+                          style={{
+                            fontSize: 12,
+                            color: "#64748b",
+                            lineHeight: 1.6,
+                          }}
+                        >
+                          {disabled
+                            ? "Atualizando este serviço..."
+                            : "Ao marcar como pago, o item sai da visão ativa e vai para o histórico protegido."}
+                        </div>
+                      </div>
+
+                      <div
+                        style={{
+                          display: "flex",
+                          flexWrap: "wrap",
+                          gap: 10,
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          paddingTop: 4,
+                        }}
+                      >
+                        <div
+                          style={{
+                            color: "#64748b",
+                            fontSize: 12,
+                            fontWeight: 700,
+                          }}
+                        >
+                          Sistema em constante atualização • podem ocorrer instabilidades momentâneas
+                        </div>
+
+                        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                          <Link
+                            href={`/servicos/${service.id}`}
+                            style={actionSecondaryStyle}
+                          >
+                            Abrir
+                          </Link>
+
+                          <Link
+                            href={`/servicos/${service.id}`}
+                            style={actionPrimaryStyle}
+                          >
+                            Editar serviço
+                          </Link>
+                        </div>
                       </div>
                     </article>
-                  ))
-                )}
+                  );
+                })}
               </div>
-            </div>
+            )}
           </div>
 
-          <aside style={styles.rightColumn}>
-            <div style={styles.infoCard}>
-              <span style={styles.sectionEyebrow}>REGRA DE OURO</span>
-              <h2 style={styles.sidebarTitle}>O que este arquivo já resolve</h2>
+          <aside
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 14,
+              position: "sticky",
+              top: 16,
+            }}
+          >
+            <SideCard
+              title="Exibidos agora"
+              value={String(listaFiltrada.length)}
+              help="Resultado após filtros e busca."
+            />
+            <SideCard
+              title={`Cobrança da visão ${aba === "ativos" ? "ativa" : "histórica"}`}
+              value={formatCurrency(somaCobrancaVisao)}
+              help={
+                aba === "ativos"
+                  ? "Soma apenas dos serviços ainda ativos na operação."
+                  : "Soma do histórico protegido atualmente exibido."
+              }
+            />
+            <SideCard
+              title={`Margem da visão ${aba === "ativos" ? "ativa" : "histórica"}`}
+              value={formatCurrency(somaMargemVisao)}
+              help={
+                aba === "ativos"
+                  ? "Não mistura histórico pago com operação atual."
+                  : "Consolidação visual do histórico protegido."
+              }
+            />
 
-              <div style={styles.ruleList}>
-                <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Cotação aprovada</strong>
-                  <span style={styles.ruleItemText}>
-                    Sai da pré-venda e entra em operação ativa.
-                  </span>
-                </div>
-
-                <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Serviço concluído</strong>
-                  <span style={styles.ruleItemText}>
-                    Vai para aguardando pagamento.
-                  </span>
-                </div>
-
-                <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Pagamento confirmado</strong>
-                  <span style={styles.ruleItemText}>
-                    Fica marcado como pago e deixa de aparecer na visão operacional padrão.
-                  </span>
-                </div>
-
-                <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Blindagem preparada</strong>
-                  <span style={styles.ruleItemText}>
-                    O próximo passo será ligar isso com histórico e Supabase real.
-                  </span>
-                </div>
+            <div
+              style={{
+                background: "#ffffff",
+                borderRadius: 22,
+                padding: 18,
+                border: "1px solid #e7eef6",
+                boxShadow: "0 16px 34px rgba(15, 23, 42, 0.05)",
+                display: "flex",
+                flexDirection: "column",
+                gap: 12,
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 18,
+                  fontWeight: 800,
+                  color: "#0f172a",
+                }}
+              >
+                Leitura operacional
               </div>
-            </div>
 
-            <div style={styles.darkCard}>
-              <div style={styles.robotTag}>ROBÔ AURORA</div>
-              <h2 style={styles.sidebarTitleDark}>Apoio operacional</h2>
-              <p style={styles.sidebarTextDark}>
-                O Robô Aurora poderá alertar serviços parados, baixa pendente,
-                margem ruim, motorista com excesso de carga e gargalos no fluxo.
-              </p>
-
-              <div style={styles.robotList}>
-                <div style={styles.robotItem}>Ler pendências</div>
-                <div style={styles.robotItem}>Sugerir prioridade</div>
-                <div style={styles.robotItem}>Acompanhar etapas</div>
-                <div style={styles.robotItem}>Preparar auditoria</div>
+              <div
+                style={{
+                  color: "#4b6478",
+                  fontSize: 14,
+                  lineHeight: 1.7,
+                }}
+              >
+                {aba === "ativos"
+                  ? "Você está vendo apenas a camada ativa da operação. Pagos e ocultos do motorista ficam fora desta visão."
+                  : "Você está vendo a camada protegida do histórico interno, preservando a regra de ocultação ao motorista."}
               </div>
-            </div>
 
-            <div style={styles.navCard}>
-              <span style={styles.sectionEyebrow}>NAVEGAÇÃO</span>
-              <h2 style={styles.sidebarTitle}>Próximos blocos</h2>
-
-              <div style={styles.navList}>
-                <Link href="/operacao" style={styles.navItem}>
-                  Abrir operação
-                </Link>
-                <Link href="/pagamentos" style={styles.navItem}>
-                  Abrir pagamentos
-                </Link>
-                <Link href="/historico" style={styles.navItem}>
-                  Abrir histórico
-                </Link>
-                <Link href="/relatorios" style={styles.navItem}>
-                  Abrir relatórios
-                </Link>
+              <div
+                style={{
+                  borderRadius: 16,
+                  background: "#f8fbff",
+                  border: "1px solid #e5edf5",
+                  padding: 14,
+                  color: "#435b6e",
+                  fontSize: 13,
+                  lineHeight: 1.7,
+                }}
+              >
+                Esta lateral foi pensada para leitura rápida de lançamentos,
+                totais e situação da visão atual, sem confundir operação ativa
+                com histórico já baixado.
               </div>
             </div>
           </aside>
-        </div>
-      </section>
+        </section>
+      </div>
     </main>
   );
 }
 
-const styles: Record<string, React.CSSProperties> = {
-  page: {
-    minHeight: "100vh",
-    background:
-      "linear-gradient(180deg, #f6fbff 0%, #edf8ff 34%, #ffffff 72%, #f8fcff 100%)",
-    color: "#0f172a",
-    paddingBottom: 56,
-  },
-
-  heroSection: {
-    position: "relative",
-    overflow: "hidden",
-    padding: "32px 20px 18px",
-  },
-
-  glowOne: {
-    position: "absolute",
-    top: -120,
-    left: -120,
-    width: 340,
-    height: 340,
-    borderRadius: "50%",
-    background: "rgba(0, 194, 255, 0.18)",
-    filter: "blur(58px)",
-    pointerEvents: "none",
-  },
-
-  glowTwo: {
-    position: "absolute",
-    top: -80,
-    right: -100,
-    width: 320,
-    height: 320,
-    borderRadius: "50%",
-    background: "rgba(37, 99, 235, 0.16)",
-    filter: "blur(58px)",
-    pointerEvents: "none",
-  },
-
-  heroCard: {
-    position: "relative",
-    maxWidth: 1240,
-    margin: "0 auto",
-    background: "rgba(255,255,255,0.78)",
-    border: "1px solid rgba(125, 211, 252, 0.28)",
-    borderRadius: 30,
-    padding: "28px 22px 24px",
-    boxShadow: "0 24px 60px rgba(14, 165, 233, 0.10)",
-    backdropFilter: "blur(12px)",
-  },
-
-  heroGrid: {
-    display: "grid",
-    gridTemplateColumns: "minmax(0, 1.15fr) minmax(300px, 0.85fr)",
-    gap: 18,
-    alignItems: "start",
-  },
-
-  heroLeft: {
-    minWidth: 0,
-  },
-
-  eyebrow: {
-    display: "inline-flex",
-    alignItems: "center",
-    minHeight: 32,
-    padding: "0 16px",
-    borderRadius: 999,
-    background: "rgba(6, 182, 212, 0.10)",
-    color: "#0c4a6e",
-    fontSize: 12,
-    fontWeight: 900,
-    letterSpacing: "0.08em",
-    marginBottom: 18,
-  },
-
-  heroTitle: {
-    margin: 0,
-    fontSize: "clamp(1.9rem, 3.7vw, 3.5rem)",
-    lineHeight: 1.03,
-    fontWeight: 950,
-    letterSpacing: "-0.05em",
-    maxWidth: 860,
-  },
-
-  heroText: {
-    marginTop: 16,
-    marginBottom: 0,
-    maxWidth: 860,
-    color: "#334155",
-    fontSize: 16,
-    lineHeight: 1.8,
-  },
-
-  heroActions: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: 14,
-    marginTop: 26,
-  },
-
-  primaryButton: {
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    minHeight: 52,
-    padding: "0 22px",
-    borderRadius: 16,
-    textDecoration: "none",
-    fontWeight: 900,
-    color: "#ffffff",
-    background: "linear-gradient(135deg, #06b6d4 0%, #2563eb 100%)",
-    boxShadow: "0 14px 30px rgba(37, 99, 235, 0.20)",
-  },
-
-  secondaryButton: {
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    minHeight: 52,
-    padding: "0 22px",
-    borderRadius: 16,
-    textDecoration: "none",
-    fontWeight: 900,
-    color: "#0f172a",
-    background: "rgba(255,255,255,0.85)",
-    border: "1px solid rgba(125, 211, 252, 0.34)",
-  },
-
-  heroRightCard: {
-    borderRadius: 26,
-    padding: 22,
-    background: "linear-gradient(180deg, #ffffff 0%, #eefaff 100%)",
-    border: "1px solid rgba(125, 211, 252, 0.30)",
-    boxShadow: "0 18px 44px rgba(8, 47, 73, 0.08)",
-  },
-
-  sideKicker: {
-    display: "inline-block",
-    color: "#0891b2",
-    fontSize: 12,
-    fontWeight: 900,
-    letterSpacing: "0.08em",
-    marginBottom: 10,
-  },
-
-  sideTitle: {
-    margin: 0,
-    fontSize: 24,
-    lineHeight: 1.08,
-    fontWeight: 900,
-    letterSpacing: "-0.03em",
-  },
-
-  sideText: {
-    marginTop: 12,
-    marginBottom: 0,
-    color: "#475569",
-    fontSize: 15,
-    lineHeight: 1.7,
-  },
-
-  sidePills: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 10,
-    marginTop: 16,
-  },
-
-  sidePill: {
-    padding: "12px 14px",
-    borderRadius: 14,
-    background: "rgba(255,255,255,0.84)",
-    border: "1px solid rgba(125, 211, 252, 0.22)",
-    color: "#0f172a",
-    fontSize: 14,
-    fontWeight: 800,
-    lineHeight: 1.55,
-  },
-
-  noticeBox: {
-    marginTop: 20,
-    padding: "14px 16px",
-    borderRadius: 16,
-    background: "rgba(6, 182, 212, 0.08)",
-    border: "1px solid rgba(6, 182, 212, 0.16)",
-    color: "#164e63",
-    lineHeight: 1.7,
-    fontSize: 14,
-    fontWeight: 700,
-  },
-
-  statsSection: {
-    maxWidth: 1240,
-    margin: "0 auto",
-    padding: "8px 20px 4px",
-  },
-
-  statsGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: 14,
-  },
-
-  statCard: {
-    background: "#ffffff",
-    borderRadius: 22,
-    border: "1px solid rgba(125, 211, 252, 0.24)",
-    padding: 18,
-    boxShadow: "0 10px 28px rgba(15, 23, 42, 0.05)",
-  },
-
-  statLabel: {
-    display: "block",
-    color: "#475569",
-    fontSize: 14,
-    fontWeight: 700,
-  },
-
-  statValue: {
-    display: "block",
-    marginTop: 8,
-    fontSize: 30,
-    lineHeight: 1,
-    fontWeight: 900,
-    letterSpacing: "-0.04em",
-  },
-
-  statDetail: {
-    display: "block",
-    marginTop: 8,
-    color: "#0891b2",
-    fontSize: 13,
-    fontWeight: 700,
-  },
-
-  contentSection: {
-    maxWidth: 1240,
-    margin: "0 auto",
-    padding: "18px 20px 0",
-  },
-
-  mainGrid: {
-    display: "grid",
-    gridTemplateColumns: "minmax(0, 1.35fr) minmax(300px, 0.85fr)",
-    gap: 18,
-  },
-
-  leftColumn: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 18,
-    minWidth: 0,
-  },
-
-  rightColumn: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 18,
-    minWidth: 0,
-  },
-
-  serviceCard: {
-    background: "linear-gradient(180deg, #ffffff 0%, #eefaff 100%)",
-    borderRadius: 24,
-    border: "1px solid rgba(125, 211, 252, 0.24)",
-    padding: 20,
-    boxShadow: "0 14px 34px rgba(15, 23, 42, 0.04)",
-  },
-
-  sectionHeader: {
-    display: "flex",
-    justifyContent: "space-between",
-    gap: 12,
-    alignItems: "flex-start",
-    flexWrap: "wrap",
-    marginBottom: 18,
-  },
-
-  sectionEyebrow: {
-    display: "inline-block",
-    marginBottom: 8,
-    color: "#0891b2",
-    fontSize: 12,
-    fontWeight: 900,
-    letterSpacing: "0.08em",
-  },
-
-  sectionTitle: {
-    margin: 0,
-    fontSize: "clamp(1.5rem, 2.6vw, 2.3rem)",
-    lineHeight: 1.08,
-    fontWeight: 900,
-    letterSpacing: "-0.03em",
-  },
-
-  filterArea: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: 10,
-    alignItems: "center",
-    minWidth: 320,
-  },
-
-  checkboxWrap: {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: 8,
-    fontSize: 14,
-    fontWeight: 700,
-    color: "#0f172a",
-    background: "#ffffff",
-    border: "1px solid rgba(125, 211, 252, 0.24)",
-    borderRadius: 14,
-    minHeight: 46,
-    padding: "0 14px",
-  },
-
-  searchInput: {
-    minHeight: 46,
-    borderRadius: 14,
-    border: "1px solid rgba(125, 211, 252, 0.28)",
-    padding: "0 14px",
-    fontSize: 14,
-    color: "#0f172a",
-    background: "#ffffff",
-    outline: "none",
-    minWidth: 280,
-  },
-
-  serviceList: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 14,
-  },
-
-  serviceItemCard: {
-    borderRadius: 22,
-    padding: 18,
-    background: "#ffffff",
-    border: "1px solid rgba(125, 211, 252, 0.18)",
-    boxShadow: "0 10px 28px rgba(15, 23, 42, 0.04)",
-  },
-
-  serviceTop: {
-    display: "flex",
-    justifyContent: "space-between",
-    gap: 12,
-    flexWrap: "wrap",
-    alignItems: "flex-start",
-  },
-
-  serviceTitle: {
-    margin: 0,
-    fontSize: 20,
-    fontWeight: 900,
-  },
-
-  serviceSubline: {
-    marginTop: 8,
-    marginBottom: 0,
-    color: "#475569",
-    lineHeight: 1.6,
-    fontSize: 14,
-    fontWeight: 600,
-  },
-
-  serviceTopRight: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-end",
-    gap: 8,
-  },
-
-  serviceValue: {
-    fontSize: 24,
-    lineHeight: 1,
-    fontWeight: 900,
-    color: "#0284c7",
-  },
-
-  badge: {
-    display: "inline-flex",
-    alignItems: "center",
-    minHeight: 28,
-    padding: "0 10px",
-    borderRadius: 999,
-    fontSize: 12,
-    fontWeight: 800,
-  },
-
-  serviceGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: 12,
-    marginTop: 16,
-  },
-
-  dataItem: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 6,
-    padding: 14,
-    borderRadius: 16,
-    background: "#ffffff",
-    border: "1px solid rgba(125, 211, 252, 0.16)",
-  },
-
-  dataItemWide: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 6,
-    padding: 14,
-    borderRadius: 16,
-    background: "#ffffff",
-    border: "1px solid rgba(125, 211, 252, 0.16)",
-    gridColumn: "1 / -1",
-  },
-
-  dataLabel: {
-    color: "#64748b",
-    fontSize: 12,
-    fontWeight: 800,
-    letterSpacing: "0.04em",
-    textTransform: "uppercase",
-  },
-
-  dataValue: {
-    color: "#0f172a",
-    fontSize: 15,
-    lineHeight: 1.5,
-    fontWeight: 800,
-  },
-
-  actionRow: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: 10,
-    marginTop: 16,
-  },
-
-  primaryAction: {
-    border: "none",
-    minHeight: 48,
-    padding: "0 18px",
-    borderRadius: 14,
-    cursor: "pointer",
-    fontWeight: 900,
-    color: "#ffffff",
-    background: "linear-gradient(135deg, #06b6d4 0%, #2563eb 100%)",
-    boxShadow: "0 14px 30px rgba(37, 99, 235, 0.18)",
-  },
-
-  secondaryAction: {
-    border: "1px solid rgba(125, 211, 252, 0.28)",
-    minHeight: 48,
-    padding: "0 18px",
-    borderRadius: 14,
-    cursor: "pointer",
-    fontWeight: 900,
-    color: "#0f172a",
-    background: "#ffffff",
-  },
-
-  doneBox: {
-    display: "flex",
-    alignItems: "center",
-    minHeight: 48,
-    padding: "0 16px",
-    borderRadius: 14,
-    background: "rgba(16, 185, 129, 0.08)",
-    border: "1px solid rgba(16, 185, 129, 0.18)",
-    color: "#065f46",
-    fontSize: 14,
-    fontWeight: 800,
-  },
-
-  emptyState: {
-    padding: 18,
-    borderRadius: 18,
-    background: "#ffffff",
-    border: "1px dashed rgba(125, 211, 252, 0.34)",
-    color: "#475569",
-    fontSize: 15,
-    fontWeight: 700,
-  },
-
-  infoCard: {
-    background: "linear-gradient(180deg, #ffffff 0%, #f4fbff 100%)",
-    borderRadius: 24,
-    border: "1px solid rgba(125, 211, 252, 0.24)",
-    padding: 20,
-    boxShadow: "0 14px 34px rgba(15, 23, 42, 0.04)",
-  },
-
-  sidebarTitle: {
-    margin: 0,
-    fontSize: 24,
-    lineHeight: 1.08,
-    fontWeight: 900,
-    color: "#0f172a",
-  },
-
-  ruleList: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 12,
-    marginTop: 16,
-  },
-
-  ruleItem: {
-    padding: 14,
-    borderRadius: 16,
-    background: "#ffffff",
-    border: "1px solid rgba(125, 211, 252, 0.18)",
-  },
-
-  ruleItemTitle: {
-    display: "block",
-    fontSize: 15,
-    fontWeight: 900,
-    color: "#0f172a",
-  },
-
-  ruleItemText: {
-    display: "block",
-    marginTop: 8,
-    fontSize: 14,
-    lineHeight: 1.65,
-    color: "#475569",
-  },
-
-  darkCard: {
-    background: "linear-gradient(135deg, #082f49 0%, #0f172a 58%, #172554 100%)",
-    borderRadius: 24,
-    padding: 20,
-    boxShadow: "0 20px 50px rgba(2, 6, 23, 0.24)",
-  },
-
-  robotTag: {
-    display: "inline-block",
-    marginBottom: 10,
-    color: "#7dd3fc",
-    fontSize: 12,
-    fontWeight: 900,
-    letterSpacing: "0.08em",
-  },
-
-  sidebarTitleDark: {
-    margin: 0,
-    fontSize: 24,
-    lineHeight: 1.08,
-    fontWeight: 900,
-    color: "#ffffff",
-  },
-
-  sidebarTextDark: {
-    marginTop: 12,
-    marginBottom: 0,
-    color: "#cbd5e1",
-    lineHeight: 1.75,
-    fontSize: 15,
-  },
-
-  robotList: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: 10,
-    marginTop: 18,
-  },
-
-  robotItem: {
-    padding: "12px 14px",
-    borderRadius: 14,
-    background: "rgba(255,255,255,0.08)",
-    border: "1px solid rgba(125, 211, 252, 0.16)",
-    color: "#e2e8f0",
-    fontSize: 13,
-    fontWeight: 700,
-    lineHeight: 1.5,
-  },
-
-  navCard: {
-    background: "linear-gradient(180deg, #ffffff 0%, #eefaff 100%)",
-    borderRadius: 24,
-    border: "1px solid rgba(125, 211, 252, 0.24)",
-    padding: 20,
-    boxShadow: "0 14px 34px rgba(15, 23, 42, 0.04)",
-  },
-
-  navList: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 10,
-    marginTop: 16,
-  },
-
-  navItem: {
-    display: "block",
-    textDecoration: "none",
-    color: "#0f172a",
-    fontWeight: 800,
-    padding: "12px 14px",
-    borderRadius: 14,
-    background: "#ffffff",
-    border: "1px solid rgba(125, 211, 252, 0.18)",
-  },
+function StatCard({
+  label,
+  value,
+  help,
+}: {
+  label: string;
+  value: string;
+  help: string;
+}) {
+  return (
+    <div
+      style={{
+        background: "#ffffff",
+        borderRadius: 22,
+        padding: 18,
+        border: "1px solid #e7eef6",
+        boxShadow: "0 14px 30px rgba(15, 23, 42, 0.05)",
+      }}
+    >
+      <div
+        style={{
+          color: "#5b7488",
+          fontSize: 13,
+          fontWeight: 700,
+          marginBottom: 10,
+        }}
+      >
+        {label}
+      </div>
+
+      <div
+        style={{
+          fontSize: 32,
+          fontWeight: 800,
+          color: "#123047",
+          marginBottom: 8,
+        }}
+      >
+        {value}
+      </div>
+
+      <div
+        style={{
+          color: "#6b7f90",
+          fontSize: 13,
+        }}
+      >
+        {help}
+      </div>
+    </div>
+  );
+}
+
+function SideCard({
+  title,
+  value,
+  help,
+}: {
+  title: string;
+  value: string;
+  help: string;
+}) {
+  return (
+    <div
+      style={{
+        background: "#ffffff",
+        borderRadius: 22,
+        padding: 18,
+        border: "1px solid #e7eef6",
+        boxShadow: "0 16px 34px rgba(15, 23, 42, 0.05)",
+      }}
+    >
+      <div
+        style={{
+          color: "#5b7488",
+          fontSize: 13,
+          fontWeight: 700,
+          marginBottom: 10,
+        }}
+      >
+        {title}
+      </div>
+
+      <div
+        style={{
+          fontSize: 30,
+          fontWeight: 800,
+          color: "#123047",
+          lineHeight: 1.2,
+        }}
+      >
+        {value}
+      </div>
+
+      <div
+        style={{
+          marginTop: 8,
+          color: "#6b7f90",
+          fontSize: 13,
+          lineHeight: 1.6,
+        }}
+      >
+        {help}
+      </div>
+    </div>
+  );
+}
+
+function EmptyState({ text }: { text: string }) {
+  return (
+    <div
+      style={{
+        borderRadius: 22,
+        border: "1px dashed #cbd5e1",
+        padding: 28,
+        textAlign: "center",
+        color: "#64748b",
+        background: "#f8fafc",
+      }}
+    >
+      {text}
+    </div>
+  );
+}
+
+function Info({ label, value }: { label: string; value: string }) {
+  return (
+    <div
+      style={{
+        background: "#ffffff",
+        border: "1px solid #e7eef6",
+        borderRadius: 16,
+        padding: 12,
+      }}
+    >
+      <div
+        style={{
+          fontSize: 12,
+          color: "#6b7f90",
+          fontWeight: 700,
+          marginBottom: 6,
+        }}
+      >
+        {label}
+      </div>
+
+      <div
+        style={{
+          fontSize: 14,
+          color: "#123047",
+          fontWeight: 800,
+          lineHeight: 1.4,
+          wordBreak: "break-word",
+        }}
+      >
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function WideInfo({ label, value }: { label: string; value: string }) {
+  return (
+    <div
+      style={{
+        background: "#ffffff",
+        border: "1px solid #e7eef6",
+        borderRadius: 16,
+        padding: 12,
+      }}
+    >
+      <div
+        style={{
+          fontSize: 12,
+          color: "#6b7f90",
+          fontWeight: 700,
+          marginBottom: 6,
+        }}
+      >
+        {label}
+      </div>
+
+      <div
+        style={{
+          fontSize: 14,
+          color: "#123047",
+          fontWeight: 700,
+          lineHeight: 1.5,
+          wordBreak: "break-word",
+        }}
+      >
+        {value}
+      </div>
+    </div>
+  );
+}
+
+const topLinkStyle: React.CSSProperties = {
+  textDecoration: "none",
+  background: "#ffffff",
+  color: "#123047",
+  border: "1px solid #dbe5ef",
+  borderRadius: 12,
+  padding: "10px 14px",
+  fontWeight: 700,
+};
+
+const topPrimaryStyle: React.CSSProperties = {
+  textDecoration: "none",
+  background: "#0ea5e9",
+  color: "#ffffff",
+  borderRadius: 12,
+  padding: "10px 14px",
+  fontWeight: 700,
+  boxShadow: "0 12px 30px rgba(14, 165, 233, 0.20)",
+};
+
+const topButtonStyle: React.CSSProperties = {
+  border: "none",
+  cursor: "pointer",
+  background: "#ffffff",
+  color: "#123047",
+  borderRadius: 12,
+  padding: "10px 14px",
+  fontWeight: 700,
+  boxShadow: "0 10px 24px rgba(15, 23, 42, 0.06)",
+};
+
+const searchInputStyle: React.CSSProperties = {
+  width: "100%",
+  borderRadius: 14,
+  border: "1px solid #d8e3ee",
+  padding: "14px 16px",
+  fontSize: 15,
+  outline: "none",
+  background: "#f8fbff",
+  color: "#123047",
+};
+
+const pillButtonBase: React.CSSProperties = {
+  border: "none",
+  cursor: "pointer",
+  borderRadius: 999,
+  padding: "10px 14px",
+  fontWeight: 800,
+};
+
+const chipBlue: React.CSSProperties = {
+  display: "inline-flex",
+  width: "fit-content",
+  background: "#e0f2fe",
+  color: "#075985",
+  borderRadius: 999,
+  padding: "6px 12px",
+  fontWeight: 700,
+  fontSize: 13,
+};
+
+const chipSoftBlue: React.CSSProperties = {
+  display: "inline-flex",
+  width: "fit-content",
+  background: "#eff6ff",
+  color: "#1d4ed8",
+  borderRadius: 999,
+  padding: "6px 10px",
+  fontWeight: 800,
+  fontSize: 12,
+};
+
+const chipNeutral: React.CSSProperties = {
+  background: "#f8fafc",
+  color: "#334155",
+  border: "1px solid #e2e8f0",
+  borderRadius: 999,
+  padding: "8px 12px",
+  fontSize: 13,
+  fontWeight: 700,
+};
+
+const chipWarning: React.CSSProperties = {
+  background: "#fff7ed",
+  color: "#9a3412",
+  border: "1px solid #fed7aa",
+  borderRadius: 999,
+  padding: "8px 12px",
+  fontSize: 13,
+  fontWeight: 700,
+};
+
+const miniTag: React.CSSProperties = {
+  background: "#f8fafc",
+  color: "#475569",
+  border: "1px solid #e2e8f0",
+  borderRadius: 999,
+  padding: "6px 10px",
+  fontSize: 12,
+  fontWeight: 700,
+};
+
+const actionPrimaryStyle: React.CSSProperties = {
+  textDecoration: "none",
+  background: "#123047",
+  color: "#ffffff",
+  borderRadius: 12,
+  padding: "10px 14px",
+  fontWeight: 800,
+};
+
+const actionSecondaryStyle: React.CSSProperties = {
+  textDecoration: "none",
+  background: "#ffffff",
+  color: "#123047",
+  border: "1px solid #dbe5ef",
+  borderRadius: 12,
+  padding: "10px 14px",
+  fontWeight: 800,
+};
+
+const quickActionStyle: React.CSSProperties = {
+  border: "1px solid #dbe5ef",
+  background: "#ffffff",
+  color: "#123047",
+  borderRadius: 12,
+  padding: "10px 12px",
+  fontWeight: 800,
+  cursor: "pointer",
+};
+
+const quickActionPrimaryStyle: React.CSSProperties = {
+  border: "none",
+  background: "#16a34a",
+  color: "#ffffff",
+  borderRadius: 12,
+  padding: "10px 12px",
+  fontWeight: 800,
+  cursor: "pointer",
+  boxShadow: "0 12px 24px rgba(22, 163, 74, 0.18)",
 };

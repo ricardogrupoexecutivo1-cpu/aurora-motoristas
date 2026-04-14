@@ -3,1198 +3,1643 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
-type FormState = {
-  empresa: string;
-  cliente: string;
-  motorista: string;
-  origem: string;
-  destino: string;
-  dataServico: string;
-  km: string;
-  diaria: string;
-  pedagio: string;
-  estacionamento: string;
-  alimentacao: string;
-  reembolso: string;
-  valorMotorista: string;
-  osSistema: string;
-  osCliente: string;
-  ocCliente: string;
-  observacao: string;
-};
+type SaveDestination = "aguardando" | "supabase" | "local";
 
-type PersistedService = {
-  id: string;
-  osSistema: string;
+type ServicePayload = {
+  os_sistema: string;
+  os_cliente: string | null;
+  oc_cliente: string | null;
   empresa: string;
+  contratante: string;
   cliente: string;
+  cliente_final: string;
+  contato_cliente_final: string;
+  telefone_cliente_final: string;
   motorista: string;
   servico: string;
+  tipo_servico: string;
+  modo_cobranca: string;
   origem: string;
   destino: string;
-  data: string;
+  endereco_retirada: string;
+  endereco_entrega: string;
+  endereco_informado_por: string;
+  placa_veiculo: string;
+  data_servico: string;
   km: number;
-  valorTotal: number;
-  valorMotorista: number;
+  km_total: number;
+  diaria: number;
+  pedagio: number;
+  estacionamento: number;
+  alimentacao: number;
+  reembolso: number;
   despesas: number;
-  etapa: "Cotação";
+  despesas_motorista: number;
+  valor_total: number;
+  valor_cobranca: number;
+  valor_por_km: number;
+  valor_motorista: number;
+  adiantamento_motorista: number;
+  fechamento_motorista: number;
+  margem_bruta: number;
+  margem_operacao: number;
+  etapa: string;
+  origem_base: string;
   observacao: string;
-  createdAt: string;
+  observacoes: string;
+  checklist_obrigatorio: boolean;
+  checklist_instrucoes: string;
+  status: string;
+  pago: boolean;
+  pago_em: string | null;
+  visivel_motorista: boolean;
 };
 
-const STORAGE_KEY = "aurora_motoristas_servicos";
+const LOCAL_STORAGE_KEY = "aurora_motoristas_servicos_rascunho";
+const DEFAULT_OBSERVACOES =
+  "Serviço lançado pelo novo fluxo operacional.";
+const DEFAULT_CHECKLIST =
+  "Motorista deve realizar checklist e enviar conforme combinado antes da liberação/finalização do serviço.";
+const DEFAULT_INFORMADO_POR = "Contratante / cliente";
 
-const initialForm: FormState = {
-  empresa: "Aurora Locadoras Premium",
-  cliente: "",
-  motorista: "",
-  origem: "",
-  destino: "",
-  dataServico: "2026-04-10",
-  km: "",
-  diaria: "",
-  pedagio: "",
-  estacionamento: "",
-  alimentacao: "",
-  reembolso: "",
-  valorMotorista: "",
-  osSistema: "OS-2026-000158",
-  osCliente: "",
-  ocCliente: "",
-  observacao: "",
-};
+function normalizeNumberInput(value: string) {
+  if (!value) return 0;
+  const sanitized = value.replace(/\./g, "").replace(",", ".").trim();
+  const parsed = Number(sanitized);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
 
-function parseMoney(value: string) {
-  const normalized = value.replace(",", ".").trim();
-  const numeric = Number(normalized);
-  return Number.isFinite(numeric) ? numeric : 0;
+function parseKmInput(value: string) {
+  const sanitized = value.replace(/[^\d.,-]/g, "").replace(",", ".");
+  const parsed = Number(sanitized);
+  return Number.isFinite(parsed) ? parsed : 0;
 }
 
 function formatCurrency(value: number) {
-  return value.toLocaleString("pt-BR", {
+  return new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL",
-  });
+  }).format(Number(value || 0));
 }
 
-function formatDate(value: string) {
-  if (!value) return "--/--/----";
-
-  const [year, month, day] = value.split("-");
-  if (!year || !month || !day) return value;
-
-  return `${day}/${month}/${year}`;
+function formatDateForInput(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
-function createServiceTitle(origem: string, destino: string) {
-  const origemLimpa = origem.trim() || "Origem";
-  const destinoLimpo = destino.trim() || "Destino";
-  return `${origemLimpa} x ${destinoLimpo}`;
+function createOS() {
+  return `OS-${Date.now()}`;
 }
 
-function safeReadStorage(): PersistedService[] {
-  if (typeof window === "undefined") return [];
-
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [];
-
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-
-    return parsed.filter(Boolean) as PersistedService[];
-  } catch {
-    return [];
+function getTipoServicoDescricao(tipo: string) {
+  switch (tipo) {
+    case "busca_veiculo":
+      return "Retirada de veículo para locadora, loja ou base operacional.";
+    case "entrega_veiculo":
+      return "Entrega de veículo ao cliente, empresa ou ponto combinado.";
+    case "transporte_executivo":
+      return "Serviço executivo urbano, corporativo ou intermunicipal.";
+    case "transfer":
+      return "Transfer de aeroporto, hotel, evento ou deslocamento especial.";
+    default:
+      return "Escolha o tipo principal para acelerar o cadastro da operação.";
   }
 }
 
-function safeWriteStorage(items: PersistedService[]) {
-  if (typeof window === "undefined") return;
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+function getModoCobrancaDescricao(modo: string) {
+  switch (modo) {
+    case "fechado_total":
+      return "Cobrança fechada da operação inteira, independentemente do KM final.";
+    case "por_km":
+      return "Cálculo baseado em distância e valor unitário por KM.";
+    default:
+      return "Defina como a operação será cobrada ao contratante.";
+  }
+}
+
+function getTipoServicoNome(tipo: string) {
+  switch (tipo) {
+    case "busca_veiculo":
+      return "Busca de veículo";
+    case "entrega_veiculo":
+      return "Entrega de veículo";
+    case "transporte_executivo":
+      return "Transporte executivo";
+    case "transfer":
+      return "Transfer";
+    default:
+      return "Serviço";
+  }
+}
+
+function buildAutoServiceName({
+  servico,
+  origem,
+  destino,
+  tipoServico,
+  cliente,
+  clienteFinal,
+}: {
+  servico: string;
+  origem: string;
+  destino: string;
+  tipoServico: string;
+  cliente: string;
+  clienteFinal: string;
+}) {
+  const servicoTrim = servico.trim();
+  if (servicoTrim) return servicoTrim;
+
+  const origemTrim = origem.trim();
+  const destinoTrim = destino.trim();
+  const clienteBase = clienteFinal.trim() || cliente.trim();
+  const tipoNome = getTipoServicoNome(tipoServico);
+
+  if (origemTrim && destinoTrim) {
+    return `${origemTrim} x ${destinoTrim}`;
+  }
+
+  if (origemTrim) {
+    return `${tipoNome} - ${origemTrim}`;
+  }
+
+  if (destinoTrim) {
+    return `${tipoNome} - ${destinoTrim}`;
+  }
+
+  if (clienteBase) {
+    return `${tipoNome} - ${clienteBase}`;
+  }
+
+  return tipoNome;
+}
+
+function hasUsefulDraftData(
+  draft: Partial<Record<string, unknown>> | null | undefined
+) {
+  if (!draft) return false;
+
+  const stringFields = [
+    "empresa",
+    "contratante",
+    "cliente",
+    "clienteFinal",
+    "contatoClienteFinal",
+    "telefoneClienteFinal",
+    "motorista",
+    "servico",
+    "origem",
+    "destino",
+    "placaVeiculo",
+    "enderecoRetirada",
+    "enderecoEntrega",
+    "osCliente",
+    "ocCliente",
+  ];
+
+  const hasFilledString = stringFields.some((field) => {
+    const value = draft[field];
+    return typeof value === "string" && value.trim().length > 0;
+  });
+
+  const nonDefaultObservacoes =
+    typeof draft.observacoes === "string" &&
+    draft.observacoes.trim().length > 0 &&
+    draft.observacoes.trim() !== DEFAULT_OBSERVACOES;
+
+  const nonDefaultChecklist =
+    typeof draft.checklistInstrucoes === "string" &&
+    draft.checklistInstrucoes.trim().length > 0 &&
+    draft.checklistInstrucoes.trim() !== DEFAULT_CHECKLIST;
+
+  const nonDefaultInformadoPor =
+    typeof draft.enderecoInformadoPor === "string" &&
+    draft.enderecoInformadoPor.trim().length > 0 &&
+    draft.enderecoInformadoPor.trim() !== DEFAULT_INFORMADO_POR;
+
+  const numericLikeFields = [
+    "kmInput",
+    "valorCobrancaInput",
+    "valorPorKmInput",
+    "valorMotoristaInput",
+    "adiantamentoMotoristaInput",
+    "pedagioInput",
+    "estacionamentoInput",
+    "alimentacaoInput",
+    "reembolsoInput",
+  ];
+
+  const hasNonZeroNumeric = numericLikeFields.some((field) => {
+    const value = draft[field];
+    return typeof value === "string" && normalizeNumberInput(value) > 0;
+  });
+
+  return (
+    hasFilledString ||
+    nonDefaultObservacoes ||
+    nonDefaultChecklist ||
+    nonDefaultInformadoPor ||
+    hasNonZeroNumeric
+  );
 }
 
 export default function NovoServicoPage() {
-  const [form, setForm] = useState<FormState>(initialForm);
-  const [savedCount, setSavedCount] = useState(0);
-  const [savedServices, setSavedServices] = useState<PersistedService[]>([]);
-  const [lastSavedMessage, setLastSavedMessage] = useState("");
+  const [saveDestination, setSaveDestination] =
+    useState<SaveDestination>("aguardando");
+  const [statusText, setStatusText] = useState("Aguardando envio");
+  const [saving, setSaving] = useState(false);
+
+  const [osSistema, setOsSistema] = useState(createOS());
+  const [osCliente, setOsCliente] = useState("");
+  const [ocCliente, setOcCliente] = useState("");
+  const [dataServico, setDataServico] = useState(formatDateForInput());
+  const [status, setStatus] = useState("pendente");
+
+  const [empresa, setEmpresa] = useState("");
+  const [contratante, setContratante] = useState("");
+  const [cliente, setCliente] = useState("");
+  const [clienteFinal, setClienteFinal] = useState("");
+  const [contatoClienteFinal, setContatoClienteFinal] = useState("");
+  const [telefoneClienteFinal, setTelefoneClienteFinal] = useState("");
+  const [motorista, setMotorista] = useState("");
+
+  const [tipoServico, setTipoServico] = useState("busca_veiculo");
+  const [modoCobranca, setModoCobranca] = useState("fechado_total");
+  const [servico, setServico] = useState("");
+  const [origem, setOrigem] = useState("");
+  const [destino, setDestino] = useState("");
+  const [placaVeiculo, setPlacaVeiculo] = useState("");
+  const [enderecoRetirada, setEnderecoRetirada] = useState("");
+  const [enderecoEntrega, setEnderecoEntrega] = useState("");
+  const [enderecoInformadoPor, setEnderecoInformadoPor] = useState(
+    DEFAULT_INFORMADO_POR
+  );
+
+  const [kmInput, setKmInput] = useState("0");
+  const [valorCobrancaInput, setValorCobrancaInput] = useState("0,00");
+  const [valorPorKmInput, setValorPorKmInput] = useState("0,00");
+  const [valorMotoristaInput, setValorMotoristaInput] = useState("0,00");
+  const [adiantamentoMotoristaInput, setAdiantamentoMotoristaInput] =
+    useState("0,00");
+  const [pedagioInput, setPedagioInput] = useState("0,00");
+  const [estacionamentoInput, setEstacionamentoInput] = useState("0,00");
+  const [alimentacaoInput, setAlimentacaoInput] = useState("0,00");
+  const [reembolsoInput, setReembolsoInput] = useState("0,00");
+
+  const [observacoes, setObservacoes] = useState(DEFAULT_OBSERVACOES);
+  const [checklistObrigatorio, setChecklistObrigatorio] = useState(true);
+  const [checklistInstrucoes, setChecklistInstrucoes] = useState(
+    DEFAULT_CHECKLIST
+  );
+
+  const km = useMemo(() => parseKmInput(kmInput), [kmInput]);
+  const valorCobrancaManual = useMemo(
+    () => normalizeNumberInput(valorCobrancaInput),
+    [valorCobrancaInput]
+  );
+  const valorPorKm = useMemo(
+    () => normalizeNumberInput(valorPorKmInput),
+    [valorPorKmInput]
+  );
+  const valorMotorista = useMemo(
+    () => normalizeNumberInput(valorMotoristaInput),
+    [valorMotoristaInput]
+  );
+  const adiantamentoMotorista = useMemo(
+    () => normalizeNumberInput(adiantamentoMotoristaInput),
+    [adiantamentoMotoristaInput]
+  );
+  const pedagio = useMemo(
+    () => normalizeNumberInput(pedagioInput),
+    [pedagioInput]
+  );
+  const estacionamento = useMemo(
+    () => normalizeNumberInput(estacionamentoInput),
+    [estacionamentoInput]
+  );
+  const alimentacao = useMemo(
+    () => normalizeNumberInput(alimentacaoInput),
+    [alimentacaoInput]
+  );
+  const reembolso = useMemo(
+    () => normalizeNumberInput(reembolsoInput),
+    [reembolsoInput]
+  );
+
+  const despesas = useMemo(
+    () => pedagio + estacionamento + alimentacao + reembolso,
+    [pedagio, estacionamento, alimentacao, reembolso]
+  );
+
+  const valorCobrancaCalculado = useMemo(() => {
+    if (modoCobranca === "por_km") {
+      return km * valorPorKm;
+    }
+    return valorCobrancaManual;
+  }, [km, modoCobranca, valorCobrancaManual, valorPorKm]);
+
+  const fechamentoMotorista = useMemo(() => {
+    const resultado = valorMotorista + despesas - adiantamentoMotorista;
+    return resultado < 0 ? 0 : resultado;
+  }, [valorMotorista, despesas, adiantamentoMotorista]);
+
+  const margemOperacao = useMemo(() => {
+    return (
+      valorCobrancaCalculado - valorMotorista + adiantamentoMotorista - despesas
+    );
+  }, [valorCobrancaCalculado, valorMotorista, adiantamentoMotorista, despesas]);
+
+  const nomeServicoAutomatico = useMemo(() => {
+    return buildAutoServiceName({
+      servico,
+      origem,
+      destino,
+      tipoServico,
+      cliente,
+      clienteFinal,
+    });
+  }, [servico, origem, destino, tipoServico, cliente, clienteFinal]);
 
   useEffect(() => {
-    const existing = safeReadStorage();
-    setSavedServices(existing);
-    setSavedCount(existing.length);
+    try {
+      const cached = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (!cached) {
+        setStatusText("Tela pronta para novo cadastro.");
+        setSaveDestination("aguardando");
+        return;
+      }
 
-    setForm((current) => ({
-      ...current,
-      osSistema: generateNextOs(existing.length + 1),
-    }));
+      const parsed = JSON.parse(cached) as Partial<Record<string, unknown>>;
+      const hasUsefulData = hasUsefulDraftData(parsed);
+
+      if (typeof parsed.osSistema === "string" && parsed.osSistema) {
+        setOsSistema(parsed.osSistema);
+      }
+      if (typeof parsed.osCliente === "string") setOsCliente(parsed.osCliente);
+      if (typeof parsed.ocCliente === "string") setOcCliente(parsed.ocCliente);
+      if (typeof parsed.dataServico === "string") setDataServico(parsed.dataServico);
+      if (typeof parsed.status === "string") setStatus(parsed.status);
+
+      if (typeof parsed.empresa === "string") setEmpresa(parsed.empresa);
+      if (typeof parsed.contratante === "string") setContratante(parsed.contratante);
+      if (typeof parsed.cliente === "string") setCliente(parsed.cliente);
+      if (typeof parsed.clienteFinal === "string") setClienteFinal(parsed.clienteFinal);
+      if (typeof parsed.contatoClienteFinal === "string") {
+        setContatoClienteFinal(parsed.contatoClienteFinal);
+      }
+      if (typeof parsed.telefoneClienteFinal === "string") {
+        setTelefoneClienteFinal(parsed.telefoneClienteFinal);
+      }
+      if (typeof parsed.motorista === "string") setMotorista(parsed.motorista);
+
+      if (typeof parsed.tipoServico === "string") setTipoServico(parsed.tipoServico);
+      if (typeof parsed.modoCobranca === "string") setModoCobranca(parsed.modoCobranca);
+      if (typeof parsed.servico === "string") setServico(parsed.servico);
+      if (typeof parsed.origem === "string") setOrigem(parsed.origem);
+      if (typeof parsed.destino === "string") setDestino(parsed.destino);
+      if (typeof parsed.placaVeiculo === "string") setPlacaVeiculo(parsed.placaVeiculo);
+      if (typeof parsed.enderecoRetirada === "string") {
+        setEnderecoRetirada(parsed.enderecoRetirada);
+      }
+      if (typeof parsed.enderecoEntrega === "string") {
+        setEnderecoEntrega(parsed.enderecoEntrega);
+      }
+      if (typeof parsed.enderecoInformadoPor === "string") {
+        setEnderecoInformadoPor(parsed.enderecoInformadoPor);
+      }
+
+      if (typeof parsed.kmInput === "string") setKmInput(parsed.kmInput);
+      if (typeof parsed.valorCobrancaInput === "string") {
+        setValorCobrancaInput(parsed.valorCobrancaInput);
+      }
+      if (typeof parsed.valorPorKmInput === "string") {
+        setValorPorKmInput(parsed.valorPorKmInput);
+      }
+      if (typeof parsed.valorMotoristaInput === "string") {
+        setValorMotoristaInput(parsed.valorMotoristaInput);
+      }
+      if (typeof parsed.adiantamentoMotoristaInput === "string") {
+        setAdiantamentoMotoristaInput(parsed.adiantamentoMotoristaInput);
+      }
+      if (typeof parsed.pedagioInput === "string") setPedagioInput(parsed.pedagioInput);
+      if (typeof parsed.estacionamentoInput === "string") {
+        setEstacionamentoInput(parsed.estacionamentoInput);
+      }
+      if (typeof parsed.alimentacaoInput === "string") {
+        setAlimentacaoInput(parsed.alimentacaoInput);
+      }
+      if (typeof parsed.reembolsoInput === "string") {
+        setReembolsoInput(parsed.reembolsoInput);
+      }
+
+      if (typeof parsed.observacoes === "string") setObservacoes(parsed.observacoes);
+      if (typeof parsed.checklistInstrucoes === "string") {
+        setChecklistInstrucoes(parsed.checklistInstrucoes);
+      }
+      if (typeof parsed.checklistObrigatorio === "boolean") {
+        setChecklistObrigatorio(parsed.checklistObrigatorio);
+      }
+
+      if (hasUsefulData) {
+        setStatusText("Rascunho local recuperado com sucesso.");
+        setSaveDestination("local");
+      } else {
+        setStatusText("Tela pronta para novo cadastro.");
+        setSaveDestination("aguardando");
+      }
+    } catch {
+      setStatusText("Tela pronta para novo cadastro.");
+      setSaveDestination("aguardando");
+    }
   }, []);
 
-  const totals = useMemo(() => {
-    const diaria = parseMoney(form.diaria);
-    const pedagio = parseMoney(form.pedagio);
-    const estacionamento = parseMoney(form.estacionamento);
-    const alimentacao = parseMoney(form.alimentacao);
-    const reembolso = parseMoney(form.reembolso);
-    const valorMotorista = parseMoney(form.valorMotorista);
+  useEffect(() => {
+    const draft = {
+      osSistema,
+      osCliente,
+      ocCliente,
+      dataServico,
+      status,
+      empresa,
+      contratante,
+      cliente,
+      clienteFinal,
+      contatoClienteFinal,
+      telefoneClienteFinal,
+      motorista,
+      tipoServico,
+      modoCobranca,
+      servico,
+      origem,
+      destino,
+      placaVeiculo,
+      enderecoRetirada,
+      enderecoEntrega,
+      enderecoInformadoPor,
+      kmInput,
+      valorCobrancaInput,
+      valorPorKmInput,
+      valorMotoristaInput,
+      adiantamentoMotoristaInput,
+      pedagioInput,
+      estacionamentoInput,
+      alimentacaoInput,
+      reembolsoInput,
+      observacoes,
+      checklistObrigatorio,
+      checklistInstrucoes,
+    };
 
-    const valorTotal =
-      diaria + pedagio + estacionamento + alimentacao + reembolso;
+    try {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(draft));
+    } catch {
+      // mantém silencioso
+    }
+  }, [
+    osSistema,
+    osCliente,
+    ocCliente,
+    dataServico,
+    status,
+    empresa,
+    contratante,
+    cliente,
+    clienteFinal,
+    contatoClienteFinal,
+    telefoneClienteFinal,
+    motorista,
+    tipoServico,
+    modoCobranca,
+    servico,
+    origem,
+    destino,
+    placaVeiculo,
+    enderecoRetirada,
+    enderecoEntrega,
+    enderecoInformadoPor,
+    kmInput,
+    valorCobrancaInput,
+    valorPorKmInput,
+    valorMotoristaInput,
+    adiantamentoMotoristaInput,
+    pedagioInput,
+    estacionamentoInput,
+    alimentacaoInput,
+    reembolsoInput,
+    observacoes,
+    checklistObrigatorio,
+    checklistInstrucoes,
+  ]);
 
-    const despesas = pedagio + estacionamento + alimentacao + reembolso;
-    const margemBruta = valorTotal - valorMotorista;
+  function limparFormulario() {
+    setOsSistema(createOS());
+    setOsCliente("");
+    setOcCliente("");
+    setDataServico(formatDateForInput());
+    setStatus("pendente");
 
-    return {
-      diaria,
+    setEmpresa("");
+    setContratante("");
+    setCliente("");
+    setClienteFinal("");
+    setContatoClienteFinal("");
+    setTelefoneClienteFinal("");
+    setMotorista("");
+
+    setTipoServico("busca_veiculo");
+    setModoCobranca("fechado_total");
+    setServico("");
+    setOrigem("");
+    setDestino("");
+    setPlacaVeiculo("");
+    setEnderecoRetirada("");
+    setEnderecoEntrega("");
+    setEnderecoInformadoPor(DEFAULT_INFORMADO_POR);
+
+    setKmInput("0");
+    setValorCobrancaInput("0,00");
+    setValorPorKmInput("0,00");
+    setValorMotoristaInput("0,00");
+    setAdiantamentoMotoristaInput("0,00");
+    setPedagioInput("0,00");
+    setEstacionamentoInput("0,00");
+    setAlimentacaoInput("0,00");
+    setReembolsoInput("0,00");
+
+    setObservacoes(DEFAULT_OBSERVACOES);
+    setChecklistObrigatorio(true);
+    setChecklistInstrucoes(DEFAULT_CHECKLIST);
+
+    try {
+      localStorage.removeItem(LOCAL_STORAGE_KEY);
+    } catch {
+      // sem impacto
+    }
+
+    setSaveDestination("aguardando");
+    setStatusText("Formulário limpo para novo cadastro.");
+  }
+
+  async function salvar() {
+    console.log("SALVAR CLICADO");
+
+    const empresaFinal = empresa.trim();
+    const contratanteFinal = (contratante.trim() || empresaFinal).trim();
+    const clienteFinalValor = (clienteFinal.trim() || cliente.trim()).trim();
+    const clienteBase = cliente.trim() || clienteFinalValor;
+    const servicoFinal = buildAutoServiceName({
+      servico,
+      origem,
+      destino,
+      tipoServico,
+      cliente,
+      clienteFinal,
+    });
+    const motoristaFinal = motorista.trim();
+
+    if (!empresaFinal) {
+      setStatusText("Informe a empresa ou contratante principal.");
+      alert("Informe a empresa ou contratante principal.");
+      return;
+    }
+
+    if (!clienteBase) {
+      setStatusText("Informe pelo menos o cliente principal.");
+      alert("Informe pelo menos o cliente principal.");
+      return;
+    }
+
+    if (!motoristaFinal) {
+      setStatusText("Informe o motorista.");
+      alert("Informe o motorista.");
+      return;
+    }
+
+    const pago = status === "pago";
+    const visivelMotorista = !pago;
+
+    const payload: ServicePayload = {
+      os_sistema: osSistema,
+      os_cliente: osCliente.trim() || null,
+      oc_cliente: ocCliente.trim() || null,
+      empresa: empresaFinal,
+      contratante: contratanteFinal || empresaFinal,
+      cliente: clienteBase,
+      cliente_final: clienteFinalValor || clienteBase,
+      contato_cliente_final: contatoClienteFinal.trim(),
+      telefone_cliente_final: telefoneClienteFinal.trim(),
+      motorista: motoristaFinal,
+      servico: servicoFinal,
+      tipo_servico: tipoServico,
+      modo_cobranca: modoCobranca,
+      origem: origem.trim(),
+      destino: destino.trim(),
+      endereco_retirada: enderecoRetirada.trim(),
+      endereco_entrega: enderecoEntrega.trim(),
+      endereco_informado_por: enderecoInformadoPor.trim(),
+      placa_veiculo: placaVeiculo.trim().toUpperCase(),
+      data_servico: dataServico,
+      km,
+      km_total: km,
+      diaria: valorCobrancaCalculado,
       pedagio,
       estacionamento,
       alimentacao,
       reembolso,
-      valorMotorista,
-      valorTotal,
       despesas,
-      margemBruta,
+      despesas_motorista: despesas,
+      valor_total: valorCobrancaCalculado,
+      valor_cobranca: valorCobrancaCalculado,
+      valor_por_km: valorPorKm,
+      valor_motorista: valorMotorista,
+      adiantamento_motorista: adiantamentoMotorista,
+      fechamento_motorista: fechamentoMotorista,
+      margem_bruta: margemOperacao,
+      margem_operacao: margemOperacao,
+      etapa: "Operacional",
+      origem_base: "Novo serviço",
+      observacao: observacoes.trim() || DEFAULT_OBSERVACOES,
+      observacoes: observacoes.trim() || DEFAULT_OBSERVACOES,
+      checklist_obrigatorio: checklistObrigatorio,
+      checklist_instrucoes: checklistInstrucoes.trim(),
+      status,
+      pago,
+      pago_em: pago ? new Date().toISOString() : null,
+      visivel_motorista: visivelMotorista,
     };
-  }, [
-    form.diaria,
-    form.pedagio,
-    form.estacionamento,
-    form.alimentacao,
-    form.reembolso,
-    form.valorMotorista,
-  ]);
 
-  function updateField<K extends keyof FormState>(field: K, value: FormState[K]) {
-    setForm((current) => ({
-      ...current,
-      [field]: value,
-    }));
-  }
+    console.log("PAYLOAD DO SERVIÇO", payload);
 
-  function generateNextOs(nextNumber: number) {
-    const base = 158 + nextNumber;
-    return `OS-2026-${String(base).padStart(6, "0")}`;
-  }
+    try {
+      setSaving(true);
+      setStatusText("Enviando serviço para o Supabase...");
+      setSaveDestination("aguardando");
 
-  function clearForm(nextLength?: number) {
-    const nextCount = typeof nextLength === "number" ? nextLength : savedCount + 1;
+      const response = await fetch("/api/services", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
 
-    setForm({
-      ...initialForm,
-      osSistema: generateNextOs(nextCount),
-    });
-  }
+      const data = await response.json().catch(() => ({}));
 
-  function saveDraft() {
-    const cliente = form.cliente.trim();
-    const motorista = form.motorista.trim();
-    const origem = form.origem.trim();
-    const destino = form.destino.trim();
+      console.log("RESPOSTA DO POST", data);
 
-    if (!cliente || !motorista || !origem || !destino) {
+      if (!response.ok || data?.success === false) {
+        throw new Error(data?.message || "Falha ao salvar no Supabase.");
+      }
+
+      try {
+        const historical = localStorage.getItem("aurora_motoristas_servicos");
+        const parsed = historical ? JSON.parse(historical) : [];
+        const next = Array.isArray(parsed) ? parsed : [];
+        next.unshift({
+          id: data?.service?.id || payload.os_sistema,
+          ...payload,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        });
+        localStorage.setItem("aurora_motoristas_servicos", JSON.stringify(next));
+      } catch {
+        // complementar
+      }
+
+      try {
+        localStorage.removeItem(LOCAL_STORAGE_KEY);
+      } catch {
+        // sem impacto
+      }
+
+      setSaveDestination("supabase");
+      setStatusText("Serviço salvo com sucesso no Supabase.");
       alert(
-        "Preencha pelo menos cliente, motorista, origem e destino antes de salvar."
+        `Serviço salvo com sucesso no Supabase.\n\nNome gerado: ${payload.servico}`
       );
-      return;
+      limparFormulario();
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Erro ao salvar o serviço.";
+
+      console.error("ERRO AO SALVAR", error);
+
+      try {
+        const historical = localStorage.getItem("aurora_motoristas_servicos");
+        const parsed = historical ? JSON.parse(historical) : [];
+        const next = Array.isArray(parsed) ? parsed : [];
+        next.unshift({
+          id: payload.os_sistema,
+          ...payload,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          local_fallback: true,
+        });
+        localStorage.setItem("aurora_motoristas_servicos", JSON.stringify(next));
+        setSaveDestination("local");
+        setStatusText(`${message} Registro preservado em fallback local.`);
+        alert(
+          `${message}\n\nRegistro preservado em fallback local.\n\nNome gerado: ${payload.servico}`
+        );
+      } catch {
+        setSaveDestination("aguardando");
+        setStatusText(message);
+        alert(message);
+      }
+    } finally {
+      setSaving(false);
     }
-
-    const existing = safeReadStorage();
-
-    const newService: PersistedService = {
-      id: `SER-LOCAL-${String(existing.length + 1).padStart(4, "0")}`,
-      osSistema: form.osSistema.trim() || generateNextOs(existing.length + 1),
-      empresa: form.empresa.trim() || "Empresa não informada",
-      cliente,
-      motorista,
-      servico: createServiceTitle(origem, destino),
-      origem,
-      destino,
-      data: formatDate(form.dataServico),
-      km: Number(form.km) || 0,
-      valorTotal: totals.valorTotal,
-      valorMotorista: totals.valorMotorista,
-      despesas: totals.despesas,
-      etapa: "Cotação",
-      observacao:
-        form.observacao.trim() ||
-        "Serviço lançado em cotação aguardando validação operacional.",
-      createdAt: new Date().toISOString(),
-    };
-
-    const updated = [newService, ...existing];
-    safeWriteStorage(updated);
-
-    setSavedServices(updated);
-    setSavedCount(updated.length);
-    setLastSavedMessage(
-      `Serviço ${newService.osSistema} salvo localmente e pronto para aparecer em /servicos.`
-    );
-
-    clearForm(updated.length + 1);
-  }
-
-  function clearSavedServices() {
-    if (typeof window === "undefined") return;
-
-    window.localStorage.removeItem(STORAGE_KEY);
-    setSavedServices([]);
-    setSavedCount(0);
-    setLastSavedMessage("Base local limpa com sucesso.");
-    clearForm(1);
   }
 
   return (
-    <main style={styles.page}>
-      <section style={styles.heroSection}>
-        <div style={styles.glowOne} />
-        <div style={styles.glowTwo} />
+    <main
+      style={{
+        minHeight: "100vh",
+        background: "#f6f8fb",
+        padding: "24px 16px 48px",
+        fontFamily: "Arial, sans-serif",
+        color: "#123047",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: 1240,
+          margin: "0 auto",
+          display: "flex",
+          flexDirection: "column",
+          gap: 18,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 12,
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+            <Link
+              href="/servicos"
+              style={{
+                textDecoration: "none",
+                background: "#ffffff",
+                color: "#123047",
+                border: "1px solid #dbe5ef",
+                borderRadius: 12,
+                padding: "10px 14px",
+                fontWeight: 700,
+              }}
+            >
+              Voltar para serviços
+            </Link>
 
-        <div style={styles.heroCard}>
-          <div style={styles.heroGrid}>
-            <div style={styles.heroLeft}>
-              <div style={styles.eyebrow}>AURORA MOTORISTAS • NOVO SERVIÇO</div>
-              <h1 style={styles.heroTitle}>
-                Cadastro operacional real do serviço com persistência local e visão premium
-              </h1>
-              <p style={styles.heroText}>
-                Esta área agora não cria apenas um rascunho visual. O serviço já
-                fica salvo localmente no navegador, preparado para entrar na lista
-                principal e seguir a trilha de cotação, operação, pagamento e histórico.
-              </p>
-
-              <div style={styles.heroActions}>
-                <Link href="/servicos" style={styles.secondaryButton}>
-                  Voltar para serviços
-                </Link>
-
-                <Link href="/operacao" style={styles.primaryButton}>
-                  Ir para operação
-                </Link>
-              </div>
-            </div>
-
-            <div style={styles.heroRightCard}>
-              <span style={styles.sideKicker}>ENTRADA PERSISTENTE</span>
-              <h2 style={styles.sideTitle}>Agora o novo serviço não some</h2>
-              <p style={styles.sideText}>
-                O cadastro passa a ser guardado no navegador e fica pronto para
-                alimentar a base operacional do app no próximo passo.
-              </p>
-
-              <div style={styles.sidePills}>
-                <div style={styles.sidePill}>Salva em localStorage</div>
-                <div style={styles.sidePill}>Entra como Cotação</div>
-                <div style={styles.sidePill}>Pronto para /servicos</div>
-              </div>
-            </div>
+            <Link
+              href="/"
+              style={{
+                textDecoration: "none",
+                background: "#ffffff",
+                color: "#123047",
+                border: "1px solid #dbe5ef",
+                borderRadius: 12,
+                padding: "10px 14px",
+                fontWeight: 700,
+              }}
+            >
+              Início
+            </Link>
           </div>
 
-          <div style={styles.noticeBox}>
-            Sistema em constante atualização. Esta tela já persiste o serviço no
-            navegador para preparar a integração direta com a lista de serviços.
+          <div
+            style={{
+              background: "#ffffff",
+              color: "#5b7488",
+              border: "1px solid #e7eef6",
+              borderRadius: 12,
+              padding: "10px 14px",
+              fontWeight: 700,
+            }}
+          >
+            {saving ? "Salvando..." : statusText}
           </div>
         </div>
-      </section>
 
-      <section style={styles.statsSection}>
-        <div style={styles.statsGrid}>
-          <article style={styles.statCard}>
-            <span style={styles.statLabel}>Valor total previsto</span>
-            <strong style={styles.statValue}>
-              {formatCurrency(totals.valorTotal)}
-            </strong>
-            <span style={styles.statDetail}>Soma automática dos custos</span>
-          </article>
+        <section
+          style={{
+            background: "#ffffff",
+            borderRadius: 24,
+            padding: 22,
+            boxShadow: "0 20px 45px rgba(15, 23, 42, 0.06)",
+            border: "1px solid #e7eef6",
+          }}
+        >
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <span
+              style={{
+                display: "inline-flex",
+                width: "fit-content",
+                background: "#e0f2fe",
+                color: "#075985",
+                borderRadius: 999,
+                padding: "6px 12px",
+                fontWeight: 700,
+                fontSize: 13,
+              }}
+            >
+              Aurora Motoristas
+            </span>
 
-          <article style={styles.statCard}>
-            <span style={styles.statLabel}>Valor motorista</span>
-            <strong style={styles.statValue}>
-              {formatCurrency(totals.valorMotorista)}
-            </strong>
-            <span style={styles.statDetail}>Repasse estimado</span>
-          </article>
+            <h1
+              style={{
+                margin: 0,
+                fontSize: 32,
+                lineHeight: 1.1,
+              }}
+            >
+              Novo serviço
+            </h1>
 
-          <article style={styles.statCard}>
-            <span style={styles.statLabel}>Margem bruta</span>
-            <strong style={styles.statValue}>
-              {formatCurrency(totals.margemBruta)}
-            </strong>
-            <span style={styles.statDetail}>Leitura inicial da operação</span>
-          </article>
+            <p
+              style={{
+                margin: 0,
+                color: "#4b6478",
+                fontSize: 15,
+                lineHeight: 1.6,
+              }}
+            >
+              Cadastro operacional com salvamento prioritário no Supabase e
+              fallback temporário em localStorage. Esta tela mantém a blindagem
+              da operação e não altera a regra do motorista: após pagamento, o
+              serviço sai da visão ativa e fica preservado no histórico interno.
+            </p>
 
-          <article style={styles.statCard}>
-            <span style={styles.statLabel}>Serviços salvos</span>
-            <strong style={styles.statValue}>{savedCount}</strong>
-            <span style={styles.statDetail}>Base local persistida</span>
-          </article>
-        </div>
-      </section>
+            <div
+              style={{
+                marginTop: 4,
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 10,
+              }}
+            >
+              <span
+                style={{
+                  background: "#f8fafc",
+                  color: "#334155",
+                  border: "1px solid #e2e8f0",
+                  borderRadius: 999,
+                  padding: "8px 12px",
+                  fontSize: 13,
+                  fontWeight: 700,
+                }}
+              >
+                Destino do salvamento:{" "}
+                {saveDestination === "supabase"
+                  ? "Supabase"
+                  : saveDestination === "local"
+                  ? "Fallback local"
+                  : "Aguardando envio"}
+              </span>
 
-      <section style={styles.contentSection}>
-        <div style={styles.mainGrid}>
-          <div style={styles.leftColumn}>
-            <div style={styles.formCard}>
-              <div style={styles.sectionHeader}>
-                <div>
-                  <span style={styles.sectionEyebrow}>CADASTRO COMPLETO</span>
-                  <h2 style={styles.sectionTitle}>Lançar novo serviço</h2>
-                </div>
-              </div>
-
-              <div style={styles.formGrid}>
-                <div style={styles.field}>
-                  <label style={styles.label}>Empresa</label>
-                  <input
-                    value={form.empresa}
-                    onChange={(e) => updateField("empresa", e.target.value)}
-                    style={styles.input}
-                    placeholder="Ex.: Aurora Locadoras Premium"
-                  />
-                </div>
-
-                <div style={styles.field}>
-                  <label style={styles.label}>Cliente</label>
-                  <input
-                    value={form.cliente}
-                    onChange={(e) => updateField("cliente", e.target.value)}
-                    style={styles.input}
-                    placeholder="Ex.: Operação Aeroporto Premium"
-                  />
-                </div>
-
-                <div style={styles.field}>
-                  <label style={styles.label}>Motorista</label>
-                  <input
-                    value={form.motorista}
-                    onChange={(e) => updateField("motorista", e.target.value)}
-                    style={styles.input}
-                    placeholder="Ex.: Carlos Henrique"
-                  />
-                </div>
-
-                <div style={styles.field}>
-                  <label style={styles.label}>Data do serviço</label>
-                  <input
-                    type="date"
-                    value={form.dataServico}
-                    onChange={(e) => updateField("dataServico", e.target.value)}
-                    style={styles.input}
-                  />
-                </div>
-
-                <div style={styles.field}>
-                  <label style={styles.label}>Origem</label>
-                  <input
-                    value={form.origem}
-                    onChange={(e) => updateField("origem", e.target.value)}
-                    style={styles.input}
-                    placeholder="Ex.: Belo Horizonte"
-                  />
-                </div>
-
-                <div style={styles.field}>
-                  <label style={styles.label}>Destino</label>
-                  <input
-                    value={form.destino}
-                    onChange={(e) => updateField("destino", e.target.value)}
-                    style={styles.input}
-                    placeholder="Ex.: Confins"
-                  />
-                </div>
-
-                <div style={styles.field}>
-                  <label style={styles.label}>KM</label>
-                  <input
-                    value={form.km}
-                    onChange={(e) => updateField("km", e.target.value)}
-                    style={styles.input}
-                    placeholder="Ex.: 42"
-                  />
-                </div>
-
-                <div style={styles.field}>
-                  <label style={styles.label}>Diária / valor base</label>
-                  <input
-                    value={form.diaria}
-                    onChange={(e) => updateField("diaria", e.target.value)}
-                    style={styles.input}
-                    placeholder="Ex.: 350"
-                  />
-                </div>
-
-                <div style={styles.field}>
-                  <label style={styles.label}>Pedágio</label>
-                  <input
-                    value={form.pedagio}
-                    onChange={(e) => updateField("pedagio", e.target.value)}
-                    style={styles.input}
-                    placeholder="Ex.: 45"
-                  />
-                </div>
-
-                <div style={styles.field}>
-                  <label style={styles.label}>Estacionamento</label>
-                  <input
-                    value={form.estacionamento}
-                    onChange={(e) => updateField("estacionamento", e.target.value)}
-                    style={styles.input}
-                    placeholder="Ex.: 20"
-                  />
-                </div>
-
-                <div style={styles.field}>
-                  <label style={styles.label}>Alimentação</label>
-                  <input
-                    value={form.alimentacao}
-                    onChange={(e) => updateField("alimentacao", e.target.value)}
-                    style={styles.input}
-                    placeholder="Ex.: 35"
-                  />
-                </div>
-
-                <div style={styles.field}>
-                  <label style={styles.label}>Reembolso / extra</label>
-                  <input
-                    value={form.reembolso}
-                    onChange={(e) => updateField("reembolso", e.target.value)}
-                    style={styles.input}
-                    placeholder="Ex.: 50"
-                  />
-                </div>
-
-                <div style={styles.field}>
-                  <label style={styles.label}>Valor motorista</label>
-                  <input
-                    value={form.valorMotorista}
-                    onChange={(e) => updateField("valorMotorista", e.target.value)}
-                    style={styles.input}
-                    placeholder="Ex.: 180"
-                  />
-                </div>
-
-                <div style={styles.field}>
-                  <label style={styles.label}>OS sistema</label>
-                  <input
-                    value={form.osSistema}
-                    onChange={(e) => updateField("osSistema", e.target.value)}
-                    style={styles.input}
-                    placeholder="Ex.: OS-2026-000158"
-                  />
-                </div>
-
-                <div style={styles.field}>
-                  <label style={styles.label}>OS cliente</label>
-                  <input
-                    value={form.osCliente}
-                    onChange={(e) => updateField("osCliente", e.target.value)}
-                    style={styles.input}
-                    placeholder="Ex.: OS-CLI-9001"
-                  />
-                </div>
-
-                <div style={styles.field}>
-                  <label style={styles.label}>OC cliente</label>
-                  <input
-                    value={form.ocCliente}
-                    onChange={(e) => updateField("ocCliente", e.target.value)}
-                    style={styles.input}
-                    placeholder="Ex.: OC-CLI-4401"
-                  />
-                </div>
-
-                <div style={styles.fieldWide}>
-                  <label style={styles.label}>Observação operacional</label>
-                  <textarea
-                    value={form.observacao}
-                    onChange={(e) => updateField("observacao", e.target.value)}
-                    style={styles.textarea}
-                    placeholder="Descreva detalhes do serviço, exigências, horários, pontos de atenção e combinação feita."
-                  />
-                </div>
-              </div>
-
-              <div style={styles.actionRow}>
-                <button type="button" onClick={saveDraft} style={styles.primaryAction}>
-                  Salvar serviço na base local
-                </button>
-
-                <button type="button" onClick={() => clearForm(savedCount + 1)} style={styles.secondaryAction}>
-                  Limpar formulário
-                </button>
-
-                <button type="button" onClick={clearSavedServices} style={styles.dangerAction}>
-                  Limpar base local
-                </button>
-              </div>
-
-              {lastSavedMessage ? (
-                <div style={styles.feedbackBox}>{lastSavedMessage}</div>
-              ) : null}
+              <span
+                style={{
+                  background: "#fff7ed",
+                  color: "#9a3412",
+                  border: "1px solid #fed7aa",
+                  borderRadius: 999,
+                  padding: "8px 12px",
+                  fontSize: 13,
+                  fontWeight: 700,
+                }}
+              >
+                Sistema em constante atualização e podem ocorrer instabilidades
+                momentâneas.
+              </span>
             </div>
           </div>
+        </section>
 
-          <aside style={styles.rightColumn}>
-            <div style={styles.previewCard}>
-              <span style={styles.sectionEyebrow}>PRÉVIA OPERACIONAL</span>
-              <h2 style={styles.sidebarTitle}>Como o serviço nasce</h2>
+        <section
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+            gap: 14,
+          }}
+        >
+          <SummaryCard label="Status inicial" value={status} />
+          <SummaryCard
+            label="Tipo selecionado"
+            value={
+              tipoServico === "busca_veiculo"
+                ? "Busca de veículo"
+                : tipoServico === "entrega_veiculo"
+                ? "Entrega de veículo"
+                : tipoServico === "transporte_executivo"
+                ? "Transporte executivo"
+                : "Transfer"
+            }
+          />
+          <SummaryCard
+            label="Modo de cobrança"
+            value={modoCobranca === "por_km" ? "Por KM" : "Fechado total"}
+          />
+          <SummaryCard label="Nome previsto" value={nomeServicoAutomatico} />
+          <SummaryCard
+            label="Margem da operação"
+            value={formatCurrency(margemOperacao)}
+          />
+        </section>
 
-              <div style={styles.ruleList}>
-                <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Etapa inicial</strong>
-                  <span style={styles.ruleItemText}>Cotação</span>
-                </div>
+        <section
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1.1fr 0.9fr",
+            gap: 16,
+          }}
+        >
+          <div
+            style={{
+              background: "#ffffff",
+              borderRadius: 24,
+              padding: 20,
+              border: "1px solid #e7eef6",
+              boxShadow: "0 20px 45px rgba(15, 23, 42, 0.06)",
+              display: "flex",
+              flexDirection: "column",
+              gap: 18,
+            }}
+          >
+            <h2
+              style={{
+                margin: 0,
+                fontSize: 22,
+                lineHeight: 1.2,
+                color: "#0f172a",
+              }}
+            >
+              Dados principais
+            </h2>
 
-                <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Rota</strong>
-                  <span style={styles.ruleItemText}>
-                    {(form.origem || "Origem")} x {(form.destino || "Destino")}
-                  </span>
-                </div>
-
-                <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Data</strong>
-                  <span style={styles.ruleItemText}>
-                    {formatDate(form.dataServico)}
-                  </span>
-                </div>
-
-                <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>OS sistema</strong>
-                  <span style={styles.ruleItemText}>
-                    {form.osSistema || "Não informada"}
-                  </span>
-                </div>
-
-                <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Valor total</strong>
-                  <span style={styles.ruleItemText}>
-                    {formatCurrency(totals.valorTotal)}
-                  </span>
-                </div>
-
-                <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Repasse motorista</strong>
-                  <span style={styles.ruleItemText}>
-                    {formatCurrency(totals.valorMotorista)}
-                  </span>
-                </div>
-
-                <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Margem bruta</strong>
-                  <span style={styles.ruleItemText}>
-                    {formatCurrency(totals.margemBruta)}
-                  </span>
-                </div>
-              </div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                gap: 12,
+              }}
+            >
+              <Field
+                label="OS"
+                value={osSistema}
+                onChange={setOsSistema}
+                placeholder="Ex.: OS-2026-000145"
+              />
+              <Field
+                label="Data do serviço"
+                value={dataServico}
+                onChange={setDataServico}
+                type="date"
+              />
+              <Field
+                label="OS do cliente"
+                value={osCliente}
+                onChange={setOsCliente}
+                placeholder="Opcional"
+              />
+              <Field
+                label="OC do cliente"
+                value={ocCliente}
+                onChange={setOcCliente}
+                placeholder="Opcional"
+              />
+              <SelectField
+                label="Status"
+                value={status}
+                onChange={setStatus}
+                options={[
+                  { value: "pendente", label: "pendente" },
+                  {
+                    value: "aguardando_pagamento",
+                    label: "aguardando_pagamento",
+                  },
+                  { value: "pago", label: "pago" },
+                ]}
+              />
+              <SelectField
+                label="Tipo de serviço"
+                value={tipoServico}
+                onChange={setTipoServico}
+                options={[
+                  { value: "busca_veiculo", label: "Busca de veículo" },
+                  { value: "entrega_veiculo", label: "Entrega de veículo" },
+                  {
+                    value: "transporte_executivo",
+                    label: "Transporte executivo",
+                  },
+                  { value: "transfer", label: "Transfer" },
+                ]}
+              />
             </div>
 
-            <div style={styles.darkCard}>
-              <div style={styles.robotTag}>ROBÔ AURORA</div>
-              <h2 style={styles.sidebarTitleDark}>Apoio ao cadastro</h2>
-              <p style={styles.sidebarTextDark}>
-                O Robô Aurora poderá sugerir valor ideal, alertar margem apertada,
-                identificar custo alto, revisar campos faltando e preparar o serviço
-                para seguir na operação com mais segurança.
-              </p>
+            <InfoBox
+              title="Tipo de serviço"
+              text={getTipoServicoDescricao(tipoServico)}
+            />
 
-              <div style={styles.robotList}>
-                <div style={styles.robotItem}>Ler margem</div>
-                <div style={styles.robotItem}>Apontar custo alto</div>
-                <div style={styles.robotItem}>Revisar cadastro</div>
-                <div style={styles.robotItem}>Preparar fluxo</div>
-              </div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                gap: 12,
+              }}
+            >
+              <Field
+                label="Empresa"
+                value={empresa}
+                onChange={setEmpresa}
+                placeholder="Ex.: Aurora Locadoras Premium"
+              />
+              <Field
+                label="Contratante"
+                value={contratante}
+                onChange={setContratante}
+                placeholder="Ex.: RAJA ALUGUEL DE VEICULOS"
+              />
+              <Field
+                label="Cliente"
+                value={cliente}
+                onChange={setCliente}
+                placeholder="Ex.: Alexandre"
+              />
+              <Field
+                label="Cliente final"
+                value={clienteFinal}
+                onChange={setClienteFinal}
+                placeholder="Ex.: Alexandre"
+              />
+              <Field
+                label="Contato do cliente"
+                value={contatoClienteFinal}
+                onChange={setContatoClienteFinal}
+                placeholder="Ex.: Sabrina"
+              />
+              <Field
+                label="Telefone do cliente"
+                value={telefoneClienteFinal}
+                onChange={setTelefoneClienteFinal}
+                placeholder="Ex.: 31999999999"
+              />
+              <Field
+                label="Motorista"
+                value={motorista}
+                onChange={setMotorista}
+                placeholder="Ex.: Paulo Santos"
+              />
+              <Field
+                label="Nome do serviço"
+                value={servico}
+                onChange={setServico}
+                placeholder="Se deixar em branco, o sistema gera automaticamente"
+              />
+              <Field
+                label="Origem"
+                value={origem}
+                onChange={setOrigem}
+                placeholder="Ex.: Pátio BH"
+              />
+              <Field
+                label="Destino"
+                value={destino}
+                onChange={setDestino}
+                placeholder="Ex.: Sinop"
+              />
+              <Field
+                label="Placa"
+                value={placaVeiculo}
+                onChange={setPlacaVeiculo}
+                placeholder="Ex.: TXT-1E25"
+              />
+              <Field
+                label="Informado por"
+                value={enderecoInformadoPor}
+                onChange={setEnderecoInformadoPor}
+                placeholder="Ex.: Contratante / cliente"
+              />
             </div>
 
-            <div style={styles.savedCard}>
-              <span style={styles.sectionEyebrow}>BASE LOCAL SALVA</span>
-              <h2 style={styles.sidebarTitle}>Serviços persistidos</h2>
+            <InfoBox
+              title="Nome automático"
+              text={`Se o campo "Nome do serviço" ficar vazio, o sistema usará: ${nomeServicoAutomatico}`}
+            />
 
-              <div style={styles.savedList}>
-                {savedServices.length === 0 ? (
-                  <div style={styles.emptyState}>
-                    Nenhum serviço salvo ainda. Preencha o formulário e clique em salvar.
-                  </div>
-                ) : (
-                  savedServices.map((item) => (
-                    <article key={item.id} style={styles.savedItem}>
-                      <strong style={styles.savedTitle}>{item.servico}</strong>
-                      <span style={styles.savedText}>
-                        {item.osSistema} • {item.data}
-                      </span>
-                      <span style={styles.savedText}>
-                        {item.empresa} • {item.cliente}
-                      </span>
-                      <span style={styles.savedText}>
-                        {formatCurrency(item.valorTotal)} • motorista{" "}
-                        {formatCurrency(item.valorMotorista)}
-                      </span>
-                      <span style={styles.savedTag}>{item.etapa}</span>
-                    </article>
-                  ))
-                )}
-              </div>
+            <Field
+              label="Endereço de retirada"
+              value={enderecoRetirada}
+              onChange={setEnderecoRetirada}
+              placeholder="Ex.: Estrada Tarcísio Schettino Ribeiro, 760"
+            />
+
+            <Field
+              label="Endereço de entrega"
+              value={enderecoEntrega}
+              onChange={setEnderecoEntrega}
+              placeholder="Ex.: Rua do Sumidouro, 555"
+            />
+
+            <TextAreaField
+              label="Observações"
+              value={observacoes}
+              onChange={setObservacoes}
+              placeholder="Observações operacionais..."
+            />
+          </div>
+
+          <div
+            style={{
+              background: "#ffffff",
+              borderRadius: 24,
+              padding: 20,
+              border: "1px solid #e7eef6",
+              boxShadow: "0 20px 45px rgba(15, 23, 42, 0.06)",
+              display: "flex",
+              flexDirection: "column",
+              gap: 18,
+            }}
+          >
+            <h2
+              style={{
+                margin: 0,
+                fontSize: 22,
+                lineHeight: 1.2,
+                color: "#0f172a",
+              }}
+            >
+              Valores e fechamento
+            </h2>
+
+            <SelectField
+              label="Modo de cobrança ao contratante"
+              value={modoCobranca}
+              onChange={setModoCobranca}
+              options={[
+                { value: "fechado_total", label: "Fechado total" },
+                { value: "por_km", label: "Por KM" },
+              ]}
+            />
+
+            <InfoBox
+              title="Modo de cobrança"
+              text={getModoCobrancaDescricao(modoCobranca)}
+            />
+
+            <Field
+              label="KM total"
+              value={kmInput}
+              onChange={setKmInput}
+              placeholder="Ex.: 150"
+            />
+
+            {modoCobranca === "por_km" ? (
+              <Field
+                label="Valor por KM"
+                value={valorPorKmInput}
+                onChange={setValorPorKmInput}
+                placeholder="0,00"
+              />
+            ) : (
+              <Field
+                label="Valor da cobrança"
+                value={valorCobrancaInput}
+                onChange={setValorCobrancaInput}
+                placeholder="0,00"
+              />
+            )}
+
+            <Field
+              label="Valor do motorista"
+              value={valorMotoristaInput}
+              onChange={setValorMotoristaInput}
+              placeholder="0,00"
+            />
+
+            <Field
+              label="Adiantamento do motorista"
+              value={adiantamentoMotoristaInput}
+              onChange={setAdiantamentoMotoristaInput}
+              placeholder="0,00"
+            />
+
+            <Field
+              label="Pedágio"
+              value={pedagioInput}
+              onChange={setPedagioInput}
+              placeholder="0,00"
+            />
+
+            <Field
+              label="Estacionamento"
+              value={estacionamentoInput}
+              onChange={setEstacionamentoInput}
+              placeholder="0,00"
+            />
+
+            <Field
+              label="Alimentação"
+              value={alimentacaoInput}
+              onChange={setAlimentacaoInput}
+              placeholder="0,00"
+            />
+
+            <Field
+              label="Reembolso / outras despesas"
+              value={reembolsoInput}
+              onChange={setReembolsoInput}
+              placeholder="0,00"
+            />
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                gap: 12,
+              }}
+            >
+              <ResultCard
+                label="Cobrança final"
+                value={formatCurrency(valorCobrancaCalculado)}
+              />
+              <ResultCard
+                label="Despesas totais"
+                value={formatCurrency(despesas)}
+              />
+              <ResultCard
+                label="Fechamento motorista"
+                value={formatCurrency(fechamentoMotorista)}
+              />
+              <ResultCard
+                label="Margem da operação"
+                value={formatCurrency(margemOperacao)}
+              />
             </div>
-          </aside>
+
+            <div
+              style={{
+                borderRadius: 18,
+                background: "#f8fbff",
+                border: "1px solid #e5edf5",
+                padding: 16,
+                color: "#435b6e",
+                fontSize: 14,
+                lineHeight: 1.7,
+              }}
+            >
+              <strong style={{ color: "#123047" }}>Regra aplicada:</strong>{" "}
+              fechamento do motorista = valor do motorista + despesas -
+              adiantamento. Margem da operação = cobrança - valor do motorista +
+              adiantamento - despesas.
+            </div>
+
+            <label
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: 10,
+                padding: 14,
+                borderRadius: 18,
+                background: "#f8fbff",
+                border: "1px solid #e5edf5",
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={checklistObrigatorio}
+                onChange={(e) => setChecklistObrigatorio(e.target.checked)}
+                style={{ marginTop: 3 }}
+              />
+              <span
+                style={{
+                  color: "#435b6e",
+                  fontSize: 14,
+                  lineHeight: 1.7,
+                }}
+              >
+                Checklist obrigatório nesta operação
+              </span>
+            </label>
+
+            <TextAreaField
+              label="Instruções do checklist"
+              value={checklistInstrucoes}
+              onChange={setChecklistInstrucoes}
+              placeholder="Orientações para o motorista..."
+            />
+          </div>
+        </section>
+
+        <section
+          style={{
+            background: "#ffffff",
+            borderRadius: 24,
+            padding: 20,
+            border: "1px solid #e7eef6",
+            boxShadow: "0 20px 45px rgba(15, 23, 42, 0.06)",
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 12,
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <div
+            style={{
+              color: "#4b6478",
+              fontSize: 14,
+              lineHeight: 1.7,
+              maxWidth: 780,
+            }}
+          >
+            Blindagem mantida: esta tela cadastra o serviço, mas não expõe visão
+            financeira ao motorista. Quando o status for <strong>pago</strong>,
+            o sistema já envia <strong>visível para motorista = não</strong> e
+            preserva o item apenas no histórico interno protegido.
+          </div>
+
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+            <button
+              type="button"
+              onClick={limparFormulario}
+              disabled={saving}
+              style={{
+                border: "1px solid #dbe5ef",
+                background: "#ffffff",
+                color: "#123047",
+                borderRadius: 12,
+                padding: "12px 16px",
+                fontWeight: 800,
+                cursor: saving ? "not-allowed" : "pointer",
+                opacity: saving ? 0.7 : 1,
+              }}
+            >
+              Limpar
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                console.log("BOTÃO SALVAR PRESSIONADO");
+                salvar();
+              }}
+              disabled={saving}
+              style={{
+                border: "none",
+                background: "#0ea5e9",
+                color: "#ffffff",
+                borderRadius: 12,
+                padding: "12px 18px",
+                fontWeight: 800,
+                cursor: saving ? "not-allowed" : "pointer",
+                boxShadow: "0 14px 28px rgba(14, 165, 233, 0.20)",
+                opacity: saving ? 0.8 : 1,
+              }}
+            >
+              {saving ? "Salvando..." : "Salvar serviço"}
+            </button>
+          </div>
+        </section>
+
+        <div
+          style={{
+            textAlign: "center",
+            color: "#64748b",
+            fontSize: 13,
+            fontWeight: 700,
+          }}
+        >
+          Sistema em constante atualização • podem ocorrer instabilidades momentâneas
         </div>
-      </section>
+      </div>
     </main>
   );
 }
 
-const styles: Record<string, React.CSSProperties> = {
-  page: {
-    minHeight: "100vh",
-    background:
-      "linear-gradient(180deg, #f6fbff 0%, #edf8ff 34%, #ffffff 72%, #f8fcff 100%)",
-    color: "#0f172a",
-    paddingBottom: 56,
-  },
+function SummaryCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div
+      style={{
+        background: "#ffffff",
+        borderRadius: 20,
+        padding: 18,
+        border: "1px solid #e7eef6",
+        boxShadow: "0 14px 30px rgba(15, 23, 42, 0.05)",
+      }}
+    >
+      <div
+        style={{
+          color: "#5b7488",
+          fontSize: 13,
+          fontWeight: 700,
+          marginBottom: 10,
+        }}
+      >
+        {label}
+      </div>
+      <div
+        style={{
+          fontSize: 22,
+          fontWeight: 800,
+          color: "#123047",
+          lineHeight: 1.3,
+        }}
+      >
+        {value}
+      </div>
+    </div>
+  );
+}
 
-  heroSection: {
-    position: "relative",
-    overflow: "hidden",
-    padding: "32px 20px 18px",
-  },
+function ResultCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div
+      style={{
+        background: "#fcfdff",
+        border: "1px solid #e7eef6",
+        borderRadius: 16,
+        padding: 14,
+      }}
+    >
+      <div
+        style={{
+          color: "#6b7f90",
+          fontSize: 12,
+          fontWeight: 700,
+          marginBottom: 8,
+        }}
+      >
+        {label}
+      </div>
+      <div
+        style={{
+          color: "#123047",
+          fontSize: 18,
+          fontWeight: 800,
+          lineHeight: 1.3,
+        }}
+      >
+        {value}
+      </div>
+    </div>
+  );
+}
 
-  glowOne: {
-    position: "absolute",
-    top: -120,
-    left: -120,
-    width: 340,
-    height: 340,
-    borderRadius: "50%",
-    background: "rgba(0, 194, 255, 0.18)",
-    filter: "blur(58px)",
-    pointerEvents: "none",
-  },
+function InfoBox({ title, text }: { title: string; text: string }) {
+  return (
+    <div
+      style={{
+        borderRadius: 16,
+        background: "#f8fbff",
+        border: "1px solid #e5edf5",
+        padding: 14,
+        color: "#435b6e",
+        fontSize: 14,
+        lineHeight: 1.7,
+      }}
+    >
+      <strong style={{ color: "#123047" }}>{title}:</strong> {text}
+    </div>
+  );
+}
 
-  glowTwo: {
-    position: "absolute",
-    top: -80,
-    right: -100,
-    width: 320,
-    height: 320,
-    borderRadius: "50%",
-    background: "rgba(37, 99, 235, 0.16)",
-    filter: "blur(58px)",
-    pointerEvents: "none",
-  },
+function Field({
+  label,
+  value,
+  onChange,
+  placeholder,
+  type = "text",
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  type?: string;
+}) {
+  return (
+    <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <span
+        style={{
+          fontSize: 13,
+          color: "#5b7488",
+          fontWeight: 700,
+        }}
+      >
+        {label}
+      </span>
 
-  heroCard: {
-    position: "relative",
-    maxWidth: 1240,
-    margin: "0 auto",
-    background: "rgba(255,255,255,0.78)",
-    border: "1px solid rgba(125, 211, 252, 0.28)",
-    borderRadius: 30,
-    padding: "28px 22px 24px",
-    boxShadow: "0 24px 60px rgba(14, 165, 233, 0.10)",
-    backdropFilter: "blur(12px)",
-  },
+      <input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        style={{
+          borderRadius: 14,
+          border: "1px solid #d8e3ee",
+          padding: "14px 16px",
+          fontSize: 15,
+          outline: "none",
+          background: "#f8fbff",
+          color: "#123047",
+        }}
+      />
+    </label>
+  );
+}
 
-  heroGrid: {
-    display: "grid",
-    gridTemplateColumns: "minmax(0, 1.15fr) minmax(300px, 0.85fr)",
-    gap: 18,
-    alignItems: "start",
-  },
+function SelectField({
+  label,
+  value,
+  onChange,
+  options,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  options: Array<{ value: string; label: string }>;
+}) {
+  return (
+    <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <span
+        style={{
+          fontSize: 13,
+          color: "#5b7488",
+          fontWeight: 700,
+        }}
+      >
+        {label}
+      </span>
 
-  heroLeft: {
-    minWidth: 0,
-  },
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        style={{
+          borderRadius: 14,
+          border: "1px solid #d8e3ee",
+          padding: "14px 16px",
+          fontSize: 15,
+          outline: "none",
+          background: "#f8fbff",
+          color: "#123047",
+        }}
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+}
 
-  eyebrow: {
-    display: "inline-flex",
-    alignItems: "center",
-    minHeight: 32,
-    padding: "0 16px",
-    borderRadius: 999,
-    background: "rgba(6, 182, 212, 0.10)",
-    color: "#0c4a6e",
-    fontSize: 12,
-    fontWeight: 900,
-    letterSpacing: "0.08em",
-    marginBottom: 18,
-  },
+function TextAreaField({
+  label,
+  value,
+  onChange,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+}) {
+  return (
+    <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <span
+        style={{
+          fontSize: 13,
+          color: "#5b7488",
+          fontWeight: 700,
+        }}
+      >
+        {label}
+      </span>
 
-  heroTitle: {
-    margin: 0,
-    fontSize: "clamp(1.9rem, 3.7vw, 3.5rem)",
-    lineHeight: 1.03,
-    fontWeight: 950,
-    letterSpacing: "-0.05em",
-    maxWidth: 860,
-  },
-
-  heroText: {
-    marginTop: 16,
-    marginBottom: 0,
-    maxWidth: 860,
-    color: "#334155",
-    fontSize: 16,
-    lineHeight: 1.8,
-  },
-
-  heroActions: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: 14,
-    marginTop: 26,
-  },
-
-  primaryButton: {
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    minHeight: 52,
-    padding: "0 22px",
-    borderRadius: 16,
-    textDecoration: "none",
-    fontWeight: 900,
-    color: "#ffffff",
-    background: "linear-gradient(135deg, #06b6d4 0%, #2563eb 100%)",
-    boxShadow: "0 14px 30px rgba(37, 99, 235, 0.20)",
-  },
-
-  secondaryButton: {
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    minHeight: 52,
-    padding: "0 22px",
-    borderRadius: 16,
-    textDecoration: "none",
-    fontWeight: 900,
-    color: "#0f172a",
-    background: "rgba(255,255,255,0.85)",
-    border: "1px solid rgba(125, 211, 252, 0.34)",
-  },
-
-  heroRightCard: {
-    borderRadius: 26,
-    padding: 22,
-    background: "linear-gradient(180deg, #ffffff 0%, #eefaff 100%)",
-    border: "1px solid rgba(125, 211, 252, 0.30)",
-    boxShadow: "0 18px 44px rgba(8, 47, 73, 0.08)",
-  },
-
-  sideKicker: {
-    display: "inline-block",
-    color: "#0891b2",
-    fontSize: 12,
-    fontWeight: 900,
-    letterSpacing: "0.08em",
-    marginBottom: 10,
-  },
-
-  sideTitle: {
-    margin: 0,
-    fontSize: 24,
-    lineHeight: 1.08,
-    fontWeight: 900,
-    letterSpacing: "-0.03em",
-  },
-
-  sideText: {
-    marginTop: 12,
-    marginBottom: 0,
-    color: "#475569",
-    fontSize: 15,
-    lineHeight: 1.7,
-  },
-
-  sidePills: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 10,
-    marginTop: 16,
-  },
-
-  sidePill: {
-    padding: "12px 14px",
-    borderRadius: 14,
-    background: "rgba(255,255,255,0.84)",
-    border: "1px solid rgba(125, 211, 252, 0.22)",
-    color: "#0f172a",
-    fontSize: 14,
-    fontWeight: 800,
-    lineHeight: 1.55,
-  },
-
-  noticeBox: {
-    marginTop: 20,
-    padding: "14px 16px",
-    borderRadius: 16,
-    background: "rgba(6, 182, 212, 0.08)",
-    border: "1px solid rgba(6, 182, 212, 0.16)",
-    color: "#164e63",
-    lineHeight: 1.7,
-    fontSize: 14,
-    fontWeight: 700,
-  },
-
-  statsSection: {
-    maxWidth: 1240,
-    margin: "0 auto",
-    padding: "8px 20px 4px",
-  },
-
-  statsGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: 14,
-  },
-
-  statCard: {
-    background: "#ffffff",
-    borderRadius: 22,
-    border: "1px solid rgba(125, 211, 252, 0.24)",
-    padding: 18,
-    boxShadow: "0 10px 28px rgba(15, 23, 42, 0.05)",
-  },
-
-  statLabel: {
-    display: "block",
-    color: "#475569",
-    fontSize: 14,
-    fontWeight: 700,
-  },
-
-  statValue: {
-    display: "block",
-    marginTop: 8,
-    fontSize: 30,
-    lineHeight: 1,
-    fontWeight: 900,
-    letterSpacing: "-0.04em",
-  },
-
-  statDetail: {
-    display: "block",
-    marginTop: 8,
-    color: "#0891b2",
-    fontSize: 13,
-    fontWeight: 700,
-  },
-
-  contentSection: {
-    maxWidth: 1240,
-    margin: "0 auto",
-    padding: "18px 20px 0",
-  },
-
-  mainGrid: {
-    display: "grid",
-    gridTemplateColumns: "minmax(0, 1.25fr) minmax(320px, 0.75fr)",
-    gap: 18,
-  },
-
-  leftColumn: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 18,
-    minWidth: 0,
-  },
-
-  rightColumn: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 18,
-    minWidth: 0,
-  },
-
-  formCard: {
-    background: "linear-gradient(180deg, #ffffff 0%, #eefaff 100%)",
-    borderRadius: 24,
-    border: "1px solid rgba(125, 211, 252, 0.24)",
-    padding: 20,
-    boxShadow: "0 14px 34px rgba(15, 23, 42, 0.04)",
-  },
-
-  sectionHeader: {
-    display: "flex",
-    justifyContent: "space-between",
-    gap: 12,
-    alignItems: "flex-start",
-    flexWrap: "wrap",
-    marginBottom: 18,
-  },
-
-  sectionEyebrow: {
-    display: "inline-block",
-    marginBottom: 8,
-    color: "#0891b2",
-    fontSize: 12,
-    fontWeight: 900,
-    letterSpacing: "0.08em",
-  },
-
-  sectionTitle: {
-    margin: 0,
-    fontSize: "clamp(1.5rem, 2.6vw, 2.3rem)",
-    lineHeight: 1.08,
-    fontWeight: 900,
-    letterSpacing: "-0.03em",
-  },
-
-  formGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: 14,
-  },
-
-  field: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 8,
-  },
-
-  fieldWide: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 8,
-    gridColumn: "1 / -1",
-  },
-
-  label: {
-    fontSize: 13,
-    fontWeight: 900,
-    color: "#0f172a",
-    letterSpacing: "0.02em",
-  },
-
-  input: {
-    minHeight: 48,
-    borderRadius: 14,
-    border: "1px solid rgba(125, 211, 252, 0.28)",
-    padding: "0 14px",
-    fontSize: 14,
-    color: "#0f172a",
-    background: "#ffffff",
-    outline: "none",
-  },
-
-  textarea: {
-    minHeight: 130,
-    borderRadius: 16,
-    border: "1px solid rgba(125, 211, 252, 0.28)",
-    padding: 14,
-    fontSize: 14,
-    color: "#0f172a",
-    background: "#ffffff",
-    outline: "none",
-    resize: "vertical",
-    fontFamily: "inherit",
-  },
-
-  actionRow: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: 10,
-    marginTop: 18,
-  },
-
-  primaryAction: {
-    border: "none",
-    minHeight: 50,
-    padding: "0 18px",
-    borderRadius: 14,
-    cursor: "pointer",
-    fontWeight: 900,
-    color: "#ffffff",
-    background: "linear-gradient(135deg, #06b6d4 0%, #2563eb 100%)",
-    boxShadow: "0 14px 30px rgba(37, 99, 235, 0.18)",
-  },
-
-  secondaryAction: {
-    border: "1px solid rgba(125, 211, 252, 0.28)",
-    minHeight: 50,
-    padding: "0 18px",
-    borderRadius: 14,
-    cursor: "pointer",
-    fontWeight: 900,
-    color: "#0f172a",
-    background: "#ffffff",
-  },
-
-  dangerAction: {
-    border: "1px solid rgba(248, 113, 113, 0.28)",
-    minHeight: 50,
-    padding: "0 18px",
-    borderRadius: 14,
-    cursor: "pointer",
-    fontWeight: 900,
-    color: "#991b1b",
-    background: "#ffffff",
-  },
-
-  feedbackBox: {
-    marginTop: 16,
-    padding: "14px 16px",
-    borderRadius: 16,
-    background: "rgba(16, 185, 129, 0.08)",
-    border: "1px solid rgba(16, 185, 129, 0.18)",
-    color: "#065f46",
-    lineHeight: 1.7,
-    fontSize: 14,
-    fontWeight: 800,
-  },
-
-  previewCard: {
-    background: "linear-gradient(180deg, #ffffff 0%, #f4fbff 100%)",
-    borderRadius: 24,
-    border: "1px solid rgba(125, 211, 252, 0.24)",
-    padding: 20,
-    boxShadow: "0 14px 34px rgba(15, 23, 42, 0.04)",
-  },
-
-  savedCard: {
-    background: "linear-gradient(180deg, #ffffff 0%, #eefaff 100%)",
-    borderRadius: 24,
-    border: "1px solid rgba(125, 211, 252, 0.24)",
-    padding: 20,
-    boxShadow: "0 14px 34px rgba(15, 23, 42, 0.04)",
-  },
-
-  sidebarTitle: {
-    margin: 0,
-    fontSize: 24,
-    lineHeight: 1.08,
-    fontWeight: 900,
-    color: "#0f172a",
-  },
-
-  ruleList: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 12,
-    marginTop: 16,
-  },
-
-  ruleItem: {
-    padding: 14,
-    borderRadius: 16,
-    background: "#ffffff",
-    border: "1px solid rgba(125, 211, 252, 0.18)",
-  },
-
-  ruleItemTitle: {
-    display: "block",
-    fontSize: 15,
-    fontWeight: 900,
-    color: "#0f172a",
-  },
-
-  ruleItemText: {
-    display: "block",
-    marginTop: 8,
-    fontSize: 14,
-    lineHeight: 1.65,
-    color: "#475569",
-  },
-
-  darkCard: {
-    background: "linear-gradient(135deg, #082f49 0%, #0f172a 58%, #172554 100%)",
-    borderRadius: 24,
-    padding: 20,
-    boxShadow: "0 20px 50px rgba(2, 6, 23, 0.24)",
-  },
-
-  robotTag: {
-    display: "inline-block",
-    marginBottom: 10,
-    color: "#7dd3fc",
-    fontSize: 12,
-    fontWeight: 900,
-    letterSpacing: "0.08em",
-  },
-
-  sidebarTitleDark: {
-    margin: 0,
-    fontSize: 24,
-    lineHeight: 1.08,
-    fontWeight: 900,
-    color: "#ffffff",
-  },
-
-  sidebarTextDark: {
-    marginTop: 12,
-    marginBottom: 0,
-    color: "#cbd5e1",
-    lineHeight: 1.75,
-    fontSize: 15,
-  },
-
-  robotList: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: 10,
-    marginTop: 18,
-  },
-
-  robotItem: {
-    padding: "12px 14px",
-    borderRadius: 14,
-    background: "rgba(255,255,255,0.08)",
-    border: "1px solid rgba(125, 211, 252, 0.16)",
-    color: "#e2e8f0",
-    fontSize: 13,
-    fontWeight: 700,
-    lineHeight: 1.5,
-  },
-
-  savedList: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 12,
-    marginTop: 16,
-  },
-
-  savedItem: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 6,
-    padding: 14,
-    borderRadius: 16,
-    background: "#ffffff",
-    border: "1px solid rgba(125, 211, 252, 0.18)",
-  },
-
-  savedTitle: {
-    fontSize: 15,
-    fontWeight: 900,
-    color: "#0f172a",
-  },
-
-  savedText: {
-    fontSize: 13,
-    lineHeight: 1.6,
-    color: "#475569",
-    fontWeight: 700,
-  },
-
-  savedTag: {
-    display: "inline-flex",
-    alignSelf: "flex-start",
-    marginTop: 4,
-    minHeight: 28,
-    padding: "0 10px",
-    alignItems: "center",
-    borderRadius: 999,
-    background: "rgba(6, 182, 212, 0.10)",
-    color: "#0e7490",
-    border: "1px solid rgba(6, 182, 212, 0.18)",
-    fontSize: 12,
-    fontWeight: 800,
-  },
-
-  emptyState: {
-    padding: 18,
-    borderRadius: 18,
-    background: "#ffffff",
-    border: "1px dashed rgba(125, 211, 252, 0.34)",
-    color: "#475569",
-    fontSize: 15,
-    fontWeight: 700,
-  },
-};
+      <textarea
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        rows={4}
+        style={{
+          borderRadius: 14,
+          border: "1px solid #d8e3ee",
+          padding: "14px 16px",
+          fontSize: 15,
+          outline: "none",
+          background: "#f8fbff",
+          color: "#123047",
+          resize: "vertical",
+          fontFamily: "Arial, sans-serif",
+        }}
+      />
+    </label>
+  );
+}
