@@ -1,346 +1,395 @@
-export default function Home() {
-  const acessosPrincipais = [
-    {
-      titulo: "Começar",
-      descricao:
-        "Entrada prática para empresas, locadoras e parceiros entenderem por onde iniciar.",
-      href: "/comecar",
-      destaque: true,
-    },
-    {
-      titulo: "Guia completo",
-      descricao:
-        "Passo a passo real do sistema para empresas, motoristas, clientes e administração.",
-      href: "/guia",
-      destaque: true,
-    },
-    {
-      titulo: "Empresas",
-      descricao:
-        "Base empresarial com cadastro, leitura por CNPJ e listagem pronta para uso real.",
-      href: "/empresas",
-    },
-    {
-      titulo: "Clientes",
-      descricao:
-        "Base comercial com cadastro, busca por CNPJ, salvamento real e listagem pronta para uso.",
-      href: "/clientes",
-    },
-    {
-      titulo: "Operação",
-      descricao:
-        "Visão central da trilha operacional, acompanhamento e organização do fluxo.",
-      href: "/operacao",
-    },
-    {
-      titulo: "Financeiro",
-      descricao:
-        "Camada de controle financeiro e evolução da base administrativa.",
-      href: "/financeiro",
-    },
-    {
-      titulo: "Motoristas",
-      descricao:
-        "Base operacional dos motoristas cadastrados, com leitura rápida e visual premium.",
-      href: "/motoristas",
-    },
-  ];
+import Link from "next/link";
+import InstallAppButton from "./components/InstallAppButton";
 
-  const cadastros = [
-    {
-      titulo: "Cadastrar empresa",
-      descricao:
-        "Primeiro passo para estruturar a operação de locadoras e empresas na plataforma.",
-      href: "/empresas/cadastrar",
-    },
-    {
-      titulo: "Cadastrar cliente",
-      descricao:
-        "Base comercial para relacionamento, histórico e organização do atendimento.",
-      href: "/cadastros/clientes",
-    },
-    {
-      titulo: "Cadastrar motorista",
-      descricao:
-        "Entrada rápida para formar a base operacional com padrão claro premium.",
-      href: "/motoristas/cadastrar",
-    },
-  ];
+const cards = [
+  {
+    tag: "Destaque",
+    title: "Começar",
+    description:
+      "Entrada prática para empresas, locadoras e parceiros entenderem por onde iniciar.",
+    href: "/comecar",
+    cta: "Abrir →",
+  },
+  {
+    tag: "Destaque",
+    title: "Guia completo",
+    description:
+      "Passo a passo real do sistema para empresas, motoristas, clientes e administração.",
+    href: "/guia",
+    cta: "Abrir →",
+  },
+  {
+    tag: "Módulo",
+    title: "Empresas",
+    description:
+      "Base empresarial com cadastro, leitura por CNPJ e listagem pronta para uso real.",
+    href: "/empresas",
+    cta: "Abrir →",
+  },
+  {
+    tag: "Módulo",
+    title: "Clientes",
+    description:
+      "Base comercial com cadastro, busca por CNPJ, salvamento real e listagem pronta para uso.",
+    href: "/clientes",
+    cta: "Abrir →",
+  },
+  {
+    tag: "Módulo",
+    title: "Operação",
+    description:
+      "Visão central da trilha operacional, acompanhamento e organização do fluxo.",
+    href: "/servicos",
+    cta: "Abrir →",
+  },
+  {
+    tag: "Módulo",
+    title: "Financeiro",
+    description:
+      "Camada de controle financeiro e evolução da base administrativa.",
+    href: "/financeiro",
+    cta: "Abrir →",
+  },
+  {
+    tag: "Módulo",
+    title: "Motoristas",
+    description:
+      "Base operacional dos motoristas cadastrados, com leitura rápida e visual premium.",
+    href: "/motoristas",
+    cta: "Abrir →",
+  },
+];
 
+const onboarding = [
+  {
+    tag: "Cadastro",
+    title: "Cadastrar empresa",
+    description:
+      "Primeiro passo para estruturar a operação de locadoras e empresas na plataforma.",
+    href: "/empresas/nova",
+  },
+  {
+    tag: "Cadastro",
+    title: "Cadastrar cliente",
+    description:
+      "Base comercial para relacionamento, histórico e organização do atendimento.",
+    href: "/clientes/novo",
+  },
+  {
+    tag: "Cadastro",
+    title: "Cadastrar motorista",
+    description:
+      "Entrada rápida para formar a base operacional com padrão claro premium.",
+    href: "/motoristas/novo",
+  },
+];
+
+export default function HomePage() {
   return (
     <main
       style={{
         minHeight: "100vh",
         background:
-          "linear-gradient(180deg, #f4faff 0%, #edf6ff 42%, #ffffff 100%)",
-        color: "#0f172a",
+          "linear-gradient(180deg, #f6f9fc 0%, #eef5fb 45%, #f8fbff 100%)",
+        padding: "24px 16px 60px",
+        fontFamily: "Arial, sans-serif",
+        color: "#123047",
       }}
     >
       <div
         style={{
           maxWidth: 1240,
           margin: "0 auto",
-          padding: "20px 16px 48px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 18,
         }}
       >
         <section
           style={{
-            position: "relative",
-            overflow: "hidden",
-            borderRadius: 30,
-            border: "1px solid #dbeafe",
-            background:
-              "radial-gradient(circle at top right, rgba(14, 165, 233, 0.18), transparent 24%), linear-gradient(135deg, #ffffff 0%, #f1f8ff 45%, #eef7ff 100%)",
-            boxShadow: "0 24px 70px rgba(15, 23, 42, 0.08)",
-            padding: "24px 18px",
-            marginBottom: 18,
-          }}
-        >
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              padding: "8px 12px",
-              borderRadius: 999,
-              background: "#e0f2fe",
-              border: "1px solid #bae6fd",
-              color: "#0369a1",
-              fontSize: 12,
-              fontWeight: 800,
-              letterSpacing: 0.4,
-              textTransform: "uppercase",
-            }}
-          >
-            Aurora Motoristas • Sistema em constante atualização
-          </div>
-
-          <h1
-            style={{
-              margin: "16px 0 10px",
-              fontSize: "clamp(32px, 6vw, 54px)",
-              lineHeight: 1.02,
-              letterSpacing: "-0.03em",
-              maxWidth: 920,
-            }}
-          >
-            Motoristas para empresas e locadoras com operação clara, visual forte e fluxo real
-          </h1>
-
-          <p
-            style={{
-              margin: 0,
-              maxWidth: 900,
-              color: "#334155",
-              lineHeight: 1.7,
-              fontSize: 16,
-            }}
-          >
-            Plataforma profissional para gestão de motoristas, cadastros,
-            ofertas, operação, pagamentos e evolução administrativa com leitura
-            clara no desktop e no celular. Sistema em constante atualização e
-            podem ocorrer instabilidades momentâneas durante melhorias.
-          </p>
-
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 12,
-              marginTop: 18,
-            }}
-          >
-            <a href="/comecar" style={primaryButton}>
-              Começar agora
-            </a>
-
-            <a href="/guia" style={secondaryButton}>
-              Ver guia completo
-            </a>
-
-            <a href="/empresas" style={ghostButton}>
-              Ver empresas
-            </a>
-
-            <a href="/clientes" style={ghostButton}>
-              Ver clientes
-            </a>
-          </div>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-              gap: 12,
-              marginTop: 18,
-            }}
-          >
-            <MiniInfo
-              title="Entrada prática"
-              text="Acesse rápido o que importa para operação real."
-            />
-            <MiniInfo
-              title="Fluxo guiado"
-              text="Empresa, cliente, motorista, serviço, pagamento e histórico."
-            />
-            <MiniInfo
-              title="Padrão Aurora"
-              text="Visual claro premium e entendimento simples."
-            />
-          </div>
-        </section>
-
-        <section
-          style={{
             background: "#ffffff",
-            border: "1px solid #dbeafe",
             borderRadius: 28,
-            boxShadow: "0 20px 60px rgba(15, 23, 42, 0.08)",
-            padding: 18,
-            marginBottom: 18,
+            padding: 24,
+            border: "1px solid #e7eef6",
+            boxShadow: "0 24px 55px rgba(15, 23, 42, 0.07)",
+            display: "grid",
+            gridTemplateColumns: "1.15fr 0.85fr",
+            gap: 20,
+            alignItems: "center",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "end",
-              flexWrap: "wrap",
-              gap: 12,
-              marginBottom: 16,
-            }}
-          >
-            <div>
-              <div
-                style={{
-                  fontSize: 13,
-                  fontWeight: 800,
-                  textTransform: "uppercase",
-                  color: "#1d4ed8",
-                  marginBottom: 6,
-                }}
-              >
-                Acessos principais
-              </div>
-              <h2
-                style={{
-                  margin: 0,
-                  fontSize: 28,
-                  lineHeight: 1.1,
-                }}
-              >
-                Navegação central do sistema
-              </h2>
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <span
+              style={{
+                display: "inline-flex",
+                width: "fit-content",
+                background: "#e0f2fe",
+                color: "#075985",
+                borderRadius: 999,
+                padding: "7px 12px",
+                fontWeight: 700,
+                fontSize: 13,
+              }}
+            >
+              Aurora Motoristas • Sistema em constante atualização
+            </span>
+
+            <h1
+              style={{
+                margin: 0,
+                fontSize: 38,
+                lineHeight: 1.05,
+                color: "#0f172a",
+              }}
+            >
+              Motoristas para empresas e locadoras com operação clara, visual
+              forte e fluxo real
+            </h1>
+
+            <p
+              style={{
+                margin: 0,
+                color: "#496276",
+                fontSize: 16,
+                lineHeight: 1.75,
+                maxWidth: 760,
+              }}
+            >
+              Plataforma profissional para gestão de motoristas, cadastros,
+              ofertas, operação, pagamentos e evolução administrativa com
+              leitura clara no desktop e no celular. Sistema em constante
+              atualização e podem ocorrer instabilidades momentâneas durante
+              melhorias.
+            </p>
+
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 12,
+              }}
+            >
+              <Link href="/comecar" style={primaryLink}>
+                Começar agora
+              </Link>
+
+              <Link href="/guia" style={secondaryLink}>
+                Ver guia completo
+              </Link>
+
+              <Link href="/empresas" style={secondaryLink}>
+                Ver empresas
+              </Link>
+
+              <Link href="/clientes" style={secondaryLink}>
+                Ver clientes
+              </Link>
             </div>
 
             <div
               style={{
-                color: "#64748b",
-                fontSize: 14,
-                fontWeight: 700,
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 10,
+                marginTop: 4,
               }}
             >
-              Entrada mais simples e comercial
+              <span style={miniChip}>Entrada prática</span>
+              <span style={miniChip}>Fluxo guiado</span>
+              <span style={miniChip}>Padrão Aurora</span>
             </div>
           </div>
 
           <div
             style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-              gap: 16,
+              background: "#f8fbff",
+              border: "1px solid #dbeafe",
+              borderRadius: 24,
+              padding: 20,
+              display: "flex",
+              flexDirection: "column",
+              gap: 14,
             }}
           >
-            {acessosPrincipais.map((item) => (
-              <a
-                key={item.titulo}
-                href={item.href}
-                style={{
-                  textDecoration: "none",
-                  borderRadius: 24,
-                  border: item.destaque
-                    ? "1px solid #93c5fd"
-                    : "1px solid #e2e8f0",
-                  background: item.destaque
-                    ? "linear-gradient(135deg, #eff6ff 0%, #f8fbff 100%)"
-                    : "#f8fbff",
-                  boxShadow: "0 18px 45px rgba(15, 23, 42, 0.06)",
-                  padding: 18,
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 8,
-                  minHeight: 160,
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: 13,
-                    fontWeight: 800,
-                    textTransform: "uppercase",
-                    color: item.destaque ? "#2563eb" : "#1d4ed8",
-                  }}
-                >
-                  {item.destaque ? "Destaque" : "Módulo"}
-                </div>
+            <div
+              style={{
+                fontSize: 22,
+                fontWeight: 800,
+                lineHeight: 1.2,
+                color: "#0f172a",
+              }}
+            >
+              Leve o app para o celular ou PC
+            </div>
 
-                <div
-                  style={{
-                    color: "#0f172a",
-                    fontWeight: 800,
-                    fontSize: 22,
-                    lineHeight: 1.1,
-                  }}
-                >
-                  {item.titulo}
-                </div>
+            <div
+              style={{
+                color: "#4b6478",
+                fontSize: 14,
+                lineHeight: 1.7,
+              }}
+            >
+              Instale o Aurora Motoristas no dispositivo para abrir mais rápido,
+              ter o app salvo e reduzir risco de perda de acesso quando a
+              internet oscilar.
+            </div>
 
-                <div
-                  style={{
-                    color: "#475569",
-                    fontSize: 15,
-                    lineHeight: 1.65,
-                  }}
-                >
-                  {item.descricao}
-                </div>
+            <InstallAppButton />
 
-                <div
-                  style={{
-                    marginTop: "auto",
-                    color: "#2563eb",
-                    fontWeight: 800,
-                    fontSize: 14,
-                  }}
-                >
-                  Abrir →
-                </div>
-              </a>
-            ))}
+            <div
+              style={{
+                borderRadius: 16,
+                background: "#ffffff",
+                border: "1px solid #e5edf5",
+                padding: 14,
+                color: "#4b6478",
+                fontSize: 13,
+                lineHeight: 1.7,
+              }}
+            >
+              Até colocarmos na Google Play, este botão já permite salvar o app
+              no celular ou no PC quando o navegador suportar instalação.
+            </div>
           </div>
         </section>
 
         <section
           style={{
             display: "grid",
-            gridTemplateColumns: "minmax(0, 1.3fr) minmax(280px, 0.9fr)",
-            gap: 18,
+            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+            gap: 14,
           }}
         >
-          <div
-            style={{
-              background: "#ffffff",
-              border: "1px solid #dbeafe",
-              borderRadius: 28,
-              boxShadow: "0 20px 60px rgba(15, 23, 42, 0.08)",
-              padding: 18,
-            }}
-          >
+          <FeatureCard
+            title="Entrada prática"
+            description="Acesse rápido o que importa para operação real."
+          />
+          <FeatureCard
+            title="Fluxo guiado"
+            description="Empresa, cliente, motorista, serviço, pagamento e histórico."
+          />
+          <FeatureCard
+            title="Padrão Aurora"
+            description="Visual claro premium e entendimento simples."
+          />
+        </section>
+
+        <section
+          style={{
+            background: "#ffffff",
+            borderRadius: 24,
+            padding: 22,
+            border: "1px solid #e7eef6",
+            boxShadow: "0 20px 45px rgba(15, 23, 42, 0.06)",
+            display: "flex",
+            flexDirection: "column",
+            gap: 16,
+          }}
+        >
+          <div>
             <div
               style={{
-                fontSize: 13,
+                fontSize: 14,
+                color: "#0ea5e9",
                 fontWeight: 800,
-                textTransform: "uppercase",
-                color: "#1d4ed8",
+                marginBottom: 6,
+              }}
+            >
+              Acessos principais
+            </div>
+
+            <h2
+              style={{
+                margin: 0,
+                fontSize: 28,
+                lineHeight: 1.1,
+                color: "#0f172a",
+              }}
+            >
+              Navegação central do sistema
+            </h2>
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+              gap: 14,
+            }}
+          >
+            {cards.map((card) => (
+              <Link
+                key={card.title}
+                href={card.href}
+                style={{
+                  textDecoration: "none",
+                  color: "inherit",
+                  background: "#fcfdff",
+                  border: "1px solid #e7eef6",
+                  borderRadius: 20,
+                  padding: 18,
+                  boxShadow: "0 14px 28px rgba(15, 23, 42, 0.04)",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 10,
+                }}
+              >
+                <span style={smallTag}>{card.tag}</span>
+
+                <strong
+                  style={{
+                    fontSize: 20,
+                    lineHeight: 1.2,
+                    color: "#0f172a",
+                  }}
+                >
+                  {card.title}
+                </strong>
+
+                <p
+                  style={{
+                    margin: 0,
+                    color: "#4b6478",
+                    fontSize: 14,
+                    lineHeight: 1.65,
+                    flex: 1,
+                  }}
+                >
+                  {card.description}
+                </p>
+
+                <span
+                  style={{
+                    color: "#0ea5e9",
+                    fontWeight: 800,
+                    fontSize: 14,
+                  }}
+                >
+                  {card.cta}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section
+          style={{
+            background: "#ffffff",
+            borderRadius: 24,
+            padding: 22,
+            border: "1px solid #e7eef6",
+            boxShadow: "0 20px 45px rgba(15, 23, 42, 0.06)",
+            display: "flex",
+            flexDirection: "column",
+            gap: 16,
+          }}
+        >
+          <div>
+            <div
+              style={{
+                fontSize: 14,
+                color: "#0ea5e9",
+                fontWeight: 800,
                 marginBottom: 6,
               }}
             >
@@ -352,204 +401,158 @@ export default function Home() {
                 margin: 0,
                 fontSize: 28,
                 lineHeight: 1.1,
+                color: "#0f172a",
               }}
             >
               Monte a base do jeito certo
             </h2>
-
-            <p
-              style={{
-                margin: "10px 0 18px",
-                color: "#475569",
-                lineHeight: 1.65,
-                fontSize: 15,
-                maxWidth: 850,
-              }}
-            >
-              Para começar sem confusão, a ordem recomendada é: empresa,
-              cliente, motorista, serviço, pagamento e histórico interno.
-            </p>
-
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-                gap: 16,
-              }}
-            >
-              {cadastros.map((item) => (
-                <a
-                  key={item.titulo}
-                  href={item.href}
-                  style={{
-                    textDecoration: "none",
-                    borderRadius: 22,
-                    border: "1px solid #e2e8f0",
-                    background: "#f8fbff",
-                    padding: 18,
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 8,
-                    minHeight: 150,
-                  }}
-                >
-                  <div
-                    style={{
-                      color: "#1d4ed8",
-                      fontSize: 13,
-                      fontWeight: 800,
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Cadastro
-                  </div>
-
-                  <div
-                    style={{
-                      color: "#0f172a",
-                      fontWeight: 800,
-                      fontSize: 22,
-                      lineHeight: 1.1,
-                    }}
-                  >
-                    {item.titulo}
-                  </div>
-
-                  <div
-                    style={{
-                      color: "#475569",
-                      fontSize: 15,
-                      lineHeight: 1.65,
-                    }}
-                  >
-                    {item.descricao}
-                  </div>
-
-                  <div
-                    style={{
-                      marginTop: "auto",
-                      color: "#2563eb",
-                      fontWeight: 800,
-                      fontSize: 14,
-                    }}
-                  >
-                    Acessar →
-                  </div>
-                </a>
-              ))}
-            </div>
           </div>
 
-          <aside
+          <p
             style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 18,
+              margin: 0,
+              color: "#4b6478",
+              fontSize: 15,
+              lineHeight: 1.75,
             }}
           >
-            <SideCard
-              title="Fluxo recomendado"
-              text="Cadastre empresa, cliente e motorista antes de escalar o restante da operação. Isso deixa o uso mais eficiente e reduz confusão."
-            />
-            <SideCard
-              title="Melhor ponto para divulgar"
-              text="Use a página /comecar para apresentar o sistema e a página /guia para explicar o funcionamento completo."
-            />
-            <SideCard
-              title="Mensagem institucional"
-              text="Sistema Aurora • Motoristas para empresas e locadoras • operação em evolução contínua."
-            />
-          </aside>
+            Para começar sem confusão, a ordem recomendada é: empresa, cliente,
+            motorista, serviço, pagamento e histórico interno.
+          </p>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+              gap: 14,
+            }}
+          >
+            {onboarding.map((item) => (
+              <Link
+                key={item.title}
+                href={item.href}
+                style={{
+                  textDecoration: "none",
+                  color: "inherit",
+                  background: "#fcfdff",
+                  border: "1px solid #e7eef6",
+                  borderRadius: 20,
+                  padding: 18,
+                  boxShadow: "0 14px 28px rgba(15, 23, 42, 0.04)",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 10,
+                }}
+              >
+                <span style={smallTag}>{item.tag}</span>
+
+                <strong
+                  style={{
+                    fontSize: 20,
+                    lineHeight: 1.2,
+                    color: "#0f172a",
+                  }}
+                >
+                  {item.title}
+                </strong>
+
+                <p
+                  style={{
+                    margin: 0,
+                    color: "#4b6478",
+                    fontSize: 14,
+                    lineHeight: 1.65,
+                    flex: 1,
+                  }}
+                >
+                  {item.description}
+                </p>
+
+                <span
+                  style={{
+                    color: "#0ea5e9",
+                    fontWeight: 800,
+                    fontSize: 14,
+                  }}
+                >
+                  Acessar →
+                </span>
+              </Link>
+            ))}
+          </div>
+
+          <div
+            style={{
+              borderRadius: 18,
+              background: "#f8fbff",
+              border: "1px solid #e5edf5",
+              padding: 16,
+              color: "#435b6e",
+              fontSize: 14,
+              lineHeight: 1.7,
+            }}
+          >
+            <strong style={{ color: "#123047" }}>Fluxo recomendado:</strong>{" "}
+            Cadastre empresa, cliente e motorista antes de escalar o restante da
+            operação. Isso deixa o uso mais eficiente e reduz confusão.
+          </div>
+
+          <div
+            style={{
+              borderRadius: 18,
+              background: "#fff7ed",
+              border: "1px solid #fed7aa",
+              padding: 16,
+              color: "#7c2d12",
+              fontSize: 14,
+              lineHeight: 1.7,
+            }}
+          >
+            <strong>Melhor ponto para divulgar:</strong> Use a página{" "}
+            <strong>/comecar</strong> para apresentar o sistema e a página{" "}
+            <strong>/guia</strong> para explicar o funcionamento completo.
+          </div>
         </section>
+
+        <footer
+          style={{
+            textAlign: "center",
+            color: "#64748b",
+            fontSize: 13,
+            fontWeight: 700,
+            paddingTop: 4,
+          }}
+        >
+          Sistema Aurora • Motoristas para empresas e locadoras • operação em
+          evolução contínua.
+        </footer>
       </div>
     </main>
   );
 }
 
-const primaryButton = {
-  textDecoration: "none",
-  padding: "14px 18px",
-  borderRadius: 16,
-  background: "linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%)",
-  color: "#ffffff",
-  fontWeight: 800,
-  fontSize: 15,
-  boxShadow: "0 16px 35px rgba(37, 99, 235, 0.28)",
-} as const;
-
-const secondaryButton = {
-  textDecoration: "none",
-  padding: "14px 18px",
-  borderRadius: 16,
-  background: "#eff6ff",
-  border: "1px solid #bfdbfe",
-  color: "#1d4ed8",
-  fontWeight: 800,
-  fontSize: 15,
-} as const;
-
-const ghostButton = {
-  textDecoration: "none",
-  padding: "14px 18px",
-  borderRadius: 16,
-  background: "#ffffff",
-  border: "1px solid #cbd5e1",
-  color: "#0f172a",
-  fontWeight: 800,
-  fontSize: 15,
-} as const;
-
-function MiniInfo({ title, text }: { title: string; text: string }) {
-  return (
-    <div
-      style={{
-        borderRadius: 20,
-        background: "rgba(255,255,255,0.82)",
-        border: "1px solid #dbeafe",
-        padding: 16,
-      }}
-    >
-      <div
-        style={{
-          fontSize: 13,
-          fontWeight: 800,
-          color: "#1d4ed8",
-          marginBottom: 6,
-          textTransform: "uppercase",
-        }}
-      >
-        {title}
-      </div>
-      <div
-        style={{
-          fontSize: 14,
-          color: "#475569",
-          lineHeight: 1.55,
-        }}
-      >
-        {text}
-      </div>
-    </div>
-  );
-}
-
-function SideCard({ title, text }: { title: string; text: string }) {
+function FeatureCard({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) {
   return (
     <div
       style={{
         background: "#ffffff",
-        border: "1px solid #dbeafe",
-        borderRadius: 24,
-        boxShadow: "0 20px 60px rgba(15, 23, 42, 0.08)",
+        borderRadius: 20,
         padding: 18,
+        border: "1px solid #e7eef6",
+        boxShadow: "0 14px 30px rgba(15, 23, 42, 0.05)",
       }}
     >
       <div
         style={{
-          fontSize: 13,
+          fontSize: 18,
           fontWeight: 800,
-          textTransform: "uppercase",
-          color: "#1d4ed8",
+          color: "#0f172a",
           marginBottom: 8,
         }}
       >
@@ -558,13 +561,53 @@ function SideCard({ title, text }: { title: string; text: string }) {
 
       <div
         style={{
-          color: "#475569",
-          lineHeight: 1.65,
-          fontSize: 15,
+          color: "#4b6478",
+          fontSize: 14,
+          lineHeight: 1.7,
         }}
       >
-        {text}
+        {description}
       </div>
     </div>
   );
 }
+
+const primaryLink: React.CSSProperties = {
+  textDecoration: "none",
+  background: "#0ea5e9",
+  color: "#ffffff",
+  borderRadius: 14,
+  padding: "12px 16px",
+  fontWeight: 800,
+  boxShadow: "0 14px 28px rgba(14, 165, 233, 0.20)",
+};
+
+const secondaryLink: React.CSSProperties = {
+  textDecoration: "none",
+  background: "#ffffff",
+  color: "#123047",
+  border: "1px solid #dbe5ef",
+  borderRadius: 14,
+  padding: "12px 16px",
+  fontWeight: 800,
+};
+
+const miniChip: React.CSSProperties = {
+  background: "#eff6ff",
+  color: "#1d4ed8",
+  borderRadius: 999,
+  padding: "8px 12px",
+  fontWeight: 700,
+  fontSize: 13,
+};
+
+const smallTag: React.CSSProperties = {
+  display: "inline-flex",
+  width: "fit-content",
+  background: "#f1f5f9",
+  color: "#334155",
+  borderRadius: 999,
+  padding: "6px 10px",
+  fontWeight: 800,
+  fontSize: 12,
+};
