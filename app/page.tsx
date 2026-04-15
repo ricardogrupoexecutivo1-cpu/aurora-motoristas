@@ -20,6 +20,14 @@ const cards = [
   },
   {
     tag: "Módulo",
+    title: "Entrar no sistema",
+    description:
+      "Acesso direto com e-mail e senha para usuários já criados pelo administrador.",
+    href: "/login",
+    cta: "Entrar →",
+  },
+  {
+    tag: "Módulo",
     title: "Empresas",
     description:
       "Base empresarial com cadastro, leitura por CNPJ e listagem pronta para uso real.",
@@ -169,12 +177,16 @@ export default function HomePage() {
                 gap: 12,
               }}
             >
-              <Link href="/comecar" style={primaryLink}>
-                Começar agora
+              <Link href="/login" style={primaryLink}>
+                Entrar no sistema
               </Link>
 
               <Link href="/guia" style={secondaryLink}>
                 Ver guia completo
+              </Link>
+
+              <Link href="/comecar" style={secondaryLink}>
+                Começar agora
               </Link>
 
               <Link href="/empresas" style={secondaryLink}>
