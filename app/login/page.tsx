@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
+import { useMemo, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
@@ -8,33 +9,95 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
+function normalizeEmail(value: string) {
+  return value.trim().toLowerCase();
+}
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [status, setStatus] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  const emailNormalizado = useMemo(() => normalizeEmail(email), [email]);
 
   async function entrar() {
-    setStatus("Entrando...");
+    const emailFinal = normalizeEmail(email);
+    const senhaFinal = senha;
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password: senha,
-    });
-
-    if (error) {
-      setStatus("Erro: " + error.message);
+    if (!emailFinal) {
+      setStatus("Informe seu e-mail.");
       return;
     }
 
-    setStatus("Login realizado com sucesso!");
-    window.location.href = "/servicos";
+    if (!senhaFinal) {
+      setStatus("Informe sua senha.");
+      return;
+    }
+
+    try {
+      setSaving(true);
+      setStatus("Entrando...");
+
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: emailFinal,
+        password: senhaFinal,
+      });
+
+      if (error) {
+        setStatus("Erro: " + error.message);
+        return;
+      }
+
+      try {
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem("aurora_session_email", emailFinal);
+
+          const role =
+            String(data?.user?.app_metadata?.role || "").trim() ||
+            String(data?.user?.user_metadata?.role || "").trim();
+
+          const empresa =
+            String(data?.user?.app_metadata?.empresa || "").trim() ||
+            String(data?.user?.user_metadata?.empresa || "").trim();
+
+          const statusUsuario =
+            String(data?.user?.app_metadata?.status || "").trim() ||
+            String(data?.user?.user_metadata?.status || "").trim();
+
+          if (role) {
+            window.localStorage.setItem("aurora_session_role", role);
+          }
+
+          if (empresa) {
+            window.localStorage.setItem("aurora_session_empresa", empresa);
+          }
+
+          if (statusUsuario) {
+            window.localStorage.setItem("aurora_session_status", statusUsuario);
+          }
+        }
+      } catch {
+        // mantém login principal funcionando mesmo se localStorage falhar
+      }
+
+      setStatus("Login realizado com sucesso!");
+      window.location.href = "/servicos";
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Erro inesperado ao entrar.";
+      setStatus("Erro: " + message);
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
     <main
       style={{
         minHeight: "100vh",
-        background: "#f6f8fb",
+        background:
+          "linear-gradient(180deg, #f6f9fc 0%, #eef5fb 45%, #f8fbff 100%)",
         padding: "24px 16px 48px",
         fontFamily: "Arial, sans-serif",
         color: "#123047",
@@ -42,145 +105,359 @@ export default function LoginPage() {
     >
       <div
         style={{
-          maxWidth: 520,
+          maxWidth: 1120,
           margin: "0 auto",
-          background: "#ffffff",
-          borderRadius: 24,
-          padding: 24,
-          border: "1px solid #e7eef6",
-          boxShadow: "0 20px 45px rgba(15, 23, 42, 0.06)",
-          display: "flex",
-          flexDirection: "column",
-          gap: 16,
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+          gap: 18,
+          alignItems: "stretch",
         }}
       >
-        <span
+        <section
           style={{
-            display: "inline-flex",
-            width: "fit-content",
-            background: "#e0f2fe",
-            color: "#075985",
-            borderRadius: 999,
-            padding: "6px 12px",
-            fontWeight: 700,
-            fontSize: 13,
+            background: "#ffffff",
+            borderRadius: 28,
+            padding: 24,
+            border: "1px solid #e7eef6",
+            boxShadow: "0 24px 55px rgba(15, 23, 42, 0.07)",
+            display: "flex",
+            flexDirection: "column",
+            gap: 16,
           }}
         >
-          Aurora Motoristas
-        </span>
-
-        <h1
-          style={{
-            margin: 0,
-            fontSize: 30,
-            lineHeight: 1.1,
-            color: "#0f172a",
-          }}
-        >
-          Entrar no sistema
-        </h1>
-
-        <p
-          style={{
-            margin: 0,
-            color: "#4b6478",
-            fontSize: 15,
-            lineHeight: 1.7,
-          }}
-        >
-          Entre com e-mail e senha para acessar o sistema. Não é necessário usar
-          código por e-mail neste fluxo.
-        </p>
-
-        <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          <span
+          <div
             style={{
-              fontSize: 13,
-              color: "#5b7488",
-              fontWeight: 700,
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 10,
+              alignItems: "center",
+              justifyContent: "space-between",
             }}
           >
-            E-mail
-          </span>
+            <span
+              style={{
+                display: "inline-flex",
+                width: "fit-content",
+                background: "#e0f2fe",
+                color: "#075985",
+                borderRadius: 999,
+                padding: "7px 12px",
+                fontWeight: 700,
+                fontSize: 13,
+              }}
+            >
+              Aurora Motoristas
+            </span>
 
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Ex.: grupoexecutivoservice1@gmail.com"
-            style={{
-              borderRadius: 14,
-              border: "1px solid #d8e3ee",
-              padding: "14px 16px",
-              fontSize: 15,
-              outline: "none",
-              background: "#f8fbff",
-              color: "#123047",
-            }}
-          />
-        </label>
+            <Link href="/" style={topLinkStyle}>
+              Voltar para a home
+            </Link>
+          </div>
 
-        <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          <span
+          <h1
             style={{
-              fontSize: 13,
-              color: "#5b7488",
-              fontWeight: 700,
+              margin: 0,
+              fontSize: 34,
+              lineHeight: 1.05,
+              color: "#0f172a",
+              wordBreak: "break-word",
             }}
           >
-            Senha
-          </span>
+            Entrar no sistema
+          </h1>
 
-          <input
-            type="password"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            placeholder="Digite sua senha"
+          <p
+            style={{
+              margin: 0,
+              color: "#4b6478",
+              fontSize: 15,
+              lineHeight: 1.75,
+              maxWidth: 700,
+            }}
+          >
+            Entre com e-mail e senha para acessar o sistema. Não é necessário
+            usar código por e-mail neste fluxo. O acesso foi preparado para uso
+            empresarial com login controlado pelo administrador.
+          </p>
+
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 10,
+            }}
+          >
+            <span style={miniChip}>Login com senha</span>
+            <span style={miniChip}>Acesso controlado</span>
+            <span style={miniChip}>Uso em celular e PC</span>
+          </div>
+
+          <div
+            style={{
+              borderRadius: 20,
+              background: "#f8fbff",
+              border: "1px solid #e5edf5",
+              padding: 18,
+              display: "flex",
+              flexDirection: "column",
+              gap: 12,
+            }}
+          >
+            <div
+              style={{
+                fontSize: 20,
+                fontWeight: 800,
+                color: "#0f172a",
+              }}
+            >
+              Orientação de acesso
+            </div>
+
+            <div
+              style={{
+                color: "#4b6478",
+                fontSize: 14,
+                lineHeight: 1.7,
+              }}
+            >
+              Use o e-mail e a senha fornecidos pelo administrador. Depois do
+              login, o sistema direciona para a área operacional.
+            </div>
+
+            <div
+              style={{
+                borderRadius: 16,
+                background: "#ffffff",
+                border: "1px solid #e7eef6",
+                padding: 14,
+                color: "#435b6e",
+                fontSize: 13,
+                lineHeight: 1.7,
+              }}
+            >
+              Sistema em constante atualização e podem ocorrer instabilidades
+              momentâneas durante melhorias.
+            </div>
+          </div>
+        </section>
+
+        <section
+          style={{
+            background: "#ffffff",
+            borderRadius: 28,
+            padding: 24,
+            border: "1px solid #e7eef6",
+            boxShadow: "0 24px 55px rgba(15, 23, 42, 0.07)",
+            display: "flex",
+            flexDirection: "column",
+            gap: 16,
+          }}
+        >
+          <div
+            style={{
+              fontSize: 22,
+              fontWeight: 800,
+              color: "#0f172a",
+            }}
+          >
+            Acesso direto
+          </div>
+
+          <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <span
+              style={{
+                fontSize: 13,
+                color: "#5b7488",
+                fontWeight: 700,
+              }}
+            >
+              E-mail
+            </span>
+
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Ex.: grupoexecutivoservice1@gmail.com"
+              autoComplete="email"
+              style={fieldStyle}
+            />
+          </label>
+
+          <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <span
+              style={{
+                fontSize: 13,
+                color: "#5b7488",
+                fontWeight: 700,
+              }}
+            >
+              Senha
+            </span>
+
+            <input
+              type="password"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              placeholder="Digite sua senha"
+              autoComplete="current-password"
+              style={fieldStyle}
+            />
+          </label>
+
+          <button
+            type="button"
+            onClick={entrar}
+            disabled={saving}
+            style={{
+              border: "none",
+              background: "#0ea5e9",
+              color: "#ffffff",
+              borderRadius: 14,
+              padding: "14px 18px",
+              fontWeight: 800,
+              fontSize: 15,
+              cursor: saving ? "not-allowed" : "pointer",
+              boxShadow: "0 14px 28px rgba(14, 165, 233, 0.20)",
+              opacity: saving ? 0.85 : 1,
+            }}
+          >
+            {saving ? "Entrando..." : "Entrar"}
+          </button>
+
+          <div
             style={{
               borderRadius: 14,
-              border: "1px solid #d8e3ee",
-              padding: "14px 16px",
-              fontSize: 15,
-              outline: "none",
               background: "#f8fbff",
-              color: "#123047",
+              border: "1px solid #e5edf5",
+              padding: "12px 14px",
+              color: "#435b6e",
+              fontSize: 13,
+              lineHeight: 1.6,
+              minHeight: 22,
+              wordBreak: "break-word",
             }}
-          />
-        </label>
+          >
+            {status ||
+              `Aguardando login${
+                emailNormalizado ? ` para ${emailNormalizado}` : "..."
+              }`}
+          </div>
 
-        <button
-          type="button"
-          onClick={entrar}
-          style={{
-            border: "none",
-            background: "#0ea5e9",
-            color: "#ffffff",
-            borderRadius: 14,
-            padding: "14px 18px",
-            fontWeight: 800,
-            fontSize: 15,
-            cursor: "pointer",
-            boxShadow: "0 14px 28px rgba(14, 165, 233, 0.20)",
-          }}
-        >
-          Entrar
-        </button>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+              gap: 12,
+            }}
+          >
+            <InfoCard
+              title="Entrar"
+              text="Acesso com e-mail e senha, sem precisar de código por e-mail."
+            />
+            <InfoCard
+              title="Destino"
+              text="Após login válido, o sistema direciona para a área de serviços."
+            />
+            <InfoCard
+              title="Sessão"
+              text="O e-mail da sessão fica disponível localmente para continuidade do uso."
+            />
+          </div>
 
-        <div
-          style={{
-            borderRadius: 14,
-            background: "#f8fbff",
-            border: "1px solid #e5edf5",
-            padding: "12px 14px",
-            color: "#435b6e",
-            fontSize: 13,
-            lineHeight: 1.6,
-            minHeight: 22,
-          }}
-        >
-          {status || "Aguardando login..."}
-        </div>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 10,
+            }}
+          >
+            <Link href="/guia" style={secondaryButton}>
+              Ver guia completo
+            </Link>
+
+            <Link href="/servicos" style={secondaryButton}>
+              Ir para operação
+            </Link>
+          </div>
+        </section>
       </div>
     </main>
   );
 }
+
+function InfoCard({ title, text }: { title: string; text: string }) {
+  return (
+    <div
+      style={{
+        background: "#fcfdff",
+        border: "1px solid #e7eef6",
+        borderRadius: 18,
+        padding: 14,
+        minWidth: 0,
+      }}
+    >
+      <div
+        style={{
+          fontSize: 15,
+          fontWeight: 800,
+          color: "#123047",
+          marginBottom: 6,
+        }}
+      >
+        {title}
+      </div>
+
+      <div
+        style={{
+          color: "#4b6478",
+          fontSize: 13,
+          lineHeight: 1.65,
+        }}
+      >
+        {text}
+      </div>
+    </div>
+  );
+}
+
+const fieldStyle: React.CSSProperties = {
+  borderRadius: 14,
+  border: "1px solid #d8e3ee",
+  padding: "14px 16px",
+  fontSize: 15,
+  outline: "none",
+  background: "#f8fbff",
+  color: "#123047",
+  boxSizing: "border-box",
+  width: "100%",
+};
+
+const topLinkStyle: React.CSSProperties = {
+  textDecoration: "none",
+  background: "#ffffff",
+  color: "#123047",
+  border: "1px solid #dbe5ef",
+  borderRadius: 12,
+  padding: "10px 14px",
+  fontWeight: 700,
+};
+
+const miniChip: React.CSSProperties = {
+  background: "#eff6ff",
+  color: "#1d4ed8",
+  borderRadius: 999,
+  padding: "8px 12px",
+  fontWeight: 700,
+  fontSize: 13,
+};
+
+const secondaryButton: React.CSSProperties = {
+  textDecoration: "none",
+  background: "#ffffff",
+  color: "#123047",
+  border: "1px solid #dbe5ef",
+  borderRadius: 12,
+  padding: "12px 16px",
+  fontWeight: 800,
+};
