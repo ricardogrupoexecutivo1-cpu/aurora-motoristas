@@ -202,6 +202,47 @@ function useIsMobile() {
   return isMobile;
 }
 
+function sanitizeWhatsappNumber(value?: string | null) {
+  const digits = String(value || "").replace(/\D/g, "");
+  if (!digits) return "";
+
+  if (digits.startsWith("55")) return digits;
+  if (digits.length >= 10) return `55${digits}`;
+
+  return digits;
+}
+
+function buildWhatsappLink(service: ServiceRow) {
+  const phone = sanitizeWhatsappNumber(service.telefone_cliente_final);
+  if (!phone) return null;
+
+  const nome = getDisplayCliente(service);
+  const os = getDisplayOS(service);
+  const rota =
+    service.origem && service.destino
+      ? `${service.origem} x ${service.destino}`
+      : service.servico || "serviço";
+
+  const mensagem = `Olá, tudo bem? Estou falando sobre o serviço ${os} (${rota}) para ${nome}.`;
+  return `https://wa.me/${phone}?text=${encodeURIComponent(mensagem)}`;
+}
+
+function serviceBelongsToEmpresa(service: ServiceRow, empresaLogada: string) {
+  if (!empresaLogada) return true;
+
+  const empresaNorm = normalize(empresaLogada);
+
+  const candidatos = [
+    service.empresa,
+    service.contratante,
+    service.empresa_operadora,
+  ]
+    .map((item) => normalize(item))
+    .filter(Boolean);
+
+  return candidatos.some((item) => item.includes(empresaNorm));
+}
+
 export default function ServicosPage() {
   const [services, setServices] = useState<ServiceRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -210,6 +251,7 @@ export default function ServicosPage() {
   const [aba, setAba] = useState<"ativos" | "historico">("ativos");
   const [statusFilter, setStatusFilter] = useState("todos");
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [empresaLogada, setEmpresaLogada] = useState("");
 
   const isMobile = useIsMobile();
 
@@ -321,14 +363,38 @@ export default function ServicosPage() {
     carregarServicos();
   }, []);
 
+  useEffect(() => {
+    try {
+      const empresaSessao =
+        localStorage.getItem("aurora_session_empresa") ||
+        localStorage.getItem("empresa") ||
+        "";
+
+      setEmpresaLogada(String(empresaSessao || "").trim());
+    } catch {
+      setEmpresaLogada("");
+    }
+  }, []);
+
+  const servicesFiltradosPorEmpresa = useMemo(() => {
+    if (!empresaLogada) return services;
+
+    return services.filter((service) =>
+      serviceBelongsToEmpresa(service, empresaLogada)
+    );
+  }, [services, empresaLogada]);
+
   const ativos = useMemo(
-    () => services.filter((service) => isServicoAtivo(service)),
-    [services]
+    () => servicesFiltradosPorEmpresa.filter((service) => isServicoAtivo(service)),
+    [servicesFiltradosPorEmpresa]
   );
 
   const historico = useMemo(
-    () => services.filter((service) => isHistoricoProtegido(service)),
-    [services]
+    () =>
+      servicesFiltradosPorEmpresa.filter((service) =>
+        isHistoricoProtegido(service)
+      ),
+    [servicesFiltradosPorEmpresa]
   );
 
   const listaBase = aba === "ativos" ? ativos : historico;
@@ -374,16 +440,18 @@ export default function ServicosPage() {
     });
   }, [listaBase, search, statusFilter]);
 
-  const totalServicos = services.length;
+  const totalServicos = servicesFiltradosPorEmpresa.length;
   const totalAtivos = ativos.length;
   const totalHistorico = historico.length;
-  const totalPendentes = services.filter(
+  const totalPendentes = servicesFiltradosPorEmpresa.filter(
     (service) => normalize(service.status) === "pendente"
   ).length;
-  const totalAguardandoPagamento = services.filter(
+  const totalAguardandoPagamento = servicesFiltradosPorEmpresa.filter(
     (service) => normalize(service.status) === "aguardando_pagamento"
   ).length;
-  const totalPagos = services.filter((service) => isPago(service)).length;
+  const totalPagos = servicesFiltradosPorEmpresa.filter((service) =>
+    isPago(service)
+  ).length;
 
   const somaCobrancaVisao = listaBase.reduce(
     (acc, service) =>
@@ -493,6 +561,16 @@ export default function ServicosPage() {
                 {loading ? "Atualizando..." : statusText}
               </span>
 
+              {empresaLogada ? (
+                <span style={chipEmpresa}>
+                  Empresa da sessão: {empresaLogada}
+                </span>
+              ) : (
+                <span style={chipInfo}>
+                  Sem filtro por empresa na sessão
+                </span>
+              )}
+
               <span style={chipWarning}>
                 Sistema em constante atualização e podem ocorrer instabilidades
                 momentâneas.
@@ -536,7 +614,7 @@ export default function ServicosPage() {
           <StatCard
             label="Base total"
             value={String(totalServicos)}
-            help="Tudo salvo no Supabase"
+            help="Resultado considerando a empresa da sessão"
           />
         </section>
 
@@ -668,6 +746,7 @@ export default function ServicosPage() {
                   const statusBadge = getStatusStyles(service);
                   const historicoProtegido = isHistoricoProtegido(service);
                   const disabled = updatingId === service.id;
+                  const whatsappLink = buildWhatsappLink(service);
 
                   return (
                     <article
@@ -978,68 +1057,91 @@ export default function ServicosPage() {
                           Ação rápida de status
                         </div>
 
-                        <div
-                          style={{
-                            display: "flex",
-                            flexWrap: "wrap",
-                            gap: 10,
-                          }}
-                        >
-                          <button
-                            type="button"
-                            disabled={disabled}
-                            onClick={() =>
-                              atualizarStatusRapido(service, "pendente")
-                            }
+                        {historicoProtegido ? (
+                          <div
                             style={{
-                              ...quickActionStyle,
-                              opacity: disabled ? 0.6 : 1,
+                              borderRadius: 14,
+                              background: "#f8fafc",
+                              border: "1px solid #e2e8f0",
+                              padding: 12,
+                              color: "#475569",
+                              fontSize: 13,
+                              lineHeight: 1.6,
+                              fontWeight: 700,
                             }}
                           >
-                            Pendente
-                          </button>
+                            Baixa já concluída. Esta operação está travada no
+                            histórico protegido e não deve receber novas ações
+                            rápidas nesta tela.
+                          </div>
+                        ) : (
+                          <>
+                            <div
+                              style={{
+                                display: "flex",
+                                flexWrap: "wrap",
+                                gap: 10,
+                              }}
+                            >
+                              <button
+                                type="button"
+                                disabled={disabled}
+                                onClick={() =>
+                                  atualizarStatusRapido(service, "pendente")
+                                }
+                                style={{
+                                  ...quickActionStyle,
+                                  opacity: disabled ? 0.6 : 1,
+                                }}
+                              >
+                                Pendente
+                              </button>
 
-                          <button
-                            type="button"
-                            disabled={disabled}
-                            onClick={() =>
-                              atualizarStatusRapido(
-                                service,
-                                "aguardando_pagamento"
-                              )
-                            }
-                            style={{
-                              ...quickActionStyle,
-                              opacity: disabled ? 0.6 : 1,
-                            }}
-                          >
-                            Aguardando pagamento
-                          </button>
+                              <button
+                                type="button"
+                                disabled={disabled}
+                                onClick={() =>
+                                  atualizarStatusRapido(
+                                    service,
+                                    "aguardando_pagamento"
+                                  )
+                                }
+                                style={{
+                                  ...quickActionStyle,
+                                  opacity: disabled ? 0.6 : 1,
+                                }}
+                              >
+                                Aguardando pagamento
+                              </button>
 
-                          <button
-                            type="button"
-                            disabled={disabled}
-                            onClick={() => atualizarStatusRapido(service, "pago")}
-                            style={{
-                              ...quickActionPrimaryStyle,
-                              opacity: disabled ? 0.6 : 1,
-                            }}
-                          >
-                            Marcar como pago
-                          </button>
-                        </div>
+                              <button
+                                type="button"
+                                disabled={disabled}
+                                onClick={() =>
+                                  atualizarStatusRapido(service, "pago")
+                                }
+                                style={{
+                                  ...quickActionPrimaryStyle,
+                                  opacity: disabled ? 0.6 : 1,
+                                }}
+                              >
+                                Marcar como pago
+                              </button>
+                            </div>
 
-                        <div
-                          style={{
-                            fontSize: 12,
-                            color: "#64748b",
-                            lineHeight: 1.6,
-                          }}
-                        >
-                          {disabled
-                            ? "Atualizando este serviço..."
-                            : "Ao marcar como pago, o item sai da visão ativa e vai para o histórico protegido."}
-                        </div>
+                            <div
+                              style={{
+                                fontSize: 12,
+                                color: "#64748b",
+                                lineHeight: 1.6,
+                              }}
+                            >
+                              {disabled
+                                ? "Atualizando este serviço..."
+                                : "Ao marcar como pago, o item sai da visão ativa e vai para o histórico protegido."}
+                            </div>
+                          </>
+                        )}
                       </div>
 
                       <div
@@ -1070,6 +1172,17 @@ export default function ServicosPage() {
                             flexWrap: "wrap",
                           }}
                         >
+                          {whatsappLink ? (
+                            <a
+                              href={whatsappLink}
+                              target="_blank"
+                              rel="noreferrer"
+                              style={whatsappButtonStyle}
+                            >
+                              WhatsApp
+                            </a>
+                          ) : null}
+
                           <Link
                             href={`/servicos/${service.id}`}
                             style={actionSecondaryStyle}
@@ -1475,6 +1588,26 @@ const chipWarning: React.CSSProperties = {
   fontWeight: 700,
 };
 
+const chipEmpresa: React.CSSProperties = {
+  background: "#ecfeff",
+  color: "#0f766e",
+  border: "1px solid #99f6e4",
+  borderRadius: 999,
+  padding: "8px 12px",
+  fontSize: 13,
+  fontWeight: 700,
+};
+
+const chipInfo: React.CSSProperties = {
+  background: "#eff6ff",
+  color: "#1d4ed8",
+  border: "1px solid #bfdbfe",
+  borderRadius: 999,
+  padding: "8px 12px",
+  fontSize: 13,
+  fontWeight: 700,
+};
+
 const miniTag: React.CSSProperties = {
   background: "#f8fafc",
   color: "#475569",
@@ -1502,6 +1635,16 @@ const actionSecondaryStyle: React.CSSProperties = {
   borderRadius: 12,
   padding: "10px 14px",
   fontWeight: 800,
+};
+
+const whatsappButtonStyle: React.CSSProperties = {
+  textDecoration: "none",
+  background: "#16a34a",
+  color: "#ffffff",
+  borderRadius: 12,
+  padding: "10px 14px",
+  fontWeight: 800,
+  boxShadow: "0 12px 24px rgba(22, 163, 74, 0.18)",
 };
 
 const quickActionStyle: React.CSSProperties = {

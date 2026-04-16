@@ -9,8 +9,51 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
+type SessionFallback = {
+  role: string;
+  empresa: string;
+  status: string;
+};
+
+const SESSION_FALLBACK_BY_EMAIL: Record<string, SessionFallback> = {
+  "ricardogrupoexecutivo1@gmail.com": {
+    role: "admin_master",
+    empresa: "GES TRANSPORTADORA LTDA",
+    status: "ativo",
+  },
+  "grupoexecutivoservice1@gmail.com": {
+    role: "operacional",
+    empresa: "GES TRANSPORTADORA LTDA",
+    status: "ativo",
+  },
+  "grupoexecutivo1@gmail.com": {
+    role: "operacional",
+    empresa: "GES TRANSPORTADORA LTDA",
+    status: "ativo",
+  },
+  "finance@ges.com": {
+    role: "financeiro",
+    empresa: "GES TRANSPORTADORA LTDA",
+    status: "ativo",
+  },
+};
+
 function normalizeEmail(value: string) {
   return value.trim().toLowerCase();
+}
+
+function normalizeText(value: unknown) {
+  return String(value || "").trim();
+}
+
+function getFallbackSession(email: string): SessionFallback {
+  return (
+    SESSION_FALLBACK_BY_EMAIL[email] || {
+      role: "",
+      empresa: "",
+      status: "ativo",
+    }
+  );
 }
 
 export default function LoginPage() {
@@ -51,34 +94,46 @@ export default function LoginPage() {
 
       try {
         if (typeof window !== "undefined") {
+          const roleAuth =
+            normalizeText(data?.user?.app_metadata?.role) ||
+            normalizeText(data?.user?.user_metadata?.role);
+
+          const empresaAuth =
+            normalizeText(data?.user?.app_metadata?.empresa) ||
+            normalizeText(data?.user?.user_metadata?.empresa);
+
+          const statusAuth =
+            normalizeText(data?.user?.app_metadata?.status) ||
+            normalizeText(data?.user?.user_metadata?.status);
+
+          const fallback = getFallbackSession(emailFinal);
+
+          const roleFinal = normalizeText(roleAuth || fallback.role).toLowerCase();
+          const empresaFinal = normalizeText(empresaAuth || fallback.empresa);
+          const statusFinal = normalizeText(statusAuth || fallback.status).toLowerCase();
+
           window.localStorage.setItem("aurora_session_email", emailFinal);
 
-          const role =
-            String(data?.user?.app_metadata?.role || "").trim() ||
-            String(data?.user?.user_metadata?.role || "").trim();
-
-          const empresa =
-            String(data?.user?.app_metadata?.empresa || "").trim() ||
-            String(data?.user?.user_metadata?.empresa || "").trim();
-
-          const statusUsuario =
-            String(data?.user?.app_metadata?.status || "").trim() ||
-            String(data?.user?.user_metadata?.status || "").trim();
-
-          if (role) {
-            window.localStorage.setItem("aurora_session_role", role);
+          if (roleFinal) {
+            window.localStorage.setItem("aurora_session_role", roleFinal);
+          } else {
+            window.localStorage.removeItem("aurora_session_role");
           }
 
-          if (empresa) {
-            window.localStorage.setItem("aurora_session_empresa", empresa);
+          if (empresaFinal) {
+            window.localStorage.setItem("aurora_session_empresa", empresaFinal);
+          } else {
+            window.localStorage.removeItem("aurora_session_empresa");
           }
 
-          if (statusUsuario) {
-            window.localStorage.setItem("aurora_session_status", statusUsuario);
+          if (statusFinal) {
+            window.localStorage.setItem("aurora_session_status", statusFinal);
+          } else {
+            window.localStorage.removeItem("aurora_session_status");
           }
         }
       } catch {
-        // mantém login principal funcionando mesmo se localStorage falhar
+        // mantém o login principal funcionando mesmo se localStorage falhar
       }
 
       setStatus("Login realizado com sucesso!");
@@ -361,7 +416,7 @@ export default function LoginPage() {
             />
             <InfoCard
               title="Sessão"
-              text="O e-mail da sessão fica disponível localmente para continuidade do uso."
+              text="O sistema preserva e-mail, perfil, empresa e status para continuidade do uso."
             />
           </div>
 

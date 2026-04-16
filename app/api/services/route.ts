@@ -8,6 +8,7 @@ type ServicePayload = {
   modo_cobranca?: string;
 
   os?: string;
+  os_sistema?: string;
   pedido_cotacao?: string | null;
   data_servico?: string | null;
   status?: string;
@@ -18,6 +19,7 @@ type ServicePayload = {
   telefone_cliente_final?: string | null;
 
   empresa_operadora?: string;
+  empresa?: string;
   motorista?: string;
   placa_veiculo?: string | null;
 
@@ -28,22 +30,30 @@ type ServicePayload = {
   endereco_informado_por?: string | null;
 
   km_total?: number | string;
+  km?: number | string;
   valor_por_km?: number | string;
   valor_cobranca?: number | string;
+  valor_total?: number | string;
 
   valor_motorista?: number | string;
   adiantamento_motorista?: number | string;
   despesas_motorista?: number | string;
+  despesas?: number | string;
+  reembolso?: number | string;
+  diaria?: number | string;
   fechamento_motorista?: number | string;
   margem_operacao?: number | string;
+  margem_bruta?: number | string;
 
   checklist_obrigatorio?: boolean;
   checklist_instrucoes?: string | null;
 
   observacoes?: string | null;
+  observacao?: string | null;
 
   action?: string;
   pago?: boolean | string | number;
+  pago_em?: string | null;
   visivel_motorista?: boolean | string | number;
 };
 
@@ -249,6 +259,267 @@ async function listServicesSafely(
   };
 }
 
+async function updateGenericStatus(
+  supabase: ReturnType<typeof getSupabaseAdmin>,
+  body: ServicePayload
+) {
+  const id = toRequiredString(body.id);
+
+  if (!id) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Informe o id do serviço para atualizar.",
+      },
+      { status: 400 }
+    );
+  }
+
+  const nowIso = new Date().toISOString();
+  const normalizedStatus = toRequiredString(body.status).toLowerCase();
+  const paidFlag =
+    body.pago !== undefined ? toBoolean(body.pago) : normalizedStatus === "pago";
+  const visibleToDriver =
+    body.visivel_motorista !== undefined
+      ? toBoolean(body.visivel_motorista)
+      : !paidFlag;
+
+  const genericUpdatePayload: Record<string, unknown> = {
+    updated_at: nowIso,
+  };
+
+  if (normalizedStatus) {
+    genericUpdatePayload.status = normalizedStatus;
+  }
+
+  genericUpdatePayload.pago = paidFlag;
+  genericUpdatePayload.visivel_motorista = visibleToDriver;
+
+  if (body.pago_em !== undefined) {
+    genericUpdatePayload.pago_em = toNullableString(body.pago_em) || null;
+  } else if (paidFlag) {
+    genericUpdatePayload.pago_em = nowIso;
+  }
+
+  const { data, error } = await supabase
+    .from("am_services")
+    .update(genericUpdatePayload)
+    .eq("id", id)
+    .select("*")
+    .single();
+
+  if (error) {
+    console.error("[am_services][UPDATE][status] erro:", error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: error.message || "Erro ao atualizar serviço.",
+        details: error,
+      },
+      { status: 500 }
+    );
+  }
+
+  console.log("[am_services][UPDATE][status] serviço atualizado:", data);
+
+  return NextResponse.json({
+    success: true,
+    message: "Serviço atualizado com sucesso.",
+    service: data,
+  });
+}
+
+async function updateMarkPaid(
+  supabase: ReturnType<typeof getSupabaseAdmin>,
+  body: ServicePayload
+) {
+  const id = toRequiredString(body.id);
+
+  if (!id) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Informe o id do serviço para atualizar.",
+      },
+      { status: 400 }
+    );
+  }
+
+  const nowIso = new Date().toISOString();
+
+  const updatePayload: Record<string, unknown> = {
+    status: "pago",
+    pago: true,
+    pago_em: nowIso,
+    visivel_motorista: false,
+    updated_at: nowIso,
+  };
+
+  const { data, error } = await supabase
+    .from("am_services")
+    .update(updatePayload)
+    .eq("id", id)
+    .select("*")
+    .single();
+
+  if (error) {
+    console.error("[am_services][UPDATE][mark_paid] erro:", error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: error.message || "Erro ao marcar serviço como pago.",
+        details: error,
+      },
+      { status: 500 }
+    );
+  }
+
+  console.log("[am_services][UPDATE][mark_paid] serviço atualizado:", data);
+
+  return NextResponse.json({
+    success: true,
+    message:
+      "Serviço marcado como pago com sucesso. Motorista não deve mais visualizar esta operação nas telas permitidas.",
+    service: data,
+  });
+}
+
+async function updateEditableFields(
+  supabase: ReturnType<typeof getSupabaseAdmin>,
+  body: ServicePayload
+) {
+  const id = toRequiredString(body.id);
+
+  if (!id) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Informe o id do serviço para atualizar.",
+      },
+      { status: 400 }
+    );
+  }
+
+  const nowIso = new Date().toISOString();
+
+  const contratante = toRequiredString(body.contratante);
+  const clienteFinal = toRequiredString(body.cliente_final);
+  const contatoClienteFinal = toRequiredString(body.contato_cliente_final);
+  const telefoneClienteFinal = toNullableString(body.telefone_cliente_final);
+  const motorista = toRequiredString(body.motorista);
+  const placaVeiculo = toNullableString(body.placa_veiculo);
+  const origem = toRequiredString(body.origem);
+  const destino = toRequiredString(body.destino);
+  const enderecoRetirada = toNullableString(body.endereco_retirada);
+  const enderecoEntrega = toNullableString(body.endereco_entrega);
+  const observacoes =
+    toNullableString(body.observacoes) || toNullableString(body.observacao);
+
+  const kmTotal = toNumber(body.km_total ?? body.km);
+  const valorPorKm = toNumber(body.valor_por_km);
+  const valorCobranca = toNumber(body.valor_cobranca ?? body.valor_total);
+  const valorMotorista = toNumber(body.valor_motorista);
+  const adiantamentoMotorista = toNumber(body.adiantamento_motorista);
+  const despesasMotorista = toNumber(
+    body.despesas_motorista ?? body.despesas ?? body.reembolso
+  );
+  const fechamentoMotorista = toNumber(body.fechamento_motorista);
+  const margemOperacao = toNumber(body.margem_operacao ?? body.margem_bruta);
+
+  if (
+    !contratante ||
+    !clienteFinal ||
+    !contatoClienteFinal ||
+    !motorista ||
+    !origem ||
+    !destino
+  ) {
+    return NextResponse.json(
+      {
+        success: false,
+        error:
+          "Para salvar a edição, informe contratante, cliente final, contato do cliente final, motorista, origem e destino.",
+      },
+      { status: 400 }
+    );
+  }
+
+  const updatePayload: Record<string, unknown> = {
+    contratante,
+    empresa: contratante,
+
+    cliente_final: clienteFinal,
+    cliente: clienteFinal,
+
+    contato_cliente_final: contatoClienteFinal,
+    telefone_cliente_final: telefoneClienteFinal,
+
+    motorista,
+    placa_veiculo: placaVeiculo,
+
+    origem,
+    destino,
+    servico: `${origem} x ${destino}`,
+
+    endereco_retirada: enderecoRetirada,
+    endereco_entrega: enderecoEntrega,
+
+    observacoes,
+    observacao:
+      observacoes || "Serviço atualizado pelo fluxo seguro de edição.",
+
+    km_total: kmTotal,
+    km: kmTotal,
+
+    valor_por_km: valorPorKm,
+    valor_cobranca: valorCobranca,
+    valor_total: valorCobranca,
+    diaria: valorCobranca,
+
+    valor_motorista: valorMotorista,
+    adiantamento_motorista: adiantamentoMotorista,
+    despesas_motorista: despesasMotorista,
+    despesas: despesasMotorista,
+    reembolso: despesasMotorista,
+
+    fechamento_motorista: fechamentoMotorista,
+    margem_operacao: margemOperacao,
+    margem_bruta: margemOperacao,
+
+    updated_at: nowIso,
+  };
+
+  const { data, error } = await supabase
+    .from("am_services")
+    .update(updatePayload)
+    .eq("id", id)
+    .select("*")
+    .single();
+
+  if (error) {
+    console.error("[am_services][UPDATE][edit] erro:", error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: error.message || "Erro ao salvar edição do serviço.",
+        details: error,
+      },
+      { status: 500 }
+    );
+  }
+
+  console.log("[am_services][UPDATE][edit] serviço atualizado:", data);
+
+  return NextResponse.json({
+    success: true,
+    message: "Serviço editado com sucesso no Supabase.",
+    service: data,
+  });
+}
+
 export async function GET() {
   try {
     const supabase = getSupabaseAdmin();
@@ -297,27 +568,54 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as ServicePayload;
+    const supabase = getSupabaseAdmin();
+
+    const hasId = Boolean(toRequiredString(body.id));
+    const hasCreateFields = Boolean(
+      toRequiredString(body.contratante) ||
+        toRequiredString(body.cliente_final) ||
+        toRequiredString(body.motorista) ||
+        toRequiredString(body.origem) ||
+        toRequiredString(body.destino)
+    );
+
+    // Atualização rápida vinda da tela /servicos
+    if (hasId && !hasCreateFields) {
+      return await updateGenericStatus(supabase, body);
+    }
 
     const tipoServico = toRequiredString(body.tipo_servico) || "busca_veiculo";
     const modoCobranca =
       toRequiredString(body.modo_cobranca) || "fechado_total";
 
-    const os = toRequiredString(body.os) || `OS-${Date.now()}`;
+    const os =
+      toRequiredString(body.os_sistema) ||
+      toRequiredString(body.os) ||
+      `OS-${Date.now()}`;
+
     const status = toRequiredString(body.status) || "pendente";
 
-    const contratante = toRequiredString(body.contratante);
-    const clienteFinal = toRequiredString(body.cliente_final);
+    const contratante =
+      toRequiredString(body.contratante) ||
+      toRequiredString(body.empresa_operadora) ||
+      toRequiredString(body.empresa);
+
+    const clienteFinal =
+      toRequiredString(body.cliente_final) || toRequiredString(body.cliente_final);
+
     const contatoClienteFinal = toRequiredString(body.contato_cliente_final);
     const motorista = toRequiredString(body.motorista);
     const origem = toRequiredString(body.origem);
     const destino = toRequiredString(body.destino);
+
     const empresaOperadora =
-      toRequiredString(body.empresa_operadora) || "Aurora Motoristas";
+      toRequiredString(body.empresa_operadora) ||
+      toRequiredString(body.empresa) ||
+      "Aurora Motoristas";
 
     if (
       !contratante ||
       !clienteFinal ||
-      !contatoClienteFinal ||
       !motorista ||
       !origem ||
       !destino
@@ -326,19 +624,23 @@ export async function POST(request: Request) {
         {
           success: false,
           error:
-            "Informe contratante, cliente final, contato do cliente final, motorista, origem e destino.",
+            "Informe contratante, cliente final, motorista, origem e destino.",
         },
         { status: 400 }
       );
     }
 
-    const valorCobranca = toNumber(body.valor_cobranca);
+    const valorCobranca = toNumber(body.valor_cobranca ?? body.valor_total);
     const valorMotorista = toNumber(body.valor_motorista);
     const adiantamentoMotorista = toNumber(body.adiantamento_motorista);
-    const despesasMotorista = toNumber(body.despesas_motorista);
+    const despesasMotorista = toNumber(
+      body.despesas_motorista ?? body.despesas ?? body.reembolso
+    );
 
     const fechamentoMotoristaInformado = toNumber(body.fechamento_motorista);
-    const margemOperacaoInformada = toNumber(body.margem_operacao);
+    const margemOperacaoInformada = toNumber(
+      body.margem_operacao ?? body.margem_bruta
+    );
 
     const fechamentoMotoristaCalculado =
       valorMotorista - adiantamentoMotorista + despesasMotorista;
@@ -350,6 +652,16 @@ export async function POST(request: Request) {
       fechamentoMotoristaInformado || fechamentoMotoristaCalculado;
 
     const margemOperacao = margemOperacaoInformada || margemOperacaoCalculada;
+
+    const observacaoFinal =
+      toNullableString(body.observacoes) ||
+      toNullableString(body.observacao) ||
+      "Serviço lançado pelo novo fluxo operacional.";
+
+    const servicoFinal =
+      toRequiredString(body.origem) && toRequiredString(body.destino)
+        ? `${origem} x ${destino}`
+        : toRequiredString(body.os_sistema) || "Serviço";
 
     const payload: Record<string, unknown> = {
       tipo_servico: tipoServico,
@@ -375,7 +687,7 @@ export async function POST(request: Request) {
       endereco_entrega: toNullableString(body.endereco_entrega),
       endereco_informado_por: toNullableString(body.endereco_informado_por),
 
-      km_total: toNumber(body.km_total),
+      km_total: toNumber(body.km_total ?? body.km),
       valor_por_km: toNumber(body.valor_por_km),
       valor_cobranca: valorCobranca,
 
@@ -388,29 +700,36 @@ export async function POST(request: Request) {
       checklist_obrigatorio: Boolean(body.checklist_obrigatorio),
       checklist_instrucoes: toNullableString(body.checklist_instrucoes),
 
-      observacoes: toNullableString(body.observacoes),
+      observacoes: observacaoFinal,
 
-      pago: status === "pago",
-      visivel_motorista: status !== "pago",
+      pago: body.pago !== undefined ? toBoolean(body.pago) : status === "pago",
+      pago_em:
+        body.pago_em !== undefined
+          ? toNullableString(body.pago_em)
+          : status === "pago"
+          ? new Date().toISOString()
+          : null,
+      visivel_motorista:
+        body.visivel_motorista !== undefined
+          ? toBoolean(body.visivel_motorista)
+          : status !== "pago",
+
       origem_base: "Novo serviço",
       etapa: "Operacional",
 
       os_sistema: os,
       empresa: empresaOperadora,
       cliente: clienteFinal,
-      servico: `${origem} x ${destino}`,
-      km: toNumber(body.km_total),
-      diaria: valorCobranca,
-      reembolso: despesasMotorista,
+      servico: servicoFinal,
+      km: toNumber(body.km_total ?? body.km),
+      diaria: toNumber(body.diaria || valorCobranca),
+      reembolso: toNumber(body.reembolso ?? despesasMotorista),
       valor_total: valorCobranca,
-      despesas: despesasMotorista,
-      margem_bruta: margemOperacao,
-      observacao:
-        toNullableString(body.observacoes) ||
-        "Serviço lançado pelo novo fluxo operacional.",
+      despesas: toNumber(body.despesas ?? despesasMotorista),
+      margem_bruta: toNumber(body.margem_bruta ?? margemOperacao),
+      observacao: observacaoFinal,
     };
 
-    const supabase = getSupabaseAdmin();
     const result = await insertWithAutoColumnFallback(supabase, payload);
 
     if (result.error || !result.data) {
@@ -475,64 +794,13 @@ export async function POST(request: Request) {
 export async function PATCH(request: Request) {
   try {
     const body = (await request.json()) as ServicePayload;
-
-    const id = toRequiredString(body.id);
-    const action = toRequiredString(body.action).toLowerCase();
-
-    if (!id) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Informe o id do serviço para atualizar.",
-        },
-        { status: 400 }
-      );
-    }
-
     const supabase = getSupabaseAdmin();
 
+    const action = toRequiredString(body.action).toLowerCase();
+
     if (action === "mark_paid") {
-      const nowIso = new Date().toISOString();
-
-      const updatePayload: Record<string, unknown> = {
-        status: "pago",
-        pago: true,
-        pago_em: nowIso,
-        visivel_motorista: false,
-        updated_at: nowIso,
-      };
-
-      const { data, error } = await supabase
-        .from("am_services")
-        .update(updatePayload)
-        .eq("id", id)
-        .select("*")
-        .single();
-
-      if (error) {
-        console.error("[am_services][PATCH][mark_paid] erro:", error);
-
-        return NextResponse.json(
-          {
-            success: false,
-            error: error.message || "Erro ao marcar serviço como pago.",
-            details: error,
-          },
-          { status: 500 }
-        );
-      }
-
-      console.log("[am_services][PATCH][mark_paid] serviço atualizado:", data);
-
-      return NextResponse.json({
-        success: true,
-        message:
-          "Serviço marcado como pago com sucesso. Motorista não deve mais visualizar esta operação nas telas permitidas.",
-        service: data,
-      });
+      return await updateMarkPaid(supabase, body);
     }
-
-    const nowIso = new Date().toISOString();
 
     const hasEditableFields =
       body.contratante !== undefined ||
@@ -546,179 +814,26 @@ export async function PATCH(request: Request) {
       body.endereco_retirada !== undefined ||
       body.endereco_entrega !== undefined ||
       body.observacoes !== undefined ||
+      body.observacao !== undefined ||
       body.km_total !== undefined ||
+      body.km !== undefined ||
       body.valor_por_km !== undefined ||
       body.valor_cobranca !== undefined ||
+      body.valor_total !== undefined ||
       body.valor_motorista !== undefined ||
       body.adiantamento_motorista !== undefined ||
       body.despesas_motorista !== undefined ||
+      body.despesas !== undefined ||
+      body.reembolso !== undefined ||
       body.fechamento_motorista !== undefined ||
-      body.margem_operacao !== undefined;
+      body.margem_operacao !== undefined ||
+      body.margem_bruta !== undefined;
 
     if (hasEditableFields) {
-      const contratante = toRequiredString(body.contratante);
-      const clienteFinal = toRequiredString(body.cliente_final);
-      const contatoClienteFinal = toRequiredString(body.contato_cliente_final);
-      const telefoneClienteFinal = toNullableString(body.telefone_cliente_final);
-      const motorista = toRequiredString(body.motorista);
-      const placaVeiculo = toNullableString(body.placa_veiculo);
-      const origem = toRequiredString(body.origem);
-      const destino = toRequiredString(body.destino);
-      const enderecoRetirada = toNullableString(body.endereco_retirada);
-      const enderecoEntrega = toNullableString(body.endereco_entrega);
-      const observacoes = toNullableString(body.observacoes);
-
-      const kmTotal = toNumber(body.km_total);
-      const valorPorKm = toNumber(body.valor_por_km);
-      const valorCobranca = toNumber(body.valor_cobranca);
-      const valorMotorista = toNumber(body.valor_motorista);
-      const adiantamentoMotorista = toNumber(body.adiantamento_motorista);
-      const despesasMotorista = toNumber(body.despesas_motorista);
-      const fechamentoMotorista = toNumber(body.fechamento_motorista);
-      const margemOperacao = toNumber(body.margem_operacao);
-
-      if (
-        !contratante ||
-        !clienteFinal ||
-        !contatoClienteFinal ||
-        !motorista ||
-        !origem ||
-        !destino
-      ) {
-        return NextResponse.json(
-          {
-            success: false,
-            error:
-              "Para salvar a edição, informe contratante, cliente final, contato do cliente final, motorista, origem e destino.",
-          },
-          { status: 400 }
-        );
-      }
-
-      const updatePayload: Record<string, unknown> = {
-        contratante,
-        empresa: contratante,
-
-        cliente_final: clienteFinal,
-        cliente: clienteFinal,
-
-        contato_cliente_final: contatoClienteFinal,
-        telefone_cliente_final: telefoneClienteFinal,
-
-        motorista,
-        placa_veiculo: placaVeiculo,
-
-        origem,
-        destino,
-        servico: `${origem} x ${destino}`,
-
-        endereco_retirada: enderecoRetirada,
-        endereco_entrega: enderecoEntrega,
-
-        observacoes,
-        observacao:
-          observacoes || "Serviço atualizado pelo fluxo seguro de edição.",
-
-        km_total: kmTotal,
-        km: kmTotal,
-
-        valor_por_km: valorPorKm,
-        valor_cobranca: valorCobranca,
-        valor_total: valorCobranca,
-        diaria: valorCobranca,
-
-        valor_motorista: valorMotorista,
-        adiantamento_motorista: adiantamentoMotorista,
-        despesas_motorista: despesasMotorista,
-        despesas: despesasMotorista,
-        reembolso: despesasMotorista,
-
-        fechamento_motorista: fechamentoMotorista,
-        margem_operacao: margemOperacao,
-        margem_bruta: margemOperacao,
-
-        updated_at: nowIso,
-      };
-
-      const { data, error } = await supabase
-        .from("am_services")
-        .update(updatePayload)
-        .eq("id", id)
-        .select("*")
-        .single();
-
-      if (error) {
-        console.error("[am_services][PATCH][edit] erro:", error);
-
-        return NextResponse.json(
-          {
-            success: false,
-            error: error.message || "Erro ao salvar edição do serviço.",
-            details: error,
-          },
-          { status: 500 }
-        );
-      }
-
-      console.log("[am_services][PATCH][edit] serviço atualizado:", data);
-
-      return NextResponse.json({
-        success: true,
-        message: "Serviço editado com sucesso no Supabase.",
-        service: data,
-      });
+      return await updateEditableFields(supabase, body);
     }
 
-    const normalizedStatus = toRequiredString(body.status).toLowerCase();
-    const paidFlag =
-      body.pago !== undefined ? toBoolean(body.pago) : normalizedStatus === "pago";
-    const visibleToDriver =
-      body.visivel_motorista !== undefined
-        ? toBoolean(body.visivel_motorista)
-        : !paidFlag;
-
-    const genericUpdatePayload: Record<string, unknown> = {
-      updated_at: nowIso,
-    };
-
-    if (normalizedStatus) {
-      genericUpdatePayload.status = normalizedStatus;
-    }
-
-    genericUpdatePayload.pago = paidFlag;
-    genericUpdatePayload.visivel_motorista = visibleToDriver;
-
-    if (paidFlag) {
-      genericUpdatePayload.pago_em = nowIso;
-    }
-
-    const { data, error } = await supabase
-      .from("am_services")
-      .update(genericUpdatePayload)
-      .eq("id", id)
-      .select("*")
-      .single();
-
-    if (error) {
-      console.error("[am_services][PATCH] erro:", error);
-
-      return NextResponse.json(
-        {
-          success: false,
-          error: error.message || "Erro ao atualizar serviço.",
-          details: error,
-        },
-        { status: 500 }
-      );
-    }
-
-    console.log("[am_services][PATCH] serviço atualizado:", data);
-
-    return NextResponse.json({
-      success: true,
-      message: "Serviço atualizado com sucesso.",
-      service: data,
-    });
+    return await updateGenericStatus(supabase, body);
   } catch (error) {
     const message =
       error instanceof Error

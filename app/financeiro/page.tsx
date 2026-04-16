@@ -1,50 +1,134 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-const EMAILS_AUTORIZADOS = [
+type SessionData = {
+  email: string;
+  role: string;
+  empresa: string;
+  status: string;
+};
+
+const EMAILS_FALLBACK_AUTORIZADOS = [
   "ricardogrupoexecutivo1@gmail.com",
   "finance@ges.com",
   "grupoexecutivo1@gmail.com",
 ];
 
-function getLocalSessionEmail() {
-  if (typeof window === "undefined") return "";
+const ROLES_AUTORIZADOS = ["admin_master", "admin", "financeiro"];
 
-  const keys = [
-    "aurora_session_email",
-    "session_email",
-    "userEmail",
-    "email",
-  ];
+function normalize(value: string | null | undefined) {
+  return String(value || "").trim().toLowerCase();
+}
 
-  for (const key of keys) {
-    const value = window.localStorage.getItem(key);
-    if (value && value.trim()) return value.trim().toLowerCase();
+function getLocalSession(): SessionData {
+  if (typeof window === "undefined") {
+    return {
+      email: "",
+      role: "",
+      empresa: "",
+      status: "",
+    };
   }
 
-  return "";
+  const email =
+    localStorage.getItem("aurora_session_email") ||
+    localStorage.getItem("session_email") ||
+    localStorage.getItem("userEmail") ||
+    localStorage.getItem("email") ||
+    "";
+
+  const role =
+    localStorage.getItem("aurora_session_role") ||
+    localStorage.getItem("role") ||
+    "";
+
+  const empresa =
+    localStorage.getItem("aurora_session_empresa") ||
+    localStorage.getItem("empresa") ||
+    "";
+
+  const status =
+    localStorage.getItem("aurora_session_status") ||
+    localStorage.getItem("status") ||
+    "";
+
+  return {
+    email: normalize(email),
+    role: normalize(role),
+    empresa: String(empresa || "").trim(),
+    status: normalize(status),
+  };
+}
+
+function isAuthorized(session: SessionData) {
+  const emailAutorizado = EMAILS_FALLBACK_AUTORIZADOS.includes(session.email);
+  const roleAutorizado = ROLES_AUTORIZADOS.includes(session.role);
+
+  return emailAutorizado || roleAutorizado;
+}
+
+function getDisplayRole(role: string) {
+  if (role === "admin_master") return "Admin Master";
+  if (role === "admin") return "Admin";
+  if (role === "financeiro") return "Financeiro";
+  if (role === "operacional") return "Operacional";
+  if (role === "motorista") return "Motorista";
+  if (role === "visualizacao") return "Visualização";
+  return role || "Não identificado";
 }
 
 export default function FinanceiroPage() {
   const [mounted, setMounted] = useState(false);
-  const [emailSessao, setEmailSessao] = useState("");
+  const [session, setSession] = useState<SessionData>({
+    email: "",
+    role: "",
+    empresa: "",
+    status: "",
+  });
+  const [accessState, setAccessState] = useState<
+    "checking" | "authorized" | "unauthenticated" | "forbidden"
+  >("checking");
 
   useEffect(() => {
     setMounted(true);
 
-    const email = getLocalSessionEmail();
-    setEmailSessao(email);
+    const localSession = getLocalSession();
+    setSession(localSession);
 
-    if (!EMAILS_AUTORIZADOS.includes(email)) {
-      window.location.href = "/acesso-negado";
+    const hasAnySession = Boolean(localSession.email || localSession.role);
+
+    if (!hasAnySession) {
+      setAccessState("unauthenticated");
+      window.location.href = "/login";
+      return;
     }
+
+    if (!isAuthorized(localSession)) {
+      setAccessState("forbidden");
+      window.location.href = "/acesso-negado";
+      return;
+    }
+
+    setAccessState("authorized");
   }, []);
 
-  const autorizado = EMAILS_AUTORIZADOS.includes(emailSessao);
+  const subtitulo = useMemo(() => {
+    if (session.role) {
+      return `${getDisplayRole(session.role)}${
+        session.empresa ? ` • ${session.empresa}` : ""
+      }`;
+    }
 
-  if (!mounted) {
+    if (session.email) {
+      return session.email;
+    }
+
+    return "Sessão protegida";
+  }, [session]);
+
+  if (!mounted || accessState === "checking") {
     return (
       <main style={styles.page}>
         <section style={styles.wrapper}>
@@ -52,8 +136,8 @@ export default function FinanceiroPage() {
             <span style={styles.kicker}>AURORA MOTORISTAS • FINANCEIRO</span>
             <h1 style={styles.title}>Validando acesso...</h1>
             <p style={styles.text}>
-              Aguarde enquanto o sistema confirma a sessão e aplica a blindagem
-              desta área.
+              Aguarde enquanto o sistema confirma a sessão, o perfil e a
+              blindagem desta área financeira.
             </p>
 
             <div style={styles.loadingBox}>
@@ -65,19 +149,41 @@ export default function FinanceiroPage() {
     );
   }
 
-  if (!autorizado) {
+  if (accessState === "unauthenticated") {
     return (
       <main style={styles.page}>
         <section style={styles.wrapper}>
           <div style={styles.card}>
             <span style={styles.kicker}>AURORA MOTORISTAS • FINANCEIRO</span>
-            <h1 style={styles.title}>Redirecionando...</h1>
+            <h1 style={styles.title}>Sessão não encontrada</h1>
             <p style={styles.text}>
-              Você não possui permissão para esta área. O sistema está
-              redirecionando para a página de acesso restrito.
+              O sistema não encontrou uma sessão válida para esta área. Você
+              está sendo redirecionado para o login.
             </p>
 
-            <div style={styles.loadingBox}>Redirecionando para acesso negado...</div>
+            <div style={styles.loadingBox}>Redirecionando para o login...</div>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
+  if (accessState === "forbidden") {
+    return (
+      <main style={styles.page}>
+        <section style={styles.wrapper}>
+          <div style={styles.card}>
+            <span style={styles.kicker}>AURORA MOTORISTAS • FINANCEIRO</span>
+            <h1 style={styles.title}>Acesso restrito</h1>
+            <p style={styles.text}>
+              Sua sessão foi identificada, mas o perfil atual não possui
+              permissão para visualizar o financeiro. Você está sendo
+              redirecionado para a área de acesso negado.
+            </p>
+
+            <div style={styles.loadingBox}>
+              Redirecionando para acesso negado...
+            </div>
           </div>
         </section>
       </main>
@@ -93,12 +199,32 @@ export default function FinanceiroPage() {
           <h1 style={styles.title}>Financeiro protegido</h1>
 
           <p style={styles.text}>
-            Acesso liberado para <strong>{emailSessao}</strong>. Esta área está
-            protegida e disponível apenas para usuários autorizados.
+            Acesso liberado para <strong>{session.email || "usuário"}</strong>.
+            Esta área está protegida por perfil e disponível apenas para usuários
+            autorizados.
           </p>
 
           <div style={styles.successBox}>
             Acesso autorizado. Conteúdo financeiro visível.
+          </div>
+
+          <div style={styles.sessionGrid}>
+            <SessionInfo
+              label="Perfil da sessão"
+              value={getDisplayRole(session.role)}
+            />
+            <SessionInfo
+              label="Empresa"
+              value={session.empresa || "Não informada"}
+            />
+            <SessionInfo
+              label="Status da sessão"
+              value={session.status || "Não informado"}
+            />
+            <SessionInfo
+              label="Leitura principal"
+              value={subtitulo}
+            />
           </div>
 
           <div style={styles.grid}>
@@ -143,6 +269,21 @@ export default function FinanceiroPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+function SessionInfo({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <div style={styles.sessionCard}>
+      <div style={styles.sessionLabel}>{label}</div>
+      <div style={styles.sessionValue}>{value}</div>
+    </div>
   );
 }
 
@@ -211,6 +352,33 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 800,
     lineHeight: 1.65,
   },
+  sessionGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: 12,
+    marginTop: 18,
+  },
+  sessionCard: {
+    background: "#ffffff",
+    borderRadius: 18,
+    border: "1px solid rgba(125, 211, 252, 0.18)",
+    padding: 14,
+    boxShadow: "0 10px 28px rgba(15, 23, 42, 0.05)",
+    minWidth: 0,
+  },
+  sessionLabel: {
+    fontSize: 12,
+    color: "#6b7f90",
+    fontWeight: 700,
+    marginBottom: 6,
+  },
+  sessionValue: {
+    fontSize: 14,
+    color: "#123047",
+    fontWeight: 800,
+    lineHeight: 1.5,
+    wordBreak: "break-word",
+  },
   actions: {
     display: "flex",
     flexWrap: "wrap",
@@ -229,7 +397,6 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#0f172a",
     background: "#ffffff",
     border: "1px solid rgba(125, 211, 252, 0.24)",
-    boxSizing: "border-box",
   },
   grid: {
     display: "grid",
