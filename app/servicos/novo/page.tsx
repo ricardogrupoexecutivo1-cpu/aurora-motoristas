@@ -245,6 +245,23 @@ function hasUsefulDraftData(
   );
 }
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    function update() {
+      setIsMobile(window.innerWidth < 768);
+    }
+
+    update();
+    window.addEventListener("resize", update);
+
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  return isMobile;
+}
+
 export default function NovoServicoPage() {
   const [saveDestination, setSaveDestination] =
     useState<SaveDestination>("aguardando");
@@ -293,6 +310,8 @@ export default function NovoServicoPage() {
   const [checklistInstrucoes, setChecklistInstrucoes] = useState(
     DEFAULT_CHECKLIST
   );
+
+  const isMobile = useIsMobile();
 
   const km = useMemo(() => parseKmInput(kmInput), [kmInput]);
   const valorCobrancaManual = useMemo(
@@ -379,13 +398,16 @@ export default function NovoServicoPage() {
       }
       if (typeof parsed.osCliente === "string") setOsCliente(parsed.osCliente);
       if (typeof parsed.ocCliente === "string") setOcCliente(parsed.ocCliente);
-      if (typeof parsed.dataServico === "string") setDataServico(parsed.dataServico);
+      if (typeof parsed.dataServico === "string")
+        setDataServico(parsed.dataServico);
       if (typeof parsed.status === "string") setStatus(parsed.status);
 
       if (typeof parsed.empresa === "string") setEmpresa(parsed.empresa);
-      if (typeof parsed.contratante === "string") setContratante(parsed.contratante);
+      if (typeof parsed.contratante === "string")
+        setContratante(parsed.contratante);
       if (typeof parsed.cliente === "string") setCliente(parsed.cliente);
-      if (typeof parsed.clienteFinal === "string") setClienteFinal(parsed.clienteFinal);
+      if (typeof parsed.clienteFinal === "string")
+        setClienteFinal(parsed.clienteFinal);
       if (typeof parsed.contatoClienteFinal === "string") {
         setContatoClienteFinal(parsed.contatoClienteFinal);
       }
@@ -394,12 +416,15 @@ export default function NovoServicoPage() {
       }
       if (typeof parsed.motorista === "string") setMotorista(parsed.motorista);
 
-      if (typeof parsed.tipoServico === "string") setTipoServico(parsed.tipoServico);
-      if (typeof parsed.modoCobranca === "string") setModoCobranca(parsed.modoCobranca);
+      if (typeof parsed.tipoServico === "string")
+        setTipoServico(parsed.tipoServico);
+      if (typeof parsed.modoCobranca === "string")
+        setModoCobranca(parsed.modoCobranca);
       if (typeof parsed.servico === "string") setServico(parsed.servico);
       if (typeof parsed.origem === "string") setOrigem(parsed.origem);
       if (typeof parsed.destino === "string") setDestino(parsed.destino);
-      if (typeof parsed.placaVeiculo === "string") setPlacaVeiculo(parsed.placaVeiculo);
+      if (typeof parsed.placaVeiculo === "string")
+        setPlacaVeiculo(parsed.placaVeiculo);
       if (typeof parsed.enderecoRetirada === "string") {
         setEnderecoRetirada(parsed.enderecoRetirada);
       }
@@ -423,7 +448,8 @@ export default function NovoServicoPage() {
       if (typeof parsed.adiantamentoMotoristaInput === "string") {
         setAdiantamentoMotoristaInput(parsed.adiantamentoMotoristaInput);
       }
-      if (typeof parsed.pedagioInput === "string") setPedagioInput(parsed.pedagioInput);
+      if (typeof parsed.pedagioInput === "string")
+        setPedagioInput(parsed.pedagioInput);
       if (typeof parsed.estacionamentoInput === "string") {
         setEstacionamentoInput(parsed.estacionamentoInput);
       }
@@ -434,7 +460,8 @@ export default function NovoServicoPage() {
         setReembolsoInput(parsed.reembolsoInput);
       }
 
-      if (typeof parsed.observacoes === "string") setObservacoes(parsed.observacoes);
+      if (typeof parsed.observacoes === "string")
+        setObservacoes(parsed.observacoes);
       if (typeof parsed.checklistInstrucoes === "string") {
         setChecklistInstrucoes(parsed.checklistInstrucoes);
       }
@@ -758,7 +785,7 @@ export default function NovoServicoPage() {
       style={{
         minHeight: "100vh",
         background: "#f6f8fb",
-        padding: "24px 16px 48px",
+        padding: isMobile ? "16px 12px 36px" : "24px 16px 48px",
         fontFamily: "Arial, sans-serif",
         color: "#123047",
       }}
@@ -782,47 +809,16 @@ export default function NovoServicoPage() {
           }}
         >
           <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
-            <Link
-              href="/servicos"
-              style={{
-                textDecoration: "none",
-                background: "#ffffff",
-                color: "#123047",
-                border: "1px solid #dbe5ef",
-                borderRadius: 12,
-                padding: "10px 14px",
-                fontWeight: 700,
-              }}
-            >
+            <Link href="/servicos" style={topSecondaryLink}>
               Voltar para serviços
             </Link>
 
-            <Link
-              href="/"
-              style={{
-                textDecoration: "none",
-                background: "#ffffff",
-                color: "#123047",
-                border: "1px solid #dbe5ef",
-                borderRadius: 12,
-                padding: "10px 14px",
-                fontWeight: 700,
-              }}
-            >
+            <Link href="/" style={topSecondaryLink}>
               Início
             </Link>
           </div>
 
-          <div
-            style={{
-              background: "#ffffff",
-              color: "#5b7488",
-              border: "1px solid #e7eef6",
-              borderRadius: 12,
-              padding: "10px 14px",
-              fontWeight: 700,
-            }}
-          >
+          <div style={statusBadgeStyle}>
             {saving ? "Salvando..." : statusText}
           </div>
         </div>
@@ -831,32 +827,20 @@ export default function NovoServicoPage() {
           style={{
             background: "#ffffff",
             borderRadius: 24,
-            padding: 22,
+            padding: isMobile ? 18 : 22,
             boxShadow: "0 20px 45px rgba(15, 23, 42, 0.06)",
             border: "1px solid #e7eef6",
           }}
         >
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            <span
-              style={{
-                display: "inline-flex",
-                width: "fit-content",
-                background: "#e0f2fe",
-                color: "#075985",
-                borderRadius: 999,
-                padding: "6px 12px",
-                fontWeight: 700,
-                fontSize: 13,
-              }}
-            >
-              Aurora Motoristas
-            </span>
+            <span style={chipBlue}>Aurora Motoristas</span>
 
             <h1
               style={{
                 margin: 0,
-                fontSize: 32,
+                fontSize: isMobile ? 28 : 32,
                 lineHeight: 1.1,
+                wordBreak: "break-word",
               }}
             >
               Novo serviço
@@ -884,17 +868,7 @@ export default function NovoServicoPage() {
                 gap: 10,
               }}
             >
-              <span
-                style={{
-                  background: "#f8fafc",
-                  color: "#334155",
-                  border: "1px solid #e2e8f0",
-                  borderRadius: 999,
-                  padding: "8px 12px",
-                  fontSize: 13,
-                  fontWeight: 700,
-                }}
-              >
+              <span style={chipNeutral}>
                 Destino do salvamento:{" "}
                 {saveDestination === "supabase"
                   ? "Supabase"
@@ -903,17 +877,7 @@ export default function NovoServicoPage() {
                   : "Aguardando envio"}
               </span>
 
-              <span
-                style={{
-                  background: "#fff7ed",
-                  color: "#9a3412",
-                  border: "1px solid #fed7aa",
-                  borderRadius: 999,
-                  padding: "8px 12px",
-                  fontSize: 13,
-                  fontWeight: 700,
-                }}
-              >
+              <span style={chipWarning}>
                 Sistema em constante atualização e podem ocorrer instabilidades
                 momentâneas.
               </span>
@@ -955,7 +919,7 @@ export default function NovoServicoPage() {
         <section
           style={{
             display: "grid",
-            gridTemplateColumns: "1.1fr 0.9fr",
+            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
             gap: 16,
           }}
         >
@@ -963,12 +927,13 @@ export default function NovoServicoPage() {
             style={{
               background: "#ffffff",
               borderRadius: 24,
-              padding: 20,
+              padding: isMobile ? 16 : 20,
               border: "1px solid #e7eef6",
               boxShadow: "0 20px 45px rgba(15, 23, 42, 0.06)",
               display: "flex",
               flexDirection: "column",
               gap: 18,
+              minWidth: 0,
             }}
           >
             <h2
@@ -985,7 +950,7 @@ export default function NovoServicoPage() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
                 gap: 12,
               }}
             >
@@ -1050,7 +1015,7 @@ export default function NovoServicoPage() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
                 gap: 12,
               }}
             >
@@ -1159,12 +1124,13 @@ export default function NovoServicoPage() {
             style={{
               background: "#ffffff",
               borderRadius: 24,
-              padding: 20,
+              padding: isMobile ? 16 : 20,
               border: "1px solid #e7eef6",
               boxShadow: "0 20px 45px rgba(15, 23, 42, 0.06)",
               display: "flex",
               flexDirection: "column",
               gap: 18,
+              minWidth: 0,
             }}
           >
             <h2
@@ -1261,7 +1227,7 @@ export default function NovoServicoPage() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
                 gap: 12,
               }}
             >
@@ -1341,7 +1307,7 @@ export default function NovoServicoPage() {
           style={{
             background: "#ffffff",
             borderRadius: 24,
-            padding: 20,
+            padding: isMobile ? 16 : 20,
             border: "1px solid #e7eef6",
             boxShadow: "0 20px 45px rgba(15, 23, 42, 0.06)",
             display: "flex",
@@ -1370,16 +1336,7 @@ export default function NovoServicoPage() {
               type="button"
               onClick={limparFormulario}
               disabled={saving}
-              style={{
-                border: "1px solid #dbe5ef",
-                background: "#ffffff",
-                color: "#123047",
-                borderRadius: 12,
-                padding: "12px 16px",
-                fontWeight: 800,
-                cursor: saving ? "not-allowed" : "pointer",
-                opacity: saving ? 0.7 : 1,
-              }}
+              style={secondaryButton}
             >
               Limpar
             </button>
@@ -1392,15 +1349,9 @@ export default function NovoServicoPage() {
               }}
               disabled={saving}
               style={{
-                border: "none",
-                background: "#0ea5e9",
-                color: "#ffffff",
-                borderRadius: 12,
-                padding: "12px 18px",
-                fontWeight: 800,
-                cursor: saving ? "not-allowed" : "pointer",
-                boxShadow: "0 14px 28px rgba(14, 165, 233, 0.20)",
+                ...primaryButton,
                 opacity: saving ? 0.8 : 1,
+                cursor: saving ? "not-allowed" : "pointer",
               }}
             >
               {saving ? "Salvando..." : "Salvar serviço"}
@@ -1416,7 +1367,8 @@ export default function NovoServicoPage() {
             fontWeight: 700,
           }}
         >
-          Sistema em constante atualização • podem ocorrer instabilidades momentâneas
+          Sistema em constante atualização • podem ocorrer instabilidades
+          momentâneas
         </div>
       </div>
     </main>
@@ -1432,6 +1384,7 @@ function SummaryCard({ label, value }: { label: string; value: string }) {
         padding: 18,
         border: "1px solid #e7eef6",
         boxShadow: "0 14px 30px rgba(15, 23, 42, 0.05)",
+        minWidth: 0,
       }}
     >
       <div
@@ -1450,6 +1403,7 @@ function SummaryCard({ label, value }: { label: string; value: string }) {
           fontWeight: 800,
           color: "#123047",
           lineHeight: 1.3,
+          wordBreak: "break-word",
         }}
       >
         {value}
@@ -1466,6 +1420,7 @@ function ResultCard({ label, value }: { label: string; value: string }) {
         border: "1px solid #e7eef6",
         borderRadius: 16,
         padding: 14,
+        minWidth: 0,
       }}
     >
       <div
@@ -1484,6 +1439,7 @@ function ResultCard({ label, value }: { label: string; value: string }) {
           fontSize: 18,
           fontWeight: 800,
           lineHeight: 1.3,
+          wordBreak: "break-word",
         }}
       >
         {value}
@@ -1540,15 +1496,7 @@ function Field({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        style={{
-          borderRadius: 14,
-          border: "1px solid #d8e3ee",
-          padding: "14px 16px",
-          fontSize: 15,
-          outline: "none",
-          background: "#f8fbff",
-          color: "#123047",
-        }}
+        style={fieldStyle}
       />
     </label>
   );
@@ -1577,19 +1525,7 @@ function SelectField({
         {label}
       </span>
 
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        style={{
-          borderRadius: 14,
-          border: "1px solid #d8e3ee",
-          padding: "14px 16px",
-          fontSize: 15,
-          outline: "none",
-          background: "#f8fbff",
-          color: "#123047",
-        }}
-      >
+      <select value={value} onChange={(e) => onChange(e.target.value)} style={fieldStyle}>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
@@ -1629,17 +1565,94 @@ function TextAreaField({
         placeholder={placeholder}
         rows={4}
         style={{
-          borderRadius: 14,
-          border: "1px solid #d8e3ee",
-          padding: "14px 16px",
-          fontSize: 15,
-          outline: "none",
-          background: "#f8fbff",
-          color: "#123047",
+          ...fieldStyle,
           resize: "vertical",
           fontFamily: "Arial, sans-serif",
+          minHeight: 110,
         }}
       />
     </label>
   );
 }
+
+const fieldStyle: React.CSSProperties = {
+  borderRadius: 14,
+  border: "1px solid #d8e3ee",
+  padding: "14px 16px",
+  fontSize: 15,
+  outline: "none",
+  background: "#f8fbff",
+  color: "#123047",
+  boxSizing: "border-box",
+  width: "100%",
+};
+
+const topSecondaryLink: React.CSSProperties = {
+  textDecoration: "none",
+  background: "#ffffff",
+  color: "#123047",
+  border: "1px solid #dbe5ef",
+  borderRadius: 12,
+  padding: "10px 14px",
+  fontWeight: 700,
+};
+
+const statusBadgeStyle: React.CSSProperties = {
+  background: "#ffffff",
+  color: "#5b7488",
+  border: "1px solid #e7eef6",
+  borderRadius: 12,
+  padding: "10px 14px",
+  fontWeight: 700,
+};
+
+const chipBlue: React.CSSProperties = {
+  display: "inline-flex",
+  width: "fit-content",
+  background: "#e0f2fe",
+  color: "#075985",
+  borderRadius: 999,
+  padding: "6px 12px",
+  fontWeight: 700,
+  fontSize: 13,
+};
+
+const chipNeutral: React.CSSProperties = {
+  background: "#f8fafc",
+  color: "#334155",
+  border: "1px solid #e2e8f0",
+  borderRadius: 999,
+  padding: "8px 12px",
+  fontSize: 13,
+  fontWeight: 700,
+};
+
+const chipWarning: React.CSSProperties = {
+  background: "#fff7ed",
+  color: "#9a3412",
+  border: "1px solid #fed7aa",
+  borderRadius: 999,
+  padding: "8px 12px",
+  fontSize: 13,
+  fontWeight: 700,
+};
+
+const secondaryButton: React.CSSProperties = {
+  border: "1px solid #dbe5ef",
+  background: "#ffffff",
+  color: "#123047",
+  borderRadius: 12,
+  padding: "12px 16px",
+  fontWeight: 800,
+  cursor: "pointer",
+};
+
+const primaryButton: React.CSSProperties = {
+  border: "none",
+  background: "#0ea5e9",
+  color: "#ffffff",
+  borderRadius: 12,
+  padding: "12px 18px",
+  fontWeight: 800,
+  boxShadow: "0 14px 28px rgba(14, 165, 233, 0.20)",
+};
