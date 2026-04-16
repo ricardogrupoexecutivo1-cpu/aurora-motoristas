@@ -185,6 +185,23 @@ function getStatusStyles(service: ServiceRow) {
   };
 }
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    function update() {
+      setIsMobile(window.innerWidth < 768);
+    }
+
+    update();
+    window.addEventListener("resize", update);
+
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  return isMobile;
+}
+
 export default function ServicosPage() {
   const [services, setServices] = useState<ServiceRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -193,6 +210,8 @@ export default function ServicosPage() {
   const [aba, setAba] = useState<"ativos" | "historico">("ativos");
   const [statusFilter, setStatusFilter] = useState("todos");
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+
+  const isMobile = useIsMobile();
 
   async function carregarServicos(message?: string) {
     try {
@@ -367,12 +386,14 @@ export default function ServicosPage() {
   const totalPagos = services.filter((service) => isPago(service)).length;
 
   const somaCobrancaVisao = listaBase.reduce(
-    (acc, service) => acc + Number(service.valor_cobranca ?? service.valor_total ?? 0),
+    (acc, service) =>
+      acc + Number(service.valor_cobranca ?? service.valor_total ?? 0),
     0
   );
 
   const somaMargemVisao = listaBase.reduce(
-    (acc, service) => acc + Number(service.margem_operacao ?? service.margem_bruta ?? 0),
+    (acc, service) =>
+      acc + Number(service.margem_operacao ?? service.margem_bruta ?? 0),
     0
   );
 
@@ -382,7 +403,7 @@ export default function ServicosPage() {
         minHeight: "100vh",
         background:
           "linear-gradient(180deg, #f4f8fc 0%, #eef4fb 45%, #f6f8fb 100%)",
-        padding: "24px 16px 48px",
+        padding: isMobile ? "16px 12px 36px" : "24px 16px 48px",
         fontFamily: "Arial, sans-serif",
         color: "#123047",
       }}
@@ -425,7 +446,7 @@ export default function ServicosPage() {
             background: "rgba(255,255,255,0.92)",
             backdropFilter: "blur(8px)",
             borderRadius: 28,
-            padding: 24,
+            padding: isMobile ? 18 : 24,
             boxShadow: "0 24px 60px rgba(15, 23, 42, 0.08)",
             border: "1px solid #e7eef6",
           }}
@@ -436,9 +457,10 @@ export default function ServicosPage() {
             <h1
               style={{
                 margin: 0,
-                fontSize: 34,
+                fontSize: isMobile ? 28 : 34,
                 lineHeight: 1.05,
                 color: "#0f172a",
+                wordBreak: "break-word",
               }}
             >
               Serviços cadastrados
@@ -486,18 +508,44 @@ export default function ServicosPage() {
             gap: 14,
           }}
         >
-          <StatCard label="Serviços ativos" value={String(totalAtivos)} help="Visíveis na operação" />
-          <StatCard label="Histórico protegido" value={String(totalHistorico)} help="Pagos ou ocultos do motorista" />
-          <StatCard label="Pendentes" value={String(totalPendentes)} help="Aguardando execução" />
-          <StatCard label="Aguardando pagamento" value={String(totalAguardandoPagamento)} help="Execução feita sem baixa final" />
-          <StatCard label="Pagos" value={String(totalPagos)} help="Baixados no histórico" />
-          <StatCard label="Base total" value={String(totalServicos)} help="Tudo salvo no Supabase" />
+          <StatCard
+            label="Serviços ativos"
+            value={String(totalAtivos)}
+            help="Visíveis na operação"
+          />
+          <StatCard
+            label="Histórico protegido"
+            value={String(totalHistorico)}
+            help="Pagos ou ocultos do motorista"
+          />
+          <StatCard
+            label="Pendentes"
+            value={String(totalPendentes)}
+            help="Aguardando execução"
+          />
+          <StatCard
+            label="Aguardando pagamento"
+            value={String(totalAguardandoPagamento)}
+            help="Execução feita sem baixa final"
+          />
+          <StatCard
+            label="Pagos"
+            value={String(totalPagos)}
+            help="Baixados no histórico"
+          />
+          <StatCard
+            label="Base total"
+            value={String(totalServicos)}
+            help="Tudo salvo no Supabase"
+          />
         </section>
 
         <section
           style={{
             display: "grid",
-            gridTemplateColumns: "minmax(0, 1.4fr) minmax(320px, 0.6fr)",
+            gridTemplateColumns: isMobile
+              ? "1fr"
+              : "minmax(0, 1.4fr) minmax(320px, 0.6fr)",
             gap: 16,
             alignItems: "start",
           }}
@@ -506,12 +554,13 @@ export default function ServicosPage() {
             style={{
               background: "#ffffff",
               borderRadius: 26,
-              padding: 18,
+              padding: isMobile ? 14 : 18,
               border: "1px solid #e7eef6",
               boxShadow: "0 20px 45px rgba(15, 23, 42, 0.06)",
               display: "flex",
               flexDirection: "column",
               gap: 16,
+              minWidth: 0,
             }}
           >
             <div
@@ -560,6 +609,7 @@ export default function ServicosPage() {
                   color: "#5b7488",
                   fontSize: 13,
                   fontWeight: 700,
+                  width: isMobile ? "100%" : "auto",
                 }}
               >
                 {aba === "ativos"
@@ -571,7 +621,7 @@ export default function ServicosPage() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "2fr 1fr",
+                gridTemplateColumns: isMobile ? "1fr" : "2fr 1fr",
                 gap: 12,
               }}
             >
@@ -589,7 +639,9 @@ export default function ServicosPage() {
               >
                 <option value="todos">Todos</option>
                 <option value="pendente">Pendentes</option>
-                <option value="aguardando_pagamento">Aguardando pagamento</option>
+                <option value="aguardando_pagamento">
+                  Aguardando pagamento
+                </option>
                 <option value="pago">Pagos</option>
               </select>
             </div>
@@ -624,13 +676,14 @@ export default function ServicosPage() {
                         background: "#fcfdff",
                         border: "1px solid #e7eef6",
                         borderRadius: 24,
-                        padding: 18,
+                        padding: isMobile ? 14 : 18,
                         boxShadow: "0 16px 34px rgba(15, 23, 42, 0.05)",
                         display: "flex",
                         flexDirection: "column",
                         gap: 14,
                         position: "relative",
                         overflow: "hidden",
+                        minWidth: 0,
                       }}
                     >
                       <div
@@ -645,6 +698,7 @@ export default function ServicosPage() {
                       <div
                         style={{
                           display: "flex",
+                          flexWrap: isMobile ? "wrap" : "nowrap",
                           justifyContent: "space-between",
                           alignItems: "flex-start",
                           gap: 12,
@@ -656,6 +710,8 @@ export default function ServicosPage() {
                             flexDirection: "column",
                             gap: 6,
                             paddingLeft: 6,
+                            minWidth: 0,
+                            flex: 1,
                           }}
                         >
                           <span style={chipSoftBlue}>
@@ -664,9 +720,10 @@ export default function ServicosPage() {
 
                           <strong
                             style={{
-                              fontSize: 20,
+                              fontSize: isMobile ? 18 : 20,
                               lineHeight: 1.25,
                               color: "#0f172a",
+                              wordBreak: "break-word",
                             }}
                           >
                             {service.servico || "Serviço sem título"}
@@ -677,9 +734,11 @@ export default function ServicosPage() {
                               color: "#5b7488",
                               fontSize: 13,
                               fontWeight: 700,
+                              wordBreak: "break-word",
                             }}
                           >
-                            {getDisplayOS(service)} • {formatDate(service.data_servico)}
+                            {getDisplayOS(service)} •{" "}
+                            {formatDate(service.data_servico)}
                           </span>
                         </div>
 
@@ -725,15 +784,32 @@ export default function ServicosPage() {
                       <div
                         style={{
                           display: "grid",
-                          gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                          gridTemplateColumns: isMobile
+                            ? "1fr"
+                            : "repeat(2, minmax(0, 1fr))",
                           gap: 10,
                         }}
                       >
-                        <Info label="Contratante" value={getDisplayEmpresa(service)} />
-                        <Info label="Cliente final" value={getDisplayCliente(service)} />
-                        <Info label="Motorista" value={service.motorista || "Não informado"} />
-                        <Info label="Placa" value={service.placa_veiculo || "Não informada"} />
-                        <Info label="KM" value={String(service.km_total ?? service.km ?? 0)} />
+                        <Info
+                          label="Contratante"
+                          value={getDisplayEmpresa(service)}
+                        />
+                        <Info
+                          label="Cliente final"
+                          value={getDisplayCliente(service)}
+                        />
+                        <Info
+                          label="Motorista"
+                          value={service.motorista || "Não informado"}
+                        />
+                        <Info
+                          label="Placa"
+                          value={service.placa_veiculo || "Não informada"}
+                        />
+                        <Info
+                          label="KM"
+                          value={String(service.km_total ?? service.km ?? 0)}
+                        />
                         <Info
                           label="Valor por KM"
                           value={formatCurrency(service.valor_por_km ?? 0)}
@@ -759,7 +835,9 @@ export default function ServicosPage() {
                         />
                         <Info
                           label="Fechamento motorista"
-                          value={formatCurrency(service.fechamento_motorista ?? 0)}
+                          value={formatCurrency(
+                            service.fechamento_motorista ?? 0
+                          )}
                         />
                         <Info
                           label="Margem"
@@ -769,24 +847,34 @@ export default function ServicosPage() {
                         />
                         <Info
                           label="Contato final"
-                          value={service.contato_cliente_final || "Não informado"}
+                          value={
+                            service.contato_cliente_final || "Não informado"
+                          }
                         />
                       </div>
 
                       <div
                         style={{
                           display: "grid",
-                          gridTemplateColumns: "1fr 1fr",
+                          gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
                           gap: 10,
                         }}
                       >
                         <WideInfo
                           label="Retirada"
-                          value={service.endereco_retirada || service.origem || "Não informada"}
+                          value={
+                            service.endereco_retirada ||
+                            service.origem ||
+                            "Não informada"
+                          }
                         />
                         <WideInfo
                           label="Entrega"
-                          value={service.endereco_entrega || service.destino || "Não informada"}
+                          value={
+                            service.endereco_entrega ||
+                            service.destino ||
+                            "Não informada"
+                          }
                         />
                       </div>
 
@@ -833,22 +921,35 @@ export default function ServicosPage() {
                           lineHeight: 1.6,
                         }}
                       >
-                        <strong style={{ color: "#123047" }}>Observações:</strong>{" "}
+                        <strong style={{ color: "#123047" }}>
+                          Observações:
+                        </strong>{" "}
                         {getDisplayObservacao(service)}
                       </div>
 
                       <div
                         style={{
                           display: "grid",
-                          gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                          gridTemplateColumns: isMobile
+                            ? "1fr"
+                            : "repeat(2, minmax(0, 1fr))",
                           gap: 10,
                         }}
                       >
-                        <Info label="WhatsApp contato final" value={service.telefone_cliente_final || "Não informado"} />
+                        <Info
+                          label="WhatsApp contato final"
+                          value={
+                            service.telefone_cliente_final || "Não informado"
+                          }
+                        />
                         <Info label="Pago" value={isPago(service) ? "Sim" : "Não"} />
                         <Info
                           label="Pago em"
-                          value={service.pago_em ? formatDateTime(service.pago_em) : "—"}
+                          value={
+                            service.pago_em
+                              ? formatDateTime(service.pago_em)
+                              : "—"
+                          }
                         />
                         <Info
                           label="Atualizado em"
@@ -958,10 +1059,17 @@ export default function ServicosPage() {
                             fontWeight: 700,
                           }}
                         >
-                          Sistema em constante atualização • podem ocorrer instabilidades momentâneas
+                          Sistema em constante atualização • podem ocorrer
+                          instabilidades momentâneas
                         </div>
 
-                        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: 10,
+                            flexWrap: "wrap",
+                          }}
+                        >
                           <Link
                             href={`/servicos/${service.id}`}
                             style={actionSecondaryStyle}
@@ -989,8 +1097,8 @@ export default function ServicosPage() {
               display: "flex",
               flexDirection: "column",
               gap: 14,
-              position: "sticky",
-              top: 16,
+              position: isMobile ? "relative" : "sticky",
+              top: isMobile ? 0 : 16,
             }}
           >
             <SideCard
@@ -1163,6 +1271,7 @@ function SideCard({
           fontWeight: 800,
           color: "#123047",
           lineHeight: 1.2,
+          wordBreak: "break-word",
         }}
       >
         {value}
@@ -1207,6 +1316,7 @@ function Info({ label, value }: { label: string; value: string }) {
         border: "1px solid #e7eef6",
         borderRadius: 16,
         padding: 12,
+        minWidth: 0,
       }}
     >
       <div
@@ -1243,6 +1353,7 @@ function WideInfo({ label, value }: { label: string; value: string }) {
         border: "1px solid #e7eef6",
         borderRadius: 16,
         padding: 12,
+        minWidth: 0,
       }}
     >
       <div
@@ -1311,6 +1422,7 @@ const searchInputStyle: React.CSSProperties = {
   outline: "none",
   background: "#f8fbff",
   color: "#123047",
+  boxSizing: "border-box",
 };
 
 const pillButtonBase: React.CSSProperties = {

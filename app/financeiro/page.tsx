@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 const EMAILS_AUTORIZADOS = [
   "ricardogrupoexecutivo1@gmail.com",
@@ -11,6 +11,7 @@ const EMAILS_AUTORIZADOS = [
 
 function getLocalSessionEmail() {
   if (typeof window === "undefined") return "";
+
   const keys = [
     "aurora_session_email",
     "session_email",
@@ -27,36 +28,41 @@ function getLocalSessionEmail() {
 }
 
 export default function FinanceiroPage() {
-  const [emailDigitado, setEmailDigitado] = useState("");
-  const [emailValidado, setEmailValidado] = useState("");
-  const [mensagem, setMensagem] = useState(
-    "Área blindada. Somente usuários autorizados podem visualizar o financeiro."
-  );
+  const [mounted, setMounted] = useState(false);
+  const [emailSessao, setEmailSessao] = useState("");
 
-  const emailSessao = useMemo(() => getLocalSessionEmail(), []);
-  const emailAtivo = (emailDigitado || emailValidado || emailSessao).toLowerCase();
+  useEffect(() => {
+    setMounted(true);
 
-  const autorizado = EMAILS_AUTORIZADOS.includes(emailAtivo);
+    const email = getLocalSessionEmail();
+    setEmailSessao(email);
 
-  function validarAcesso() {
-    const email = emailDigitado.trim().toLowerCase();
-
-    if (!email) {
-      setMensagem("Digite um e-mail autorizado para validar o acesso.");
-      return;
+    if (!EMAILS_AUTORIZADOS.includes(email)) {
+      window.location.href = "/acesso-negado";
     }
+  }, []);
 
-    setEmailValidado(email);
+  const autorizado = EMAILS_AUTORIZADOS.includes(emailSessao);
 
-    if (EMAILS_AUTORIZADOS.includes(email)) {
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem("aurora_session_email", email);
-      }
-      setMensagem(`Acesso liberado para ${email}.`);
-      return;
-    }
+  if (!mounted) {
+    return (
+      <main style={styles.page}>
+        <section style={styles.wrapper}>
+          <div style={styles.card}>
+            <span style={styles.kicker}>AURORA MOTORISTAS • FINANCEIRO</span>
+            <h1 style={styles.title}>Validando acesso...</h1>
+            <p style={styles.text}>
+              Aguarde enquanto o sistema confirma a sessão e aplica a blindagem
+              desta área.
+            </p>
 
-    setMensagem("Acesso negado. Este e-mail não possui permissão para o financeiro.");
+            <div style={styles.loadingBox}>
+              Carregando proteção do financeiro...
+            </div>
+          </div>
+        </section>
+      </main>
+    );
   }
 
   if (!autorizado) {
@@ -64,42 +70,14 @@ export default function FinanceiroPage() {
       <main style={styles.page}>
         <section style={styles.wrapper}>
           <div style={styles.card}>
-            <span style={styles.kicker}>AURORA MOTORISTAS • FINANCEIRO BLINDADO</span>
-            <h1 style={styles.title}>Acesso restrito</h1>
+            <span style={styles.kicker}>AURORA MOTORISTAS • FINANCEIRO</span>
+            <h1 style={styles.title}>Redirecionando...</h1>
             <p style={styles.text}>
-              Esta área financeira está protegida. Mesmo que a rota seja acessada
-              diretamente, o conteúdo só pode ser exibido para usuários autorizados.
+              Você não possui permissão para esta área. O sistema está
+              redirecionando para a página de acesso restrito.
             </p>
 
-            <div style={styles.alertBox}>{mensagem}</div>
-
-            <div style={styles.formBox}>
-              <label style={styles.label}>E-mail autorizado</label>
-              <input
-                type="email"
-                placeholder="Digite seu e-mail autorizado"
-                value={emailDigitado}
-                onChange={(e) => setEmailDigitado(e.target.value)}
-                style={styles.input}
-              />
-              <button type="button" onClick={validarAcesso} style={styles.primaryButton}>
-                Validar acesso
-              </button>
-            </div>
-
-            <div style={styles.infoBox}>
-              <strong style={styles.infoTitle}>Sessão local detectada:</strong>
-              <span style={styles.infoText}>{emailSessao || "Nenhum e-mail encontrado"}</span>
-            </div>
-
-            <div style={styles.actions}>
-              <Link href="/" style={styles.secondaryButton}>
-                Voltar para início
-              </Link>
-              <Link href="/ofertas" style={styles.secondaryButton}>
-                Ir para ofertas
-              </Link>
-            </div>
+            <div style={styles.loadingBox}>Redirecionando para acesso negado...</div>
           </div>
         </section>
       </main>
@@ -111,14 +89,17 @@ export default function FinanceiroPage() {
       <section style={styles.wrapper}>
         <div style={styles.card}>
           <span style={styles.kicker}>AURORA MOTORISTAS • FINANCEIRO</span>
+
           <h1 style={styles.title}>Financeiro protegido</h1>
+
           <p style={styles.text}>
-            Acesso liberado para <strong>{emailAtivo}</strong>. Esta é uma blindagem
-            emergencial da primeira versão. O próximo passo será conectar a permissão
-            real por autenticação e perfil.
+            Acesso liberado para <strong>{emailSessao}</strong>. Esta área está
+            protegida e disponível apenas para usuários autorizados.
           </p>
 
-          <div style={styles.successBox}>Acesso autorizado. Conteúdo financeiro visível.</div>
+          <div style={styles.successBox}>
+            Acesso autorizado. Conteúdo financeiro visível.
+          </div>
 
           <div style={styles.grid}>
             <article style={styles.metricCard}>
@@ -150,8 +131,13 @@ export default function FinanceiroPage() {
             <Link href="/" style={styles.secondaryButton}>
               Início
             </Link>
-            <Link href="/operacao" style={styles.secondaryButton}>
+
+            <Link href="/servicos" style={styles.secondaryButton}>
               Operação
+            </Link>
+
+            <Link href="/guia" style={styles.secondaryButton}>
+              Guia
             </Link>
           </div>
         </div>
@@ -168,12 +154,14 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#0f172a",
   },
   wrapper: {
+    width: "100%",
     maxWidth: 1080,
     margin: "0 auto",
     padding: "24px 12px 80px",
+    boxSizing: "border-box",
   },
   card: {
-    background: "rgba(255,255,255,0.9)",
+    background: "rgba(255,255,255,0.92)",
     border: "1px solid rgba(125, 211, 252, 0.24)",
     borderRadius: 24,
     padding: 20,
@@ -194,6 +182,7 @@ const styles: Record<string, React.CSSProperties> = {
     lineHeight: 1.05,
     fontWeight: 950,
     letterSpacing: "-0.04em",
+    wordBreak: "break-word",
   },
   text: {
     marginTop: 14,
@@ -202,13 +191,13 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: 15,
     lineHeight: 1.75,
   },
-  alertBox: {
+  loadingBox: {
     marginTop: 18,
     padding: "14px 16px",
     borderRadius: 16,
-    background: "rgba(239, 68, 68, 0.08)",
-    border: "1px solid rgba(239, 68, 68, 0.18)",
-    color: "#991b1b",
+    background: "rgba(14, 165, 233, 0.08)",
+    border: "1px solid rgba(14, 165, 233, 0.18)",
+    color: "#0c4a6e",
     fontWeight: 700,
     lineHeight: 1.65,
   },
@@ -222,43 +211,11 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 800,
     lineHeight: 1.65,
   },
-  formBox: {
+  actions: {
     display: "flex",
-    flexDirection: "column",
+    flexWrap: "wrap",
     gap: 10,
     marginTop: 18,
-    padding: 16,
-    borderRadius: 18,
-    background: "#ffffff",
-    border: "1px solid rgba(125, 211, 252, 0.18)",
-  },
-  label: {
-    fontSize: 13,
-    fontWeight: 800,
-    color: "#475569",
-  },
-  input: {
-    minHeight: 46,
-    width: "100%",
-    borderRadius: 14,
-    border: "1px solid rgba(125, 211, 252, 0.28)",
-    padding: "0 14px",
-    fontSize: 14,
-    color: "#0f172a",
-    background: "#ffffff",
-    outline: "none",
-    boxSizing: "border-box",
-  },
-  primaryButton: {
-    border: "none",
-    minHeight: 48,
-    padding: "0 18px",
-    borderRadius: 14,
-    cursor: "pointer",
-    fontWeight: 900,
-    color: "#ffffff",
-    background: "linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%)",
-    boxShadow: "0 14px 30px rgba(37, 99, 235, 0.18)",
   },
   secondaryButton: {
     display: "inline-flex",
@@ -272,36 +229,11 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#0f172a",
     background: "#ffffff",
     border: "1px solid rgba(125, 211, 252, 0.24)",
-  },
-  infoBox: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 6,
-    marginTop: 16,
-    padding: 14,
-    borderRadius: 16,
-    background: "rgba(6, 182, 212, 0.08)",
-    border: "1px solid rgba(6, 182, 212, 0.16)",
-  },
-  infoTitle: {
-    fontSize: 13,
-    color: "#164e63",
-  },
-  infoText: {
-    fontSize: 14,
-    color: "#0f172a",
-    fontWeight: 700,
-    wordBreak: "break-word",
-  },
-  actions: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: 10,
-    marginTop: 18,
+    boxSizing: "border-box",
   },
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
     gap: 12,
     marginTop: 18,
   },
@@ -311,20 +243,23 @@ const styles: Record<string, React.CSSProperties> = {
     border: "1px solid rgba(125, 211, 252, 0.18)",
     padding: 16,
     boxShadow: "0 10px 28px rgba(15, 23, 42, 0.05)",
+    minWidth: 0,
   },
   metricLabel: {
     display: "block",
     color: "#475569",
     fontSize: 14,
     fontWeight: 700,
+    lineHeight: 1.5,
   },
   metricValue: {
     display: "block",
     marginTop: 8,
-    fontSize: 28,
-    lineHeight: 1,
+    fontSize: "clamp(1.6rem, 5vw, 2rem)",
+    lineHeight: 1.05,
     fontWeight: 900,
     letterSpacing: "-0.04em",
+    wordBreak: "break-word",
   },
   metricDetail: {
     display: "block",
@@ -332,5 +267,6 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#0891b2",
     fontSize: 13,
     fontWeight: 700,
+    lineHeight: 1.5,
   },
 };
