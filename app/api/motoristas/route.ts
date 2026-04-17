@@ -11,6 +11,7 @@ type MotoristaPayload = {
   telefone?: string;
   email?: string;
   cep?: string;
+  endereco?: string;
   logradouro?: string;
   numero?: string;
   complemento?: string;
@@ -19,6 +20,7 @@ type MotoristaPayload = {
   estado?: string;
   observacoes?: string;
   foto_url?: string;
+  ativo?: boolean;
 };
 
 function limparDocumento(valor: string) {
@@ -27,6 +29,16 @@ function limparDocumento(valor: string) {
 
 function limparTexto(valor: unknown) {
   return String(valor || "").trim();
+}
+
+function normalizarBoolean(valor: unknown, padrao = true) {
+  if (typeof valor === "boolean") return valor;
+  if (typeof valor === "string") {
+    const texto = valor.trim().toLowerCase();
+    if (["true", "1", "sim", "yes"].includes(texto)) return true;
+    if (["false", "0", "nao", "não", "no"].includes(texto)) return false;
+  }
+  return padrao;
 }
 
 function getSupabaseAdmin() {
@@ -64,6 +76,9 @@ export async function GET() {
           success: false,
           message: "Erro ao listar motoristas.",
           error: error.message,
+          details: error.details || null,
+          hint: error.hint || null,
+          code: error.code || null,
         },
         { status: 500 },
       );
@@ -94,24 +109,14 @@ export async function POST(request: Request) {
   try {
     const body = (await request.json()) as MotoristaPayload;
 
-    const payload = {
-      nome: limparTexto(body.nome),
-      cpf: limparDocumento(body.cpf || ""),
-      cnh: limparTexto(body.cnh),
-      telefone: limparDocumento(body.telefone || ""),
-      email: limparTexto(body.email),
-      cep: limparDocumento(body.cep || ""),
-      logradouro: limparTexto(body.logradouro),
-      numero: limparTexto(body.numero),
-      complemento: limparTexto(body.complemento),
-      bairro: limparTexto(body.bairro),
-      cidade: limparTexto(body.cidade),
-      estado: limparTexto(body.estado).toUpperCase().slice(0, 2),
-      observacoes: limparTexto(body.observacoes),
-      foto_url: limparTexto(body.foto_url),
-    };
+    const cpfLimpo = limparDocumento(body.cpf || "");
+    const telefoneLimpo = limparDocumento(body.telefone || "");
+    const cepLimpo = limparDocumento(body.cep || "");
 
-    if (!payload.nome) {
+    const enderecoFinal = limparTexto(body.endereco || body.logradouro);
+    const ativoFinal = normalizarBoolean(body.ativo, true);
+
+    if (!limparTexto(body.nome)) {
       return NextResponse.json(
         {
           success: false,
@@ -121,11 +126,31 @@ export async function POST(request: Request) {
       );
     }
 
-    if (payload.cpf.length !== 11) {
+    if (!telefoneLimpo) {
       return NextResponse.json(
         {
           success: false,
-          message: "CPF inválido. Informe 11 números.",
+          message: "Telefone é obrigatório.",
+        },
+        { status: 400 },
+      );
+    }
+
+    if (cpfLimpo && cpfLimpo.length !== 11) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "CPF inválido. Informe 11 números ou deixe em branco.",
+        },
+        { status: 400 },
+      );
+    }
+
+    if (cepLimpo && cepLimpo.length !== 8) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "CEP inválido. Informe 8 números ou deixe em branco.",
         },
         { status: 400 },
       );
@@ -133,32 +158,56 @@ export async function POST(request: Request) {
 
     const supabase = getSupabaseAdmin();
 
-    const { data: existente, error: erroBusca } = await supabase
-      .from("motoristas_aurora")
-      .select("id, cpf")
-      .eq("cpf", payload.cpf)
-      .maybeSingle();
+    if (cpfLimpo) {
+      const { data: existente, error: erroBusca } = await supabase
+        .from("motoristas_aurora")
+        .select("id, cpf")
+        .eq("cpf", cpfLimpo)
+        .maybeSingle();
 
-    if (erroBusca) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Erro ao validar CPF existente.",
-          error: erroBusca.message,
-        },
-        { status: 500 },
-      );
+      if (erroBusca) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Erro ao validar CPF existente.",
+            error: erroBusca.message,
+            details: erroBusca.details || null,
+            hint: erroBusca.hint || null,
+            code: erroBusca.code || null,
+          },
+          { status: 500 },
+        );
+      }
+
+      if (existente) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Já existe motorista cadastrado com este CPF.",
+          },
+          { status: 409 },
+        );
+      }
     }
 
-    if (existente) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Já existe motorista cadastrado com este CPF.",
-        },
-        { status: 409 },
-      );
-    }
+    const payload = {
+      nome: limparTexto(body.nome),
+      cpf: cpfLimpo || null,
+      cnh: limparTexto(body.cnh) || null,
+      telefone: telefoneLimpo,
+      email: limparTexto(body.email) || null,
+      cep: cepLimpo || null,
+      endereco: enderecoFinal || null,
+      logradouro: enderecoFinal || null,
+      numero: limparTexto(body.numero) || null,
+      complemento: limparTexto(body.complemento) || null,
+      bairro: limparTexto(body.bairro) || null,
+      cidade: limparTexto(body.cidade) || null,
+      estado: limparTexto(body.estado).toUpperCase().slice(0, 2) || null,
+      observacoes: limparTexto(body.observacoes) || null,
+      foto_url: limparTexto(body.foto_url) || null,
+      ativo: ativoFinal,
+    };
 
     const { data, error } = await supabase
       .from("motoristas_aurora")
@@ -175,6 +224,7 @@ export async function POST(request: Request) {
           details: error.details || null,
           hint: error.hint || null,
           code: error.code || null,
+          payload_enviado: payload,
         },
         { status: 500 },
       );
