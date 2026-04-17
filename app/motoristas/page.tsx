@@ -11,6 +11,7 @@ type Motorista = {
   telefone?: string | null;
   email?: string | null;
   cep?: string | null;
+  endereco?: string | null;
   logradouro?: string | null;
   numero?: string | null;
   complemento?: string | null;
@@ -19,6 +20,7 @@ type Motorista = {
   estado?: string | null;
   observacoes?: string | null;
   foto_url?: string | null;
+  ativo?: boolean | null;
   created_at?: string | null;
   updated_at?: string | null;
 };
@@ -30,6 +32,8 @@ type ApiResponse = {
   motoristas?: Motorista[];
   total?: number;
 };
+
+type FiltroStatus = "todos" | "pendentes" | "ativos" | "inativos";
 
 function formatarCPF(valor?: string | null) {
   const digits = String(valor || "").replace(/\D/g, "").slice(0, 11);
@@ -66,11 +70,46 @@ function formatarData(valor?: string | null) {
   }).format(data);
 }
 
+function inferirOrigemPublica(observacoes?: string | null) {
+  return String(observacoes || "").toLowerCase().includes("cadastro_motorista_publico");
+}
+
+function obterStatusMotorista(motorista: Motorista) {
+  if (motorista.ativo === true) {
+    return {
+      chave: "ativos" as const,
+      rotulo: "Ativo na base",
+      cor: "#0f766e",
+      fundo: "rgba(6,182,212,0.10)",
+      borda: "1px solid rgba(6,182,212,0.18)",
+    };
+  }
+
+  if (motorista.ativo === false && inferirOrigemPublica(motorista.observacoes)) {
+    return {
+      chave: "pendentes" as const,
+      rotulo: "Pendente para análise",
+      cor: "#9a3412",
+      fundo: "rgba(251,146,60,0.12)",
+      borda: "1px solid rgba(251,146,60,0.22)",
+    };
+  }
+
+  return {
+    chave: "inativos" as const,
+    rotulo: "Inativo / interno",
+    cor: "#475569",
+    fundo: "rgba(148,163,184,0.12)",
+    borda: "1px solid rgba(148,163,184,0.22)",
+  };
+}
+
 export default function MotoristasPage() {
   const [motoristas, setMotoristas] = useState<Motorista[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
   const [busca, setBusca] = useState("");
+  const [filtroStatus, setFiltroStatus] = useState<FiltroStatus>("todos");
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -114,7 +153,7 @@ export default function MotoristasPage() {
           return;
         }
 
-        setMotoristas(Array.isArray(data?.motoristas) ? data!.motoristas! : []);
+        setMotoristas(Array.isArray(data?.motoristas) ? data.motoristas : []);
       } catch (error) {
         setErro(error instanceof Error ? error.message : "Erro ao carregar motoristas.");
       } finally {
@@ -125,12 +164,39 @@ export default function MotoristasPage() {
     carregarMotoristas();
   }, []);
 
+  const totais = useMemo(() => {
+    let ativos = 0;
+    let pendentes = 0;
+    let inativos = 0;
+
+    for (const motorista of motoristas) {
+      const status = obterStatusMotorista(motorista);
+
+      if (status.chave === "ativos") ativos += 1;
+      if (status.chave === "pendentes") pendentes += 1;
+      if (status.chave === "inativos") inativos += 1;
+    }
+
+    return {
+      total: motoristas.length,
+      ativos,
+      pendentes,
+      inativos,
+    };
+  }, [motoristas]);
+
   const motoristasFiltrados = useMemo(() => {
     const termo = busca.trim().toLowerCase();
 
-    if (!termo) return motoristas;
-
     return motoristas.filter((motorista) => {
+      const status = obterStatusMotorista(motorista);
+
+      if (filtroStatus !== "todos" && status.chave !== filtroStatus) {
+        return false;
+      }
+
+      if (!termo) return true;
+
       const base = [
         motorista.nome,
         motorista.cpf,
@@ -138,6 +204,7 @@ export default function MotoristasPage() {
         motorista.email,
         motorista.cidade,
         motorista.estado,
+        motorista.observacoes,
       ]
         .filter(Boolean)
         .join(" ")
@@ -145,7 +212,7 @@ export default function MotoristasPage() {
 
       return base.includes(termo);
     });
-  }, [busca, motoristas]);
+  }, [busca, filtroStatus, motoristas]);
 
   return (
     <main style={pageStyle}>
@@ -154,7 +221,21 @@ export default function MotoristasPage() {
 
       <div style={containerStyle}>
         <header style={heroStyle}>
-          <div style={heroBadge}>Aurora Motoristas • Base premium</div>
+          <div style={heroTopRow}>
+            <div style={heroBadge}>Aurora Motoristas • Base premium</div>
+
+            <div style={heroTopButtons}>
+              <Link href="/" style={topButtonStyle}>
+                Home
+              </Link>
+              <Link href="/motoristas/cadastrar" style={topButtonStyle}>
+                Novo motorista interno
+              </Link>
+              <Link href="/quero-ser-motorista" style={topButtonStyle}>
+                Fluxo público
+              </Link>
+            </div>
+          </div>
 
           <div
             style={{
@@ -166,14 +247,17 @@ export default function MotoristasPage() {
               <h1 style={heroTitle}>Motoristas cadastrados</h1>
 
               <p style={heroText}>
-                Visualize a base real de motoristas já salvos no Aurora Motoristas, com busca rápida,
-                leitura elegante e foco total em operação premium no desktop e no celular.
+                Visualize a base real de motoristas já salvos no Aurora Motoristas, com
+                separação clara entre <strong>pendentes</strong>, <strong>ativos</strong> e
+                <strong> inativos</strong>, facilitando a validação final antes de liberar
+                testes sérios com sua equipe.
               </p>
 
               <div style={heroPills}>
                 <span style={pillStyle}>Base real</span>
-                <span style={pillStyle}>Busca rápida</span>
+                <span style={pillStyle}>Triagem pronta</span>
                 <span style={pillStyle}>Visual premium</span>
+                <span style={pillStyle}>Leitura clara</span>
               </div>
             </div>
 
@@ -183,12 +267,42 @@ export default function MotoristasPage() {
               </div>
               <div style={heroSideLabel}>Motoristas</div>
               <div style={heroSideText}>
-                Total filtrado da base operacional, pronto para conferência e evolução sem mexer no
-                financeiro.
+                Total filtrado da base operacional para conferência final antes da versão de
+                testes com sua equipe.
               </div>
             </div>
           </div>
         </header>
+
+        <section
+          style={{
+            ...summaryGridStyle,
+            gridTemplateColumns: isMobile
+              ? "1fr"
+              : "repeat(4, minmax(0, 1fr))",
+          }}
+        >
+          <SummaryCard
+            title="Base total"
+            value={carregando ? "..." : String(totais.total)}
+            note="Todos os motoristas lidos da base real."
+          />
+          <SummaryCard
+            title="Pendentes"
+            value={carregando ? "..." : String(totais.pendentes)}
+            note="Cadastros públicos aguardando análise."
+          />
+          <SummaryCard
+            title="Ativos"
+            value={carregando ? "..." : String(totais.ativos)}
+            note="Prontos para operação na base."
+          />
+          <SummaryCard
+            title="Inativos"
+            value={carregando ? "..." : String(totais.inativos)}
+            note="Internos ou não liberados na operação."
+          />
+        </section>
 
         <section style={cardStyle}>
           <div
@@ -202,7 +316,8 @@ export default function MotoristasPage() {
               <div style={sectionEyebrow}>Base operacional</div>
               <h2 style={sectionTitle}>Lista de motoristas</h2>
               <p style={sectionText}>
-                Consulte por nome, CPF, telefone, e-mail, cidade ou estado.
+                Consulte por nome, CPF, telefone, e-mail, cidade ou estado e filtre a
+                leitura para homologação final.
               </p>
             </div>
 
@@ -214,6 +329,29 @@ export default function MotoristasPage() {
                 style={inputStyle}
               />
             </div>
+          </div>
+
+          <div style={filterRowStyle}>
+            <FilterButton
+              active={filtroStatus === "todos"}
+              onClick={() => setFiltroStatus("todos")}
+              label={`Todos (${totais.total})`}
+            />
+            <FilterButton
+              active={filtroStatus === "pendentes"}
+              onClick={() => setFiltroStatus("pendentes")}
+              label={`Pendentes (${totais.pendentes})`}
+            />
+            <FilterButton
+              active={filtroStatus === "ativos"}
+              onClick={() => setFiltroStatus("ativos")}
+              label={`Ativos (${totais.ativos})`}
+            />
+            <FilterButton
+              active={filtroStatus === "inativos"}
+              onClick={() => setFiltroStatus("inativos")}
+              label={`Inativos (${totais.inativos})`}
+            />
           </div>
 
           {erro ? <div style={errorStyle}>{erro}</div> : null}
@@ -230,6 +368,7 @@ export default function MotoristasPage() {
             <div style={listStyle}>
               {motoristasFiltrados.map((motorista) => {
                 const endereco = [
+                  motorista.endereco,
                   motorista.logradouro,
                   motorista.numero,
                   motorista.bairro,
@@ -238,6 +377,9 @@ export default function MotoristasPage() {
                 ]
                   .filter(Boolean)
                   .join(" • ");
+
+                const status = obterStatusMotorista(motorista);
+                const origemPublica = inferirOrigemPublica(motorista.observacoes);
 
                 return (
                   <Link
@@ -256,11 +398,21 @@ export default function MotoristasPage() {
                         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                           <div style={itemNameStyle}>{motorista.nome || "Sem nome"}</div>
                           <div style={itemMetaLineStyle}>
-                            CPF: {formatarCPF(motorista.cpf)} • Telefone: {formatarTelefone(motorista.telefone)}
+                            CPF: {formatarCPF(motorista.cpf)} • Telefone:{" "}
+                            {formatarTelefone(motorista.telefone)}
                           </div>
                         </div>
 
-                        <div style={statusPillStyle}>Ativo na base</div>
+                        <div
+                          style={{
+                            ...statusPillStyle,
+                            color: status.cor,
+                            background: status.fundo,
+                            border: status.borda,
+                          }}
+                        >
+                          {status.rotulo}
+                        </div>
                       </div>
 
                       <div
@@ -269,12 +421,12 @@ export default function MotoristasPage() {
                           gridTemplateColumns: isMobile ? "1fr" : "repeat(2, minmax(0, 1fr))",
                         }}
                       >
+                        <Detail label="Origem" value={origemPublica ? "Cadastro público" : "Cadastro interno / base"} />
                         <Detail label="CNH" value={motorista.cnh || "—"} />
                         <Detail label="E-mail" value={motorista.email || "—"} />
                         <Detail label="CEP" value={motorista.cep || "—"} />
                         <Detail label="Endereço" value={endereco || "—"} />
                         <Detail label="Complemento" value={motorista.complemento || "—"} />
-                        <Detail label="Foto URL" value={motorista.foto_url || "—"} />
                         <Detail label="Observações" value={motorista.observacoes || "—"} />
                         <Detail label="Criado em" value={formatarData(motorista.created_at)} />
                       </div>
@@ -302,6 +454,49 @@ function Detail({
       <div style={detailLabelStyle}>{label}</div>
       <div style={detailValueStyle}>{value}</div>
     </div>
+  );
+}
+
+function SummaryCard({
+  title,
+  value,
+  note,
+}: {
+  title: string;
+  value: string;
+  note: string;
+}) {
+  return (
+    <article style={summaryCardStyle}>
+      <div style={summaryCardTitleStyle}>{title}</div>
+      <div style={summaryCardValueStyle}>{value}</div>
+      <div style={summaryCardNoteStyle}>{note}</div>
+    </article>
+  );
+}
+
+function FilterButton({
+  active,
+  onClick,
+  label,
+}: {
+  active: boolean;
+  onClick: () => void;
+  label: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      style={{
+        ...filterButtonStyle,
+        background: active ? "#0f172a" : "#ffffff",
+        color: active ? "#ffffff" : "#123047",
+        border: active ? "1px solid #0f172a" : "1px solid rgba(148,163,184,0.22)",
+      }}
+    >
+      {label}
+    </button>
   );
 }
 
@@ -354,6 +549,35 @@ const heroStyle: CSSProperties = {
   marginBottom: 18,
 };
 
+const heroTopRow: CSSProperties = {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  gap: 12,
+  flexWrap: "wrap",
+};
+
+const heroTopButtons: CSSProperties = {
+  display: "flex",
+  flexWrap: "wrap",
+  gap: 10,
+};
+
+const topButtonStyle: CSSProperties = {
+  textDecoration: "none",
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  minHeight: 38,
+  padding: "10px 14px",
+  borderRadius: 999,
+  background: "#ffffff",
+  border: "1px solid rgba(148,163,184,0.20)",
+  color: "#123047",
+  fontSize: 13,
+  fontWeight: 800,
+};
+
 const heroBadge: CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
@@ -390,7 +614,7 @@ const heroText: CSSProperties = {
   fontSize: 15,
   lineHeight: 1.7,
   color: "#475569",
-  maxWidth: 720,
+  maxWidth: 760,
 };
 
 const heroPills: CSSProperties = {
@@ -444,6 +668,44 @@ const heroSideText: CSSProperties = {
   color: "rgba(255,255,255,0.82)",
 };
 
+const summaryGridStyle: CSSProperties = {
+  display: "grid",
+  gap: 16,
+  marginBottom: 18,
+};
+
+const summaryCardStyle: CSSProperties = {
+  background: "rgba(255,255,255,0.94)",
+  borderRadius: 24,
+  border: "1px solid rgba(148,163,184,0.16)",
+  boxShadow: "0 20px 48px rgba(15,23,42,0.07)",
+  padding: 18,
+  backdropFilter: "blur(10px)",
+};
+
+const summaryCardTitleStyle: CSSProperties = {
+  fontSize: 13,
+  fontWeight: 800,
+  textTransform: "uppercase",
+  letterSpacing: 0.4,
+  color: "#0891b2",
+  marginBottom: 10,
+};
+
+const summaryCardValueStyle: CSSProperties = {
+  fontSize: 34,
+  fontWeight: 900,
+  color: "#0f172a",
+  lineHeight: 1,
+  marginBottom: 8,
+};
+
+const summaryCardNoteStyle: CSSProperties = {
+  fontSize: 13,
+  lineHeight: 1.7,
+  color: "#64748b",
+};
+
 const cardStyle: CSSProperties = {
   background: "rgba(255,255,255,0.94)",
   borderRadius: 30,
@@ -457,7 +719,7 @@ const toolbarStyle: CSSProperties = {
   display: "flex",
   justifyContent: "space-between",
   gap: 16,
-  marginBottom: 22,
+  marginBottom: 18,
 };
 
 const sectionEyebrow: CSSProperties = {
@@ -497,6 +759,23 @@ const inputStyle: CSSProperties = {
   outline: "none",
   boxSizing: "border-box",
   boxShadow: "inset 0 1px 0 rgba(255,255,255,0.9)",
+};
+
+const filterRowStyle: CSSProperties = {
+  display: "flex",
+  flexWrap: "wrap",
+  gap: 10,
+  marginBottom: 18,
+};
+
+const filterButtonStyle: CSSProperties = {
+  minHeight: 38,
+  padding: "9px 14px",
+  borderRadius: 999,
+  fontSize: 13,
+  fontWeight: 800,
+  cursor: "pointer",
+  background: "#ffffff",
 };
 
 const errorStyle: CSSProperties = {
@@ -587,9 +866,6 @@ const statusPillStyle: CSSProperties = {
   minHeight: 36,
   padding: "8px 12px",
   borderRadius: 999,
-  background: "rgba(6,182,212,0.10)",
-  color: "#0f766e",
-  border: "1px solid rgba(6,182,212,0.18)",
   fontSize: 12,
   fontWeight: 800,
   whiteSpace: "nowrap",
