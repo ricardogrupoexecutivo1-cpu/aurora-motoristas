@@ -288,10 +288,11 @@ export default function HomePage() {
               </span>
             </Link>
 
-            <Link href="/guia" style={accessCard}>
-              <span style={accessTitle}>Ver guia</span>
+            <Link href="/plataforma/ajuda" style={accessCard}>
+              <span style={accessTitle}>Tutorial Aurora Motoristas</span>
               <span style={accessText}>
-                Entender o fluxo certo antes de usar o sistema.
+                Abrir a central oficial com tutorial interno, PDFs e materiais
+                de apoio.
               </span>
             </Link>
           </div>
