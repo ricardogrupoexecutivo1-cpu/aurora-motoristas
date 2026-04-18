@@ -23,9 +23,7 @@ export default function PlataformaPage() {
         <section style={hero}>
           <span style={chip}>Aurora Motoristas • Plataforma</span>
 
-          <h1 style={title}>
-            Estrutura segura de uso da plataforma
-          </h1>
+          <h1 style={title}>Estrutura segura de uso da plataforma</h1>
 
           <p style={subtitle}>
             Esta área foi criada para organizar a lógica da plataforma sem mexer
@@ -45,6 +43,10 @@ export default function PlataformaPage() {
 
             <Link href="/plataforma/motoristas" style={secondaryButton}>
               Ver blindagem de motoristas
+            </Link>
+
+            <Link href="/plataforma/tutorial" style={secondaryButton}>
+              📘 Tutorial / Ajuda
             </Link>
           </div>
         </section>
@@ -168,6 +170,14 @@ export default function PlataformaPage() {
               <span style={accessTitle}>Blindagem de motoristas</span>
               <span style={accessText}>
                 Regras para impedir acesso de terceiros à base interna.
+              </span>
+            </Link>
+
+            <Link href="/plataforma/tutorial" style={accessCard}>
+              <span style={accessTitle}>Tutorial / Ajuda</span>
+              <span style={accessText}>
+                Guia oficial para entender o sistema, consultar o fluxo e evitar
+                dúvidas operacionais.
               </span>
             </Link>
           </div>
@@ -376,15 +386,15 @@ const compareBox: React.CSSProperties = {
 
 const compareGrid: React.CSSProperties = {
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-  gap: 12,
+  gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+  gap: 14,
 };
 
 const compareCard: React.CSSProperties = {
-  background: "#fcfdff",
-  border: "1px solid #e7eef6",
+  background: "#f8fbff",
+  border: "1px solid #e5edf5",
   borderRadius: 18,
-  padding: 16,
+  padding: 18,
 };
 
 const compareTitle: React.CSSProperties = {
@@ -407,13 +417,14 @@ const warningBox: React.CSSProperties = {
   border: "1px solid #fed7aa",
   borderRadius: 20,
   padding: 18,
+  boxShadow: "0 12px 30px rgba(154, 52, 18, 0.06)",
 };
 
 const warningText: React.CSSProperties = {
   margin: "8px 0 0 0",
-  color: "#7c2d12",
+  color: "#9a3412",
   fontSize: 14,
-  lineHeight: 1.75,
+  lineHeight: 1.8,
 };
 
 const nextBox: React.CSSProperties = {
@@ -429,39 +440,41 @@ const nextBox: React.CSSProperties = {
 
 const nextGrid: React.CSSProperties = {
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-  gap: 12,
+  gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+  gap: 14,
 };
 
 const accessCard: React.CSSProperties = {
   textDecoration: "none",
-  background: "#fcfdff",
-  border: "1px solid #e7eef6",
+  background: "#f8fbff",
+  border: "1px solid #e5edf5",
   borderRadius: 18,
-  padding: 16,
+  padding: 18,
   display: "flex",
   flexDirection: "column",
-  gap: 6,
+  gap: 8,
+  boxShadow: "0 10px 24px rgba(15, 23, 42, 0.04)",
 };
 
 const accessTitle: React.CSSProperties = {
-  fontSize: 15,
+  fontSize: 16,
   fontWeight: 800,
   color: "#123047",
 };
 
 const accessText: React.CSSProperties = {
   color: "#4b6478",
-  fontSize: 13,
-  lineHeight: 1.65,
+  fontSize: 14,
+  lineHeight: 1.7,
 };
 
 const footerNote: React.CSSProperties = {
-  background: "#f8fbff",
-  border: "1px solid #e5edf5",
-  borderRadius: 16,
+  background: "#ffffff",
+  border: "1px solid #e7eef6",
+  borderRadius: 18,
   padding: 16,
-  color: "#435b6e",
+  color: "#4b6478",
   fontSize: 13,
-  lineHeight: 1.75,
+  lineHeight: 1.8,
+  boxShadow: "0 12px 30px rgba(15, 23, 42, 0.04)",
 };
