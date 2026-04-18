@@ -146,6 +146,10 @@ export default function HomePage() {
                   Cadastrar novo serviço
                 </Link>
 
+                <Link href="/cadastros/clientes" style={secondaryButtonLarge}>
+                  Cadastrar cliente
+                </Link>
+
                 <Link href="/motoristas/cadastrar" style={secondaryButtonLarge}>
                   Quero ser motorista
                 </Link>
@@ -195,6 +199,14 @@ export default function HomePage() {
               </div>
 
               <div style={infoCard}>
+                <div style={infoTitle}>Clientes</div>
+                <div style={infoText}>
+                  Devem ser cadastrados antes dos serviços para manter a base
+                  organizada e evitar lançamento sem vínculo correto.
+                </div>
+              </div>
+
+              <div style={infoCard}>
                 <div style={infoTitle}>Motoristas</div>
                 <div style={infoText}>
                   Têm rota própria de cadastro, sem misturar com a área
@@ -225,8 +237,8 @@ export default function HomePage() {
             text="Acesso com e-mail e senha para operação empresarial e continuidade do uso."
           />
           <FeatureCard
-            title="Novo serviço"
-            text="Fluxo direto para cadastrar serviço sem cair em área errada."
+            title="Clientes"
+            text="Cadastre a base de clientes antes de criar novos serviços."
           />
           <FeatureCard
             title="Motoristas"
@@ -271,6 +283,13 @@ export default function HomePage() {
               <span style={accessTitle}>Entrar no sistema</span>
               <span style={accessText}>
                 Login empresarial para continuar a operação.
+              </span>
+            </Link>
+
+            <Link href="/cadastros/clientes" style={accessCard}>
+              <span style={accessTitle}>Cadastrar cliente</span>
+              <span style={accessText}>
+                Abrir o cadastro de clientes para vincular corretamente os serviços.
               </span>
             </Link>
 
