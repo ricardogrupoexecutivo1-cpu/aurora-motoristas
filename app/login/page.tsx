@@ -137,7 +137,7 @@ export default function LoginPage() {
       }
 
       setStatus("Login realizado com sucesso!");
-      window.location.href = "/servicos";
+      window.location.href = "/servicos/novo";
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Erro inesperado ao entrar.";
@@ -276,7 +276,9 @@ export default function LoginPage() {
               }}
             >
               Use o e-mail e a senha fornecidos pelo administrador. Depois do
-              login, o sistema direciona para a área operacional.
+              login, o sistema direciona para a área correta de cadastro e
+              lançamento de serviço. Para quem deseja entrar como motorista,
+              existe uma rota própria de cadastro.
             </div>
 
             <div
@@ -412,7 +414,7 @@ export default function LoginPage() {
             />
             <InfoCard
               title="Destino"
-              text="Após login válido, o sistema direciona para a área de serviços."
+              text="Após login válido, o sistema direciona para a área de cadastro e lançamento de serviços."
             />
             <InfoCard
               title="Sessão"
@@ -431,8 +433,12 @@ export default function LoginPage() {
               Ver guia completo
             </Link>
 
-            <Link href="/servicos" style={secondaryButton}>
-              Ir para operação
+            <Link href="/servicos/novo" style={secondaryButton}>
+              Ir para novo serviço
+            </Link>
+
+            <Link href="/quero-ser-motorista" style={secondaryButton}>
+              Quero ser motorista
             </Link>
           </div>
         </section>
