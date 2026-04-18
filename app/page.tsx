@@ -146,7 +146,7 @@ export default function HomePage() {
                   Cadastrar novo serviço
                 </Link>
 
-                <Link href="/quero-ser-motorista" style={secondaryButtonLarge}>
+                <Link href="/motoristas/cadastrar" style={secondaryButtonLarge}>
                   Quero ser motorista
                 </Link>
               </div>
@@ -281,7 +281,7 @@ export default function HomePage() {
               </span>
             </Link>
 
-            <Link href="/quero-ser-motorista" style={accessCard}>
+            <Link href="/motoristas/cadastrar" style={accessCard}>
               <span style={accessTitle}>Quero ser motorista</span>
               <span style={accessText}>
                 Ir para a área própria de cadastro de motorista.
