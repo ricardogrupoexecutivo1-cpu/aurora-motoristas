@@ -814,8 +814,7 @@ export default function AdminServicosPage() {
             <div style={sectionEyebrow}>Gráfico principal</div>
             <h2 style={sectionTitle}>Status da operação</h2>
             <p style={sectionText}>
-              Leitura visual imediata para entender onde a base está
-              concentrada.
+              Leitura visual imediata para entender onde a base está concentrada.
             </p>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -1407,7 +1406,6 @@ const pageStyle: CSSProperties = {
     "linear-gradient(180deg, #f4f8fc 0%, #eef4fb 45%, #f6f8fb 100%)",
   padding: "24px 16px 48px",
   color: "#123047",
-  fontFamily: "Arial, sans-serif",
 };
 
 const containerStyle: CSSProperties = {
@@ -1463,7 +1461,61 @@ const heroInfoRow: CSSProperties = {
   display: "flex",
   flexWrap: "wrap",
   gap: 10,
+};
+
+const chipNeutral: CSSProperties = {
+  display: "inline-flex",
   alignItems: "center",
+  padding: "8px 12px",
+  borderRadius: 999,
+  background: "#f8fafc",
+  border: "1px solid #e2e8f0",
+  color: "#334155",
+  fontSize: 13,
+  fontWeight: 700,
+};
+
+const chipWarning: CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  padding: "8px 12px",
+  borderRadius: 999,
+  background: "#fff7ed",
+  border: "1px solid #fed7aa",
+  color: "#9a3412",
+  fontSize: 13,
+  fontWeight: 700,
+};
+
+const topButtonStyle: CSSProperties = {
+  textDecoration: "none",
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  minHeight: 42,
+  padding: "10px 14px",
+  borderRadius: 999,
+  background: "#ffffff",
+  border: "1px solid rgba(148,163,184,0.20)",
+  color: "#123047",
+  fontSize: 13,
+  fontWeight: 800,
+  cursor: "pointer",
+};
+
+const topPrimaryStyle: CSSProperties = {
+  ...topButtonStyle,
+  background: "linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%)",
+  color: "#ffffff",
+  border: "1px solid transparent",
+  boxShadow: "0 14px 32px rgba(37, 99, 235, 0.22)",
+};
+
+const topRefreshStyle: CSSProperties = {
+  ...topButtonStyle,
+  background: "#0f172a",
+  color: "#ffffff",
+  border: "1px solid #0f172a",
 };
 
 const statsGridStyle: CSSProperties = {
@@ -1474,31 +1526,33 @@ const statsGridStyle: CSSProperties = {
 
 const statCardStyle: CSSProperties = {
   background: "#ffffff",
-  borderRadius: 22,
+  borderRadius: 24,
   padding: 18,
   border: "1px solid #e7eef6",
-  boxShadow: "0 14px 30px rgba(15, 23, 42, 0.05)",
+  boxShadow: "0 18px 40px rgba(15, 23, 42, 0.06)",
 };
 
 const statLabelStyle: CSSProperties = {
-  color: "#5b7488",
   fontSize: 13,
-  fontWeight: 700,
+  fontWeight: 800,
+  textTransform: "uppercase",
+  letterSpacing: 0.4,
+  color: "#0891b2",
   marginBottom: 10,
 };
 
 const statValueStyle: CSSProperties = {
   fontSize: 32,
-  fontWeight: 800,
-  color: "#123047",
+  fontWeight: 900,
+  color: "#0f172a",
+  lineHeight: 1,
   marginBottom: 8,
-  lineHeight: 1.1,
 };
 
 const statHelpStyle: CSSProperties = {
-  color: "#6b7f90",
   fontSize: 13,
-  lineHeight: 1.55,
+  lineHeight: 1.65,
+  color: "#64748b",
 };
 
 const twoColumnsStyle: CSSProperties = {
@@ -1510,33 +1564,34 @@ const twoColumnsStyle: CSSProperties = {
 const panelStyle: CSSProperties = {
   background: "#ffffff",
   borderRadius: 26,
-  padding: 18,
+  padding: 20,
   border: "1px solid #e7eef6",
   boxShadow: "0 20px 45px rgba(15, 23, 42, 0.06)",
   display: "flex",
   flexDirection: "column",
-  gap: 14,
+  gap: 16,
+  minWidth: 0,
 };
 
 const sectionEyebrow: CSSProperties = {
-  color: "#1d4ed8",
   fontSize: 12,
   fontWeight: 800,
   textTransform: "uppercase",
-  letterSpacing: 0.4,
+  letterSpacing: 0.45,
+  color: "#0891b2",
 };
 
 const sectionTitle: CSSProperties = {
   margin: 0,
-  fontSize: 24,
-  fontWeight: 900,
+  fontSize: 28,
+  lineHeight: 1.08,
   color: "#0f172a",
-  lineHeight: 1.15,
+  fontWeight: 900,
 };
 
 const sectionText: CSSProperties = {
   margin: 0,
-  color: "#5b7488",
+  color: "#64748b",
   fontSize: 14,
   lineHeight: 1.7,
 };
@@ -1544,25 +1599,25 @@ const sectionText: CSSProperties = {
 const barHeaderStyle: CSSProperties = {
   display: "flex",
   justifyContent: "space-between",
-  gap: 10,
+  gap: 12,
   alignItems: "center",
 };
 
 const barLabelStyle: CSSProperties = {
-  color: "#334155",
-  fontSize: 13,
+  fontSize: 14,
   fontWeight: 700,
+  color: "#123047",
 };
 
 const barValueStyle: CSSProperties = {
-  color: "#0f172a",
   fontSize: 14,
   fontWeight: 900,
+  color: "#0f172a",
 };
 
 const barTrackStyle: CSSProperties = {
   width: "100%",
-  height: 12,
+  height: 14,
   borderRadius: 999,
   background: "#e2e8f0",
   overflow: "hidden",
@@ -1571,40 +1626,39 @@ const barTrackStyle: CSSProperties = {
 const barFillStyle: CSSProperties = {
   height: "100%",
   borderRadius: 999,
-  minWidth: 6,
+  transition: "width 0.3s ease",
 };
 
 const miniFinanceCardStyle: CSSProperties = {
+  borderRadius: 18,
   background: "#f8fbff",
   border: "1px solid #e5edf5",
-  borderRadius: 18,
   padding: 14,
-  display: "grid",
-  gap: 6,
 };
 
 const miniFinanceLabelStyle: CSSProperties = {
-  color: "#5b7488",
   fontSize: 13,
   fontWeight: 700,
+  color: "#64748b",
+  marginBottom: 6,
 };
 
 const miniFinanceValueStyle: CSSProperties = {
-  color: "#123047",
-  fontSize: 22,
+  fontSize: 24,
   fontWeight: 900,
-  lineHeight: 1.2,
-  wordBreak: "break-word",
+  color: "#0f172a",
+  lineHeight: 1.1,
 };
 
 const adminNoteStyle: CSSProperties = {
-  borderRadius: 16,
-  background: "#f8fbff",
-  border: "1px solid #e5edf5",
+  borderRadius: 18,
+  background: "#eff6ff",
+  border: "1px solid #bfdbfe",
   padding: 14,
-  color: "#435b6e",
+  color: "#1e3a8a",
   fontSize: 13,
   lineHeight: 1.7,
+  fontWeight: 700,
 };
 
 const tabsRowStyle: CSSProperties = {
@@ -1614,12 +1668,13 @@ const tabsRowStyle: CSSProperties = {
 };
 
 const tabButtonStyle: CSSProperties = {
-  border: "1px solid #dbe5ef",
-  borderRadius: 999,
+  minHeight: 40,
   padding: "10px 14px",
+  borderRadius: 999,
+  border: "1px solid #dbeafe",
+  fontSize: 13,
   fontWeight: 800,
   cursor: "pointer",
-  background: "#ffffff",
 };
 
 const filtersGridStyle: CSSProperties = {
@@ -1629,13 +1684,14 @@ const filtersGridStyle: CSSProperties = {
 
 const inputStyle: CSSProperties = {
   width: "100%",
-  borderRadius: 14,
-  border: "1px solid #d8e3ee",
+  minHeight: 52,
+  borderRadius: 18,
+  border: "1px solid rgba(148,163,184,0.24)",
+  background: "linear-gradient(180deg, #ffffff 0%, #f8fbff 100%)",
   padding: "14px 16px",
   fontSize: 15,
+  color: "#0f172a",
   outline: "none",
-  background: "#f8fbff",
-  color: "#123047",
   boxSizing: "border-box",
 };
 
@@ -1679,63 +1735,71 @@ const serviceMetaStyle: CSSProperties = {
 };
 
 const statusBadgeStyle: CSSProperties = {
+  alignSelf: "flex-start",
   borderRadius: 999,
   padding: "8px 12px",
   fontWeight: 800,
   fontSize: 12,
-  alignSelf: "flex-start",
 };
 
 const infoCardStyle: CSSProperties = {
+  borderRadius: 18,
+  border: "1px solid rgba(148,163,184,0.14)",
   background: "#ffffff",
-  border: "1px solid #e7eef6",
-  borderRadius: 16,
-  padding: 12,
+  padding: 14,
   minWidth: 0,
 };
 
 const infoLabelStyle: CSSProperties = {
   fontSize: 12,
-  color: "#6b7f90",
-  fontWeight: 700,
+  fontWeight: 800,
+  textTransform: "uppercase",
+  letterSpacing: 0.4,
+  color: "#0891b2",
   marginBottom: 6,
+  wordBreak: "break-word",
 };
 
 const infoValueStyle: CSSProperties = {
   fontSize: 14,
-  color: "#123047",
-  fontWeight: 800,
-  lineHeight: 1.4,
+  lineHeight: 1.65,
+  color: "#0f172a",
+  whiteSpace: "pre-wrap",
   wordBreak: "break-word",
 };
 
 const fiscalBoxStyle: CSSProperties = {
+  borderRadius: 18,
   background: "#ffffff",
   border: "1px solid #e7eef6",
-  borderRadius: 18,
   padding: 14,
-  display: "grid",
+  display: "flex",
+  flexDirection: "column",
   gap: 12,
 };
 
 const fiscalTitleStyle: CSSProperties = {
   fontSize: 14,
+  fontWeight: 800,
   color: "#123047",
-  fontWeight: 900,
 };
 
 const notaBadgeStyle: CSSProperties = {
-  borderRadius: 999,
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  minHeight: 36,
   padding: "8px 12px",
-  fontWeight: 800,
+  borderRadius: 999,
   fontSize: 12,
+  fontWeight: 800,
 };
 
 const fiscalNoteStyle: CSSProperties = {
-  borderRadius: 16,
-  padding: 14,
+  borderRadius: 14,
+  padding: 12,
   fontSize: 13,
-  lineHeight: 1.7,
+  lineHeight: 1.6,
   fontWeight: 700,
 };
 
@@ -1782,6 +1846,25 @@ const actionsRowStyle: CSSProperties = {
   gap: 10,
 };
 
+const actionButtonStyle: CSSProperties = {
+  minHeight: 40,
+  padding: "10px 14px",
+  borderRadius: 14,
+  border: "1px solid #cbd5e1",
+  background: "#ffffff",
+  color: "#123047",
+  fontSize: 13,
+  fontWeight: 800,
+  cursor: "pointer",
+};
+
+const actionPrimaryButtonStyle: CSSProperties = {
+  ...actionButtonStyle,
+  background: "#0f172a",
+  color: "#ffffff",
+  border: "1px solid #0f172a",
+};
+
 const helperTextStyle: CSSProperties = {
   fontSize: 12,
   color: "#64748b",
@@ -1794,103 +1877,39 @@ const footerMetaStyle: CSSProperties = {
   fontWeight: 700,
 };
 
-const emptyStateStyle: CSSProperties = {
-  borderRadius: 22,
-  border: "1px dashed #cbd5e1",
-  padding: 28,
-  textAlign: "center",
-  color: "#64748b",
-  background: "#f8fafc",
-};
-
-const chipNeutral: CSSProperties = {
-  background: "#f8fafc",
-  color: "#334155",
-  border: "1px solid #e2e8f0",
-  borderRadius: 999,
-  padding: "8px 12px",
-  fontSize: 13,
-  fontWeight: 700,
-};
-
-const chipWarning: CSSProperties = {
-  background: "#fff7ed",
-  color: "#9a3412",
-  border: "1px solid #fed7aa",
-  borderRadius: 999,
-  padding: "8px 12px",
-  fontSize: 13,
-  fontWeight: 700,
-};
-
-const topButtonStyle: CSSProperties = {
-  textDecoration: "none",
-  background: "#ffffff",
-  color: "#123047",
-  border: "1px solid #dbe5ef",
-  borderRadius: 12,
-  padding: "10px 14px",
-  fontWeight: 700,
-  boxShadow: "0 10px 24px rgba(15, 23, 42, 0.06)",
-};
-
-const topPrimaryStyle: CSSProperties = {
-  textDecoration: "none",
-  background: "#0ea5e9",
-  color: "#ffffff",
-  borderRadius: 12,
-  padding: "10px 14px",
-  fontWeight: 700,
-  boxShadow: "0 12px 30px rgba(14, 165, 233, 0.20)",
-};
-
-const topRefreshStyle: CSSProperties = {
-  border: "none",
-  cursor: "pointer",
-  background: "#123047",
-  color: "#ffffff",
-  borderRadius: 12,
-  padding: "10px 14px",
-  fontWeight: 700,
-  boxShadow: "0 10px 24px rgba(15, 23, 42, 0.12)",
-};
-
-const actionButtonStyle: CSSProperties = {
-  border: "1px solid #dbe5ef",
-  background: "#ffffff",
-  color: "#123047",
-  borderRadius: 12,
-  padding: "10px 12px",
-  fontWeight: 800,
-  cursor: "pointer",
-};
-
-const actionPrimaryButtonStyle: CSSProperties = {
-  border: "none",
-  background: "#16a34a",
-  color: "#ffffff",
-  borderRadius: 12,
-  padding: "10px 12px",
-  fontWeight: 800,
-  cursor: "pointer",
-  boxShadow: "0 12px 24px rgba(22, 163, 74, 0.18)",
-};
-
 const secondaryLinkStyle: CSSProperties = {
   textDecoration: "none",
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  minHeight: 40,
+  padding: "10px 14px",
+  borderRadius: 14,
+  border: "1px solid #cbd5e1",
   background: "#ffffff",
   color: "#123047",
-  border: "1px solid #dbe5ef",
-  borderRadius: 12,
-  padding: "10px 14px",
+  fontSize: 13,
   fontWeight: 800,
 };
 
 const primaryLinkStyle: CSSProperties = {
-  textDecoration: "none",
-  background: "#123047",
+  ...secondaryLinkStyle,
+  background: "linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%)",
   color: "#ffffff",
-  borderRadius: 12,
-  padding: "10px 14px",
-  fontWeight: 800,
+  border: "1px solid transparent",
+};
+
+const emptyStateStyle: CSSProperties = {
+  minHeight: 140,
+  borderRadius: 24,
+  border: "1px dashed rgba(148,163,184,0.28)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: "#475569",
+  fontSize: 15,
+  fontWeight: 700,
+  background: "rgba(248,250,252,0.72)",
+  textAlign: "center",
+  padding: 20,
 };

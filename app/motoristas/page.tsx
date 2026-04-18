@@ -36,23 +36,34 @@ type ApiResponse = {
 type FiltroStatus = "todos" | "pendentes" | "ativos" | "inativos";
 
 function formatarCPF(valor?: string | null) {
-  const digits = String(valor || "").replace(/\D/g, "").slice(0, 11);
+  const digits = String(valor || "")
+    .replace(/\D/g, "")
+    .slice(0, 11);
 
   if (!digits) return "—";
   if (digits.length <= 3) return digits;
   if (digits.length <= 6) return digits.replace(/^(\d{3})(\d+)/, "$1.$2");
-  if (digits.length <= 9) return digits.replace(/^(\d{3})(\d{3})(\d+)/, "$1.$2.$3");
+  if (digits.length <= 9) {
+    return digits.replace(/^(\d{3})(\d{3})(\d+)/, "$1.$2.$3");
+  }
 
-  return digits.replace(/^(\d{3})(\d{3})(\d{3})(\d{1,2}).*/, "$1.$2.$3-$4");
+  return digits.replace(
+    /^(\d{3})(\d{3})(\d{3})(\d{1,2}).*/,
+    "$1.$2.$3-$4",
+  );
 }
 
 function formatarTelefone(valor?: string | null) {
-  const digits = String(valor || "").replace(/\D/g, "").slice(0, 11);
+  const digits = String(valor || "")
+    .replace(/\D/g, "")
+    .slice(0, 11);
 
   if (!digits) return "—";
   if (digits.length <= 2) return digits;
   if (digits.length <= 6) return digits.replace(/^(\d{2})(\d+)/, "($1) $2");
-  if (digits.length <= 10) return digits.replace(/^(\d{2})(\d{4})(\d+)/, "($1) $2-$3");
+  if (digits.length <= 10) {
+    return digits.replace(/^(\d{2})(\d{4})(\d+)/, "($1) $2-$3");
+  }
 
   return digits.replace(/^(\d{2})(\d{5})(\d+)/, "($1) $2-$3");
 }
@@ -71,7 +82,9 @@ function formatarData(valor?: string | null) {
 }
 
 function inferirOrigemPublica(observacoes?: string | null) {
-  return String(observacoes || "").toLowerCase().includes("cadastro_motorista_publico");
+  return String(observacoes || "")
+    .toLowerCase()
+    .includes("cadastro_motorista_publico");
 }
 
 function obterStatusMotorista(motorista: Motorista) {
@@ -155,7 +168,11 @@ export default function MotoristasPage() {
 
         setMotoristas(Array.isArray(data?.motoristas) ? data.motoristas : []);
       } catch (error) {
-        setErro(error instanceof Error ? error.message : "Erro ao carregar motoristas.");
+        setErro(
+          error instanceof Error
+            ? error.message
+            : "Erro ao carregar motoristas.",
+        );
       } finally {
         setCarregando(false);
       }
@@ -221,17 +238,48 @@ export default function MotoristasPage() {
 
       <div style={containerStyle}>
         <header style={heroStyle}>
-          <div style={heroTopRow}>
+          <div
+            style={{
+              ...heroTopRow,
+              flexDirection: isMobile ? "column" : "row",
+              alignItems: isMobile ? "stretch" : "center",
+            }}
+          >
             <div style={heroBadge}>Aurora Motoristas • Base premium</div>
 
-            <div style={heroTopButtons}>
-              <Link href="/" style={topButtonStyle}>
+            <div
+              style={{
+                ...heroTopButtons,
+                width: isMobile ? "100%" : "auto",
+              }}
+            >
+              <Link
+                href="/"
+                style={{
+                  ...topButtonStyle,
+                  width: isMobile ? "100%" : "auto",
+                }}
+              >
                 Home
               </Link>
-              <Link href="/motoristas/cadastrar" style={topButtonStyle}>
+
+              <Link
+                href="/motoristas/cadastrar"
+                style={{
+                  ...topButtonStyle,
+                  width: isMobile ? "100%" : "auto",
+                }}
+              >
                 Novo motorista interno
               </Link>
-              <Link href="/quero-ser-motorista" style={topButtonStyle}>
+
+              <Link
+                href="/quero-ser-motorista"
+                style={{
+                  ...topButtonStyle,
+                  width: isMobile ? "100%" : "auto",
+                }}
+              >
                 Fluxo público
               </Link>
             </div>
@@ -240,17 +288,19 @@ export default function MotoristasPage() {
           <div
             style={{
               ...heroGrid,
-              gridTemplateColumns: isMobile ? "1fr" : "minmax(0, 1.5fr) minmax(260px, 0.8fr)",
+              gridTemplateColumns: isMobile
+                ? "1fr"
+                : "minmax(0, 1.5fr) minmax(260px, 0.8fr)",
             }}
           >
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14, minWidth: 0 }}>
               <h1 style={heroTitle}>Motoristas cadastrados</h1>
 
               <p style={heroText}>
-                Visualize a base real de motoristas já salvos no Aurora Motoristas, com
-                separação clara entre <strong>pendentes</strong>, <strong>ativos</strong> e
-                <strong> inativos</strong>, facilitando a validação final antes de liberar
-                testes sérios com sua equipe.
+                Visualize a base real de motoristas já salvos no Aurora
+                Motoristas, com separação clara entre <strong>pendentes</strong>,{" "}
+                <strong>ativos</strong> e <strong>inativos</strong>, facilitando a
+                validação final antes de liberar testes sérios com sua equipe.
               </p>
 
               <div style={heroPills}>
@@ -263,12 +313,14 @@ export default function MotoristasPage() {
 
             <div style={heroSideCard}>
               <div style={heroSideNumber}>
-                {carregando ? "..." : String(motoristasFiltrados.length).padStart(2, "0")}
+                {carregando
+                  ? "..."
+                  : String(motoristasFiltrados.length).padStart(2, "0")}
               </div>
               <div style={heroSideLabel}>Motoristas</div>
               <div style={heroSideText}>
-                Total filtrado da base operacional para conferência final antes da versão de
-                testes com sua equipe.
+                Total filtrado da base operacional para conferência final antes da
+                versão de testes com sua equipe.
               </div>
             </div>
           </div>
@@ -277,9 +329,7 @@ export default function MotoristasPage() {
         <section
           style={{
             ...summaryGridStyle,
-            gridTemplateColumns: isMobile
-              ? "1fr"
-              : "repeat(4, minmax(0, 1fr))",
+            gridTemplateColumns: isMobile ? "1fr" : "repeat(4, minmax(0, 1fr))",
           }}
         >
           <SummaryCard
@@ -304,7 +354,12 @@ export default function MotoristasPage() {
           />
         </section>
 
-        <section style={cardStyle}>
+        <section
+          style={{
+            ...cardStyle,
+            padding: isMobile ? 16 : 24,
+          }}
+        >
           <div
             style={{
               ...toolbarStyle,
@@ -312,16 +367,16 @@ export default function MotoristasPage() {
               alignItems: isMobile ? "stretch" : "center",
             }}
           >
-            <div>
+            <div style={{ minWidth: 0 }}>
               <div style={sectionEyebrow}>Base operacional</div>
               <h2 style={sectionTitle}>Lista de motoristas</h2>
               <p style={sectionText}>
-                Consulte por nome, CPF, telefone, e-mail, cidade ou estado e filtre a
-                leitura para homologação final.
+                Consulte por nome, CPF, telefone, e-mail, cidade ou estado e
+                filtre a leitura para homologação final.
               </p>
             </div>
 
-            <div style={{ width: isMobile ? "100%" : 360 }}>
+            <div style={{ width: isMobile ? "100%" : 360, minWidth: 0 }}>
               <input
                 value={busca}
                 onChange={(e) => setBusca(e.target.value)}
@@ -395,8 +450,18 @@ export default function MotoristasPage() {
                           alignItems: isMobile ? "flex-start" : "center",
                         }}
                       >
-                        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                          <div style={itemNameStyle}>{motorista.nome || "Sem nome"}</div>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 6,
+                            minWidth: 0,
+                            width: "100%",
+                          }}
+                        >
+                          <div style={itemNameStyle}>
+                            {motorista.nome || "Sem nome"}
+                          </div>
                           <div style={itemMetaLineStyle}>
                             CPF: {formatarCPF(motorista.cpf)} • Telefone:{" "}
                             {formatarTelefone(motorista.telefone)}
@@ -409,6 +474,9 @@ export default function MotoristasPage() {
                             color: status.cor,
                             background: status.fundo,
                             border: status.borda,
+                            whiteSpace: isMobile ? "normal" : "nowrap",
+                            width: isMobile ? "100%" : "auto",
+                            textAlign: "center",
                           }}
                         >
                           {status.rotulo}
@@ -418,17 +486,35 @@ export default function MotoristasPage() {
                       <div
                         style={{
                           ...detailsGridStyle,
-                          gridTemplateColumns: isMobile ? "1fr" : "repeat(2, minmax(0, 1fr))",
+                          gridTemplateColumns: isMobile
+                            ? "1fr"
+                            : "repeat(2, minmax(0, 1fr))",
                         }}
                       >
-                        <Detail label="Origem" value={origemPublica ? "Cadastro público" : "Cadastro interno / base"} />
+                        <Detail
+                          label="Origem"
+                          value={
+                            origemPublica
+                              ? "Cadastro público"
+                              : "Cadastro interno / base"
+                          }
+                        />
                         <Detail label="CNH" value={motorista.cnh || "—"} />
                         <Detail label="E-mail" value={motorista.email || "—"} />
                         <Detail label="CEP" value={motorista.cep || "—"} />
                         <Detail label="Endereço" value={endereco || "—"} />
-                        <Detail label="Complemento" value={motorista.complemento || "—"} />
-                        <Detail label="Observações" value={motorista.observacoes || "—"} />
-                        <Detail label="Criado em" value={formatarData(motorista.created_at)} />
+                        <Detail
+                          label="Complemento"
+                          value={motorista.complemento || "—"}
+                        />
+                        <Detail
+                          label="Observações"
+                          value={motorista.observacoes || "—"}
+                        />
+                        <Detail
+                          label="Criado em"
+                          value={formatarData(motorista.created_at)}
+                        />
                       </div>
                     </article>
                   </Link>
@@ -492,7 +578,11 @@ function FilterButton({
         ...filterButtonStyle,
         background: active ? "#0f172a" : "#ffffff",
         color: active ? "#ffffff" : "#123047",
-        border: active ? "1px solid #0f172a" : "1px solid rgba(148,163,184,0.22)",
+        border: active
+          ? "1px solid #0f172a"
+          : "1px solid rgba(148,163,184,0.22)",
+        width: "auto",
+        maxWidth: "100%",
       }}
     >
       {label}
@@ -506,7 +596,7 @@ const pageStyle: CSSProperties = {
     "radial-gradient(circle at top left, rgba(34,211,238,0.18), transparent 28%), linear-gradient(180deg, #eef6ff 0%, #f8fbff 46%, #f4f7fb 100%)",
   padding: "24px 16px 40px",
   position: "relative",
-  overflow: "hidden",
+  overflowX: "hidden",
 };
 
 const containerStyle: CSSProperties = {
@@ -526,6 +616,7 @@ const ambientGlowTop: CSSProperties = {
   borderRadius: "50%",
   background: "rgba(6,182,212,0.14)",
   filter: "blur(40px)",
+  pointerEvents: "none",
 };
 
 const ambientGlowBottom: CSSProperties = {
@@ -537,10 +628,12 @@ const ambientGlowBottom: CSSProperties = {
   borderRadius: "50%",
   background: "rgba(37,99,235,0.12)",
   filter: "blur(42px)",
+  pointerEvents: "none",
 };
 
 const heroStyle: CSSProperties = {
-  background: "linear-gradient(135deg, rgba(255,255,255,0.94) 0%, rgba(241,248,255,0.96) 100%)",
+  background:
+    "linear-gradient(135deg, rgba(255,255,255,0.94) 0%, rgba(241,248,255,0.96) 100%)",
   border: "1px solid rgba(148,163,184,0.18)",
   borderRadius: 32,
   padding: 24,
@@ -568,7 +661,7 @@ const topButtonStyle: CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
-  minHeight: 38,
+  minHeight: 42,
   padding: "10px 14px",
   borderRadius: 999,
   background: "#ffffff",
@@ -576,6 +669,7 @@ const topButtonStyle: CSSProperties = {
   color: "#123047",
   fontSize: 13,
   fontWeight: 800,
+  boxSizing: "border-box",
 };
 
 const heroBadge: CSSProperties = {
@@ -592,6 +686,7 @@ const heroBadge: CSSProperties = {
   fontWeight: 800,
   letterSpacing: 0.4,
   textTransform: "uppercase",
+  maxWidth: "100%",
 };
 
 const heroGrid: CSSProperties = {
@@ -602,11 +697,12 @@ const heroGrid: CSSProperties = {
 
 const heroTitle: CSSProperties = {
   margin: 0,
-  fontSize: "clamp(30px, 5vw, 46px)",
-  lineHeight: 1.02,
+  fontSize: "clamp(28px, 5vw, 46px)",
+  lineHeight: 1.08,
   color: "#0f172a",
   fontWeight: 900,
   letterSpacing: -1.2,
+  wordBreak: "break-word",
 };
 
 const heroText: CSSProperties = {
@@ -615,6 +711,7 @@ const heroText: CSSProperties = {
   lineHeight: 1.7,
   color: "#475569",
   maxWidth: 760,
+  wordBreak: "break-word",
 };
 
 const heroPills: CSSProperties = {
@@ -635,6 +732,7 @@ const pillStyle: CSSProperties = {
   fontSize: 13,
   fontWeight: 700,
   boxShadow: "0 6px 18px rgba(15,23,42,0.05)",
+  maxWidth: "100%",
 };
 
 const heroSideCard: CSSProperties = {
@@ -647,6 +745,7 @@ const heroSideCard: CSSProperties = {
   flexDirection: "column",
   justifyContent: "space-between",
   boxShadow: "0 20px 40px rgba(15,23,42,0.18)",
+  minWidth: 0,
 };
 
 const heroSideNumber: CSSProperties = {
@@ -654,18 +753,21 @@ const heroSideNumber: CSSProperties = {
   fontWeight: 900,
   color: "#67e8f9",
   letterSpacing: 1,
+  lineHeight: 1,
 };
 
 const heroSideLabel: CSSProperties = {
   fontSize: 26,
   fontWeight: 900,
   lineHeight: 1.1,
+  wordBreak: "break-word",
 };
 
 const heroSideText: CSSProperties = {
   fontSize: 14,
   lineHeight: 1.7,
   color: "rgba(255,255,255,0.82)",
+  wordBreak: "break-word",
 };
 
 const summaryGridStyle: CSSProperties = {
@@ -681,6 +783,7 @@ const summaryCardStyle: CSSProperties = {
   boxShadow: "0 20px 48px rgba(15,23,42,0.07)",
   padding: 18,
   backdropFilter: "blur(10px)",
+  minWidth: 0,
 };
 
 const summaryCardTitleStyle: CSSProperties = {
@@ -690,6 +793,7 @@ const summaryCardTitleStyle: CSSProperties = {
   letterSpacing: 0.4,
   color: "#0891b2",
   marginBottom: 10,
+  wordBreak: "break-word",
 };
 
 const summaryCardValueStyle: CSSProperties = {
@@ -704,6 +808,7 @@ const summaryCardNoteStyle: CSSProperties = {
   fontSize: 13,
   lineHeight: 1.7,
   color: "#64748b",
+  wordBreak: "break-word",
 };
 
 const cardStyle: CSSProperties = {
@@ -713,6 +818,7 @@ const cardStyle: CSSProperties = {
   boxShadow: "0 24px 60px rgba(15,23,42,0.08)",
   padding: 24,
   backdropFilter: "blur(12px)",
+  minWidth: 0,
 };
 
 const toolbarStyle: CSSProperties = {
@@ -737,6 +843,7 @@ const sectionTitle: CSSProperties = {
   fontWeight: 900,
   color: "#0f172a",
   lineHeight: 1.08,
+  wordBreak: "break-word",
 };
 
 const sectionText: CSSProperties = {
@@ -745,6 +852,7 @@ const sectionText: CSSProperties = {
   lineHeight: 1.7,
   color: "#64748b",
   maxWidth: 760,
+  wordBreak: "break-word",
 };
 
 const inputStyle: CSSProperties = {
@@ -776,6 +884,7 @@ const filterButtonStyle: CSSProperties = {
   fontWeight: 800,
   cursor: "pointer",
   background: "#ffffff",
+  boxSizing: "border-box",
 };
 
 const errorStyle: CSSProperties = {
@@ -802,6 +911,8 @@ const loadingCardStyle: CSSProperties = {
   fontSize: 15,
   fontWeight: 700,
   background: "rgba(248,250,252,0.72)",
+  textAlign: "center",
+  padding: 20,
 };
 
 const emptyCardStyle: CSSProperties = {
@@ -828,6 +939,7 @@ const linkCardStyle: CSSProperties = {
   textDecoration: "none",
   color: "inherit",
   display: "block",
+  minWidth: 0,
 };
 
 const itemCardStyle: CSSProperties = {
@@ -837,6 +949,7 @@ const itemCardStyle: CSSProperties = {
   padding: 18,
   boxShadow: "0 12px 28px rgba(15,23,42,0.06)",
   cursor: "pointer",
+  minWidth: 0,
 };
 
 const itemHeaderStyle: CSSProperties = {
@@ -851,12 +964,14 @@ const itemNameStyle: CSSProperties = {
   fontWeight: 900,
   color: "#0f172a",
   lineHeight: 1.1,
+  wordBreak: "break-word",
 };
 
 const itemMetaLineStyle: CSSProperties = {
   fontSize: 13,
   color: "#64748b",
   lineHeight: 1.6,
+  wordBreak: "break-word",
 };
 
 const statusPillStyle: CSSProperties = {
@@ -868,12 +983,13 @@ const statusPillStyle: CSSProperties = {
   borderRadius: 999,
   fontSize: 12,
   fontWeight: 800,
-  whiteSpace: "nowrap",
+  boxSizing: "border-box",
 };
 
 const detailsGridStyle: CSSProperties = {
   display: "grid",
   gap: 12,
+  minWidth: 0,
 };
 
 const detailCardStyle: CSSProperties = {
@@ -881,6 +997,7 @@ const detailCardStyle: CSSProperties = {
   border: "1px solid rgba(148,163,184,0.14)",
   background: "#ffffff",
   padding: 14,
+  minWidth: 0,
 };
 
 const detailLabelStyle: CSSProperties = {
@@ -890,6 +1007,7 @@ const detailLabelStyle: CSSProperties = {
   letterSpacing: 0.4,
   color: "#0891b2",
   marginBottom: 6,
+  wordBreak: "break-word",
 };
 
 const detailValueStyle: CSSProperties = {
