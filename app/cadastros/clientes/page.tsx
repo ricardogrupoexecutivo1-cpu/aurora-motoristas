@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type ClienteForm = {
   tipoPessoa: "PF" | "PJ";
@@ -85,6 +85,20 @@ export default function ClientesPage() {
   const [feedback, setFeedback] = useState<string>("");
   const [feedbackType, setFeedbackType] = useState<"success" | "error" | "info">("info");
   const [fonteReceita, setFonteReceita] = useState<string>("");
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < 768);
+    }
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const tituloPrincipal = useMemo(() => {
     return form.tipoPessoa === "PJ"
@@ -236,7 +250,7 @@ export default function ClientesPage() {
         style={{
           maxWidth: 1240,
           margin: "0 auto",
-          padding: "20px 16px 40px",
+          padding: isMobile ? "20px 12px 40px" : "20px 16px 40px",
         }}
       >
         <div
@@ -289,7 +303,7 @@ export default function ClientesPage() {
             background:
               "radial-gradient(circle at top right, rgba(56, 189, 248, 0.18), transparent 26%), linear-gradient(135deg, #ffffff 0%, #f3f9ff 45%, #eef7ff 100%)",
             boxShadow: "0 25px 70px rgba(15, 23, 42, 0.08)",
-            padding: "22px 18px",
+            padding: isMobile ? "20px 14px" : "22px 18px",
             marginBottom: 18,
           }}
         >
@@ -388,8 +402,11 @@ export default function ClientesPage() {
         <section
           style={{
             display: "grid",
-            gridTemplateColumns: "minmax(0, 1.6fr) minmax(280px, 0.9fr)",
+            gridTemplateColumns: isMobile
+              ? "minmax(0, 1fr)"
+              : "minmax(0, 1.6fr) minmax(280px, 0.9fr)",
             gap: 18,
+            alignItems: "start",
           }}
         >
           <div
@@ -398,20 +415,22 @@ export default function ClientesPage() {
               border: "1px solid #dbeafe",
               borderRadius: 28,
               boxShadow: "0 20px 60px rgba(15, 23, 42, 0.08)",
-              padding: 18,
+              padding: isMobile ? 16 : 18,
+              minWidth: 0,
             }}
           >
             <div
               style={{
                 display: "flex",
                 justifyContent: "space-between",
-                alignItems: "center",
+                alignItems: isMobile ? "stretch" : "center",
                 flexWrap: "wrap",
                 gap: 12,
                 marginBottom: 18,
+                flexDirection: isMobile ? "column" : "row",
               }}
             >
-              <div>
+              <div style={{ minWidth: 0 }}>
                 <h2
                   style={{
                     margin: 0,
@@ -441,6 +460,7 @@ export default function ClientesPage() {
                   padding: 6,
                   borderRadius: 999,
                   border: "1px solid #e2e8f0",
+                  alignSelf: isMobile ? "flex-start" : "auto",
                 }}
               >
                 {(["PJ", "PF"] as const).map((tipo) => {
@@ -494,7 +514,7 @@ export default function ClientesPage() {
                 placeholder="Ex.: Grupo Executivo Service"
               />
 
-              <div style={{ display: "block" }}>
+              <div style={{ display: "block", minWidth: 0 }}>
                 <label
                   style={{
                     display: "block",
@@ -512,6 +532,8 @@ export default function ClientesPage() {
                     display: "flex",
                     flexWrap: "wrap",
                     gap: 10,
+                    flexDirection: isMobile ? "column" : "row",
+                    alignItems: isMobile ? "stretch" : "center",
                   }}
                 >
                   <input
@@ -526,6 +548,7 @@ export default function ClientesPage() {
                     style={{
                       flex: "1 1 220px",
                       minWidth: 0,
+                      width: isMobile ? "100%" : "auto",
                       height: 50,
                       borderRadius: 16,
                       border: "1px solid #cbd5e1",
@@ -549,6 +572,7 @@ export default function ClientesPage() {
                         opacity: loadingReceita ? 0.7 : 1,
                         padding: "0 16px",
                         height: 50,
+                        width: isMobile ? "100%" : "auto",
                         borderRadius: 16,
                         background: "#e0f2fe",
                         color: "#0369a1",
@@ -698,6 +722,7 @@ export default function ClientesPage() {
                 flexWrap: "wrap",
                 gap: 12,
                 marginTop: 18,
+                flexDirection: isMobile ? "column" : "row",
               }}
             >
               <button
@@ -715,6 +740,7 @@ export default function ClientesPage() {
                   fontWeight: 800,
                   fontSize: 15,
                   boxShadow: "0 16px 35px rgba(37, 99, 235, 0.28)",
+                  width: isMobile ? "100%" : "auto",
                 }}
               >
                 {loading ? "Salvando cliente..." : "Salvar cliente"}
@@ -736,6 +762,7 @@ export default function ClientesPage() {
                   color: "#0f172a",
                   fontWeight: 800,
                   fontSize: 15,
+                  width: isMobile ? "100%" : "auto",
                 }}
               >
                 Limpar formulário
@@ -748,6 +775,7 @@ export default function ClientesPage() {
               display: "flex",
               flexDirection: "column",
               gap: 18,
+              minWidth: 0,
             }}
           >
             <InfoCard
@@ -787,7 +815,7 @@ function Field({
   required?: boolean;
 }) {
   return (
-    <label style={{ display: "block" }}>
+    <label style={{ display: "block", minWidth: 0 }}>
       <span
         style={{
           display: "block",
@@ -831,6 +859,7 @@ function InfoCard({ title, text }: { title: string; text: string }) {
         borderRadius: 24,
         boxShadow: "0 20px 60px rgba(15, 23, 42, 0.08)",
         padding: 18,
+        minWidth: 0,
       }}
     >
       <div
