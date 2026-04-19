@@ -33,11 +33,14 @@ function limparTexto(valor: unknown) {
 
 function normalizarBoolean(valor: unknown, padrao = true) {
   if (typeof valor === "boolean") return valor;
+
   if (typeof valor === "string") {
     const texto = valor.trim().toLowerCase();
+
     if (["true", "1", "sim", "yes"].includes(texto)) return true;
     if (["false", "0", "nao", "não", "no"].includes(texto)) return false;
   }
+
   return padrao;
 }
 
@@ -61,14 +64,36 @@ function getSupabaseAdmin() {
   });
 }
 
-export async function GET() {
+function isAdminScope(request: Request) {
+  const { searchParams } = new URL(request.url);
+
+  const scope = (searchParams.get("scope") || "").trim().toLowerCase();
+  const admin = (searchParams.get("admin") || "").trim().toLowerCase();
+  const modo = (searchParams.get("modo") || "").trim().toLowerCase();
+
+  return (
+    scope === "admin" ||
+    admin === "1" ||
+    admin === "true" ||
+    modo === "admin"
+  );
+}
+
+export async function GET(request: Request) {
   try {
     const supabase = getSupabaseAdmin();
+    const adminScope = isAdminScope(request);
 
-    const { data, error } = await supabase
+    let query = supabase
       .from("motoristas_aurora")
       .select("*")
       .order("created_at", { ascending: false });
+
+    if (!adminScope) {
+      query = query.eq("ativo", true);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       return NextResponse.json(
@@ -87,9 +112,12 @@ export async function GET() {
     return NextResponse.json(
       {
         success: true,
-        message: "Motoristas listados com sucesso.",
+        message: adminScope
+          ? "Motoristas listados com sucesso em modo admin."
+          : "Motoristas ativos listados com sucesso.",
         motoristas: data || [],
         total: Array.isArray(data) ? data.length : 0,
+        scope: adminScope ? "admin" : "operacao",
       },
       { status: 200 },
     );

@@ -307,6 +307,13 @@ export default function HomePage() {
               </span>
             </Link>
 
+            <Link href="/plataforma/motoristas/painel" style={accessCard}>
+              <span style={accessTitle}>Painel de motoristas</span>
+              <span style={accessText}>
+                Revisar a base e preparar a futura autorização dos motoristas cadastrados.
+              </span>
+            </Link>
+
             <Link href="/plataforma/ajuda" style={accessCard}>
               <span style={accessTitle}>Tutorial Aurora Motoristas</span>
               <span style={accessText}>

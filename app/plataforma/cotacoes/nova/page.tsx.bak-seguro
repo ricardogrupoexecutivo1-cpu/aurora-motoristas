@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
@@ -187,13 +187,13 @@ function generateId(prefix = 'COT') {
 function unidadePadraoPorModalidade(modalidade: ModalidadeServico) {
   switch (modalidade) {
     case 'transfer':
-      return 'servi├ºo'
+      return 'serviço'
     case 'diaria':
-      return 'di├íria'
+      return 'diária'
     case 'semanal':
       return 'semana'
     case 'mensal':
-      return 'm├¬s'
+      return 'mês'
     default:
       return 'unidade'
   }
@@ -210,13 +210,13 @@ function addDaysToDate(dateStr: string, days: number) {
 function tipoOperacaoLabel(value: TipoOperacao) {
   switch (value) {
     case 'mobilizacao':
-      return 'Mobiliza├º├úo'
+      return 'Mobilização'
     case 'desmobilizacao':
-      return 'Desmobiliza├º├úo'
+      return 'Desmobilização'
     case 'mobilizacao_desmobilizacao':
-      return 'Mobiliza├º├úo + desmobiliza├º├úo'
+      return 'Mobilização + desmobilização'
     case 'diaria':
-      return 'Di├íria'
+      return 'Diária'
     case 'semanal':
       return 'Semanal'
     case 'mensal':
@@ -239,29 +239,29 @@ function mapTipoToConfig(tipo: string | null): {
       return {
         modalidade: 'pacote_personalizado',
         operacao: 'mobilizacao',
-        tipoServico: 'Mobiliza├º├úo',
-        unidade: 'servi├ºo',
+        tipoServico: 'Mobilização',
+        unidade: 'serviço',
       }
     case 'desmobilizacao':
       return {
         modalidade: 'pacote_personalizado',
         operacao: 'desmobilizacao',
-        tipoServico: 'Desmobiliza├º├úo',
-        unidade: 'servi├ºo',
+        tipoServico: 'Desmobilização',
+        unidade: 'serviço',
       }
     case 'mobilizacao_desmobilizacao':
       return {
         modalidade: 'pacote_personalizado',
         operacao: 'mobilizacao_desmobilizacao',
-        tipoServico: 'Mobiliza├º├úo + desmobiliza├º├úo',
-        unidade: 'servi├ºo',
+        tipoServico: 'Mobilização + desmobilização',
+        unidade: 'serviço',
       }
     case 'diaria':
       return {
         modalidade: 'diaria',
         operacao: 'diaria',
-        tipoServico: 'Di├íria de motorista',
-        unidade: 'di├íria',
+        tipoServico: 'Diária de motorista',
+        unidade: 'diária',
       }
     case 'semanal':
       return {
@@ -275,7 +275,7 @@ function mapTipoToConfig(tipo: string | null): {
         modalidade: 'mensal',
         operacao: 'mensal',
         tipoServico: 'Contrato mensal',
-        unidade: 'm├¬s',
+        unidade: 'mês',
       }
     case 'pacote_personalizado':
       return {
@@ -289,7 +289,7 @@ function mapTipoToConfig(tipo: string | null): {
         modalidade: 'transfer',
         operacao: 'transfer',
         tipoServico: 'Transfer',
-        unidade: 'servi├ºo',
+        unidade: 'serviço',
       }
   }
 }
@@ -317,7 +317,7 @@ function PlataformaCotacoesNovaPageContent() {
     useState<ModalidadeServico>('transfer')
   const [tipoOperacao, setTipoOperacao] = useState<TipoOperacao>('transfer')
   const [quantidade, setQuantidade] = useState(1)
-  const [unidadeQuantidade, setUnidadeQuantidade] = useState('servi├ºo')
+  const [unidadeQuantidade, setUnidadeQuantidade] = useState('serviço')
   const [baseMotorista, setBaseMotorista] = useState<BaseMotorista>('bh')
   const [motoristaNome, setMotoristaNome] = useState('')
   const [motoristaId, setMotoristaId] = useState('')
@@ -333,7 +333,7 @@ function PlataformaCotacoesNovaPageContent() {
   const [valorDiariaExtra, setValorDiariaExtra] = useState(0)
   const [quantidadeDiariasExtras, setQuantidadeDiariasExtras] = useState(0)
   const [motivoDiariaExtra, setMotivoDiariaExtra] = useState(
-    'Espera superior a 6 horas para libera├º├úo do ve├¡culo.'
+    'Espera superior a 6 horas para liberação do veículo.'
   )
   const [despesas, setDespesas] = useState<DespesaItem[]>([])
   const [valorUnitarioMotorista, setValorUnitarioMotorista] = useState(0)
@@ -536,7 +536,7 @@ function PlataformaCotacoesNovaPageContent() {
       setTipoOperacao('transfer')
     }
     if (modalidade === 'diaria') {
-      setTipoServico('Di├íria de motorista')
+      setTipoServico('Diária de motorista')
       setTipoOperacao('diaria')
     }
     if (modalidade === 'semanal') {
@@ -609,7 +609,7 @@ function PlataformaCotacoesNovaPageContent() {
     setModalidadeServico('transfer')
     setTipoOperacao('transfer')
     setQuantidade(1)
-    setUnidadeQuantidade('servi├ºo')
+    setUnidadeQuantidade('serviço')
     setBaseMotorista('bh')
     setMotoristaNome('')
     setMotoristaId('')
@@ -624,7 +624,7 @@ function PlataformaCotacoesNovaPageContent() {
     setCobraDiariaExtraApos6h(true)
     setValorDiariaExtra(0)
     setQuantidadeDiariasExtras(0)
-    setMotivoDiariaExtra('Espera superior a 6 horas para libera├º├úo do ve├¡culo.')
+    setMotivoDiariaExtra('Espera superior a 6 horas para liberação do veículo.')
     setDespesas([])
     setValorUnitarioMotorista(0)
     setValorUnitarioCliente(0)
@@ -685,29 +685,29 @@ function PlataformaCotacoesNovaPageContent() {
 
     if (!isValidDocumento(tipoPessoaCliente, documentoCliente)) {
       showMessage(
-        `${getDocumentoLabel(tipoPessoaCliente)} do cliente inv├ílido. Preencha com n├║meros suficientes.`,
+        `${getDocumentoLabel(tipoPessoaCliente)} do cliente inválido. Preencha com números suficientes.`,
         'erro'
       )
       return
     }
 
     if (!dataServico) {
-      showMessage('Informe a data do servi├ºo.', 'erro')
+      showMessage('Informe a data do serviço.', 'erro')
       return
     }
 
     if (!origem.trim() && modalidadeServico === 'transfer') {
-      showMessage('Informe a origem da cota├º├úo.', 'erro')
+      showMessage('Informe a origem da cotação.', 'erro')
       return
     }
 
     if (!destino.trim() && modalidadeServico === 'transfer') {
-      showMessage('Informe o destino da cota├º├úo.', 'erro')
+      showMessage('Informe o destino da cotação.', 'erro')
       return
     }
 
     if (tipoFaturamentoCliente === 'mensal' && !competenciaFaturamento.trim()) {
-      showMessage('Informe a compet├¬ncia do faturamento mensal.', 'erro')
+      showMessage('Informe a competência do faturamento mensal.', 'erro')
       return
     }
 
@@ -813,13 +813,13 @@ function PlataformaCotacoesNovaPageContent() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(atualizado))
 
       showMessage(
-        `Cota├º├úo ${payload.id} salva com sucesso. Opera├º├úo: ${tipoOperacaoLabel(
+        `Cotação ${payload.id} salva com sucesso. Operação: ${tipoOperacaoLabel(
           payload.tipoOperacao
-        )}. Despesas lan├ºadas: ${payload.despesas.length}.`,
+        )}. Despesas lançadas: ${payload.despesas.length}.`,
         'sucesso'
       )
     } catch {
-      showMessage('N├úo foi poss├¡vel salvar agora no navegador.', 'erro')
+      showMessage('Não foi possível salvar agora no navegador.', 'erro')
     }
   }
 
@@ -835,29 +835,29 @@ function PlataformaCotacoesNovaPageContent() {
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="space-y-3">
               <span className="inline-flex rounded-full bg-cyan-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">
-                Aurora Motoristas ÔÇó Cota├º├úo isolada
+                Aurora Motoristas • Cotação isolada
               </span>
 
               <div>
                 <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
-                  Nova cota├º├úo estrat├®gica
+                  Nova cotação estratégica
                 </h1>
                 <p className="mt-2 max-w-3xl text-sm text-slate-600 md:text-base">
-                  Camada nova criada sem mexer no fluxo em produ├º├úo. Agora a cota├º├úo
-                  recebe os dados da entrada r├ípida e abre j├í no tipo certo, mantendo
-                  padr├úo s├®rio e profissional.
+                  Camada nova criada sem mexer no fluxo em produção. Agora a cotação
+                  recebe os dados da entrada rápida e abre já no tipo certo, mantendo
+                  padrão sério e profissional.
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-3 text-sm">
                 <span className="rounded-2xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-emerald-700">
-                  Cliente j├í preenchido
+                  Cliente já preenchido
                 </span>
                 <span className="rounded-2xl border border-sky-200 bg-sky-50 px-3 py-2 text-sky-700">
-                  Tipo de cota├º├úo j├í definido
+                  Tipo de cotação já definido
                 </span>
                 <span className="rounded-2xl border border-amber-200 bg-amber-50 px-3 py-2 text-amber-700">
-                  Sem quebrar o que j├í existe
+                  Sem quebrar o que já existe
                 </span>
               </div>
             </div>
@@ -867,20 +867,20 @@ function PlataformaCotacoesNovaPageContent() {
                 href="/plataforma/cotacoes"
                 className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
               >
-                Ver cota├º├Áes
+                Ver cotações
               </Link>
               <Link
                 href="/plataforma/cotacoes/novo"
                 className="rounded-2xl border border-slate-900 bg-slate-900 px-4 py-3 text-center text-sm font-semibold text-white transition hover:opacity-90"
               >
-                Voltar ├á entrada r├ípida
+                Voltar à entrada rápida
               </Link>
             </div>
           </div>
 
           <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-            Sistema em constante atualiza├º├úo. Esta camada nova foi criada para agregar
-            valor sem mexer na plataforma j├í em produ├º├úo.
+            Sistema em constante atualização. Esta camada nova foi criada para agregar
+            valor sem mexer na plataforma já em produção.
           </div>
         </section>
 
@@ -900,10 +900,10 @@ function PlataformaCotacoesNovaPageContent() {
         <section className="grid gap-6 xl:grid-cols-[1.55fr_0.95fr]">
           <div className="space-y-6">
             <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="text-lg font-semibold">Dados principais da cota├º├úo</h2>
+              <h2 className="text-lg font-semibold">Dados principais da cotação</h2>
 
               <div className="mt-5 grid gap-4 md:grid-cols-2">
-                <Field label="Status da cota├º├úo" helper="Toda cota├º├úo deve terminar em aceita ou recusada.">
+                <Field label="Status da cotação" helper="Toda cotação deve terminar em aceita ou recusada.">
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value as StatusCotacao)}
@@ -918,7 +918,7 @@ function PlataformaCotacoesNovaPageContent() {
                   </select>
                 </Field>
 
-                <Field label="Modalidade do servi├ºo">
+                <Field label="Modalidade do serviço">
                   <select
                     value={modalidadeServico}
                     onChange={(e) =>
@@ -927,42 +927,42 @@ function PlataformaCotacoesNovaPageContent() {
                     className="input"
                   >
                     <option value="transfer">Transfer</option>
-                    <option value="diaria">Di├íria</option>
+                    <option value="diaria">Diária</option>
                     <option value="semanal">Semanal</option>
                     <option value="mensal">Mensal</option>
                     <option value="pacote_personalizado">Pacote personalizado</option>
                   </select>
                 </Field>
 
-                <Field label="Tipo operacional da cota├º├úo">
+                <Field label="Tipo operacional da cotação">
                   <select
                     value={tipoOperacao}
                     onChange={(e) => setTipoOperacao(e.target.value as TipoOperacao)}
                     className="input"
                   >
                     <option value="transfer">Transfer</option>
-                    <option value="mobilizacao">Mobiliza├º├úo</option>
-                    <option value="desmobilizacao">Desmobiliza├º├úo</option>
+                    <option value="mobilizacao">Mobilização</option>
+                    <option value="desmobilizacao">Desmobilização</option>
                     <option value="mobilizacao_desmobilizacao">
-                      Mobiliza├º├úo + desmobiliza├º├úo
+                      Mobilização + desmobilização
                     </option>
-                    <option value="diaria">Di├íria</option>
+                    <option value="diaria">Diária</option>
                     <option value="semanal">Semanal</option>
                     <option value="mensal">Mensal</option>
                     <option value="pacote_personalizado">Pacote personalizado</option>
                   </select>
                 </Field>
 
-                <Field label="Tipo de servi├ºo">
+                <Field label="Tipo de serviço">
                   <input
                     value={tipoServico}
                     onChange={(e) => setTipoServico(e.target.value)}
                     className="input"
-                    placeholder="Ex.: mobiliza├º├úo sonda / desmobiliza├º├úo / di├íria motorista"
+                    placeholder="Ex.: mobilização sonda / desmobilização / diária motorista"
                   />
                 </Field>
 
-                <Field label="Contratante" helper="Obrigat├│rio.">
+                <Field label="Contratante" helper="Obrigatório.">
                   <input
                     value={contratante}
                     onChange={(e) => setContratante(e.target.value)}
@@ -1016,12 +1016,12 @@ function PlataformaCotacoesNovaPageContent() {
                     <option value="a_combinar">A combinar</option>
                     <option value="pix">PIX</option>
                     <option value="boleto">Boleto</option>
-                    <option value="transferencia">Transfer├¬ncia</option>
-                    <option value="cartao">Cart├úo</option>
+                    <option value="transferencia">Transferência</option>
+                    <option value="cartao">Cartão</option>
                   </select>
                 </Field>
 
-                <Field label="Data do servi├ºo" helper="Obrigat├│rio.">
+                <Field label="Data do serviço" helper="Obrigatório.">
                   <input
                     type="date"
                     value={dataServico}
@@ -1030,7 +1030,7 @@ function PlataformaCotacoesNovaPageContent() {
                   />
                 </Field>
 
-                <Field label="Hor├írio do servi├ºo">
+                <Field label="Horário do serviço">
                   <input
                     type="time"
                     value={horarioServico}
@@ -1039,7 +1039,7 @@ function PlataformaCotacoesNovaPageContent() {
                   />
                 </Field>
 
-                <Field label="Hor├írio de apresenta├º├úo do motorista">
+                <Field label="Horário de apresentação do motorista">
                   <input
                     type="time"
                     value={horarioApresentacao}
@@ -1048,7 +1048,7 @@ function PlataformaCotacoesNovaPageContent() {
                   />
                 </Field>
 
-                <Field label="Local de apresenta├º├úo">
+                <Field label="Local de apresentação">
                   <input
                     value={localApresentacao}
                     onChange={(e) => setLocalApresentacao(e.target.value)}
@@ -1057,7 +1057,7 @@ function PlataformaCotacoesNovaPageContent() {
                   />
                 </Field>
 
-                <Field label="Origem" helper={modalidadeServico === 'transfer' ? 'Obrigat├│rio para transfer.' : undefined}>
+                <Field label="Origem" helper={modalidadeServico === 'transfer' ? 'Obrigatório para transfer.' : undefined}>
                   <input
                     value={origem}
                     onChange={(e) => setOrigem(e.target.value)}
@@ -1066,7 +1066,7 @@ function PlataformaCotacoesNovaPageContent() {
                   />
                 </Field>
 
-                <Field label="Destino" helper={modalidadeServico === 'transfer' ? 'Obrigat├│rio para transfer.' : undefined}>
+                <Field label="Destino" helper={modalidadeServico === 'transfer' ? 'Obrigatório para transfer.' : undefined}>
                   <input
                     value={destino}
                     onChange={(e) => setDestino(e.target.value)}
@@ -1077,20 +1077,20 @@ function PlataformaCotacoesNovaPageContent() {
               </div>
 
               <div className="mt-4">
-                <Field label="Observa├º├úo da apresenta├º├úo">
+                <Field label="Observação da apresentação">
                   <textarea
                     value={observacaoApresentacao}
                     onChange={(e) => setObservacaoApresentacao(e.target.value)}
                     rows={3}
                     className="textarea"
-                    placeholder="Instru├º├Áes de apresenta├º├úo do motorista."
+                    placeholder="Instruções de apresentação do motorista."
                   />
                 </Field>
               </div>
             </section>
 
             <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="text-lg font-semibold">Quantidade e pre├ºo por cliente</h2>
+              <h2 className="text-lg font-semibold">Quantidade e preço por cliente</h2>
 
               <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                 <Field label="Quantidade aprovada" helper="Pode ser 1, 10, 100 ou qualquer outra quantidade.">
@@ -1110,18 +1110,18 @@ function PlataformaCotacoesNovaPageContent() {
                     value={unidadeQuantidade}
                     onChange={(e) => setUnidadeQuantidade(e.target.value)}
                     className="input"
-                    placeholder="Ex.: di├íria, semana, m├¬s, unidade"
+                    placeholder="Ex.: diária, semana, mês, unidade"
                   />
                 </Field>
 
                 <MoneyField
-                  label="Valor unit├írio do cliente"
+                  label="Valor unitário do cliente"
                   value={valorUnitarioCliente}
                   onChange={setValorUnitarioCliente}
                 />
 
                 <MoneyField
-                  label="Valor unit├írio do motorista"
+                  label="Valor unitário do motorista"
                   value={valorUnitarioMotorista}
                   onChange={setValorUnitarioMotorista}
                 />
@@ -1132,9 +1132,9 @@ function PlataformaCotacoesNovaPageContent() {
             </section>
 
             <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="text-lg font-semibold">Opera├º├úo de ida e retorno</h2>
+              <h2 className="text-lg font-semibold">Operação de ida e retorno</h2>
               <p className="mt-1 text-sm text-slate-500">
-                Aqui voc├¬ controla mobiliza├º├úo, desmobiliza├º├úo, ida e retorno com km diferente
+                Aqui você controla mobilização, desmobilização, ida e retorno com km diferente
                 e valor com ou sem reembolso.
               </p>
 
@@ -1181,7 +1181,7 @@ function PlataformaCotacoesNovaPageContent() {
                     onChange={(e) => setAplicarReembolsoIda(e.target.value === 'sim')}
                     className="input"
                   >
-                    <option value="nao">N├úo</option>
+                    <option value="nao">Não</option>
                     <option value="sim">Sim</option>
                   </select>
                 </Field>
@@ -1192,7 +1192,7 @@ function PlataformaCotacoesNovaPageContent() {
                     onChange={(e) => setAplicarReembolsoRetorno(e.target.value === 'sim')}
                     className="input"
                   >
-                    <option value="nao">N├úo</option>
+                    <option value="nao">Não</option>
                     <option value="sim">Sim</option>
                   </select>
                 </Field>
@@ -1207,7 +1207,7 @@ function PlataformaCotacoesNovaPageContent() {
             </section>
 
             <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="text-lg font-semibold">Espera e di├íria extra</h2>
+              <h2 className="text-lg font-semibold">Espera e diária extra</h2>
 
               <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                 <Field label="Horas previstas de espera">
@@ -1222,24 +1222,24 @@ function PlataformaCotacoesNovaPageContent() {
                   />
                 </Field>
 
-                <Field label="Cobrar di├íria extra ap├│s 6h?">
+                <Field label="Cobrar diária extra após 6h?">
                   <select
                     value={cobraDiariaExtraApos6h ? 'sim' : 'nao'}
                     onChange={(e) => setCobraDiariaExtraApos6h(e.target.value === 'sim')}
                     className="input"
                   >
                     <option value="sim">Sim</option>
-                    <option value="nao">N├úo</option>
+                    <option value="nao">Não</option>
                   </select>
                 </Field>
 
                 <MoneyField
-                  label="Valor da di├íria extra"
+                  label="Valor da diária extra"
                   value={valorDiariaExtra}
                   onChange={setValorDiariaExtra}
                 />
 
-                <Field label="Quantidade de di├írias extras">
+                <Field label="Quantidade de diárias extras">
                   <input
                     type="number"
                     min="0"
@@ -1252,19 +1252,19 @@ function PlataformaCotacoesNovaPageContent() {
                 </Field>
 
                 <SummaryCard
-                  label="Total das di├írias extras"
+                  label="Total das diárias extras"
                   value={toMoney(diariasExtrasCalculadas)}
                 />
               </div>
 
               <div className="mt-4">
-                <Field label="Motivo da di├íria extra">
+                <Field label="Motivo da diária extra">
                   <textarea
                     value={motivoDiariaExtra}
                     onChange={(e) => setMotivoDiariaExtra(e.target.value)}
                     rows={3}
                     className="textarea"
-                    placeholder="Motivo da di├íria extra."
+                    placeholder="Motivo da diária extra."
                   />
                 </Field>
               </div>
@@ -1273,9 +1273,9 @@ function PlataformaCotacoesNovaPageContent() {
             <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
               <div className="flex items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-lg font-semibold">Despesas lan├º├íveis</h2>
+                  <h2 className="text-lg font-semibold">Despesas lançáveis</h2>
                   <p className="mt-1 text-sm text-slate-500">
-                    Lance v├írias despesas do mesmo tipo quantas vezes precisar para fechar motorista e cliente.
+                    Lance várias despesas do mesmo tipo quantas vezes precisar para fechar motorista e cliente.
                   </p>
                 </div>
 
@@ -1290,7 +1290,7 @@ function PlataformaCotacoesNovaPageContent() {
 
               {despesas.length === 0 ? (
                 <div className="mt-5 rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-600">
-                  Nenhuma despesa lan├ºada ainda.
+                  Nenhuma despesa lançada ainda.
                 </div>
               ) : (
                 <div className="mt-5 space-y-4">
@@ -1316,17 +1316,17 @@ function PlataformaCotacoesNovaPageContent() {
                             }
                             className="input"
                           >
-                            <option value="combustivel">Combust├¡vel</option>
-                            <option value="pedagio">Ped├ígio</option>
-                            <option value="alimentacao">Alimenta├º├úo</option>
+                            <option value="combustivel">Combustível</option>
+                            <option value="pedagio">Pedágio</option>
+                            <option value="alimentacao">Alimentação</option>
                             <option value="hospedagem">Hospedagem</option>
                             <option value="estacionamento">Estacionamento</option>
-                            <option value="manutencao">Manuten├º├úo</option>
+                            <option value="manutencao">Manutenção</option>
                             <option value="outros">Outros</option>
                           </select>
                         </Field>
 
-                        <Field label="Descri├º├úo">
+                        <Field label="Descrição">
                           <input
                             value={despesa.descricao}
                             onChange={(e) =>
@@ -1371,7 +1371,7 @@ function PlataformaCotacoesNovaPageContent() {
               )}
 
               <div className="mt-4">
-                <SummaryCard label="Total das despesas lan├ºadas" value={toMoney(totalDespesas)} />
+                <SummaryCard label="Total das despesas lançadas" value={toMoney(totalDespesas)} />
               </div>
             </section>
 
@@ -1385,14 +1385,14 @@ function PlataformaCotacoesNovaPageContent() {
                     onChange={(e) => setTipoPessoaCliente(e.target.value as TipoPessoa)}
                     className="input"
                   >
-                    <option value="juridica">Jur├¡dica</option>
-                    <option value="fisica">F├¡sica</option>
+                    <option value="juridica">Jurídica</option>
+                    <option value="fisica">Física</option>
                   </select>
                 </Field>
 
                 <Field
                   label={`${getDocumentoLabel(tipoPessoaCliente)} do cliente`}
-                  helper="Obrigat├│rio. Pode ser com ou sem m├íscara."
+                  helper="Obrigatório. Pode ser com ou sem máscara."
                 >
                   <input
                     value={documentoCliente}
@@ -1406,7 +1406,7 @@ function PlataformaCotacoesNovaPageContent() {
                   />
                 </Field>
 
-                <Field label="Inscri├º├úo Estadual (se houver)">
+                <Field label="Inscrição Estadual (se houver)">
                   <input
                     value={inscricaoEstadualCliente}
                     onChange={(e) => setInscricaoEstadualCliente(e.target.value)}
@@ -1415,7 +1415,7 @@ function PlataformaCotacoesNovaPageContent() {
                   />
                 </Field>
 
-                <Field label="Inscri├º├úo Municipal (se houver)">
+                <Field label="Inscrição Municipal (se houver)">
                   <input
                     value={inscricaoMunicipalCliente}
                     onChange={(e) => setInscricaoMunicipalCliente(e.target.value)}
@@ -1424,12 +1424,12 @@ function PlataformaCotacoesNovaPageContent() {
                   />
                 </Field>
 
-                <Field label="Endere├ºo do cliente">
+                <Field label="Endereço do cliente">
                   <input
                     value={enderecoCliente}
                     onChange={(e) => setEnderecoCliente(e.target.value)}
                     className="input"
-                    placeholder="Rua, n├║mero, complemento, bairro"
+                    placeholder="Rua, número, complemento, bairro"
                   />
                 </Field>
 
@@ -1469,12 +1469,12 @@ function PlataformaCotacoesNovaPageContent() {
                   />
                 </Field>
 
-                <Field label="Respons├ível financeiro">
+                <Field label="Responsável financeiro">
                   <input
                     value={responsavelFinanceiroCliente}
                     onChange={(e) => setResponsavelFinanceiroCliente(e.target.value)}
                     className="input"
-                    placeholder="Nome do respons├ível financeiro"
+                    placeholder="Nome do responsável financeiro"
                   />
                 </Field>
 
@@ -1488,12 +1488,12 @@ function PlataformaCotacoesNovaPageContent() {
                     }
                     className="input"
                   >
-                    <option value="por_servico">Por servi├ºo</option>
+                    <option value="por_servico">Por serviço</option>
                     <option value="mensal">Mensal</option>
                   </select>
                 </Field>
 
-                <Field label="Compet├¬ncia do faturamento">
+                <Field label="Competência do faturamento">
                   <input
                     value={competenciaFaturamento}
                     onChange={(e) => setCompetenciaFaturamento(e.target.value)}
@@ -1502,7 +1502,7 @@ function PlataformaCotacoesNovaPageContent() {
                   />
                 </Field>
 
-                <Field label="Per├¡odo de refer├¬ncia">
+                <Field label="Período de referência">
                   <input
                     value={periodoReferencia}
                     onChange={(e) => setPeriodoReferencia(e.target.value)}
@@ -1519,20 +1519,20 @@ function PlataformaCotacoesNovaPageContent() {
                     className="h-4 w-4"
                   />
                   <span className="text-sm text-slate-700">
-                    Agrupar esta cobran├ºa no fechamento mensal
+                    Agrupar esta cobrança no fechamento mensal
                   </span>
                 </label>
               </div>
             </section>
 
             <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="text-lg font-semibold">Cobran├ºa futura e dados do emitente</h2>
+              <h2 className="text-lg font-semibold">Cobrança futura e dados do emitente</h2>
               <p className="mt-1 text-sm text-slate-500">
-                Estes campos ficam preservados para a etapa posterior de cobran├ºa, sem serem exigidos agora.
+                Estes campos ficam preservados para a etapa posterior de cobrança, sem serem exigidos agora.
               </p>
 
               <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                <Field label="Tipo do documento de cobran├ºa futura">
+                <Field label="Tipo do documento de cobrança futura">
                   <select
                     value={tipoDocumentoCobranca}
                     onChange={(e) =>
@@ -1542,8 +1542,8 @@ function PlataformaCotacoesNovaPageContent() {
                     }
                     className="input"
                   >
-                    <option value="nota_debito">Nota de d├®bito</option>
-                    <option value="cobranca_interna">Cobran├ºa interna</option>
+                    <option value="nota_debito">Nota de débito</option>
+                    <option value="cobranca_interna">Cobrança interna</option>
                     <option value="proposta_comercial">Proposta comercial</option>
                   </select>
                 </Field>
@@ -1566,7 +1566,7 @@ function PlataformaCotacoesNovaPageContent() {
                   />
                 </Field>
 
-                <Field label="Data futura de emiss├úo">
+                <Field label="Data futura de emissão">
                   <input
                     type="date"
                     value={dataEmissaoDocumento}
@@ -1584,7 +1584,7 @@ function PlataformaCotacoesNovaPageContent() {
                   />
                 </Field>
 
-                <Field label="Nome / raz├úo social do emitente">
+                <Field label="Nome / razão social do emitente">
                   <input
                     value={emitenteNome}
                     onChange={(e) => setEmitenteNome(e.target.value)}
@@ -1602,7 +1602,7 @@ function PlataformaCotacoesNovaPageContent() {
                   />
                 </Field>
 
-                <Field label="Inscri├º├úo do emitente">
+                <Field label="Inscrição do emitente">
                   <input
                     value={emitenteInscricao}
                     onChange={(e) => setEmitenteInscricao(e.target.value)}
@@ -1611,12 +1611,12 @@ function PlataformaCotacoesNovaPageContent() {
                   />
                 </Field>
 
-                <Field label="Endere├ºo do emitente">
+                <Field label="Endereço do emitente">
                   <input
                     value={emitenteEndereco}
                     onChange={(e) => setEmitenteEndereco(e.target.value)}
                     className="input"
-                    placeholder="Rua, n├║mero, bairro, complemento"
+                    placeholder="Rua, número, bairro, complemento"
                   />
                 </Field>
 
@@ -1655,24 +1655,24 @@ function PlataformaCotacoesNovaPageContent() {
                     onChange={(e) => setEmitenteDadosPagamento(e.target.value)}
                     rows={3}
                     className="textarea"
-                    placeholder="PIX, banco, ag├¬ncia, conta, instru├º├Áes de pagamento."
+                    placeholder="PIX, banco, agência, conta, instruções de pagamento."
                   />
                 </Field>
 
-                <Field label="Observa├º├Áes financeiras da cobran├ºa futura">
+                <Field label="Observações financeiras da cobrança futura">
                   <textarea
                     value={observacoesFinanceiras}
                     onChange={(e) => setObservacoesFinanceiras(e.target.value)}
                     rows={3}
                     className="textarea"
-                    placeholder="Condi├º├Áes de pagamento, juros, multa, observa├º├Áes."
+                    placeholder="Condições de pagamento, juros, multa, observações."
                   />
                 </Field>
               </div>
             </section>
 
             <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="text-lg font-semibold">Controle estrat├®gico da decis├úo</h2>
+              <h2 className="text-lg font-semibold">Controle estratégico da decisão</h2>
 
               <div className="mt-5 grid gap-4 md:grid-cols-2">
                 <label className="flex items-start gap-3 rounded-2xl border border-slate-200 p-4">
@@ -1683,7 +1683,7 @@ function PlataformaCotacoesNovaPageContent() {
                     className="mt-1 h-4 w-4"
                   />
                   <span className="text-sm text-slate-700">
-                    Confirmar que esta cota├º├úo entrou no fluxo formal e precisa retornar como
+                    Confirmar que esta cotação entrou no fluxo formal e precisa retornar como
                     <strong> aceita </strong>ou<strong> recusada</strong>.
                   </span>
                 </label>
@@ -1696,7 +1696,7 @@ function PlataformaCotacoesNovaPageContent() {
                     className="mt-1 h-4 w-4"
                   />
                   <span className="text-sm text-slate-700">
-                    Marcar como vis├¡vel para motorista quando a opera├º├úo j├í puder avan├ºar.
+                    Marcar como visível para motorista quando a operação já puder avançar.
                   </span>
                 </label>
 
@@ -1708,31 +1708,31 @@ function PlataformaCotacoesNovaPageContent() {
                     className="mt-1 h-4 w-4"
                   />
                   <span className="text-sm text-slate-700">
-                    Marcar como pronto para virar servi├ºo assim que o cliente aceitar.
-                    O v├¡nculo obrigat├│rio com motorista s├│ ficar├í completo quando a cota├º├úo
+                    Marcar como pronto para virar serviço assim que o cliente aceitar.
+                    O vínculo obrigatório com motorista só ficará completo quando a cotação
                     estiver <strong>aceita</strong> e com <strong>motorista preenchido</strong>.
                   </span>
                 </label>
               </div>
 
               <div className="mt-4 grid gap-4">
-                <Field label="Observa├º├Áes para o cliente">
+                <Field label="Observações para o cliente">
                   <textarea
                     value={observacoesCliente}
                     onChange={(e) => setObservacoesCliente(e.target.value)}
                     rows={3}
                     className="textarea"
-                    placeholder="Texto comercial, condi├º├Áes, aviso de prazo, validade da proposta."
+                    placeholder="Texto comercial, condições, aviso de prazo, validade da proposta."
                   />
                 </Field>
 
-                <Field label="Observa├º├Áes internas">
+                <Field label="Observações internas">
                   <textarea
                     value={observacoesInternas}
                     onChange={(e) => setObservacoesInternas(e.target.value)}
                     rows={4}
                     className="textarea"
-                    placeholder="Anota├º├Áes internas, multas, hist├│rico, estrat├®gia."
+                    placeholder="Anotações internas, multas, histórico, estratégia."
                   />
                 </Field>
               </div>
@@ -1744,7 +1744,7 @@ function PlataformaCotacoesNovaPageContent() {
               <h2 className="text-lg font-semibold">Resumo premium</h2>
 
               <div className="mt-5 space-y-3">
-                <SummaryRow label="Opera├º├úo" value={tipoOperacaoLabel(tipoOperacao)} />
+                <SummaryRow label="Operação" value={tipoOperacaoLabel(tipoOperacao)} />
                 <SummaryRow
                   label="Quantidade"
                   value={`${quantidadeFinal} ${unidadeQuantidade || 'unidade'}`}
@@ -1754,14 +1754,14 @@ function PlataformaCotacoesNovaPageContent() {
                 <SummaryRow label="Total ida" value={toMoney(totalOperacionalIda)} />
                 <SummaryRow label="Total retorno" value={toMoney(totalOperacionalRetorno)} />
                 <SummaryRow label="Total operacional" value={toMoney(totalOperacional)} />
-                <SummaryRow label="Despesas lan├ºadas" value={toMoney(totalDespesas)} />
-                <SummaryRow label="Di├írias extras" value={toMoney(diariasExtrasCalculadas)} />
+                <SummaryRow label="Despesas lançadas" value={toMoney(totalDespesas)} />
+                <SummaryRow label="Diárias extras" value={toMoney(diariasExtrasCalculadas)} />
                 <SummaryRow label="Total base cliente" value={toMoney(valorTotalClienteBase)} />
                 <SummaryRow label="Total base motorista" value={toMoney(valorTotalMotorista)} />
                 <SummaryRow label="Subtotal custos" value={toMoney(subtotalCustos)} />
-                <SummaryRow label="Acr├®scimo urgente" value={toMoney(acrescimoUrgente)} />
-                <SummaryRow label="Acr├®scimo emergencial" value={toMoney(acrescimoEmergencial)} />
-                <SummaryRow label="Total da cota├º├úo" value={toMoney(valorCobradoCliente)} strong />
+                <SummaryRow label="Acréscimo urgente" value={toMoney(acrescimoUrgente)} />
+                <SummaryRow label="Acréscimo emergencial" value={toMoney(acrescimoEmergencial)} />
+                <SummaryRow label="Total da cotação" value={toMoney(valorCobradoCliente)} strong />
                 <SummaryRow label="Margem bruta" value={toMoney(margemBruta)} strong />
               </div>
 
@@ -1769,14 +1769,14 @@ function PlataformaCotacoesNovaPageContent() {
                 <p className="font-semibold text-slate-900">Leitura operacional</p>
                 <p className="mt-2">
                   {podeVincularServico
-                    ? 'Esta cota├º├úo j├í est├í pronta para virar servi├ºo com v├¡nculo obrigat├│rio ao motorista.'
-                    : 'Para virar servi├ºo com seguran├ºa: status deve ser aceita, motorista preenchido e op├º├úo pronta para vincular marcada.'}
+                    ? 'Esta cotação já está pronta para virar serviço com vínculo obrigatório ao motorista.'
+                    : 'Para virar serviço com segurança: status deve ser aceita, motorista preenchido e opção pronta para vincular marcada.'}
                 </p>
               </div>
             </section>
 
             <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="text-lg font-semibold">A├º├Áes</h2>
+              <h2 className="text-lg font-semibold">Ações</h2>
 
               <div className="mt-5 grid gap-3">
                 <button
@@ -1784,7 +1784,7 @@ function PlataformaCotacoesNovaPageContent() {
                   onClick={salvarCotacao}
                   className="rounded-2xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:opacity-90"
                 >
-                  Salvar cota├º├úo isolada
+                  Salvar cotação isolada
                 </button>
 
                 <button
@@ -1792,7 +1792,7 @@ function PlataformaCotacoesNovaPageContent() {
                   onClick={limparFormulario}
                   className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
                 >
-                  Limpar formul├írio
+                  Limpar formulário
                 </button>
               </div>
             </section>
@@ -1844,19 +1844,19 @@ export default function PlataformaCotacoesNovaPage() {
           <div className="mx-auto flex min-h-screen w-full max-w-7xl items-center justify-center px-4 py-10 md:px-6 lg:px-8">
             <div className="w-full max-w-2xl rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm">
               <span className="inline-flex rounded-full bg-cyan-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">
-                Aurora Motoristas ÔÇó Cota├º├úo isolada
+                Aurora Motoristas • Cotação isolada
               </span>
 
               <h1 className="mt-4 text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
-                Carregando cota├º├úo estrat├®gica
+                Carregando cotação estratégica
               </h1>
 
               <p className="mt-3 text-sm text-slate-600 md:text-base">
-                Estamos preparando a p├ígina isolada da cota├º├úo sem interferir na plataforma principal.
+                Estamos preparando a página isolada da cotação sem interferir na plataforma principal.
               </p>
 
               <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-                Sistema em constante atualiza├º├úo. Esta camada nova foi criada para agregar valor sem mexer na plataforma j├í em produ├º├úo.
+                Sistema em constante atualização. Esta camada nova foi criada para agregar valor sem mexer na plataforma já em produção.
               </div>
             </div>
           </div>

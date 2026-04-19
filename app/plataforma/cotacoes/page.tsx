@@ -498,7 +498,7 @@ export default function PlataformaCotacoesPage() {
                 Voltar à plataforma
               </Link>
               <Link
-                href="/plataforma/cotacoes/nova"
+                href="/plataforma/cotacoes/novo"
                 className="rounded-2xl border border-slate-900 bg-slate-900 px-4 py-3 text-center text-sm font-semibold text-white transition hover:opacity-90"
               >
                 Nova cotação
@@ -677,7 +677,7 @@ export default function PlataformaCotacoesPage() {
               </p>
               <div className="mt-5">
                 <Link
-                  href="/plataforma/cotacoes/nova"
+                  href="/plataforma/cotacoes/novo"
                   className="inline-flex rounded-2xl border border-slate-900 bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:opacity-90"
                 >
                   Criar nova cotação

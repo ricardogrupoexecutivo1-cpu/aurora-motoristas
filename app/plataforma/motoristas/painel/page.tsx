@@ -1,300 +1,569 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
-type PerfilTipo = "motorista" | "operadora" | "admin";
-
-type SessaoLocal = {
-  perfil: PerfilTipo;
-  empresa: string;
-  atualizadoEm?: string;
+type MotoristaResumo = {
+  titulo: string;
+  descricao: string;
 };
 
-const STORAGE_KEY = "aurora_motoristas_plataforma_sessao_local";
+type StatusMotorista = "pendente" | "ativo" | "bloqueado";
 
-const LABELS: Record<PerfilTipo, string> = {
-  motorista: "Motorista interno",
-  operadora: "Operadora externa",
-  admin: "Admin master",
+type AcaoMotorista = "autorizar" | "bloquear" | "inativar";
+
+type MotoristaApiRaw = Record<string, unknown>;
+
+type MotoristaPainel = {
+  id: string;
+  nome: string;
+  telefone: string;
+  cidade: string;
+  status: StatusMotorista;
+  origem: "api" | "mock";
 };
 
-const DESCRICOES: Record<PerfilTipo, string> = {
-  motorista:
-    "Leitura individual e restrita. O motorista vê apenas a própria operação autorizada e não acessa base completa, inteligência comercial ou relatórios estratégicos.",
-  operadora:
-    "Leitura segregada por empresa. A operadora externa atua apenas dentro da própria estrutura aprovada, sem qualquer acesso à base interna master.",
-  admin:
-    "Visão de governança protegida. A administração master controla segregação, liberação, auditoria e blindagem da rede interna de motoristas.",
-};
+const cardsResumo: MotoristaResumo[] = [
+  {
+    titulo: "Base protegida",
+    descricao:
+      "A base interna de motoristas permanece sob controle administrativo, com separação clara entre operação, triagem e uso da plataforma.",
+  },
+  {
+    titulo: "Leitura rápida",
+    descricao:
+      "Esta página foi criada como camada segura de navegação para evitar quebrar fluxos já em produção enquanto evoluímos o restante do sistema.",
+  },
+  {
+    titulo: "Expansão controlada",
+    descricao:
+      "A partir daqui podemos ligar novas funções, relatórios, filtros e ações administrativas sem mexer nas páginas antigas.",
+  },
+];
 
-const ALERTAS: Record<PerfilTipo, string> = {
-  motorista:
-    "Você não pode visualizar outros motoristas, base consolidada ou relatórios administrativos.",
-  operadora:
-    "Você não pode pesquisar, listar, exportar ou sugerir motoristas da base interna master.",
-  admin:
-    "Sua visão é administrativa e protegida. Mesmo com acesso amplo, a plataforma deve preservar segregação e trilha de governança.",
-};
+const motoristasMockBase: MotoristaPainel[] = [
+  {
+    id: "mock-1",
+    nome: "João da Silva",
+    telefone: "(31) 99999-1111",
+    cidade: "Belo Horizonte • MG",
+    status: "pendente",
+    origem: "mock",
+  },
+  {
+    id: "mock-2",
+    nome: "Carlos Mendes",
+    telefone: "(31) 98888-2222",
+    cidade: "Parauapebas • PA",
+    status: "ativo",
+    origem: "mock",
+  },
+  {
+    id: "mock-3",
+    nome: "Marcos Pereira",
+    telefone: "(31) 97777-3333",
+    cidade: "Contagem • MG",
+    status: "bloqueado",
+    origem: "mock",
+  },
+];
 
-const CARDS: Record<
-  PerfilTipo,
-  Array<{
-    titulo: string;
-    valor: string;
-    descricao: string;
-  }>
-> = {
-  motorista: [
-    {
-      titulo: "Serviços visíveis",
-      valor: "Somente os seus",
-      descricao:
-        "A visão do motorista é individual. Nada de base completa ou leitura de colegas.",
-    },
-    {
-      titulo: "Base de motoristas",
-      valor: "Bloqueada",
-      descricao:
-        "Lista completa, busca ampla e leitura consolidada permanecem protegidas.",
-    },
-    {
-      titulo: "Histórico após pagamento",
-      valor: "Oculto da sua visão",
-      descricao:
-        "Após baixa final, o serviço sai da visão do motorista e permanece apenas no histórico interno protegido.",
-    },
-  ],
-  operadora: [
-    {
-      titulo: "Estrutura liberada",
-      valor: "Somente a própria",
-      descricao:
-        "A operadora externa só trabalha com a base vinculada à própria empresa aprovada.",
-    },
-    {
-      titulo: "Base interna master",
-      valor: "Inacessível",
-      descricao:
-        "A rede principal de motoristas não pode ser listada, pesquisada, exportada ou sugerida.",
-    },
-    {
-      titulo: "Relatórios estratégicos",
-      valor: "Bloqueados",
-      descricao:
-        "Sem margens globais, inteligência comercial, contatos internos ou visão consolidada da operação principal.",
-    },
-  ],
-  admin: [
-    {
-      titulo: "Governança",
-      valor: "Ativa",
-      descricao:
-        "Controle total da política de acesso, segregação por empresa e proteção da rede interna.",
-    },
-    {
-      titulo: "Auditoria",
-      valor: "Protegida",
-      descricao:
-        "A administração acompanha regras, acessos, histórico e blindagem sem expor o ativo principal a terceiros.",
-    },
-    {
-      titulo: "Segregação",
-      valor: "Obrigatória",
-      descricao:
-        "Mesmo na visão master, cada camada deve respeitar empresa, papel, escopo e necessidade de leitura.",
-    },
-  ],
-};
+function getStatusClasses(status: StatusMotorista) {
+  if (status === "ativo") {
+    return "border-emerald-200 bg-emerald-50 text-emerald-700";
+  }
 
-const REGRAS: Record<PerfilTipo, string[]> = {
-  motorista: [
-    "Ver apenas os próprios serviços autorizados.",
-    "Não enxergar outros motoristas da rede.",
-    "Não acessar relatórios estratégicos.",
-    "Não acessar margens ou visão consolidada.",
-    "Perder a visualização do serviço após pagamento ou baixa final.",
-  ],
-  operadora: [
-    "Usar somente a própria base vinculada à própria empresa.",
-    "Nunca acessar a base interna master.",
-    "Não pesquisar, exportar, listar ou sugerir motoristas internos.",
-    "Não acessar histórico interno da operação principal.",
-    "Depender de autorização formal e plano ativo.",
-  ],
-  admin: [
-    "Controlar segregação rígida por empresa.",
-    "Liberar ou bloquear estruturas e perfis.",
-    "Proteger a base interna de motoristas.",
-    "Auditar leitura, histórico e regras de exposição.",
-    "Impedir aproveitamento comercial da rede interna por terceiros.",
-  ],
-};
+  if (status === "bloqueado") {
+    return "border-red-200 bg-red-50 text-red-700";
+  }
 
-const ACOES: Record<
-  PerfilTipo,
-  Array<{
-    titulo: string;
-    texto: string;
-  }>
-> = {
-  motorista: [
-    {
-      titulo: "Área operacional individual",
-      texto:
-        "Acesso apenas à própria jornada de trabalho, sem navegação pela base completa.",
-    },
-    {
-      titulo: "Serviços dentro da janela permitida",
-      texto:
-        "Somente serviços autorizados e ainda visíveis operacionalmente permanecem na sua leitura.",
-    },
-    {
-      titulo: "Histórico protegido",
-      texto:
-        "Após pagamento, o registro continua existindo internamente, mas fora da visão do motorista.",
-    },
-  ],
-  operadora: [
-    {
-      titulo: "Operação por empresa",
-      texto:
-        "Sua empresa atua apenas dentro da própria estrutura aprovada e segregada.",
-    },
-    {
-      titulo: "Sem aproveitamento da rede interna",
-      texto:
-        "A plataforma não entrega contatos, listas, histórico nem base estratégica da operação principal.",
-    },
-    {
-      titulo: "Plano e autorização",
-      texto:
-        "A permanência da operadora externa depende de regras comerciais e governança válidas.",
-    },
-  ],
-  admin: [
-    {
-      titulo: "Controle central",
-      texto:
-        "A administração master audita, corrige, libera e bloqueia com trilha de governança.",
-    },
-    {
-      titulo: "Blindagem da base",
-      texto:
-        "A rede interna é ativo estratégico e deve permanecer protegida em caráter permanente.",
-    },
-    {
-      titulo: "Escala com segurança",
-      texto:
-        "A plataforma pode crescer por camadas sem quebrar produção e sem expor a estrutura principal.",
-    },
-  ],
-};
-
-function perfilValido(valor: unknown): valor is PerfilTipo {
-  return valor === "motorista" || valor === "operadora" || valor === "admin";
+  return "border-amber-200 bg-amber-50 text-amber-700";
 }
 
-function corPerfil(perfil: PerfilTipo) {
-  if (perfil === "motorista") {
-    return {
-      badge: "border-emerald-200 bg-emerald-50 text-emerald-700",
-      caixa: "from-emerald-900 via-emerald-800 to-cyan-900",
-      destaque: "border-emerald-100 bg-emerald-50 text-emerald-900",
-      botao: "bg-emerald-600 hover:bg-emerald-700",
-    };
+function getStatusLabel(status: StatusMotorista) {
+  if (status === "ativo") return "ativo";
+  if (status === "bloqueado") return "bloqueado";
+  return "pendente";
+}
+
+function safeParseJson(value: string | null) {
+  if (!value) return null;
+
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
+}
+
+function hasAdminAccessInObject(value: unknown): boolean {
+  if (!value || typeof value !== "object") return false;
+
+  const record = value as Record<string, unknown>;
+
+  const candidateStrings = [
+    record.role,
+    record.papel,
+    record.perfil,
+    record.tipo,
+    record.nivel,
+    record.accessLevel,
+    record.userRole,
+    record.email,
+    record.login,
+  ]
+    .filter((item): item is string => typeof item === "string")
+    .map((item) => item.toLowerCase().trim());
+
+  const adminTerms = [
+    "admin",
+    "admin_master",
+    "administrador",
+    "master",
+    "gestor",
+    "gestao",
+  ];
+
+  const hasAdminTerm = candidateStrings.some((valueItem) =>
+    adminTerms.some((term) => valueItem.includes(term)),
+  );
+
+  const hasKnownAdminEmail = candidateStrings.some(
+    (valueItem) => valueItem === "ricardogrupoexecutivo1@gmail.com",
+  );
+
+  return hasAdminTerm || hasKnownAdminEmail;
+}
+
+function hasAdminAccessFromStorage(): boolean {
+  if (typeof window === "undefined") return false;
+
+  const directBooleanKeys = [
+    "aurora_motoristas_admin",
+    "admin_master",
+    "is_admin",
+    "isAdmin",
+    "user_is_admin",
+  ];
+
+  for (const key of directBooleanKeys) {
+    const value = window.localStorage.getItem(key);
+
+    if (!value) continue;
+
+    const normalized = value.toLowerCase().trim();
+
+    if (normalized === "true" || normalized === "1" || normalized === "yes") {
+      return true;
+    }
   }
 
-  if (perfil === "operadora") {
-    return {
-      badge: "border-amber-200 bg-amber-50 text-amber-700",
-      caixa: "from-amber-900 via-orange-800 to-slate-900",
-      destaque: "border-amber-100 bg-amber-50 text-amber-900",
-      botao: "bg-amber-600 hover:bg-amber-700",
-    };
+  const jsonKeys = [
+    "aurora_motoristas_session",
+    "aurora_motoristas_user",
+    "aurora_session",
+    "sessao_local",
+    "session",
+    "user",
+    "usuario",
+    "perfil",
+    "auth_user",
+  ];
+
+  for (const key of jsonKeys) {
+    const parsed = safeParseJson(window.localStorage.getItem(key));
+
+    if (hasAdminAccessInObject(parsed)) {
+      return true;
+    }
   }
+
+  for (let index = 0; index < window.localStorage.length; index += 1) {
+    const key = window.localStorage.key(index);
+
+    if (!key) continue;
+
+    const rawValue = window.localStorage.getItem(key);
+    const parsed = safeParseJson(rawValue);
+
+    if (hasAdminAccessInObject(parsed)) {
+      return true;
+    }
+
+    const normalizedRaw = (rawValue || "").toLowerCase();
+
+    if (
+      normalizedRaw.includes("ricardogrupoexecutivo1@gmail.com") &&
+      (normalizedRaw.includes("admin") ||
+        normalizedRaw.includes("administrador") ||
+        normalizedRaw.includes("admin_master"))
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function firstString(...values: unknown[]): string {
+  for (const value of values) {
+    if (typeof value === "string" && value.trim()) {
+      return value.trim();
+    }
+  }
+
+  return "";
+}
+
+function normalizeStatus(value: unknown): StatusMotorista {
+  if (typeof value !== "string") {
+    return "pendente";
+  }
+
+  const normalized = value.toLowerCase().trim();
+
+  if (
+    normalized.includes("ativo") ||
+    normalized.includes("aprovado") ||
+    normalized.includes("autorizado") ||
+    normalized === "active"
+  ) {
+    return "ativo";
+  }
+
+  if (
+    normalized.includes("bloqueado") ||
+    normalized.includes("inativo") ||
+    normalized.includes("suspenso") ||
+    normalized === "blocked"
+  ) {
+    return "bloqueado";
+  }
+
+  return "pendente";
+}
+
+function mapMotoristaApiItem(
+  item: MotoristaApiRaw,
+  index: number,
+): MotoristaPainel {
+  const nome = firstString(
+    item.nome,
+    item.name,
+    item.nome_completo,
+    item.motorista_nome,
+    item.full_name,
+  );
+
+  const telefone = firstString(
+    item.telefone,
+    item.phone,
+    item.whatsapp,
+    item.celular,
+    item.fone,
+  );
+
+  const cidade = firstString(item.cidade, item.city);
+  const estado = firstString(item.estado, item.uf, item.state);
+
+  const cidadeFinal =
+    cidade && estado
+      ? `${cidade} • ${estado}`
+      : cidade || estado || "Cidade não informada";
+
+  const status = normalizeStatus(
+    item.status ?? item.situacao ?? item.aprovacao ?? item.state,
+  );
+
+  const idValue =
+    typeof item.id === "string" || typeof item.id === "number"
+      ? String(item.id)
+      : `api-${index}`;
 
   return {
-    badge: "border-cyan-200 bg-cyan-50 text-cyan-700",
-    caixa: "from-slate-900 via-cyan-900 to-blue-900",
-    destaque: "border-cyan-100 bg-cyan-50 text-cyan-900",
-    botao: "bg-cyan-600 hover:bg-cyan-700",
+    id: idValue,
+    nome: nome || `Motorista ${index + 1}`,
+    telefone: telefone || "Telefone não informado",
+    cidade: cidadeFinal,
+    status,
+    origem: "api",
   };
 }
 
-function formatarData(valor?: string) {
-  if (!valor) return "Sem registro de atualização";
+function extractMotoristasFromPayload(payload: unknown): MotoristaPainel[] {
+  if (Array.isArray(payload)) {
+    return payload
+      .filter(
+        (item): item is MotoristaApiRaw =>
+          Boolean(item) && typeof item === "object",
+      )
+      .map(mapMotoristaApiItem);
+  }
 
-  const data = new Date(valor);
+  if (payload && typeof payload === "object") {
+    const record = payload as Record<string, unknown>;
 
-  if (Number.isNaN(data.getTime())) return "Sem registro de atualização";
+    const candidateArrays = [
+      record.data,
+      record.items,
+      record.motoristas,
+      record.results,
+      record.rows,
+    ];
 
-  return new Intl.DateTimeFormat("pt-BR", {
-    dateStyle: "short",
-    timeStyle: "medium",
-  }).format(data);
+    for (const candidate of candidateArrays) {
+      if (Array.isArray(candidate)) {
+        return candidate
+          .filter(
+            (item): item is MotoristaApiRaw =>
+              Boolean(item) && typeof item === "object",
+          )
+          .map(mapMotoristaApiItem);
+      }
+    }
+  }
+
+  return [];
+}
+
+function getActionButtonClass(action: AcaoMotorista) {
+  if (action === "autorizar") {
+    return "bg-emerald-600 hover:bg-emerald-700";
+  }
+
+  if (action === "bloquear") {
+    return "bg-red-600 hover:bg-red-700";
+  }
+
+  return "bg-amber-500 hover:bg-amber-600";
+}
+
+function getStatusFromAction(action: AcaoMotorista): StatusMotorista {
+  if (action === "autorizar") return "ativo";
+  if (action === "bloquear") return "bloqueado";
+  return "pendente";
+}
+
+function getActionLabel(action: AcaoMotorista) {
+  if (action === "autorizar") return "Autorizar";
+  if (action === "bloquear") return "Bloquear";
+  return "Inativar";
 }
 
 export default function PlataformaMotoristasPainelPage() {
-  const [perfil, setPerfil] = useState<PerfilTipo>("motorista");
-  const [empresa, setEmpresa] = useState("Base Interna");
-  const [atualizadoEm, setAtualizadoEm] = useState<string>("");
-  const [carregado, setCarregado] = useState(false);
+  const router = useRouter();
+
+  const [checkingAccess, setCheckingAccess] = useState(true);
+  const [authorized, setAuthorized] = useState(false);
+
+  const [motoristas, setMotoristas] =
+    useState<MotoristaPainel[]>(motoristasMockBase);
+  const [carregandoMotoristas, setCarregandoMotoristas] = useState(true);
+  const [origemLista, setOrigemLista] = useState<"api" | "mock">("mock");
+  const [mensagemBase, setMensagemBase] = useState(
+    "Preparando leitura da base administrativa...",
+  );
+  const [mensagemAcao, setMensagemAcao] = useState("");
+  const [salvandoId, setSalvandoId] = useState<string | null>(null);
 
   useEffect(() => {
-    try {
-      const bruto = window.localStorage.getItem(STORAGE_KEY);
+    const allowed = hasAdminAccessFromStorage();
 
-      if (bruto) {
-        const parsed = JSON.parse(bruto) as Partial<SessaoLocal>;
+    if (!allowed) {
+      router.replace("/acesso-negado");
+      return;
+    }
 
-        if (perfilValido(parsed?.perfil)) {
-          setPerfil(parsed.perfil);
+    setAuthorized(true);
+    setCheckingAccess(false);
+  }, [router]);
+
+  useEffect(() => {
+    if (!authorized) return;
+
+    let cancelled = false;
+
+    async function carregarMotoristas() {
+      setCarregandoMotoristas(true);
+
+      try {
+        const response = await fetch("/api/motoristas", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          cache: "no-store",
+        });
+
+        if (!response.ok) {
+          throw new Error(`Falha ao ler /api/motoristas (${response.status})`);
         }
 
-        if (typeof parsed?.empresa === "string" && parsed.empresa.trim()) {
-          setEmpresa(parsed.empresa.trim());
-        }
+        const payload = (await response.json()) as unknown;
+        const motoristasApi = extractMotoristasFromPayload(payload);
 
-        if (
-          typeof parsed?.atualizadoEm === "string" &&
-          parsed.atualizadoEm.trim()
-        ) {
-          setAtualizadoEm(parsed.atualizadoEm);
+        if (!cancelled) {
+          if (motoristasApi.length > 0) {
+            setMotoristas(motoristasApi);
+            setOrigemLista("api");
+            setMensagemBase("Base real carregada com sucesso pela API.");
+          } else {
+            setMotoristas(motoristasMockBase);
+            setOrigemLista("mock");
+            setMensagemBase(
+              "A API respondeu, mas sem motoristas utilizáveis. Mantido fallback mock com segurança.",
+            );
+          }
+        }
+      } catch {
+        if (!cancelled) {
+          setMotoristas(motoristasMockBase);
+          setOrigemLista("mock");
+          setMensagemBase(
+            "Não foi possível ler a base real agora. Mantido fallback mock sem quebrar a operação.",
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setCarregandoMotoristas(false);
         }
       }
-    } catch (error) {
-      console.error("Erro ao ler sessão local do painel:", error);
-    } finally {
-      setCarregado(true);
     }
-  }, []);
 
-  const cores = corPerfil(perfil);
+    carregarMotoristas();
 
-  const infoSessao = useMemo(
-    () => ({
-      perfil: LABELS[perfil],
-      empresa,
-      atualizadoEm: formatarData(atualizadoEm),
-    }),
-    [perfil, empresa, atualizadoEm]
-  );
+    return () => {
+      cancelled = true;
+    };
+  }, [authorized]);
 
-  if (!carregado) {
+  const resumoAcesso = useMemo(() => {
+    if (checkingAccess) {
+      return "Validando acesso administrativo...";
+    }
+
+    if (authorized) {
+      return "Acesso administrativo validado.";
+    }
+
+    return "Acesso não autorizado.";
+  }, [authorized, checkingAccess]);
+
+  const totais = useMemo(() => {
+    const pendentes = motoristas.filter(
+      (item) => item.status === "pendente",
+    ).length;
+    const ativos = motoristas.filter((item) => item.status === "ativo").length;
+    const bloqueados = motoristas.filter(
+      (item) => item.status === "bloqueado",
+    ).length;
+
+    return {
+      total: motoristas.length,
+      pendentes,
+      ativos,
+      bloqueados,
+    };
+  }, [motoristas]);
+
+  async function handleSalvarStatus(
+    motorista: MotoristaPainel,
+    action: AcaoMotorista,
+  ) {
+    if (motorista.origem !== "api") {
+      setMensagemAcao(
+        `O motorista "${motorista.nome}" está em fallback mock. A gravação real só acontece com itens vindos da API.`,
+      );
+      return;
+    }
+
+    const novoStatus = getStatusFromAction(action);
+    const statusAnterior = motorista.status;
+
+    setSalvandoId(motorista.id);
+    setMensagemAcao(
+      `Salvando "${getActionLabel(action)}" para ${motorista.nome}...`,
+    );
+
+    setMotoristas((current) =>
+      current.map((item) =>
+        item.id === motorista.id ? { ...item, status: novoStatus } : item,
+      ),
+    );
+
+    try {
+      const response = await fetch(`/api/motoristas/${motorista.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: novoStatus,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Falha ao salvar (${response.status})`);
+      }
+
+      setMensagemAcao(
+        `Status de ${motorista.nome} atualizado com sucesso para "${getStatusLabel(
+          novoStatus,
+        )}".`,
+      );
+    } catch {
+      setMotoristas((current) =>
+        current.map((item) =>
+          item.id === motorista.id ? { ...item, status: statusAnterior } : item,
+        ),
+      );
+
+      setMensagemAcao(
+        `Não foi possível salvar o status de ${motorista.nome} na API ainda. A interface voltou ao estado anterior com segurança.`,
+      );
+    } finally {
+      setSalvandoId(null);
+    }
+  }
+
+  if (checkingAccess || !authorized) {
     return (
       <main className="min-h-screen bg-slate-50 text-slate-900">
-        <section className="mx-auto flex min-h-screen max-w-7xl items-center justify-center px-6 py-12 md:px-8">
-          <div className="w-full max-w-2xl rounded-[2rem] border border-slate-200 bg-white p-8 text-center shadow-sm">
-            <span className="inline-flex rounded-full border border-cyan-200 bg-cyan-50 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">
-              Aurora Motoristas • Sessão automática
-            </span>
-            <h1 className="mt-4 text-3xl font-bold text-slate-900">
-              Carregando painel por perfil
+        <section className="mx-auto flex min-h-screen w-full max-w-3xl items-center justify-center px-4 py-10">
+          <div className="w-full rounded-3xl border border-slate-200 bg-white p-6 text-center shadow-sm sm:p-8">
+            <div className="inline-flex rounded-full border border-cyan-200 bg-cyan-50 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">
+              Aurora Motoristas • Área administrativa
+            </div>
+
+            <h1 className="mt-4 text-2xl font-bold text-slate-900 sm:text-3xl">
+              Verificando permissão
             </h1>
-            <p className="mt-4 text-sm leading-7 text-slate-600">
-              Estamos lendo a sessão local salva nesta camada isolada para abrir
-              o painel correto sem tocar na produção publicada.
+
+            <p className="mt-3 text-sm leading-6 text-slate-600 sm:text-base">
+              Esta área é restrita ao administrador. Estamos validando a sessão
+              local antes de liberar o painel.
             </p>
+
+            <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+              {resumoAcesso}
+            </div>
+
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+              <Link
+                href="/plataforma"
+                className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+              >
+                Voltar à plataforma
+              </Link>
+
+              <Link
+                href="/acesso-negado"
+                className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+              >
+                Ir para acesso negado
+              </Link>
+            </div>
           </div>
         </section>
       </main>
@@ -303,242 +572,296 @@ export default function PlataformaMotoristasPainelPage() {
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
-      <section className="border-b border-slate-200 bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-12 md:px-8">
-          <div className="flex flex-wrap items-center gap-3 text-sm">
-            <a
-              href="/plataforma"
-              className="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-2 font-medium text-slate-700 transition hover:border-cyan-300 hover:text-cyan-700"
-            >
-              Voltar para Plataforma
-            </a>
+      <section className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8">
+        <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+          <div className="border-b border-slate-100 px-5 py-4 sm:px-6">
+            <div className="flex flex-wrap items-center gap-3 text-sm">
+              <Link
+                href="/plataforma"
+                className="inline-flex items-center rounded-full border border-slate-200 px-3 py-1.5 font-medium text-slate-700 transition hover:bg-slate-100"
+              >
+                Voltar à plataforma
+              </Link>
 
-            <a
-              href="/plataforma/acessos"
-              className="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-2 font-medium text-slate-700 transition hover:border-cyan-300 hover:text-cyan-700"
-            >
-              Central de acessos
-            </a>
+              <Link
+                href="/plataforma/motoristas"
+                className="inline-flex items-center rounded-full border border-slate-200 px-3 py-1.5 font-medium text-slate-700 transition hover:bg-slate-100"
+              >
+                Ver motoristas
+              </Link>
 
-            <a
-              href="/plataforma/sessao-local"
-              className="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-2 font-medium text-slate-700 transition hover:border-cyan-300 hover:text-cyan-700"
-            >
-              Alterar sessão
-            </a>
+              <Link
+                href="/quero-ser-motorista"
+                className="inline-flex items-center rounded-full border border-slate-200 px-3 py-1.5 font-medium text-slate-700 transition hover:bg-slate-100"
+              >
+                Cadastro público
+              </Link>
+            </div>
           </div>
 
-          <div className="mt-8 grid gap-8 lg:grid-cols-[1.2fr,0.8fr]">
-            <div>
-              <span
-                className={`inline-flex rounded-full border px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] ${cores.badge}`}
-              >
-                Painel por perfil • Sessão automática
-              </span>
-
-              <h1 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 md:text-5xl">
-                {LABELS[perfil]}
-              </h1>
-
-              <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600 md:text-lg">
-                {DESCRICOES[perfil]}
-              </p>
-
-              <div className="mt-6 flex flex-wrap gap-3">
-                <a
-                  href="/plataforma/sessao-local"
-                  className="inline-flex items-center rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100"
-                >
-                  Alterar sessão salva
-                </a>
-
-                <a
-                  href="/plataforma/motoristas"
-                  className="inline-flex items-center rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100"
-                >
-                  Ver blindagem
-                </a>
+          <div className="px-5 py-6 sm:px-6 sm:py-8">
+            <div className="flex flex-col gap-4">
+              <div className="inline-flex w-fit items-center rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700">
+                Aurora Motoristas • Painel isolado
               </div>
-            </div>
 
-            <div
-              className={`rounded-3xl bg-gradient-to-br p-6 text-white shadow-sm ${cores.caixa}`}
-            >
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/80">
-                Sessão carregada automaticamente
-              </p>
-
-              <h2 className="mt-3 text-2xl font-bold">
-                Leitura segura por papel
-              </h2>
-
-              <div className="mt-5 space-y-3 text-sm text-white/90">
-                <p>
-                  <span className="font-semibold">Perfil:</span>{" "}
-                  {infoSessao.perfil}
-                </p>
-                <p>
-                  <span className="font-semibold">Empresa:</span>{" "}
-                  {infoSessao.empresa}
-                </p>
-                <p>
-                  <span className="font-semibold">Atualizado em:</span>{" "}
-                  {infoSessao.atualizadoEm}
+              <div>
+                <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+                  Painel de motoristas
+                </h1>
+                <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600 sm:text-base">
+                  Camada nova, isolada e segura para organizar a evolução da área
+                  de motoristas sem mexer no que já está em produção. Aqui fica
+                  uma base estável para ligar próximas funções com cautela.
                 </p>
               </div>
 
-              <div className="mt-5 rounded-2xl border border-white/15 bg-white/10 p-4 text-sm leading-7 text-white/90">
-                {ALERTAS[perfil]}
+              <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+                Acesso administrativo validado. Motoristas, clientes e perfis
+                sem administração não devem visualizar esta área.
               </div>
             </div>
           </div>
         </div>
-      </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-10 md:px-8">
-        <div className="grid gap-6 lg:grid-cols-3">
-          {CARDS[perfil].map((card) => (
+        <section className="grid gap-4 md:grid-cols-3">
+          {cardsResumo.map((card) => (
             <article
               key={card.titulo}
-              className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
+              className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm"
             >
-              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-500">
+              <h2 className="text-base font-semibold text-slate-900">
                 {card.titulo}
-              </p>
-              <h2 className="mt-3 text-2xl font-bold text-slate-900">
-                {card.valor}
               </h2>
-              <p className="mt-3 text-sm leading-7 text-slate-600">
+              <p className="mt-2 text-sm leading-6 text-slate-600">
                 {card.descricao}
               </p>
             </article>
           ))}
-        </div>
-      </section>
+        </section>
 
-      <section className="mx-auto max-w-7xl px-6 pb-10 md:px-8">
-        <div className="grid gap-6 lg:grid-cols-[1fr,1fr]">
-          <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm md:p-8">
-            <span className="inline-flex rounded-full border border-slate-200 bg-slate-100 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-700">
-              Regras ativas deste perfil
-            </span>
-
-            <h2 className="mt-3 text-2xl font-bold text-slate-900">
-              O que esta visão pode e não pode fazer
+        <section className="grid gap-4 lg:grid-cols-2">
+          <article className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+            <h2 className="text-lg font-semibold text-slate-900">
+              Navegação segura
             </h2>
+            <p className="mt-2 text-sm leading-6 text-slate-600">
+              Esta página pode servir como ponto de apoio para a gestão da base
+              de motoristas, sem depender de alterar estruturas antigas.
+            </p>
 
-            <ul className="mt-6 space-y-4">
-              {REGRAS[perfil].map((regra) => (
-                <li
-                  key={regra}
-                  className="flex gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-7 text-slate-700"
-                >
-                  <span className="mt-2 inline-block h-2.5 w-2.5 rounded-full bg-cyan-500" />
-                  <span>{regra}</span>
-                </li>
-              ))}
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <Link
+                href="/plataforma/motoristas"
+                className="rounded-2xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+              >
+                Abrir área de motoristas
+              </Link>
+
+              <Link
+                href="/admin/servicos"
+                className="rounded-2xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+              >
+                Ir para Admin • Serviços
+              </Link>
+
+              <Link
+                href="/relatorios"
+                className="rounded-2xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+              >
+                Ver relatórios
+              </Link>
+
+              <Link
+                href="/plataforma/tutorial"
+                className="rounded-2xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+              >
+                Tutorial / ajuda
+              </Link>
+            </div>
+          </article>
+
+          <article className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+            <h2 className="text-lg font-semibold text-slate-900">
+              Próxima expansão controlada
+            </h2>
+            <ul className="mt-3 space-y-3 text-sm leading-6 text-slate-600">
+              <li>• filtros de motoristas por status, cidade e empresa</li>
+              <li>• leitura da base interna protegida</li>
+              <li>• vínculo do motorista ao serviço fechado</li>
+              <li>• histórico administrativo protegido</li>
+              <li>
+                • separação rígida entre operação interna e operadoras externas
+              </li>
             </ul>
+
+            <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+              Regra mantida: motorista sem admin, cliente sem admin, empresa vê
+              apenas o que for dela e a base interna permanece blindada.
+            </div>
+          </article>
+        </section>
+
+        <section className="grid gap-4 md:grid-cols-4">
+          <article className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+            <p className="text-sm text-slate-500">Base lida</p>
+            <p className="mt-2 text-3xl font-bold text-slate-900">
+              {totais.total}
+            </p>
+            <p className="mt-2 text-sm text-slate-600">
+              Total de motoristas visíveis neste painel.
+            </p>
+          </article>
+
+          <article className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+            <p className="text-sm text-slate-500">Pendentes</p>
+            <p className="mt-2 text-3xl font-bold text-amber-600">
+              {totais.pendentes}
+            </p>
+            <p className="mt-2 text-sm text-slate-600">
+              Aguardando autorização administrativa.
+            </p>
+          </article>
+
+          <article className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+            <p className="text-sm text-slate-500">Ativos</p>
+            <p className="mt-2 text-3xl font-bold text-emerald-600">
+              {totais.ativos}
+            </p>
+            <p className="mt-2 text-sm text-slate-600">
+              Liberados para operar.
+            </p>
+          </article>
+
+          <article className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+            <p className="text-sm text-slate-500">Bloqueados</p>
+            <p className="mt-2 text-3xl font-bold text-red-600">
+              {totais.bloqueados}
+            </p>
+            <p className="mt-2 text-sm text-slate-600">
+              Fora da operação até nova decisão administrativa.
+            </p>
+          </article>
+        </section>
+
+        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <div className="inline-flex w-fit items-center rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700">
+                Gestão de motoristas
+              </div>
+
+              <h2 className="mt-3 text-xl font-bold text-slate-900 sm:text-2xl">
+                Autorizar motoristas cadastrados
+              </h2>
+
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
+                Esta área agora tenta carregar a base real pela API. Se a leitura
+                falhar, o painel mantém fallback mock para não quebrar a camada
+                administrativa.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
+              {carregandoMotoristas
+                ? "Carregando base..."
+                : origemLista === "api"
+                  ? "Origem: API real"
+                  : "Origem: fallback mock"}
+            </div>
           </div>
 
-          <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm md:p-8">
-            <span
-              className={`inline-flex rounded-full border px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] ${cores.badge}`}
-            >
-              Leitura operacional
-            </span>
+          <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-700">
+            {mensagemBase}
+          </div>
 
-            <h2 className="mt-3 text-2xl font-bold text-slate-900">
-              Estrutura de uso por camada
-            </h2>
+          {mensagemAcao ? (
+            <div className="mt-4 rounded-2xl border border-cyan-200 bg-cyan-50 p-4 text-sm leading-6 text-cyan-800">
+              {mensagemAcao}
+            </div>
+          ) : null}
 
-            <div className="mt-6 space-y-4">
-              {ACOES[perfil].map((acao, index) => (
+          <div className="mt-6 space-y-4">
+            {motoristas.map((motorista) => {
+              const estaSalvando = salvandoId === motorista.id;
+
+              return (
                 <article
-                  key={acao.titulo}
-                  className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
+                  key={motorista.id}
+                  className="rounded-3xl border border-slate-200 p-4"
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-sm font-bold text-white">
-                      {String(index + 1).padStart(2, "0")}
+                  <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="text-base font-bold text-slate-900">
+                          {motorista.nome}
+                        </h3>
+
+                        <span className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-600">
+                          {motorista.origem === "api" ? "api" : "mock"}
+                        </span>
+                      </div>
+
+                      <p className="mt-1 text-sm text-slate-500">
+                        {motorista.telefone} • {motorista.cidade}
+                      </p>
+
+                      <div
+                        className={`mt-3 inline-flex rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] ${getStatusClasses(
+                          motorista.status,
+                        )}`}
+                      >
+                        Status: {getStatusLabel(motorista.status)}
+                      </div>
                     </div>
 
-                    <div>
-                      <h3 className="text-base font-bold text-slate-900">
-                        {acao.titulo}
-                      </h3>
-                      <p className="mt-2 text-sm leading-7 text-slate-600">
-                        {acao.texto}
-                      </p>
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        disabled={estaSalvando}
+                        onClick={() =>
+                          handleSalvarStatus(motorista, "autorizar")
+                        }
+                        className={`rounded-full px-4 py-2 text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-60 ${getActionButtonClass(
+                          "autorizar",
+                        )}`}
+                      >
+                        {estaSalvando ? "Salvando..." : "Autorizar"}
+                      </button>
+
+                      <button
+                        type="button"
+                        disabled={estaSalvando}
+                        onClick={() => handleSalvarStatus(motorista, "bloquear")}
+                        className={`rounded-full px-4 py-2 text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-60 ${getActionButtonClass(
+                          "bloquear",
+                        )}`}
+                      >
+                        {estaSalvando ? "Salvando..." : "Bloquear"}
+                      </button>
+
+                      <button
+                        type="button"
+                        disabled={estaSalvando}
+                        onClick={() => handleSalvarStatus(motorista, "inativar")}
+                        className={`rounded-full px-4 py-2 text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-60 ${getActionButtonClass(
+                          "inativar",
+                        )}`}
+                      >
+                        {estaSalvando ? "Salvando..." : "Inativar"}
+                      </button>
                     </div>
                   </div>
                 </article>
-              ))}
-            </div>
+              );
+            })}
           </div>
-        </div>
-      </section>
 
-      <section className="mx-auto max-w-7xl px-6 pb-10 md:px-8">
-        <div
-          className={`rounded-[2rem] border p-6 shadow-sm md:p-8 ${cores.destaque}`}
-        >
-          <div className="grid gap-6 lg:grid-cols-[1.1fr,0.9fr]">
-            <div>
-              <span className="inline-flex rounded-full border border-current/10 bg-white/60 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em]">
-                Trava de segurança
-              </span>
-
-              <h2 className="mt-3 text-2xl font-bold">
-                Bloqueio imediato em tentativa de acesso indevido
-              </h2>
-
-              <p className="mt-4 text-sm leading-7">
-                Qualquer tentativa de acessar base interna sem permissão,
-                pesquisar motoristas fora do escopo autorizado, exportar dados
-                protegidos ou romper a segregação da plataforma deve permitir
-                bloqueio imediato do acesso e revisão administrativa.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-current/10 bg-white/70 p-5">
-              <h3 className="text-base font-bold">
-                Próxima ligação segura com o sistema real
-              </h3>
-              <p className="mt-3 text-sm leading-7">
-                O próximo passo será manter esta leitura visual premium e ligar
-                o perfil ao usuário real da sessão, sem mexer na base já
-                publicada e sem quebrar produção.
-              </p>
-
-              <div className="mt-5 flex flex-wrap gap-3">
-                <a
-                  href="/plataforma/sessao-local"
-                  className="inline-flex items-center rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100"
-                >
-                  Alterar sessão
-                </a>
-
-                <a
-                  href="/plataforma/acessos"
-                  className={`inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold text-white transition ${cores.botao}`}
-                >
-                  Voltar para acessos
-                </a>
-              </div>
-            </div>
+          <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-700">
+            Próximo nível seguro: refletir a decisão administrativa na operação e
+            impedir vínculo de serviço com motorista fora da base autorizada.
           </div>
-        </div>
-      </section>
-
-      <section className="border-t border-slate-200 bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-6 md:px-8">
-          <p className="text-sm leading-7 text-slate-500">
-            Sistema em constante atualização e podem ocorrer instabilidades
-            momentâneas durante melhorias. Esta página foi criada como camada
-            nova e isolada para validar leitura automática da sessão sem tocar
-            na base já publicada.
-          </p>
-        </div>
+        </section>
       </section>
     </main>
   );
