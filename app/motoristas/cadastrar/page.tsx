@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type MotoristaForm = {
   nome: string;
@@ -99,6 +99,20 @@ export default function CadastrarMotoristaPage() {
   const [feedback, setFeedback] = useState("");
   const [feedbackType, setFeedbackType] = useState<"success" | "error" | "info">("info");
   const [fonteCep, setFonteCep] = useState("");
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < 768);
+    }
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   function updateField<K extends keyof MotoristaForm>(field: K, value: MotoristaForm[K]) {
     setForm((current) => ({
@@ -145,7 +159,6 @@ export default function CadastrarMotoristaPage() {
       }));
 
       if (address.bairro && !currentHasNeighborhood(form.observacoes)) {
-        // Mantemos bairro como observação por enquanto, sem alterar schema atual.
         setForm((current) => ({
           ...current,
           cep: formatCep(address.cep || cep),
@@ -252,7 +265,7 @@ export default function CadastrarMotoristaPage() {
         style={{
           maxWidth: 1240,
           margin: "0 auto",
-          padding: "20px 16px 48px",
+          padding: isMobile ? "20px 12px 48px" : "20px 16px 48px",
         }}
       >
         <div
@@ -283,7 +296,7 @@ export default function CadastrarMotoristaPage() {
             background:
               "radial-gradient(circle at top right, rgba(14, 165, 233, 0.18), transparent 24%), linear-gradient(135deg, #ffffff 0%, #f1f8ff 45%, #eef7ff 100%)",
             boxShadow: "0 24px 70px rgba(15, 23, 42, 0.08)",
-            padding: "24px 18px",
+            padding: isMobile ? "20px 14px" : "24px 18px",
             marginBottom: 18,
           }}
         >
@@ -335,8 +348,11 @@ export default function CadastrarMotoristaPage() {
         <section
           style={{
             display: "grid",
-            gridTemplateColumns: "minmax(0, 1.6fr) minmax(280px, 0.9fr)",
+            gridTemplateColumns: isMobile
+              ? "minmax(0, 1fr)"
+              : "minmax(0, 1.6fr) minmax(280px, 0.9fr)",
             gap: 18,
+            alignItems: "start",
           }}
         >
           <div
@@ -345,20 +361,22 @@ export default function CadastrarMotoristaPage() {
               border: "1px solid #dbeafe",
               borderRadius: 28,
               boxShadow: "0 20px 60px rgba(15, 23, 42, 0.08)",
-              padding: 18,
+              padding: isMobile ? 16 : 18,
+              minWidth: 0,
             }}
           >
             <div
               style={{
                 display: "flex",
                 justifyContent: "space-between",
-                alignItems: "center",
+                alignItems: isMobile ? "stretch" : "center",
                 flexWrap: "wrap",
                 gap: 12,
                 marginBottom: 18,
+                flexDirection: isMobile ? "column" : "row",
               }}
             >
-              <div>
+              <div style={{ minWidth: 0 }}>
                 <h2
                   style={{
                     margin: 0,
@@ -392,6 +410,7 @@ export default function CadastrarMotoristaPage() {
                   fontWeight: 800,
                   color: "#0f172a",
                   fontSize: 14,
+                  alignSelf: isMobile ? "flex-start" : "auto",
                 }}
               >
                 <input
@@ -448,7 +467,7 @@ export default function CadastrarMotoristaPage() {
                 placeholder="Número da CNH"
               />
 
-              <div style={{ display: "block" }}>
+              <div style={{ display: "block", minWidth: 0 }}>
                 <label
                   style={{
                     display: "block",
@@ -466,6 +485,8 @@ export default function CadastrarMotoristaPage() {
                     display: "flex",
                     flexWrap: "wrap",
                     gap: 10,
+                    flexDirection: isMobile ? "column" : "row",
+                    alignItems: isMobile ? "stretch" : "center",
                   }}
                 >
                   <input
@@ -476,6 +497,7 @@ export default function CadastrarMotoristaPage() {
                     style={{
                       flex: "1 1 220px",
                       minWidth: 0,
+                      width: isMobile ? "100%" : "auto",
                       height: 50,
                       borderRadius: 16,
                       border: "1px solid #cbd5e1",
@@ -498,6 +520,7 @@ export default function CadastrarMotoristaPage() {
                       opacity: loadingCep ? 0.7 : 1,
                       padding: "0 16px",
                       height: 50,
+                      width: isMobile ? "100%" : "auto",
                       borderRadius: 16,
                       background: "#e0f2fe",
                       color: "#0369a1",
@@ -618,6 +641,7 @@ export default function CadastrarMotoristaPage() {
                 flexWrap: "wrap",
                 gap: 12,
                 marginTop: 18,
+                flexDirection: isMobile ? "column" : "row",
               }}
             >
               <button
@@ -635,6 +659,7 @@ export default function CadastrarMotoristaPage() {
                   fontWeight: 800,
                   fontSize: 15,
                   boxShadow: "0 16px 35px rgba(37, 99, 235, 0.28)",
+                  width: isMobile ? "100%" : "auto",
                 }}
               >
                 {loading ? "Salvando motorista..." : "Salvar motorista"}
@@ -656,6 +681,7 @@ export default function CadastrarMotoristaPage() {
                   color: "#0f172a",
                   fontWeight: 800,
                   fontSize: 15,
+                  width: isMobile ? "100%" : "auto",
                 }}
               >
                 Limpar formulário
@@ -668,6 +694,7 @@ export default function CadastrarMotoristaPage() {
               display: "flex",
               flexDirection: "column",
               gap: 18,
+              minWidth: 0,
             }}
           >
             <InfoCard
@@ -724,7 +751,7 @@ function Field({
   required?: boolean;
 }) {
   return (
-    <label style={{ display: "block" }}>
+    <label style={{ display: "block", minWidth: 0 }}>
       <span
         style={{
           display: "block",
@@ -768,6 +795,7 @@ function InfoCard({ title, text }: { title: string; text: string }) {
         borderRadius: 24,
         boxShadow: "0 20px 60px rgba(15, 23, 42, 0.08)",
         padding: 18,
+        minWidth: 0,
       }}
     >
       <div
