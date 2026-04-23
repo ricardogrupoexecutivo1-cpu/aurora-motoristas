@@ -4,26 +4,33 @@ import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: {
-    default: "App Motoristas - A menor taxa do mercado | 5%",
-    template: "%s | App Motoristas",
+    default: "MOVO - Mobilidade Inteligente | Taxa de apenas 5%",
+    template: "%s | MOVO",
   },
   description:
-    "Plataforma de mobilidade com a menor taxa do mercado (5%). Solicite corridas, seja motorista parceiro ou gerencie sua frota empresarial com segurança e tecnologia de ponta.",
+    "Plataforma completa de mobilidade urbana e gestão de serviços com a menor taxa do mercado (5%). Solicite corridas, seja motorista parceiro ou gerencie sua frota empresarial com segurança e tecnologia de ponta.",
   keywords: [
+    "movo",
     "app motoristas",
-    "corrida",
     "uber",
     "99",
+    "corrida",
     "motorista",
     "transporte",
     "mobilidade",
     "táxi",
     "viagem",
     "transfer",
+    "menor taxa",
+    "5%",
+    "delivery",
+    "entrega",
+    "corporativo",
+    "frota",
   ],
-  authors: [{ name: "App Motoristas" }],
-  creator: "App Motoristas",
-  publisher: "App Motoristas",
+  authors: [{ name: "MOVO - App Motoristas" }],
+  creator: "MOVO",
+  publisher: "MOVO - App Motoristas",
   metadataBase: new URL("https://www.appmotoristas.com.br"),
   alternates: {
     canonical: "/",
@@ -32,8 +39,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pt_BR",
     url: "https://www.appmotoristas.com.br",
-    siteName: "App Motoristas",
-    title: "App Motoristas - A menor taxa do mercado | 5%",
+    siteName: "MOVO - Mobilidade Inteligente",
+    title: "MOVO - A menor taxa do mercado | Apenas 5%",
     description:
       "Plataforma de mobilidade com a menor taxa do mercado. Solicite corridas, seja motorista ou gerencie sua frota.",
     images: [
@@ -41,14 +48,14 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "App Motoristas",
+        alt: "MOVO - Mobilidade Inteligente",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "App Motoristas - A menor taxa do mercado",
-    description: "Plataforma de mobilidade com taxa de apenas 5%",
+    title: "MOVO - Mobilidade Inteligente | Taxa de apenas 5%",
+    description: "Plataforma de mobilidade com a menor taxa do mercado",
     images: ["/og-image.png"],
   },
   robots: {
@@ -93,10 +100,10 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className="bg-background">
       <head>
-        <meta name="application-name" content="App Motoristas" />
+        <meta name="application-name" content="MOVO" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="App Motoristas" />
+        <meta name="apple-mobile-web-app-title" content="MOVO" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="format-detection" content="telephone=no" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />

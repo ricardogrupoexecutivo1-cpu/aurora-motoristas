@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
+import { Navigation as NavIcon } from "lucide-react";
 import { formatCurrency, formatDateTime, getGreeting, getStatusColor, getStatusLabel } from "@/lib/utils";
 import {
   Car,

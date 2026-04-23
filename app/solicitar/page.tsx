@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { Navigation } from "lucide-react";
 import { formatCurrency, calculateRidePrice, getGreeting } from "@/lib/utils";
 import {
   MapPin,
@@ -217,15 +218,14 @@ export default function SolicitarCorridaPage() {
               <ArrowLeft className="w-6 h-6" />
             </button>
           ) : (
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
-                <Car className="w-5 h-5 text-primary-foreground" />
+            <Link href="/" className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary to-cyan-500 rounded-xl flex items-center justify-center">
+                <Navigation className="w-5 h-5 text-white" />
               </div>
               <div>
-                <span className="font-bold text-foreground">App</span>
-                <span className="font-bold text-primary">Motoristas</span>
+                <span className="font-bold text-xl text-foreground">MOVO</span>
               </div>
-            </div>
+            </Link>
           )}
 
           <div className="flex items-center gap-2">
