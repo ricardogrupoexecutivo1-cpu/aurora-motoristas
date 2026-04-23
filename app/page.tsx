@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -133,7 +133,7 @@ export default function HomePage() {
                 <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-success rounded-full border-2 border-background animate-pulse" />
               </div>
               <div>
-                <span className="text-2xl lg:text-3xl font-black tracking-tight gradient-text">MOVO</span>
+                <span className="text-2xl lg:text-3xl font-black tracking-tight gradient-text">Aurora Motoristas</span>
                 <p className="text-[10px] text-muted-foreground tracking-[0.2em] -mt-1 hidden sm:block">MOBILIDADE DO FUTURO</p>
               </div>
             </Link>
@@ -191,7 +191,7 @@ export default function HomePage() {
                 <div className="w-11 h-11 rounded-2xl gradient-premium flex items-center justify-center">
                   <Navigation className="w-6 h-6 text-white" />
                 </div>
-                <span className="text-2xl font-black gradient-text">MOVO</span>
+                <span className="text-2xl font-black gradient-text">Aurora Motoristas</span>
               </div>
               <button onClick={() => setMobileMenuOpen(false)} className="p-2.5 rounded-xl bg-secondary">
                 <X className="w-5 h-5" />
@@ -210,7 +210,7 @@ export default function HomePage() {
                     <Car className="w-7 h-7 text-white" />
                   </div>
                   <div className="flex-1">
-                    <span className="font-bold text-lg text-white">MOVO Ride</span>
+                    <span className="font-bold text-lg text-white">Aurora Ride</span>
                     <p className="text-sm text-gray-400">Transporte de passageiros</p>
                   </div>
                   <ArrowUpRight className="w-6 h-6 text-white" />
@@ -228,7 +228,7 @@ export default function HomePage() {
                     <Package className="w-7 h-7 text-white" />
                   </div>
                   <div className="flex-1">
-                    <span className="font-bold text-lg text-white">MOVO Express</span>
+                    <span className="font-bold text-lg text-white">Aurora Express</span>
                     <p className="text-sm text-white/80">Busca e Entrega Brasil</p>
                   </div>
                   <ArrowUpRight className="w-6 h-6 text-white" />
@@ -246,7 +246,7 @@ export default function HomePage() {
                     <Briefcase className="w-7 h-7 text-white" />
                   </div>
                   <div className="flex-1">
-                    <span className="font-bold text-lg text-foreground">MOVO Business</span>
+                    <span className="font-bold text-lg text-foreground">Aurora Business</span>
                     <p className="text-sm text-muted-foreground">Gestao ERP completa</p>
                   </div>
                   <ArrowUpRight className="w-6 h-6 text-muted-foreground" />
@@ -348,7 +348,7 @@ export default function HomePage() {
           {/* Three Platform Cards */}
           <div id="plataformas" className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             
-            {/* MOVO RIDE - Transporte */}
+            {/* Aurora Ride - Transporte */}
             <Link href="/solicitar" className="group relative">
               <div className="absolute inset-0 bg-gradient-to-br from-ride-black via-gray-900 to-gray-800 rounded-[2rem] transform group-hover:scale-[1.02] transition-transform duration-500" />
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -368,7 +368,7 @@ export default function HomePage() {
                     <Car className="w-7 h-7 text-ride-black" />
                   </div>
                   <div>
-                    <h2 className="text-xl lg:text-2xl font-black text-white">MOVO Ride</h2>
+                    <h2 className="text-xl lg:text-2xl font-black text-white">Aurora Ride</h2>
                     <p className="text-gray-400 text-sm">Transporte de passageiros</p>
                   </div>
                 </div>
@@ -399,7 +399,7 @@ export default function HomePage() {
               </div>
             </Link>
 
-            {/* MOVO EXPRESS - Busca e Entrega */}
+            {/* Aurora Express - Busca e Entrega */}
             <Link href="/entregas" className="group relative md:col-span-2 lg:col-span-1">
               <div className="absolute inset-0 bg-gradient-to-br from-silicon-orange via-orange-500 to-warning rounded-[2rem] transform group-hover:scale-[1.02] transition-transform duration-500" />
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -419,7 +419,7 @@ export default function HomePage() {
                     <Package className="w-7 h-7 text-silicon-orange" />
                   </div>
                   <div>
-                    <h2 className="text-xl lg:text-2xl font-black text-white">MOVO Express</h2>
+                    <h2 className="text-xl lg:text-2xl font-black text-white">Aurora Express</h2>
                     <p className="text-white/80 text-sm">Busca e Entrega</p>
                   </div>
                 </div>
@@ -450,7 +450,7 @@ export default function HomePage() {
               </div>
             </Link>
 
-            {/* MOVO BUSINESS - Gestao ERP */}
+            {/* Aurora Business - Gestao ERP */}
             <Link href="/plataforma" className="group relative md:col-span-2 lg:col-span-1">
               <div className="absolute inset-0 gradient-premium rounded-[2rem] p-[2px]">
                 <div className="absolute inset-[2px] bg-card rounded-[1.875rem]" />
@@ -470,7 +470,7 @@ export default function HomePage() {
                     <Briefcase className="w-7 h-7 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-xl lg:text-2xl font-black text-foreground">MOVO Business</h2>
+                    <h2 className="text-xl lg:text-2xl font-black text-foreground">Aurora Business</h2>
                     <p className="text-muted-foreground text-sm">Gestao empresarial</p>
                   </div>
                 </div>
@@ -533,7 +533,7 @@ export default function HomePage() {
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-silicon-orange/10 rounded-full mb-4">
               <Package className="w-4 h-4 text-silicon-orange" />
-              <span className="text-sm font-semibold text-silicon-orange">MOVO Express</span>
+              <span className="text-sm font-semibold text-silicon-orange">Aurora Express</span>
             </div>
             <h2 className="text-3xl lg:text-4xl font-black mb-4">Busca e Entrega em Todo Brasil</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -652,7 +652,7 @@ export default function HomePage() {
               </div>
               <h2 className="text-3xl lg:text-4xl font-black mb-6">Ganhe Mais com a Menor Taxa do Mercado</h2>
               <p className="text-lg text-muted-foreground mb-8">
-                Enquanto outras plataformas cobram de 20% a 25%, no MOVO voce paga apenas 5% de taxa. Isso significa mais dinheiro no seu bolso a cada corrida ou entrega.
+                Enquanto outras plataformas cobram de 20% a 25%, no Aurora Motoristas voce paga apenas 5% de taxa. Isso significa mais dinheiro no seu bolso a cada corrida ou entrega.
               </p>
 
               <div className="space-y-4 mb-8">
@@ -699,7 +699,7 @@ export default function HomePage() {
                   </div>
                   <div className="p-4 rounded-xl bg-destructive/10 text-center">
                     <p className="text-2xl font-bold text-destructive">5%</p>
-                    <p className="text-xs text-muted-foreground">Taxa MOVO</p>
+                    <p className="text-xs text-muted-foreground">Taxa Aurora</p>
                   </div>
                 </div>
 
@@ -724,7 +724,7 @@ export default function HomePage() {
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-4">
               <Building2 className="w-4 h-4 text-primary" />
-              <span className="text-sm font-semibold text-primary">MOVO BUSINESS</span>
+              <span className="text-sm font-semibold text-primary">Aurora Business</span>
             </div>
             <h2 className="text-3xl lg:text-4xl font-black mb-4">Solucoes para sua Empresa</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -774,7 +774,7 @@ export default function HomePage() {
             <div className="relative grid lg:grid-cols-2 gap-8 items-center">
               <div>
                 <h2 className="text-3xl lg:text-4xl font-black text-white mb-4">
-                  Baixe o App MOVO
+                  Baixe o App Aurora Motoristas
                 </h2>
                 <p className="text-white/80 text-lg mb-8">
                   Disponivel para Android e iOS. Peca corridas, envie entregas e gerencie tudo na palma da sua mao.
@@ -803,7 +803,7 @@ export default function HomePage() {
                   <div className="w-full h-full rounded-[2.5rem] bg-card flex items-center justify-center">
                     <div className="text-center">
                       <Navigation className="w-16 h-16 mx-auto mb-4 text-primary" />
-                      <p className="text-2xl font-black gradient-text">MOVO</p>
+                      <p className="text-2xl font-black gradient-text">Aurora Motoristas</p>
                       <p className="text-xs text-muted-foreground">Mobilidade do Futuro</p>
                     </div>
                   </div>
@@ -823,7 +823,7 @@ export default function HomePage() {
                 <div className="w-10 h-10 rounded-xl gradient-premium flex items-center justify-center">
                   <Navigation className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-xl font-black gradient-text">MOVO</span>
+                <span className="text-xl font-black gradient-text">Aurora Motoristas</span>
               </div>
               <p className="text-sm text-muted-foreground mb-4">
                 A plataforma de mobilidade com a menor taxa do mercado. Transporte, entregas e gestao em um so lugar.
@@ -835,9 +835,9 @@ export default function HomePage() {
               <h4 className="font-bold mb-4">Servicos</h4>
               <div className="space-y-2">
                 {[
-                  { label: "MOVO Ride", href: "/solicitar" },
-                  { label: "MOVO Express", href: "/entregas" },
-                  { label: "MOVO Business", href: "/plataforma" },
+                  { label: "Aurora Ride", href: "/solicitar" },
+                  { label: "Aurora Express", href: "/entregas" },
+                  { label: "Aurora Business", href: "/plataforma" },
                   { label: "Seja Parceiro", href: "/motoristas/cadastrar" },
                 ].map((link) => (
                   <Link key={link.href} href={link.href} className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
@@ -894,3 +894,5 @@ export default function HomePage() {
     </main>
   );
 }
+
+
