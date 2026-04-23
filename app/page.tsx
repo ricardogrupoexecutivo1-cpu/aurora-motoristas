@@ -861,25 +861,25 @@ export default function HomePage() {
             <div>
               <h4 className="font-bold mb-4">Contato</h4>
               <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <PhoneCall className="w-4 h-4 text-primary" />
-                  <span className="text-sm text-muted-foreground">0800 123 4567</span>
-                </div>
-                <div className="flex items-center gap-3">
+                <a href="https://wa.me/5531997490074" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 hover:text-success transition-colors">
                   <MessageCircle className="w-4 h-4 text-success" />
-                  <span className="text-sm text-muted-foreground">WhatsApp</span>
-                </div>
-                <div className="flex items-center gap-3">
+                  <span className="text-sm text-muted-foreground hover:text-success">(31) 99749-0074</span>
+                </a>
+                <a href="https://wa.me/5531985614993" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 hover:text-success transition-colors">
+                  <PhoneCall className="w-4 h-4 text-primary" />
+                  <span className="text-sm text-muted-foreground hover:text-primary">(31) 98561-4993</span>
+                </a>
+                <a href="mailto:ricardogrupoexecutivo1@gmail.com" className="flex items-center gap-3 hover:text-primary transition-colors">
                   <Send className="w-4 h-4 text-primary" />
-                  <span className="text-sm text-muted-foreground">contato@movo.com.br</span>
-                </div>
+                  <span className="text-sm text-muted-foreground hover:text-primary">ricardogrupoexecutivo1@gmail.com</span>
+                </a>
               </div>
             </div>
           </div>
 
           <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm text-muted-foreground">
-              2024 MOVO - Todos os direitos reservados
+              www.appmotoristas.com.br
             </p>
             <div className="flex items-center gap-2">
               <Shield className="w-4 h-4 text-success" />
