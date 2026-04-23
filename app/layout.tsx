@@ -1,16 +1,106 @@
 import "./globals.css";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
+
+const inter = Inter({ 
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
 
 export const metadata: Metadata = {
-  title: "Aurora Motoristas",
-  description:
-    "Aurora Motoristas - operação inteligente com serviços, histórico protegido e uso rápido no celular ou PC.",
-  manifest: "/manifest.webmanifest",
-  themeColor: "#0ea5e9",
-  icons: {
-    icon: "/icon-192.png",
-    apple: "/icon-192.png",
+  title: {
+    default: "MOVO - Mobilidade do Futuro | Taxa de apenas 5%",
+    template: "%s | MOVO",
   },
+  description:
+    "Plataforma completa de mobilidade urbana, transporte de passageiros e entregas em todo Brasil com a menor taxa do mercado (apenas 5%). Solicite corridas, entregas, seja motorista parceiro ou gerencie sua frota empresarial com seguranca e tecnologia de ponta.",
+  keywords: [
+    "movo",
+    "app motoristas",
+    "corrida",
+    "motorista",
+    "transporte",
+    "mobilidade",
+    "taxi",
+    "viagem",
+    "transfer",
+    "menor taxa",
+    "5%",
+    "delivery",
+    "entrega",
+    "busca e entrega",
+    "logistica",
+    "frete",
+    "corporativo",
+    "frota",
+    "erp",
+    "gestao",
+    "brasil",
+  ],
+  authors: [{ name: "MOVO" }],
+  creator: "MOVO",
+  publisher: "MOVO",
+  metadataBase: new URL("https://www.appmotoristas.com.br"),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    url: "https://www.appmotoristas.com.br",
+    siteName: "MOVO - Mobilidade do Futuro",
+    title: "MOVO - A menor taxa do mercado | Apenas 5%",
+    description:
+      "Plataforma de mobilidade e entregas com a menor taxa do mercado. Solicite corridas, entregas em todo Brasil, seja motorista ou gerencie sua frota.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "MOVO - Mobilidade do Futuro",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MOVO - Mobilidade do Futuro | Taxa de apenas 5%",
+    description: "Plataforma de mobilidade com a menor taxa do mercado",
+    images: ["/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  manifest: "/manifest.webmanifest",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/icon-192.png", sizes: "192x192", type: "image/png" }],
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#6366f1" },
+    { media: "(prefers-color-scheme: dark)", color: "#818cf8" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -19,17 +109,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" className={`${inter.variable} bg-background`}>
       <head>
-        <meta name="application-name" content="Aurora Motoristas" />
+        <meta name="application-name" content="MOVO" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Aurora Motoristas" />
+        <meta name="apple-mobile-web-app-title" content="MOVO" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="theme-color" content="#0ea5e9" />
+        <meta name="format-detection" content="telephone=no" />
       </head>
 
-      <body>{children}</body>
+      <body className="font-sans antialiased">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }

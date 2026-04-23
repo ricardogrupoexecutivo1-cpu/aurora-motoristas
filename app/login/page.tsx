@@ -3,6 +3,23 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
+import {
+  Navigation,
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  ArrowRight,
+  User,
+  Car,
+  Building2,
+  Shield,
+  CheckCircle,
+  AlertCircle,
+  Smartphone,
+  Fingerprint,
+  Briefcase,
+} from "lucide-react";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -14,6 +31,8 @@ type SessionFallback = {
   empresa: string;
   status: string;
 };
+
+type LoginType = "passageiro" | "motorista" | "empresa";
 
 const SESSION_FALLBACK_BY_EMAIL: Record<string, SessionFallback> = {
   "ricardogrupoexecutivo1@gmail.com": {
@@ -57,38 +76,45 @@ function getFallbackSession(email: string): SessionFallback {
 }
 
 export default function LoginPage() {
+  const [loginType, setLoginType] = useState<LoginType>("passageiro");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [status, setStatus] = useState("");
+  const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   const emailNormalizado = useMemo(() => normalizeEmail(email), [email]);
 
-  async function entrar() {
+  async function entrar(e: React.FormEvent) {
+    e.preventDefault();
     const emailFinal = normalizeEmail(email);
     const senhaFinal = senha;
 
     if (!emailFinal) {
-      setStatus("Informe seu e-mail.");
+      setError("Informe seu e-mail.");
       return;
     }
 
     if (!senhaFinal) {
-      setStatus("Informe sua senha.");
+      setError("Informe sua senha.");
       return;
     }
 
     try {
       setSaving(true);
       setStatus("Entrando...");
+      setError("");
 
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
         email: emailFinal,
         password: senhaFinal,
       });
 
-      if (error) {
-        setStatus("Erro: " + error.message);
+      if (authError) {
+        setError("E-mail ou senha incorretos. Tente novamente.");
+        setSaving(false);
         return;
       }
 
@@ -113,412 +139,334 @@ export default function LoginPage() {
           const statusFinal = normalizeText(statusAuth || fallback.status).toLowerCase();
 
           window.localStorage.setItem("aurora_session_email", emailFinal);
+          window.localStorage.setItem("movo_login_type", loginType);
 
           if (roleFinal) {
             window.localStorage.setItem("aurora_session_role", roleFinal);
-          } else {
-            window.localStorage.removeItem("aurora_session_role");
           }
-
           if (empresaFinal) {
             window.localStorage.setItem("aurora_session_empresa", empresaFinal);
-          } else {
-            window.localStorage.removeItem("aurora_session_empresa");
           }
-
           if (statusFinal) {
             window.localStorage.setItem("aurora_session_status", statusFinal);
-          } else {
-            window.localStorage.removeItem("aurora_session_status");
           }
         }
       } catch {
-        // mantém o login principal funcionando mesmo se localStorage falhar
+        // mantém o login funcionando mesmo se localStorage falhar
       }
 
       setStatus("Login realizado com sucesso!");
-      window.location.href = "/servicos/novo";
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Erro inesperado ao entrar.";
-      setStatus("Erro: " + message);
+
+      // Redirecionar baseado no tipo de login
+      if (loginType === "passageiro") {
+        window.location.href = "/solicitar";
+      } else if (loginType === "motorista") {
+        window.location.href = "/motorista";
+      } else if (loginType === "empresa") {
+        window.location.href = "/plataforma";
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Erro inesperado ao entrar.";
+      setError(message);
     } finally {
       setSaving(false);
     }
   }
 
+  const loginTypes = [
+    { id: "passageiro", label: "Passageiro", icon: User, color: "primary" },
+    { id: "motorista", label: "Motorista", icon: Car, color: "success" },
+    { id: "empresa", label: "Empresa", icon: Building2, color: "warning" },
+  ];
+
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        background:
-          "linear-gradient(180deg, #f6f9fc 0%, #eef5fb 45%, #f8fbff 100%)",
-        padding: "24px 16px 48px",
-        fontFamily: "Arial, sans-serif",
-        color: "#123047",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 1120,
-          margin: "0 auto",
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-          gap: 18,
-          alignItems: "stretch",
-        }}
-      >
-        <section
-          style={{
-            background: "#ffffff",
-            borderRadius: 28,
-            padding: 24,
-            border: "1px solid #e7eef6",
-            boxShadow: "0 24px 55px rgba(15, 23, 42, 0.07)",
-            display: "flex",
-            flexDirection: "column",
-            gap: 16,
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 10,
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <span
-              style={{
-                display: "inline-flex",
-                width: "fit-content",
-                background: "#e0f2fe",
-                color: "#075985",
-                borderRadius: 999,
-                padding: "7px 12px",
-                fontWeight: 700,
-                fontSize: 13,
-              }}
+    <main className="min-h-screen bg-background flex">
+      {/* Left Side - Form */}
+      <div className="flex-1 flex flex-col">
+        {/* Header */}
+        <header className="p-4 lg:p-6">
+          <Link href="/" className="inline-flex items-center gap-2">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-cyan-500 flex items-center justify-center">
+              <Navigation className="w-5 h-5 text-white" />
+            </div>
+            <span className="text-xl font-black">MOVO</span>
+          </Link>
+        </header>
+
+        {/* Form Container */}
+        <div className="flex-1 flex items-center justify-center px-4 py-8">
+          <div className="w-full max-w-md">
+            <div className="text-center mb-8">
+              <h1 className="text-2xl lg:text-3xl font-black text-foreground mb-2">
+                Bem-vindo de volta
+              </h1>
+              <p className="text-muted-foreground">
+                Entre na sua conta MOVO para continuar
+              </p>
+            </div>
+
+            {/* Login Type Selector */}
+            <div className="flex p-1.5 bg-secondary rounded-2xl mb-6">
+              {loginTypes.map((type) => (
+                <button
+                  key={type.id}
+                  type="button"
+                  onClick={() => setLoginType(type.id as LoginType)}
+                  className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-semibold transition-all ${
+                    loginType === type.id
+                      ? type.color === "primary"
+                        ? "bg-primary text-white shadow-lg"
+                        : type.color === "success"
+                        ? "bg-success text-white shadow-lg"
+                        : "bg-warning text-white shadow-lg"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <type.icon className="w-4 h-4" />
+                  <span className="hidden sm:inline">{type.label}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Error Message */}
+            {error && (
+              <div className="flex items-center gap-2 p-4 bg-destructive/10 border border-destructive/20 rounded-xl mb-6">
+                <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0" />
+                <p className="text-sm text-destructive">{error}</p>
+              </div>
+            )}
+
+            {/* Success Message */}
+            {status && !error && (
+              <div className="flex items-center gap-2 p-4 bg-success/10 border border-success/20 rounded-xl mb-6">
+                <CheckCircle className="w-5 h-5 text-success flex-shrink-0" />
+                <p className="text-sm text-success">{status}</p>
+              </div>
+            )}
+
+            {/* Login Form */}
+            <form onSubmit={entrar} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">E-mail</label>
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="seu@email.com"
+                    autoComplete="email"
+                    required
+                    className="w-full pl-12 pr-4 py-3.5 bg-secondary rounded-xl border border-transparent focus:border-primary focus:outline-none transition-colors"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Senha</label>
+                <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={senha}
+                    onChange={(e) => setSenha(e.target.value)}
+                    placeholder="Sua senha"
+                    autoComplete="current-password"
+                    required
+                    className="w-full pl-12 pr-12 py-3.5 bg-secondary rounded-xl border border-transparent focus:border-primary focus:outline-none transition-colors"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5 text-muted-foreground" />
+                    ) : (
+                      <Eye className="w-5 h-5 text-muted-foreground" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="w-4 h-4 rounded border-border accent-primary"
+                  />
+                  <span className="text-sm text-muted-foreground">Lembrar de mim</span>
+                </label>
+                <Link href="/recuperar-senha" className="text-sm text-primary hover:underline">
+                  Esqueci a senha
+                </Link>
+              </div>
+
+              <button
+                type="submit"
+                disabled={saving}
+                className={`w-full py-4 font-bold rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg ${
+                  loginType === "passageiro"
+                    ? "bg-primary text-white hover:bg-primary/90 shadow-primary/25"
+                    : loginType === "motorista"
+                    ? "bg-success text-white hover:bg-success/90 shadow-success/25"
+                    : "bg-warning text-white hover:bg-warning/90 shadow-warning/25"
+                } disabled:opacity-50 disabled:cursor-not-allowed`}
+              >
+                {saving ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Entrando...
+                  </>
+                ) : (
+                  <>
+                    Entrar
+                    <ArrowRight className="w-5 h-5" />
+                  </>
+                )}
+              </button>
+            </form>
+
+            {/* Divider */}
+            <div className="flex items-center gap-4 my-6">
+              <div className="flex-1 h-px bg-border" />
+              <span className="text-sm text-muted-foreground">ou continue com</span>
+              <div className="flex-1 h-px bg-border" />
+            </div>
+
+            {/* Social Login */}
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                className="flex items-center justify-center gap-2 py-3 bg-secondary rounded-xl font-medium hover:bg-secondary/80 transition-colors"
+              >
+                <svg className="w-5 h-5" viewBox="0 0 24 24">
+                  <path
+                    fill="currentColor"
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  />
+                  <path
+                    fill="currentColor"
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  />
+                  <path
+                    fill="currentColor"
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                  />
+                  <path
+                    fill="currentColor"
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                  />
+                </svg>
+                Google
+              </button>
+              <button
+                type="button"
+                className="flex items-center justify-center gap-2 py-3 bg-secondary rounded-xl font-medium hover:bg-secondary/80 transition-colors"
+              >
+                <Smartphone className="w-5 h-5" />
+                SMS
+              </button>
+            </div>
+
+            {/* Biometric */}
+            <button
+              type="button"
+              className="w-full flex items-center justify-center gap-2 py-3 mt-3 bg-card border border-border rounded-xl font-medium hover:border-primary/50 transition-colors"
             >
-              Aurora Motoristas
-            </span>
+              <Fingerprint className="w-5 h-5 text-primary" />
+              Entrar com biometria
+            </button>
 
-            <Link href="/" style={topLinkStyle}>
-              Voltar para a home
-            </Link>
+            {/* Quick Access Links */}
+            <div className="grid grid-cols-2 gap-3 mt-6">
+              <Link
+                href="/servicos/novo"
+                className="flex items-center gap-2 p-3 bg-card border border-border rounded-xl hover:border-primary/50 transition-colors"
+              >
+                <Briefcase className="w-5 h-5 text-primary" />
+                <span className="text-sm font-medium">Novo serviço</span>
+              </Link>
+              <Link
+                href="/motoristas/cadastrar"
+                className="flex items-center gap-2 p-3 bg-card border border-border rounded-xl hover:border-success/50 transition-colors"
+              >
+                <Car className="w-5 h-5 text-success" />
+                <span className="text-sm font-medium">Ser motorista</span>
+              </Link>
+            </div>
+
+            {/* Create Account */}
+            <p className="text-center mt-8 text-muted-foreground">
+              Ainda não tem conta?{" "}
+              <Link href="/cadastro" className="text-primary font-semibold hover:underline">
+                Criar conta grátis
+              </Link>
+            </p>
           </div>
+        </div>
+      </div>
 
-          <h1
-            style={{
-              margin: 0,
-              fontSize: 34,
-              lineHeight: 1.05,
-              color: "#0f172a",
-              wordBreak: "break-word",
-            }}
-          >
-            Entrar no sistema
-          </h1>
+      {/* Right Side - Image/Info (Desktop Only) */}
+      <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-primary via-primary to-cyan-600 p-12 flex-col justify-between relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-20 right-20 w-64 h-64 border-4 border-white rounded-full" />
+          <div className="absolute bottom-40 left-20 w-40 h-40 border-4 border-white rounded-full" />
+          <div className="absolute top-1/2 right-40 w-20 h-20 border-4 border-white rounded-full" />
+        </div>
 
-          <p
-            style={{
-              margin: 0,
-              color: "#4b6478",
-              fontSize: 15,
-              lineHeight: 1.75,
-              maxWidth: 700,
-            }}
-          >
-            Entre com e-mail e senha para acessar o sistema. Não é necessário
-            usar código por e-mail neste fluxo. O acesso foi preparado para uso
-            empresarial com login controlado pelo administrador.
+        <div className="relative">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 rounded-full mb-4">
+            <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
+            <span className="text-white text-sm font-semibold">Taxa de apenas 5%</span>
+          </div>
+        </div>
+
+        <div className="relative text-white">
+          <h2 className="text-4xl xl:text-5xl font-black mb-6 leading-tight">
+            A mobilidade inteligente que você merece
+          </h2>
+          <p className="text-lg xl:text-xl text-white/80 mb-10 leading-relaxed">
+            Com o MOVO, você viaja com segurança, economia e praticidade.
+            A menor taxa do mercado e tecnologia de ponta para você.
           </p>
 
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 10,
-            }}
-          >
-            <span style={miniChip}>Login com senha</span>
-            <span style={miniChip}>Acesso controlado</span>
-            <span style={miniChip}>Uso em celular e PC</span>
+          <div className="space-y-4">
+            {[
+              { icon: Shield, text: "100% dos motoristas verificados" },
+              { icon: CheckCircle, text: "Taxa de apenas 5% - a menor do Brasil" },
+              { icon: Smartphone, text: "Pagamento via PIX, cartão ou dinheiro" },
+            ].map((item, i) => (
+              <div key={i} className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                  <item.icon className="w-6 h-6" />
+                </div>
+                <span className="font-medium text-lg">{item.text}</span>
+              </div>
+            ))}
           </div>
+        </div>
 
-          <div
-            style={{
-              borderRadius: 20,
-              background: "#f8fbff",
-              border: "1px solid #e5edf5",
-              padding: 18,
-              display: "flex",
-              flexDirection: "column",
-              gap: 12,
-            }}
-          >
-            <div
-              style={{
-                fontSize: 20,
-                fontWeight: 800,
-                color: "#0f172a",
-              }}
-            >
-              Orientação de acesso
-            </div>
-
-            <div
-              style={{
-                color: "#4b6478",
-                fontSize: 14,
-                lineHeight: 1.7,
-              }}
-            >
-              Use o e-mail e a senha fornecidos pelo administrador. Depois do
-              login, o sistema direciona para a área correta de cadastro e
-              lançamento de serviço. Para quem deseja entrar como motorista,
-              existe uma rota própria de cadastro.
-            </div>
-
-            <div
-              style={{
-                borderRadius: 16,
-                background: "#ffffff",
-                border: "1px solid #e7eef6",
-                padding: 14,
-                color: "#435b6e",
-                fontSize: 13,
-                lineHeight: 1.7,
-              }}
-            >
-              Sistema em constante atualização e podem ocorrer instabilidades
-              momentâneas durante melhorias.
-            </div>
+        <div className="relative flex items-center gap-4">
+          <div className="flex -space-x-3">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div
+                key={i}
+                className="w-12 h-12 rounded-full bg-white/20 border-2 border-white/30 flex items-center justify-center text-sm font-bold"
+              >
+                {String.fromCharCode(64 + i)}
+              </div>
+            ))}
           </div>
-        </section>
-
-        <section
-          style={{
-            background: "#ffffff",
-            borderRadius: 28,
-            padding: 24,
-            border: "1px solid #e7eef6",
-            boxShadow: "0 24px 55px rgba(15, 23, 42, 0.07)",
-            display: "flex",
-            flexDirection: "column",
-            gap: 16,
-          }}
-        >
-          <div
-            style={{
-              fontSize: 22,
-              fontWeight: 800,
-              color: "#0f172a",
-            }}
-          >
-            Acesso direto
+          <div>
+            <p className="font-bold text-lg">+800K usuários</p>
+            <p className="text-sm text-white/70">confiam no MOVO</p>
           </div>
-
-          <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            <span
-              style={{
-                fontSize: 13,
-                color: "#5b7488",
-                fontWeight: 700,
-              }}
-            >
-              E-mail
-            </span>
-
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Ex.: grupoexecutivoservice1@gmail.com"
-              autoComplete="email"
-              style={fieldStyle}
-            />
-          </label>
-
-          <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            <span
-              style={{
-                fontSize: 13,
-                color: "#5b7488",
-                fontWeight: 700,
-              }}
-            >
-              Senha
-            </span>
-
-            <input
-              type="password"
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
-              placeholder="Digite sua senha"
-              autoComplete="current-password"
-              style={fieldStyle}
-            />
-          </label>
-
-          <button
-            type="button"
-            onClick={entrar}
-            disabled={saving}
-            style={{
-              border: "none",
-              background: "#0ea5e9",
-              color: "#ffffff",
-              borderRadius: 14,
-              padding: "14px 18px",
-              fontWeight: 800,
-              fontSize: 15,
-              cursor: saving ? "not-allowed" : "pointer",
-              boxShadow: "0 14px 28px rgba(14, 165, 233, 0.20)",
-              opacity: saving ? 0.85 : 1,
-            }}
-          >
-            {saving ? "Entrando..." : "Entrar"}
-          </button>
-
-          <div
-            style={{
-              borderRadius: 14,
-              background: "#f8fbff",
-              border: "1px solid #e5edf5",
-              padding: "12px 14px",
-              color: "#435b6e",
-              fontSize: 13,
-              lineHeight: 1.6,
-              minHeight: 22,
-              wordBreak: "break-word",
-            }}
-          >
-            {status ||
-              `Aguardando login${
-                emailNormalizado ? ` para ${emailNormalizado}` : "..."
-              }`}
-          </div>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-              gap: 12,
-            }}
-          >
-            <InfoCard
-              title="Entrar"
-              text="Acesso com e-mail e senha, sem precisar de código por e-mail."
-            />
-            <InfoCard
-              title="Destino"
-              text="Após login válido, o sistema direciona para a área de cadastro e lançamento de serviços."
-            />
-            <InfoCard
-              title="Sessão"
-              text="O sistema preserva e-mail, perfil, empresa e status para continuidade do uso."
-            />
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 10,
-            }}
-          >
-            <Link href="/guia" style={secondaryButton}>
-              Ver guia completo
-            </Link>
-
-            <Link href="/servicos/novo" style={secondaryButton}>
-              Ir para novo serviço
-            </Link>
-
-            <Link href="/quero-ser-motorista" style={secondaryButton}>
-              Quero ser motorista
-            </Link>
-          </div>
-        </section>
+        </div>
       </div>
     </main>
   );
 }
-
-function InfoCard({ title, text }: { title: string; text: string }) {
-  return (
-    <div
-      style={{
-        background: "#fcfdff",
-        border: "1px solid #e7eef6",
-        borderRadius: 18,
-        padding: 14,
-        minWidth: 0,
-      }}
-    >
-      <div
-        style={{
-          fontSize: 15,
-          fontWeight: 800,
-          color: "#123047",
-          marginBottom: 6,
-        }}
-      >
-        {title}
-      </div>
-
-      <div
-        style={{
-          color: "#4b6478",
-          fontSize: 13,
-          lineHeight: 1.65,
-        }}
-      >
-        {text}
-      </div>
-    </div>
-  );
-}
-
-const fieldStyle: React.CSSProperties = {
-  borderRadius: 14,
-  border: "1px solid #d8e3ee",
-  padding: "14px 16px",
-  fontSize: 15,
-  outline: "none",
-  background: "#f8fbff",
-  color: "#123047",
-  boxSizing: "border-box",
-  width: "100%",
-};
-
-const topLinkStyle: React.CSSProperties = {
-  textDecoration: "none",
-  background: "#ffffff",
-  color: "#123047",
-  border: "1px solid #dbe5ef",
-  borderRadius: 12,
-  padding: "10px 14px",
-  fontWeight: 700,
-};
-
-const miniChip: React.CSSProperties = {
-  background: "#eff6ff",
-  color: "#1d4ed8",
-  borderRadius: 999,
-  padding: "8px 12px",
-  fontWeight: 700,
-  fontSize: 13,
-};
-
-const secondaryButton: React.CSSProperties = {
-  textDecoration: "none",
-  background: "#ffffff",
-  color: "#123047",
-  border: "1px solid #dbe5ef",
-  borderRadius: 12,
-  padding: "12px 16px",
-  fontWeight: 800,
-};
