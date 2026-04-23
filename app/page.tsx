@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import InstallPWA from "@/components/install-pwa";
 import {
   Car,
   Users,
@@ -887,6 +888,9 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
+      {/* PWA Install Component */}
+      <InstallPWA />
     </main>
   );
 }
