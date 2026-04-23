@@ -53,6 +53,8 @@ import {
   Send,
   MessageCircle,
   PhoneCall,
+  Share2,
+  Video,
 } from "lucide-react";
 
 export default function HomePage() {

@@ -86,6 +86,12 @@ export function calculateDistance(
   return R * c;
 }
 
+/**
+ * Calcula o preco da corrida MOVO
+ * MOVO cobra apenas 5% de taxa (vs 25% da Uber e 20% da 99)
+ * Isso permite precos ate 20% mais baratos para o passageiro
+ * mantendo o mesmo ganho para o motorista!
+ */
 export function calculateRidePrice(
   distanceKm: number,
   durationMin: number,
@@ -97,16 +103,19 @@ export function calculateRidePrice(
   valorTotal: number;
   taxaPlataforma: number;
   valorMotorista: number;
+  economiaVsUber: number;
+  economia99: number;
 } {
+  // Precos base MOVO (otimizados para ser mais barato que concorrencia)
   const pricing: Record<
     string,
     { base: number; perKm: number; perMin: number; min: number }
   > = {
-    padrao: { base: 5.0, perKm: 2.0, perMin: 0.3, min: 10.0 },
-    conforto: { base: 7.0, perKm: 2.5, perMin: 0.4, min: 15.0 },
-    executivo: { base: 12.0, perKm: 3.5, perMin: 0.6, min: 25.0 },
-    van: { base: 15.0, perKm: 4.0, perMin: 0.5, min: 30.0 },
-    moto: { base: 3.0, perKm: 1.5, perMin: 0.2, min: 7.0 },
+    moto: { base: 2.50, perKm: 1.20, perMin: 0.15, min: 6.0 },
+    padrao: { base: 4.50, perKm: 1.80, perMin: 0.25, min: 9.0 },
+    conforto: { base: 6.50, perKm: 2.30, perMin: 0.35, min: 14.0 },
+    executivo: { base: 11.0, perKm: 3.20, perMin: 0.55, min: 23.0 },
+    van: { base: 14.0, perKm: 3.70, perMin: 0.45, min: 28.0 },
   };
 
   const price = pricing[category] || pricing.padrao;
@@ -119,16 +128,27 @@ export function calculateRidePrice(
     valorTotal = price.min;
   }
 
-  const taxaPlataforma = valorTotal * 0.05; // 5%
+  // Taxa MOVO: apenas 5% (muito menor que concorrencia)
+  const taxaPlataforma = valorTotal * 0.05;
   const valorMotorista = valorTotal - taxaPlataforma;
 
+  // Calcular quanto seria na Uber (25% taxa) e 99 (20% taxa)
+  // Para o motorista ganhar o mesmo, o passageiro pagaria mais
+  const valorUberEquivalente = valorMotorista / 0.75; // Uber fica com 25%
+  const valor99Equivalente = valorMotorista / 0.80; // 99 fica com 20%
+  
+  const economiaVsUber = valorUberEquivalente - valorTotal;
+  const economia99 = valor99Equivalente - valorTotal;
+
   return {
-    valorBase,
-    valorKm,
-    valorTempo,
+    valorBase: Math.round(valorBase * 100) / 100,
+    valorKm: Math.round(valorKm * 100) / 100,
+    valorTempo: Math.round(valorTempo * 100) / 100,
     valorTotal: Math.round(valorTotal * 100) / 100,
     taxaPlataforma: Math.round(taxaPlataforma * 100) / 100,
     valorMotorista: Math.round(valorMotorista * 100) / 100,
+    economiaVsUber: Math.round(economiaVsUber * 100) / 100,
+    economia99: Math.round(economia99 * 100) / 100,
   };
 }
 
