@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import {
   Car,
   Users,
@@ -34,33 +34,47 @@ import {
   Timer,
   BadgeCheck,
   Fingerprint,
-  Video,
-  PhoneCall,
   Truck,
   Bike,
   Package,
   Briefcase,
-  Plane,
-  Home,
   Menu,
   X,
+  ArrowUpRight,
+  Percent,
+  Crown,
+  Rocket,
+  Target,
+  BarChart3,
+  FileText,
+  Settings,
+  Bell,
+  Search,
+  Send,
+  MessageCircle,
+  PhoneCall,
 } from "lucide-react";
 
 export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeService, setActiveService] = useState<"ride" | "delivery" | "corporate">("ride");
+  const [scrolled, setScrolled] = useState(false);
   const [stats, setStats] = useState({
     corridas: 0,
     motoristas: 0,
     clientes: 0,
     avaliacao: 0,
-    economia: 0,
   });
 
   useEffect(() => {
-    const targets = { corridas: 2847523, motoristas: 45780, clientes: 892341, avaliacao: 4.9, economia: 15 };
-    const duration = 2500;
-    const steps = 80;
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const targets = { corridas: 2847523, motoristas: 45780, clientes: 892341, avaliacao: 4.9 };
+    const duration = 2000;
+    const steps = 60;
     const interval = duration / steps;
 
     let step = 0;
@@ -74,7 +88,6 @@ export default function HomePage() {
         motoristas: Math.floor(targets.motoristas * easeOut),
         clientes: Math.floor(targets.clientes * easeOut),
         avaliacao: Math.round(targets.avaliacao * easeOut * 10) / 10,
-        economia: Math.floor(targets.economia * easeOut),
       });
       if (step >= steps) clearInterval(timer);
     }, interval);
@@ -89,33 +102,34 @@ export default function HomePage() {
   };
 
   return (
-    <main className="min-h-screen bg-background overflow-hidden">
+    <main className="min-h-screen bg-background overflow-x-hidden">
       {/* Header Premium */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled ? "bg-background/90 backdrop-blur-xl shadow-lg" : "bg-transparent"
+      }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 group">
+            <Link href="/" className="flex items-center gap-3 group">
               <div className="relative">
-                <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-2xl bg-gradient-to-br from-primary via-primary to-cyan-500 flex items-center justify-center shadow-lg shadow-primary/30 group-hover:shadow-primary/50 transition-shadow">
-                  <Navigation className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
+                <div className="w-11 h-11 lg:w-12 lg:h-12 rounded-2xl gradient-premium flex items-center justify-center shadow-lg neon-primary group-hover:scale-110 transition-transform">
+                  <Navigation className="w-6 h-6 text-white" />
                 </div>
-                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-success rounded-full border-2 border-background" />
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-success rounded-full border-2 border-background animate-pulse" />
               </div>
-              <div className="hidden sm:block">
-                <span className="text-xl lg:text-2xl font-black tracking-tight text-foreground">MOVO</span>
-                <p className="text-[10px] text-muted-foreground -mt-1 tracking-widest">MOBILIDADE INTELIGENTE</p>
+              <div>
+                <span className="text-2xl lg:text-3xl font-black tracking-tight gradient-text">MOVO</span>
+                <p className="text-[10px] text-muted-foreground tracking-[0.2em] -mt-1 hidden sm:block">MOBILIDADE DO FUTURO</p>
               </div>
             </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-1">
               {[
-                { href: "#servicos", label: "Serviços" },
+                { href: "#plataformas", label: "Plataformas" },
                 { href: "#motoristas", label: "Seja Motorista" },
                 { href: "#empresas", label: "Empresas" },
-                { href: "#seguranca", label: "Segurança" },
-                { href: "#ajuda", label: "Ajuda" },
+                { href: "#seguranca", label: "Seguranca" },
               ].map((link) => (
                 <Link
                   key={link.href}
@@ -128,22 +142,22 @@ export default function HomePage() {
             </nav>
 
             {/* CTA Buttons */}
-            <div className="flex items-center gap-2 lg:gap-3">
+            <div className="flex items-center gap-3">
               <Link
                 href="/login"
-                className="hidden sm:flex px-4 py-2 text-sm font-semibold text-foreground hover:text-primary transition-colors"
+                className="hidden sm:flex px-5 py-2.5 text-sm font-semibold text-foreground hover:text-primary transition-colors"
               >
                 Entrar
               </Link>
               <Link
                 href="/cadastro"
-                className="px-4 lg:px-6 py-2.5 text-sm font-bold text-white bg-gradient-to-r from-primary to-cyan-500 rounded-xl hover:opacity-90 transition-opacity shadow-lg shadow-primary/25"
+                className="px-5 lg:px-7 py-2.5 lg:py-3 text-sm font-bold text-white gradient-premium rounded-xl btn-premium shadow-xl"
               >
-                Começar
+                Comecar Agora
               </Link>
               <button
                 onClick={() => setMobileMenuOpen(true)}
-                className="lg:hidden p-2 rounded-xl bg-secondary"
+                className="lg:hidden p-2.5 rounded-xl bg-secondary hover:bg-secondary/80 transition-colors"
               >
                 <Menu className="w-5 h-5" />
               </button>
@@ -155,281 +169,280 @@ export default function HomePage() {
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-[60] lg:hidden">
-          <div className="absolute inset-0 bg-background/95 backdrop-blur-xl" />
-          <div className="relative h-full flex flex-col p-6">
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-primary to-cyan-500 flex items-center justify-center">
-                  <Navigation className="w-5 h-5 text-white" />
+          <div className="absolute inset-0 bg-background/98 backdrop-blur-2xl" />
+          <div className="relative h-full flex flex-col p-6 safe-area-top">
+            <div className="flex items-center justify-between mb-10">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-2xl gradient-premium flex items-center justify-center">
+                  <Navigation className="w-6 h-6 text-white" />
                 </div>
-                <span className="text-xl font-black">MOVO</span>
+                <span className="text-2xl font-black gradient-text">MOVO</span>
               </div>
-              <button onClick={() => setMobileMenuOpen(false)} className="p-2 rounded-xl bg-secondary">
+              <button onClick={() => setMobileMenuOpen(false)} className="p-2.5 rounded-xl bg-secondary">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <nav className="flex-1 space-y-2">
+            <div className="flex-1 space-y-3 overflow-y-auto">
+              {/* Plataforma Uber */}
+              <div className="p-1 rounded-3xl bg-gradient-to-r from-uber-black to-gray-800">
+                <Link
+                  href="/solicitar"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-4 p-5 rounded-[1.4rem] bg-uber-black"
+                >
+                  <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center">
+                    <Car className="w-7 h-7 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <span className="font-bold text-lg text-white">Pedir Corrida</span>
+                    <p className="text-sm text-gray-400">Estilo Uber/99 - Taxa 5%</p>
+                  </div>
+                  <ArrowUpRight className="w-6 h-6 text-white" />
+                </Link>
+              </div>
+
+              {/* Plataforma Gestao */}
+              <div className="p-1 rounded-3xl gradient-premium">
+                <Link
+                  href="/plataforma"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-4 p-5 rounded-[1.4rem] bg-card"
+                >
+                  <div className="w-14 h-14 rounded-2xl gradient-premium flex items-center justify-center">
+                    <Briefcase className="w-7 h-7 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <span className="font-bold text-lg text-foreground">Gestao ERP</span>
+                    <p className="text-sm text-muted-foreground">Servicos e cotacoes</p>
+                  </div>
+                  <ArrowUpRight className="w-6 h-6 text-muted-foreground" />
+                </Link>
+              </div>
+
+              {/* Other Links */}
               {[
-                { href: "/solicitar", label: "Solicitar Corrida", icon: Car, color: "primary" },
-                { href: "/motorista", label: "Painel Motorista", icon: Wallet, color: "success" },
-                { href: "/plataforma", label: "Gestão de Serviços", icon: Briefcase, color: "warning" },
-                { href: "/empresas/cadastrar", label: "Para Empresas", icon: Building2, color: "cyan-500" },
-                { href: "/motoristas/cadastrar", label: "Seja Motorista", icon: TrendingUp, color: "success" },
-                { href: "/cadastro", label: "Criar Conta", icon: UserCircle, color: "primary" },
+                { href: "/motorista", label: "Painel Motorista", icon: Wallet, desc: "Ganhos e corridas" },
+                { href: "/motoristas/cadastrar", label: "Seja Motorista", icon: TrendingUp, desc: "Ganhe mais" },
+                { href: "/cadastro", label: "Criar Conta", icon: UserCircle, desc: "Gratis e rapido" },
               ].map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-4 p-4 rounded-2xl bg-card border border-border hover:border-primary/50 transition-colors"
+                  className="flex items-center gap-4 p-5 rounded-2xl bg-card border border-border hover:border-primary/30 transition-colors"
                 >
-                  <div className={`w-12 h-12 rounded-xl bg-${item.color}/10 flex items-center justify-center`}>
-                    <item.icon className={`w-6 h-6 text-${item.color}`} />
+                  <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center">
+                    <item.icon className="w-6 h-6 text-primary" />
                   </div>
-                  <span className="font-semibold">{item.label}</span>
-                  <ChevronRight className="w-5 h-5 ml-auto text-muted-foreground" />
+                  <div className="flex-1">
+                    <span className="font-semibold">{item.label}</span>
+                    <p className="text-sm text-muted-foreground">{item.desc}</p>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-muted-foreground" />
                 </Link>
               ))}
-            </nav>
+            </div>
 
-            <div className="pt-6 border-t border-border">
+            <div className="pt-6 border-t border-border mt-6">
               <Link
                 href="/login"
-                className="w-full py-4 bg-secondary rounded-xl font-semibold text-center block mb-3"
+                className="w-full py-4 bg-secondary rounded-xl font-semibold text-center block"
               >
                 Entrar na minha conta
               </Link>
-              <p className="text-center text-sm text-muted-foreground">
-                www.appmotoristas.com.br
-              </p>
             </div>
           </div>
         </div>
       )}
 
-      {/* Hero Section */}
-      <section className="relative pt-24 lg:pt-32 pb-16 lg:pb-24">
-        {/* Background Effects */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-bl from-primary/20 via-cyan-500/10 to-transparent rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-success/10 via-emerald-500/5 to-transparent rounded-full blur-3xl" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gradient-radial from-primary/5 to-transparent rounded-full" />
-        </div>
+      {/* Hero Section - Full Screen Impact */}
+      <section className="relative min-h-screen flex items-center pt-20 lg:pt-0">
+        {/* Background Mesh */}
+        <div className="absolute inset-0 gradient-mesh" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
+        
+        {/* Animated Orbs */}
+        <div className="absolute top-20 left-10 w-72 h-72 bg-primary/30 rounded-full blur-[100px] animate-float" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-silicon-pink/20 rounded-full blur-[120px] animate-float-slow" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-silicon-cyan/10 rounded-full blur-[150px]" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            {/* Left Content */}
-            <div className="space-y-8">
-              {/* Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-success/10 border border-success/20 rounded-full">
-                <Sparkles className="w-4 h-4 text-success" />
-                <span className="text-sm font-semibold text-success">Taxa de apenas 5% - A menor do Brasil</span>
-              </div>
-
-              {/* Title */}
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-foreground leading-[1.1]">
-                O futuro da{" "}
-                <span className="relative">
-                  <span className="relative z-10 bg-gradient-to-r from-primary via-cyan-500 to-primary bg-clip-text text-transparent">
-                    mobilidade
-                  </span>
-                  <svg className="absolute -bottom-2 left-0 w-full h-3 text-primary/30" viewBox="0 0 200 12" preserveAspectRatio="none">
-                    <path d="M0,8 Q50,0 100,8 T200,8" fill="none" stroke="currentColor" strokeWidth="4" />
-                  </svg>
-                </span>{" "}
-                chegou
-              </h1>
-
-              {/* Description */}
-              <p className="text-lg lg:text-xl text-muted-foreground max-w-xl leading-relaxed">
-                Plataforma completa de transporte e gestão de serviços com a{" "}
-                <strong className="text-foreground">menor taxa do mercado</strong>, IA integrada e máxima segurança para motoristas e passageiros.
-              </p>
-
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  href="/solicitar"
-                  className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-primary to-cyan-500 text-white font-bold rounded-2xl shadow-xl shadow-primary/30 hover:shadow-2xl hover:shadow-primary/40 hover:-translate-y-1 transition-all"
-                >
-                  <Car className="w-5 h-5" />
-                  Solicitar corrida
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </Link>
-                <Link
-                  href="/motoristas/cadastrar"
-                  className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-card border-2 border-border text-foreground font-bold rounded-2xl hover:border-primary/50 hover:bg-primary/5 transition-all"
-                >
-                  <Wallet className="w-5 h-5 text-success" />
-                  Quero dirigir
-                </Link>
-              </div>
-
-              {/* Trust Badges */}
-              <div className="flex flex-wrap items-center gap-6 pt-4">
-                <div className="flex items-center gap-2">
-                  <div className="flex -space-x-2">
-                    {[1, 2, 3, 4, 5].map((i) => (
-                      <div
-                        key={i}
-                        className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/80 to-cyan-500/80 border-2 border-background flex items-center justify-center text-xs font-bold text-white"
-                      >
-                        {String.fromCharCode(64 + i)}
-                      </div>
-                    ))}
-                  </div>
-                  <div className="text-sm">
-                    <div className="flex items-center gap-1">
-                      {[1, 2, 3, 4, 5].map((i) => (
-                        <Star key={i} className="w-4 h-4 fill-warning text-warning" />
-                      ))}
-                    </div>
-                    <p className="text-muted-foreground">{formatNumber(stats.clientes)}+ usuários</p>
-                  </div>
-                </div>
-
-                <div className="h-10 w-px bg-border hidden sm:block" />
-
-                <div className="flex items-center gap-2">
-                  <BadgeCheck className="w-8 h-8 text-success" />
-                  <div className="text-sm">
-                    <p className="font-semibold">100% verificado</p>
-                    <p className="text-muted-foreground">Motoristas checados</p>
-                  </div>
-                </div>
-              </div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 w-full">
+          <div className="text-center mb-16 lg:mb-20 animate-fade-in-up">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-success/10 border border-success/30 rounded-full mb-8">
+              <Crown className="w-4 h-4 text-success" />
+              <span className="text-sm font-bold text-success">Taxa de apenas 5% - A menor do Brasil</span>
+              <Sparkles className="w-4 h-4 text-success" />
             </div>
 
-            {/* Right Content - App Preview */}
-            <div className="relative">
-              {/* Main Card */}
-              <div className="relative bg-card rounded-[2rem] border border-border shadow-2xl p-6 lg:p-8">
-                {/* Status Badge */}
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-success text-white text-sm font-bold rounded-full shadow-lg flex items-center gap-2">
-                  <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
-                  Motorista a caminho
+            {/* Main Title */}
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl xl:text-8xl font-black mb-6 leading-[1.1] text-balance">
+              <span className="text-foreground">Duas plataformas.</span>
+              <br />
+              <span className="gradient-text">Um futuro.</span>
+            </h1>
+
+            <p className="text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
+              Escolha entre pedir uma corrida estilo Uber ou gerenciar seus servicos empresariais.
+              Tudo em um so lugar, com a tecnologia mais avancada do mercado.
+            </p>
+
+            {/* Trust Stats Mini */}
+            <div className="flex flex-wrap items-center justify-center gap-6 lg:gap-10">
+              <div className="flex items-center gap-2">
+                <div className="flex -space-x-2">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="w-8 h-8 rounded-full gradient-premium border-2 border-background" />
+                  ))}
                 </div>
-
-                {/* Map Placeholder */}
-                <div className="relative h-48 lg:h-56 bg-gradient-to-br from-slate-100 to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-2xl mb-6 overflow-hidden">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="relative">
-                      <div className="w-20 h-20 bg-primary/20 rounded-full animate-ping" />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
-                          <Car className="w-6 h-6 text-white" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Route Line */}
-                  <div className="absolute top-1/2 left-8 right-8 h-1 bg-gradient-to-r from-primary via-cyan-500 to-success rounded-full" />
-                  
-                  {/* Origin */}
-                  <div className="absolute top-1/2 left-6 -translate-y-1/2 w-4 h-4 bg-primary rounded-full border-4 border-white shadow-lg" />
-                  
-                  {/* Destination */}
-                  <div className="absolute top-1/2 right-6 -translate-y-1/2 w-4 h-4 bg-success rounded-full border-4 border-white shadow-lg" />
-                </div>
-
-                {/* Ride Details */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-4 p-4 bg-secondary/50 rounded-xl">
-                    <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
-                      <MapPin className="w-6 h-6 text-primary" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-xs text-muted-foreground">De</p>
-                      <p className="font-semibold">Av. Paulista, 1000</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-4 p-4 bg-secondary/50 rounded-xl">
-                    <div className="w-12 h-12 bg-success/10 rounded-xl flex items-center justify-center">
-                      <Navigation className="w-6 h-6 text-success" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-xs text-muted-foreground">Para</p>
-                      <p className="font-semibold">Aeroporto de Congonhas</p>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-3">
-                    <div className="text-center p-3 bg-secondary/50 rounded-xl">
-                      <Timer className="w-5 h-5 mx-auto mb-1 text-muted-foreground" />
-                      <p className="text-sm font-bold">3 min</p>
-                      <p className="text-xs text-muted-foreground">Chegada</p>
-                    </div>
-                    <div className="text-center p-3 bg-secondary/50 rounded-xl">
-                      <Route className="w-5 h-5 mx-auto mb-1 text-muted-foreground" />
-                      <p className="text-sm font-bold">12 km</p>
-                      <p className="text-xs text-muted-foreground">Distância</p>
-                    </div>
-                    <div className="text-center p-3 bg-primary/10 rounded-xl">
-                      <CircleDollarSign className="w-5 h-5 mx-auto mb-1 text-primary" />
-                      <p className="text-sm font-bold text-primary">R$ 32</p>
-                      <p className="text-xs text-muted-foreground">Valor</p>
-                    </div>
-                  </div>
-                </div>
+                <span className="text-sm font-medium text-muted-foreground">+{formatNumber(stats.clientes)} usuarios</span>
               </div>
-
-              {/* Floating Cards */}
-              <div className="absolute -left-4 lg:-left-8 top-1/4 p-4 bg-card rounded-2xl border border-border shadow-xl animate-bounce">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-warning/10 rounded-xl flex items-center justify-center">
-                    <Star className="w-5 h-5 fill-warning text-warning" />
-                  </div>
-                  <div>
-                    <p className="font-bold">{stats.avaliacao}</p>
-                    <p className="text-xs text-muted-foreground">Avaliação</p>
-                  </div>
-                </div>
+              <div className="flex items-center gap-2">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <Star key={i} className="w-4 h-4 fill-warning text-warning" />
+                ))}
+                <span className="text-sm font-medium">{stats.avaliacao}</span>
               </div>
-
-              <div className="absolute -right-4 lg:-right-8 bottom-1/4 p-4 bg-card rounded-2xl border border-border shadow-xl">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-success/10 rounded-xl flex items-center justify-center">
-                    <Shield className="w-5 h-5 text-success" />
-                  </div>
-                  <div>
-                    <p className="font-bold text-success">Seguro</p>
-                    <p className="text-xs text-muted-foreground">Viagem protegida</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="absolute right-8 -top-4 p-3 bg-gradient-to-r from-primary to-cyan-500 rounded-2xl shadow-xl text-white">
-                <div className="flex items-center gap-2">
-                  <Bot className="w-5 h-5" />
-                  <span className="text-sm font-semibold">IA 24h</span>
-                </div>
+              <div className="flex items-center gap-2">
+                <BadgeCheck className="w-5 h-5 text-success" />
+                <span className="text-sm font-medium text-muted-foreground">100% Verificado</span>
               </div>
             </div>
+          </div>
+
+          {/* Two Platform Cards */}
+          <div id="plataformas" className="grid lg:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto">
+            {/* UBER STYLE CARD */}
+            <Link href="/solicitar" className="group relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-uber-black via-gray-900 to-gray-800 rounded-[2rem] transform group-hover:scale-[1.02] transition-transform duration-500" />
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-[2rem]" />
+              </div>
+              
+              <div className="relative p-8 lg:p-10">
+                {/* Badge */}
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur rounded-full mb-6">
+                  <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                  <span className="text-sm font-semibold text-white">Estilo Uber / 99</span>
+                </div>
+
+                {/* Icon & Title */}
+                <div className="flex items-start gap-5 mb-6">
+                  <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-2xl bg-white flex items-center justify-center transform group-hover:rotate-6 transition-transform">
+                    <Car className="w-9 h-9 lg:w-10 lg:h-10 text-uber-black" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl lg:text-3xl font-black text-white mb-2">MOVO Ride</h2>
+                    <p className="text-gray-400">Peca sua corrida agora</p>
+                  </div>
+                </div>
+
+                {/* Features */}
+                <div className="space-y-3 mb-8">
+                  {[
+                    "Taxa de apenas 5% para motoristas",
+                    "Preco justo para passageiros",
+                    "GPS em tempo real",
+                    "Pagamento PIX, cartao ou dinheiro",
+                  ].map((feature, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                      <span className="text-gray-300 text-sm lg:text-base">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* CTA */}
+                <div className="flex items-center justify-between p-4 lg:p-5 bg-white/5 backdrop-blur rounded-2xl group-hover:bg-white/10 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+                      <MapPin className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-white font-semibold">Para onde?</p>
+                      <p className="text-gray-400 text-sm">Escolha seu destino</p>
+                    </div>
+                  </div>
+                  <ArrowRight className="w-6 h-6 text-white group-hover:translate-x-2 transition-transform" />
+                </div>
+              </div>
+            </Link>
+
+            {/* GESTAO ERP CARD */}
+            <Link href="/plataforma" className="group relative">
+              <div className="absolute inset-0 gradient-premium rounded-[2rem] p-[2px]">
+                <div className="absolute inset-[2px] bg-card rounded-[1.875rem]" />
+              </div>
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] neon-primary" />
+              
+              <div className="relative p-8 lg:p-10">
+                {/* Badge */}
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-6">
+                  <Rocket className="w-4 h-4 text-primary" />
+                  <span className="text-sm font-semibold text-primary">ERP Completo</span>
+                </div>
+
+                {/* Icon & Title */}
+                <div className="flex items-start gap-5 mb-6">
+                  <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-2xl gradient-premium flex items-center justify-center transform group-hover:rotate-6 transition-transform">
+                    <Briefcase className="w-9 h-9 lg:w-10 lg:h-10 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl lg:text-3xl font-black text-foreground mb-2">MOVO Business</h2>
+                    <p className="text-muted-foreground">Gestao empresarial</p>
+                  </div>
+                </div>
+
+                {/* Features */}
+                <div className="space-y-3 mb-8">
+                  {[
+                    "Cotacoes e orcamentos automaticos",
+                    "Controle de servicos e entregas",
+                    "Relatorios e dashboard completo",
+                    "IA para otimizar operacoes",
+                  ].map((feature, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
+                      <span className="text-muted-foreground text-sm lg:text-base">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* CTA */}
+                <div className="flex items-center justify-between p-4 lg:p-5 bg-secondary/50 rounded-2xl group-hover:bg-secondary transition-colors">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl gradient-premium flex items-center justify-center">
+                      <BarChart3 className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-foreground font-semibold">Acessar Plataforma</p>
+                      <p className="text-muted-foreground text-sm">Dashboard completo</p>
+                    </div>
+                  </div>
+                  <ArrowRight className="w-6 h-6 text-primary group-hover:translate-x-2 transition-transform" />
+                </div>
+              </div>
+            </Link>
           </div>
         </div>
       </section>
 
       {/* Stats Section */}
-      <section className="py-12 lg:py-16 bg-card border-y border-border">
+      <section className="py-16 lg:py-24 bg-card border-y border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
             {[
-              { value: formatNumber(stats.corridas), label: "Corridas realizadas", icon: Car },
-              { value: formatNumber(stats.motoristas), label: "Motoristas ativos", icon: Users },
-              { value: formatNumber(stats.clientes), label: "Usuários cadastrados", icon: UserCircle },
-              { value: `${stats.economia}%`, label: "Economia vs concorrentes", icon: TrendingUp },
-              { value: "5%", label: "Menor taxa do mercado", icon: CircleDollarSign, highlight: true },
+              { value: formatNumber(stats.corridas), label: "Corridas realizadas", icon: Car, color: "primary" },
+              { value: formatNumber(stats.motoristas), label: "Motoristas parceiros", icon: Users, color: "success" },
+              { value: formatNumber(stats.clientes), label: "Usuarios ativos", icon: Globe, color: "silicon-cyan" },
+              { value: "5%", label: "Taxa mais baixa", icon: Percent, color: "warning" },
             ].map((stat, i) => (
-              <div key={i} className={`text-center ${stat.highlight ? "col-span-2 lg:col-span-1" : ""}`}>
-                <div className={`w-14 h-14 mx-auto mb-3 rounded-2xl flex items-center justify-center ${stat.highlight ? "bg-success/10" : "bg-primary/10"}`}>
-                  <stat.icon className={`w-7 h-7 ${stat.highlight ? "text-success" : "text-primary"}`} />
+              <div key={i} className="text-center group">
+                <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-${stat.color}/10 flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                  <stat.icon className={`w-8 h-8 text-${stat.color}`} />
                 </div>
-                <p className={`text-3xl lg:text-4xl font-black mb-1 ${stat.highlight ? "text-success" : "text-foreground"}`}>
-                  {stat.value}
-                </p>
+                <p className="text-3xl lg:text-4xl font-black text-foreground mb-1">{stat.value}</p>
                 <p className="text-sm text-muted-foreground">{stat.label}</p>
               </div>
             ))}
@@ -437,223 +450,42 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Access Cards - Main Feature */}
-      <section id="servicos" className="py-16 lg:py-24">
+      {/* Services Section */}
+      <section className="py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 lg:mb-16">
-            <h2 className="text-3xl lg:text-5xl font-black text-foreground mb-4">
-              Tudo em uma só plataforma
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Duas soluções poderosas integradas: mobilidade urbana e gestão completa de serviços
-            </p>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
-            {/* App de Mobilidade */}
-            <div className="group relative bg-gradient-to-br from-primary/5 via-card to-cyan-500/5 rounded-3xl border-2 border-primary/20 p-6 lg:p-8 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 transition-all overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-primary/10 to-transparent rounded-full blur-3xl group-hover:from-primary/20 transition-colors" />
-              
-              <div className="relative">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-cyan-500 rounded-2xl flex items-center justify-center shadow-xl shadow-primary/30">
-                    <Car className="w-8 h-8 text-white" />
-                  </div>
-                  <div>
-                    <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full">MOBILIDADE</span>
-                    <h3 className="text-2xl lg:text-3xl font-black text-foreground mt-2">MOVO Ride</h3>
-                  </div>
-                </div>
-
-                <p className="text-muted-foreground mb-6 text-lg">
-                  App de transporte estilo Uber/99 com a <strong className="text-success">menor taxa do mercado (5%)</strong>. 
-                  Solicite corridas, seja motorista parceiro ou gerencie frotas corporativas.
-                </p>
-
-                <div className="grid grid-cols-2 gap-3 mb-6">
-                  {[
-                    { icon: MapPin, label: "GPS em tempo real" },
-                    { icon: Shield, label: "100% verificado" },
-                    { icon: Wallet, label: "Pagamento flexível" },
-                    { icon: Bot, label: "IA Assistente 24h" },
-                  ].map((item, i) => (
-                    <div key={i} className="flex items-center gap-2 text-sm">
-                      <item.icon className="w-4 h-4 text-primary" />
-                      <span>{item.label}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Link
-                    href="/solicitar"
-                    className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-primary to-cyan-500 text-white font-bold rounded-xl hover:opacity-90 transition-opacity"
-                  >
-                    <MapPin className="w-5 h-5" />
-                    Solicitar corrida
-                  </Link>
-                  <Link
-                    href="/motorista"
-                    className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-4 bg-secondary text-foreground font-bold rounded-xl hover:bg-secondary/80 transition-colors"
-                  >
-                    <Wallet className="w-5 h-5" />
-                    Painel motorista
-                  </Link>
-                </div>
-              </div>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-4">
+              <Zap className="w-4 h-4 text-primary" />
+              <span className="text-sm font-semibold text-primary">Servicos Completos</span>
             </div>
-
-            {/* Sistema de Gestão */}
-            <div className="group relative bg-gradient-to-br from-success/5 via-card to-emerald-500/5 rounded-3xl border-2 border-success/20 p-6 lg:p-8 hover:border-success/50 hover:shadow-2xl hover:shadow-success/10 transition-all overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-success/10 to-transparent rounded-full blur-3xl group-hover:from-success/20 transition-colors" />
-              
-              <div className="relative">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-success to-emerald-600 rounded-2xl flex items-center justify-center shadow-xl shadow-success/30">
-                    <Briefcase className="w-8 h-8 text-white" />
-                  </div>
-                  <div>
-                    <span className="px-3 py-1 bg-success/10 text-success text-xs font-bold rounded-full">ERP COMPLETO</span>
-                    <h3 className="text-2xl lg:text-3xl font-black text-foreground mt-2">MOVO Business</h3>
-                  </div>
-                </div>
-
-                <p className="text-muted-foreground mb-6 text-lg">
-                  Sistema completo de gestão para empresas de transporte. Controle de motoristas, serviços, 
-                  cotações, financeiro e muito mais com <strong className="text-success">segurança total</strong>.
-                </p>
-
-                <div className="grid grid-cols-2 gap-3 mb-6">
-                  {[
-                    { icon: Users, label: "Gestão de equipe" },
-                    { icon: TrendingUp, label: "Relatórios completos" },
-                    { icon: CreditCard, label: "Controle financeiro" },
-                    { icon: Lock, label: "Acesso seguro" },
-                  ].map((item, i) => (
-                    <div key={i} className="flex items-center gap-2 text-sm">
-                      <item.icon className="w-4 h-4 text-success" />
-                      <span>{item.label}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Link
-                    href="/plataforma"
-                    className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-success to-emerald-600 text-white font-bold rounded-xl hover:opacity-90 transition-opacity"
-                  >
-                    <Building2 className="w-5 h-5" />
-                    Acessar plataforma
-                  </Link>
-                  <Link
-                    href="/servicos"
-                    className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-4 bg-secondary text-foreground font-bold rounded-xl hover:bg-secondary/80 transition-colors"
-                  >
-                    <Briefcase className="w-5 h-5" />
-                    Ver serviços
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Services Types */}
-      <section className="py-16 lg:py-24 bg-card">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-black text-foreground mb-4">
-              Serviços para todas as necessidades
+            <h2 className="text-3xl lg:text-5xl font-black mb-4 text-balance">
+              Tudo que voce precisa em <span className="gradient-text">um so lugar</span>
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Do transporte executivo ao delivery, temos a solução perfeita para você
+              Do transporte de passageiros a gestao completa de servicos empresariais
             </p>
           </div>
 
-          {/* Service Tabs */}
-          <div className="flex justify-center mb-10">
-            <div className="inline-flex p-1.5 bg-secondary rounded-2xl">
-              {[
-                { id: "ride", label: "Transporte", icon: Car },
-                { id: "delivery", label: "Entregas", icon: Package },
-                { id: "corporate", label: "Corporativo", icon: Building2 },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveService(tab.id as typeof activeService)}
-                  className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all ${
-                    activeService === tab.id
-                      ? "bg-primary text-white shadow-lg"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  <tab.icon className="w-5 h-5" />
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Service Content */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-            {activeService === "ride" && [
-              { icon: Car, title: "MOVO Padrão", desc: "Econômico e rápido", price: "A partir de R$ 8" },
-              { icon: Sparkles, title: "MOVO Conforto", desc: "Carros espaçosos e ar", price: "A partir de R$ 12" },
-              { icon: Award, title: "MOVO Black", desc: "Premium e exclusivo", price: "A partir de R$ 25" },
-              { icon: Users, title: "MOVO XL", desc: "Até 6 passageiros", price: "A partir de R$ 18" },
-            ].map((item, i) => (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { icon: Car, title: "Corridas", desc: "Transporte de passageiros com seguranca", color: "uber-black", href: "/solicitar" },
+              { icon: Truck, title: "Entregas", desc: "Envio rapido de pacotes e documentos", color: "silicon-orange", href: "/solicitar" },
+              { icon: Briefcase, title: "Corporativo", desc: "Solucoes para empresas", color: "primary", href: "/empresas/cadastrar" },
+              { icon: Package, title: "Fretes", desc: "Mudancas e cargas pesadas", color: "success", href: "/solicitar" },
+            ].map((service, i) => (
               <Link
                 key={i}
-                href="/solicitar"
-                className="group p-6 bg-background rounded-2xl border border-border hover:border-primary/50 hover:shadow-xl transition-all"
+                href={service.href}
+                className="group p-6 lg:p-8 bg-card rounded-2xl border border-border hover:border-primary/30 card-hover"
               >
-                <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-primary/20 group-hover:scale-110 transition-all">
-                  <item.icon className="w-7 h-7 text-primary" />
+                <div className={`w-14 h-14 rounded-2xl bg-${service.color}/10 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}>
+                  <service.icon className={`w-7 h-7 text-${service.color}`} />
                 </div>
-                <h3 className="text-lg font-bold mb-1">{item.title}</h3>
-                <p className="text-sm text-muted-foreground mb-3">{item.desc}</p>
-                <p className="text-sm font-semibold text-primary">{item.price}</p>
-              </Link>
-            ))}
-
-            {activeService === "delivery" && [
-              { icon: Bike, title: "MOVO Moto", desc: "Entregas rápidas", price: "A partir de R$ 6" },
-              { icon: Package, title: "MOVO Flash", desc: "Até 30min na cidade", price: "A partir de R$ 12" },
-              { icon: Truck, title: "MOVO Cargo", desc: "Volumes grandes", price: "A partir de R$ 35" },
-              { icon: Plane, title: "MOVO Express", desc: "Intercidades", price: "Sob consulta" },
-            ].map((item, i) => (
-              <Link
-                key={i}
-                href="/solicitar"
-                className="group p-6 bg-background rounded-2xl border border-border hover:border-success/50 hover:shadow-xl transition-all"
-              >
-                <div className="w-14 h-14 bg-success/10 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-success/20 group-hover:scale-110 transition-all">
-                  <item.icon className="w-7 h-7 text-success" />
+                <h3 className="text-xl font-bold mb-2">{service.title}</h3>
+                <p className="text-muted-foreground text-sm mb-4">{service.desc}</p>
+                <div className="flex items-center gap-2 text-primary font-semibold text-sm">
+                  Acessar <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
-                <h3 className="text-lg font-bold mb-1">{item.title}</h3>
-                <p className="text-sm text-muted-foreground mb-3">{item.desc}</p>
-                <p className="text-sm font-semibold text-success">{item.price}</p>
-              </Link>
-            ))}
-
-            {activeService === "corporate" && [
-              { icon: Building2, title: "Frota Dedicada", desc: "Veículos exclusivos", price: "Plano mensal" },
-              { icon: Users, title: "Transporte Executivo", desc: "Para diretoria", price: "Sob demanda" },
-              { icon: CreditCard, title: "Conta Corporativa", desc: "Faturamento mensal", price: "Taxa especial" },
-              { icon: TrendingUp, title: "Dashboard Completo", desc: "Relatórios e métricas", price: "Incluso" },
-            ].map((item, i) => (
-              <Link
-                key={i}
-                href="/empresas/cadastrar"
-                className="group p-6 bg-background rounded-2xl border border-border hover:border-warning/50 hover:shadow-xl transition-all"
-              >
-                <div className="w-14 h-14 bg-warning/10 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-warning/20 group-hover:scale-110 transition-all">
-                  <item.icon className="w-7 h-7 text-warning" />
-                </div>
-                <h3 className="text-lg font-bold mb-1">{item.title}</h3>
-                <p className="text-sm text-muted-foreground mb-3">{item.desc}</p>
-                <p className="text-sm font-semibold text-warning">{item.price}</p>
               </Link>
             ))}
           </div>
@@ -661,134 +493,32 @@ export default function HomePage() {
       </section>
 
       {/* Driver Section */}
-      <section id="motoristas" className="py-16 lg:py-24">
+      <section id="motoristas" className="py-16 lg:py-24 bg-gradient-to-b from-card to-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="order-2 lg:order-1">
-              <div className="relative">
-                <div className="bg-gradient-to-br from-success/20 to-emerald-500/20 rounded-3xl p-8 lg:p-12">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-card rounded-2xl p-4 shadow-lg">
-                      <Wallet className="w-8 h-8 text-success mb-2" />
-                      <p className="text-2xl font-black">R$ 4.850</p>
-                      <p className="text-sm text-muted-foreground">Ganho médio/mês</p>
-                    </div>
-                    <div className="bg-card rounded-2xl p-4 shadow-lg">
-                      <CircleDollarSign className="w-8 h-8 text-primary mb-2" />
-                      <p className="text-2xl font-black text-success">5%</p>
-                      <p className="text-sm text-muted-foreground">Taxa da plataforma</p>
-                    </div>
-                    <div className="bg-card rounded-2xl p-4 shadow-lg">
-                      <Zap className="w-8 h-8 text-warning mb-2" />
-                      <p className="text-2xl font-black">24h</p>
-                      <p className="text-sm text-muted-foreground">Recebimento PIX</p>
-                    </div>
-                    <div className="bg-card rounded-2xl p-4 shadow-lg">
-                      <Clock className="w-8 h-8 text-cyan-500 mb-2" />
-                      <p className="text-2xl font-black">Livre</p>
-                      <p className="text-sm text-muted-foreground">Seus horários</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="absolute -bottom-4 -right-4 p-4 bg-card rounded-2xl shadow-xl border border-border">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-success/10 rounded-xl flex items-center justify-center">
-                      <TrendingUp className="w-6 h-6 text-success" />
-                    </div>
-                    <div>
-                      <p className="font-bold">+47%</p>
-                      <p className="text-xs text-muted-foreground">vs concorrentes</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="order-1 lg:order-2 space-y-6">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-success/10 border border-success/20 rounded-full">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-success/10 rounded-full mb-6">
                 <TrendingUp className="w-4 h-4 text-success" />
-                <span className="text-sm font-semibold text-success">Ganhe mais com o MOVO</span>
+                <span className="text-sm font-semibold text-success">Ganhe mais com a MOVO</span>
               </div>
-
-              <h2 className="text-3xl lg:text-4xl font-black text-foreground">
-                Dirija com a menor taxa do mercado
+              <h2 className="text-3xl lg:text-5xl font-black mb-6 text-balance">
+                Seja um motorista <span className="gradient-text">parceiro</span>
               </h2>
-
-              <p className="text-lg text-muted-foreground">
-                Com apenas 5% de taxa, você ganha mais a cada corrida. Pagamento em até 24h via PIX, 
-                sem metas obrigatórias e com suporte 24 horas.
+              <p className="text-lg text-muted-foreground mb-8">
+                Com a menor taxa do mercado, voce leva mais dinheiro para casa. 
+                Cadastre-se agora e comece a dirigir com liberdade e seguranca.
               </p>
 
-              <div className="space-y-4">
+              <div className="space-y-4 mb-8">
                 {[
-                  { icon: CircleDollarSign, text: "Taxa de apenas 5% - a menor do Brasil" },
-                  { icon: Zap, text: "Receba seus ganhos em até 24h via PIX" },
-                  { icon: Clock, text: "Trabalhe quando e onde quiser" },
-                  { icon: Shield, text: "Seguro contra acidentes incluso" },
-                  { icon: Headphones, text: "Suporte exclusivo para motoristas" },
+                  { icon: Percent, title: "Taxa de apenas 5%", desc: "A menor do Brasil" },
+                  { icon: Wallet, title: "Saque imediato", desc: "Receba via PIX na hora" },
+                  { icon: Shield, title: "Seguro incluso", desc: "Protecao total nas corridas" },
+                  { icon: Gift, title: "Bonus e premios", desc: "Ganhe mais com indicacoes" },
                 ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-success/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <item.icon className="w-5 h-5 text-success" />
-                    </div>
-                    <span className="font-medium">{item.text}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <Link
-                  href="/motoristas/cadastrar"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-success text-white font-bold rounded-xl shadow-lg shadow-success/30 hover:bg-success/90 transition-colors"
-                >
-                  <Car className="w-5 h-5" />
-                  Quero ser motorista
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
-                <Link
-                  href="/motorista"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-card border border-border font-semibold rounded-xl hover:border-success/50 transition-colors"
-                >
-                  Já sou motorista
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Security Section */}
-      <section id="seguranca" className="py-16 lg:py-24 bg-card">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-full">
-                <Shield className="w-4 h-4 text-primary" />
-                <span className="text-sm font-semibold text-primary">Segurança máxima</span>
-              </div>
-
-              <h2 className="text-3xl lg:text-4xl font-black text-foreground">
-                Sua segurança é nossa prioridade absoluta
-              </h2>
-
-              <p className="text-lg text-muted-foreground">
-                Investimos nas mais avançadas tecnologias de segurança para garantir 
-                tranquilidade em todas as suas viagens.
-              </p>
-
-              <div className="grid sm:grid-cols-2 gap-4">
-                {[
-                  { icon: Fingerprint, title: "Verificação facial", desc: "Antes de cada corrida" },
-                  { icon: BadgeCheck, title: "Antecedentes", desc: "Checagem completa" },
-                  { icon: Video, title: "Gravação opcional", desc: "Áudio durante viagem" },
-                  { icon: PhoneCall, title: "Botão SOS", desc: "Emergência em 1 toque" },
-                  { icon: Share2, title: "Compartilhar rota", desc: "Com amigos e família" },
-                  { icon: Shield, title: "Seguro incluso", desc: "Todas as corridas" },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-3 p-4 bg-background rounded-xl border border-border">
-                    <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <item.icon className="w-5 h-5 text-primary" />
+                  <div key={i} className="flex items-center gap-4 p-4 bg-card rounded-xl border border-border">
+                    <div className="w-12 h-12 rounded-xl bg-success/10 flex items-center justify-center">
+                      <item.icon className="w-6 h-6 text-success" />
                     </div>
                     <div>
                       <p className="font-semibold">{item.title}</p>
@@ -797,27 +527,50 @@ export default function HomePage() {
                   </div>
                 ))}
               </div>
+
+              <Link
+                href="/motoristas/cadastrar"
+                className="inline-flex items-center gap-3 px-8 py-4 bg-success text-white font-bold rounded-xl btn-premium shadow-xl shadow-success/30"
+              >
+                <Car className="w-5 h-5" />
+                Quero ser motorista
+                <ArrowRight className="w-5 h-5" />
+              </Link>
             </div>
 
+            {/* Earnings Preview Card */}
             <div className="relative">
-              <div className="bg-gradient-to-br from-primary/10 to-cyan-500/10 rounded-3xl p-8 lg:p-12">
-                <div className="flex items-center justify-center">
-                  <div className="relative">
-                    <div className="w-48 h-48 lg:w-64 lg:h-64 bg-primary/20 rounded-full flex items-center justify-center">
-                      <div className="w-36 h-36 lg:w-48 lg:h-48 bg-primary/30 rounded-full flex items-center justify-center">
-                        <div className="w-24 h-24 lg:w-32 lg:h-32 bg-primary rounded-full flex items-center justify-center shadow-2xl shadow-primary/50">
-                          <Shield className="w-12 h-12 lg:w-16 lg:h-16 text-white" />
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="absolute top-0 right-0 p-3 bg-card rounded-xl shadow-lg border border-border">
-                      <Lock className="w-6 h-6 text-success" />
-                    </div>
-                    <div className="absolute bottom-0 left-0 p-3 bg-card rounded-xl shadow-lg border border-border">
-                      <CheckCircle className="w-6 h-6 text-primary" />
-                    </div>
+              <div className="absolute inset-0 bg-gradient-to-br from-success/20 to-transparent rounded-3xl blur-3xl" />
+              <div className="relative bg-card rounded-3xl border border-border shadow-2xl p-8">
+                <div className="flex items-center justify-between mb-8">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Ganhos estimados</p>
+                    <p className="text-4xl font-black text-success">R$ 8.500</p>
+                    <p className="text-sm text-muted-foreground">por mes</p>
                   </div>
+                  <div className="w-16 h-16 rounded-2xl bg-success/10 flex items-center justify-center">
+                    <TrendingUp className="w-8 h-8 text-success" />
+                  </div>
+                </div>
+
+                <div className="space-y-4 mb-8">
+                  <div className="flex justify-between items-center p-3 bg-secondary/50 rounded-xl">
+                    <span className="text-muted-foreground">Corridas (150)</span>
+                    <span className="font-bold">R$ 9.000</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-secondary/50 rounded-xl">
+                    <span className="text-muted-foreground">Taxa MOVO (5%)</span>
+                    <span className="font-bold text-destructive">- R$ 450</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-success/10 rounded-xl">
+                    <span className="font-semibold">Voce recebe</span>
+                    <span className="font-black text-success text-xl">R$ 8.550</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-center gap-3 p-4 bg-warning/10 rounded-xl">
+                  <Gift className="w-5 h-5 text-warning" />
+                  <span className="text-sm font-semibold">+ R$ 500 bonus de indicacao disponivel</span>
                 </div>
               </div>
             </div>
@@ -825,66 +578,71 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Quick Access */}
-      <section className="py-16 lg:py-24">
+      {/* Security Section */}
+      <section id="seguranca" className="py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl lg:text-3xl font-black text-foreground mb-8 text-center">
-            Acesso rápido
-          </h2>
+          <div className="text-center mb-12 lg:mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-4">
+              <Shield className="w-4 h-4 text-primary" />
+              <span className="text-sm font-semibold text-primary">Seguranca Total</span>
+            </div>
+            <h2 className="text-3xl lg:text-5xl font-black mb-4">
+              Sua seguranca e nossa <span className="gradient-text">prioridade</span>
+            </h2>
+          </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { href: "/solicitar", icon: MapPin, title: "Solicitar corrida", desc: "Peça agora", color: "primary" },
-              { href: "/motorista", icon: Wallet, title: "Painel motorista", desc: "Seus ganhos", color: "success" },
-              { href: "/plataforma", icon: Briefcase, title: "Gestão de serviços", desc: "ERP completo", color: "warning" },
-              { href: "/login", icon: UserCircle, title: "Entrar", desc: "Sua conta", color: "primary" },
-              { href: "/motoristas/cadastrar", icon: Car, title: "Seja motorista", desc: "Cadastre-se", color: "success" },
-              { href: "/empresas/cadastrar", icon: Building2, title: "Para empresas", desc: "Conta corporativa", color: "warning" },
-              { href: "/assistente", icon: Bot, title: "IA Assistente", desc: "Ajuda 24h", color: "cyan-500" },
-              { href: "/servicos", icon: Zap, title: "Serviços", desc: "Todos os serviços", color: "primary" },
+              { icon: Fingerprint, title: "Verificacao Completa", desc: "Todos os motoristas passam por verificacao de antecedentes e documentacao" },
+              { icon: Lock, title: "Dados Protegidos", desc: "Criptografia de ponta a ponta em todas as suas informacoes" },
+              { icon: MapPin, title: "Rastreamento GPS", desc: "Acompanhe sua viagem em tempo real e compartilhe com familiares" },
+              { icon: PhoneCall, title: "Suporte 24h", desc: "Equipe sempre disponivel para ajudar voce" },
+              { icon: Star, title: "Sistema de Avaliacao", desc: "Motoristas e passageiros se avaliam mutuamente" },
+              { icon: Shield, title: "Seguro Viagem", desc: "Cobertura completa durante todas as corridas" },
             ].map((item, i) => (
-              <Link
-                key={i}
-                href={item.href}
-                className="group p-4 lg:p-5 bg-card rounded-2xl border border-border hover:border-primary/50 hover:shadow-xl transition-all"
-              >
-                <div
-                  className={`w-12 h-12 rounded-xl flex items-center justify-center mb-3 transition-transform group-hover:scale-110 bg-${item.color}/10`}
-                >
-                  <item.icon className={`w-6 h-6 text-${item.color}`} />
+              <div key={i} className="p-6 lg:p-8 bg-card rounded-2xl border border-border card-hover">
+                <div className="w-14 h-14 rounded-2xl gradient-premium flex items-center justify-center mb-5">
+                  <item.icon className="w-7 h-7 text-white" />
                 </div>
-                <h3 className="font-bold text-foreground mb-0.5">{item.title}</h3>
-                <p className="text-sm text-muted-foreground">{item.desc}</p>
-              </Link>
+                <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+                <p className="text-muted-foreground">{item.desc}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 lg:py-24 bg-gradient-to-br from-primary via-primary to-cyan-600">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl lg:text-5xl font-black text-white mb-6">
-            Pronto para começar?
-          </h2>
-          <p className="text-lg lg:text-xl text-white/80 mb-10 max-w-2xl mx-auto">
-            Junte-se a milhares de pessoas que já confiam no MOVO para suas viagens e negócios.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/solicitar"
-              className="inline-flex items-center justify-center gap-3 px-10 py-5 bg-white text-primary font-black rounded-2xl hover:bg-white/90 transition-colors shadow-xl"
-            >
-              <Car className="w-6 h-6" />
-              Solicitar corrida
-            </Link>
-            <Link
-              href="/motoristas/cadastrar"
-              className="inline-flex items-center justify-center gap-3 px-10 py-5 bg-white/10 text-white font-black rounded-2xl border-2 border-white/30 hover:bg-white/20 transition-colors"
-            >
-              <Users className="w-6 h-6" />
-              Seja motorista parceiro
-            </Link>
+      <section className="py-16 lg:py-24">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden rounded-3xl">
+            <div className="absolute inset-0 gradient-premium" />
+            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMtOS45NDEgMC0xOCA4LjA1OS0xOCAxOHM4LjA1OSAxOCAxOCAxOGMxMC45NDEgMCAxOC04LjA1OSAxOC0xOHMtNy4wNTktMTgtMTgtMTgiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjIiLz48L2c+PC9zdmc+')] opacity-30" />
+            
+            <div className="relative p-8 lg:p-16 text-center">
+              <h2 className="text-3xl lg:text-5xl font-black text-white mb-6 text-balance">
+                Pronto para comecar?
+              </h2>
+              <p className="text-lg text-white/80 max-w-2xl mx-auto mb-10">
+                Junte-se a milhares de usuarios e motoristas que ja fazem parte da revolucao da mobilidade.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Link
+                  href="/solicitar"
+                  className="w-full sm:w-auto px-8 py-4 bg-white text-primary font-bold rounded-xl hover:bg-white/90 transition-colors shadow-xl flex items-center justify-center gap-3"
+                >
+                  <Car className="w-5 h-5" />
+                  Pedir uma corrida
+                </Link>
+                <Link
+                  href="/motoristas/cadastrar"
+                  className="w-full sm:w-auto px-8 py-4 bg-white/10 backdrop-blur text-white font-bold rounded-xl hover:bg-white/20 transition-colors border border-white/20 flex items-center justify-center gap-3"
+                >
+                  <Wallet className="w-5 h-5" />
+                  Quero dirigir
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -892,72 +650,53 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="py-12 lg:py-16 bg-card border-t border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12 mb-12">
             {/* Brand */}
-            <div className="lg:col-span-2">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-cyan-500 flex items-center justify-center">
-                  <Navigation className="w-6 h-6 text-white" />
+            <div className="col-span-2 lg:col-span-1">
+              <Link href="/" className="flex items-center gap-2 mb-4">
+                <div className="w-10 h-10 rounded-xl gradient-premium flex items-center justify-center">
+                  <Navigation className="w-5 h-5 text-white" />
                 </div>
-                <div>
-                  <span className="text-xl font-black text-foreground">MOVO</span>
-                  <p className="text-xs text-muted-foreground">MOBILIDADE INTELIGENTE</p>
-                </div>
-              </div>
-              <p className="text-muted-foreground mb-4 max-w-xs">
-                A plataforma de mobilidade com a menor taxa do mercado. Tecnologia, segurança e economia para você.
+                <span className="text-xl font-black gradient-text">MOVO</span>
+              </Link>
+              <p className="text-sm text-muted-foreground mb-4">
+                A plataforma de mobilidade mais completa do Brasil.
               </p>
-              <p className="text-sm font-semibold text-primary">www.appmotoristas.com.br</p>
+              <p className="text-xs text-muted-foreground">
+                www.appmotoristas.com.br
+              </p>
             </div>
 
             {/* Links */}
-            <div>
-              <h4 className="font-bold text-foreground mb-4">Passageiros</h4>
-              <ul className="space-y-2">
-                {["Solicitar corrida", "Criar conta", "Promoções", "Segurança"].map((item) => (
-                  <li key={item}>
-                    <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                      {item}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-foreground mb-4">Motoristas</h4>
-              <ul className="space-y-2">
-                {["Seja parceiro", "Acessar painel", "Ganhos", "Documentos"].map((item) => (
-                  <li key={item}>
-                    <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                      {item}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-foreground mb-4">Empresa</h4>
-              <ul className="space-y-2">
-                {["Sobre nós", "Contato", "Termos de uso", "Privacidade"].map((item) => (
-                  <li key={item}>
-                    <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                      {item}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {[
+              { title: "Passageiros", links: ["Pedir corrida", "Precos", "Seguranca", "Ajuda"] },
+              { title: "Motoristas", links: ["Seja motorista", "Ganhos", "Requisitos", "Suporte"] },
+              { title: "Empresas", links: ["Solucoes", "API", "Parcerias", "Contato"] },
+              { title: "MOVO", links: ["Sobre nos", "Carreiras", "Blog", "Privacidade"] },
+            ].map((section, i) => (
+              <div key={i}>
+                <h4 className="font-bold mb-4">{section.title}</h4>
+                <ul className="space-y-2">
+                  {section.links.map((link, j) => (
+                    <li key={j}>
+                      <Link href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                        {link}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
 
-          <div className="pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="pt-8 border-t border-border flex flex-col lg:flex-row items-center justify-between gap-4">
             <p className="text-sm text-muted-foreground">
-              2024 MOVO - App Motoristas. Todos os direitos reservados.
+              2024 MOVO. Todos os direitos reservados.
             </p>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Heart className="w-4 h-4 text-destructive" />
-              Feito com amor no Brasil
+            <div className="flex items-center gap-6">
+              <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Termos</Link>
+              <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Privacidade</Link>
+              <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Cookies</Link>
             </div>
           </div>
         </div>

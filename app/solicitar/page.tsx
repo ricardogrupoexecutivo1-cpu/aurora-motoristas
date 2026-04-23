@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Navigation } from "lucide-react";
-import { formatCurrency, calculateRidePrice, getGreeting } from "@/lib/utils";
+import { formatCurrency, calculateRidePrice } from "@/lib/utils";
 import {
   MapPin,
   Navigation,
@@ -219,11 +218,12 @@ export default function SolicitarCorridaPage() {
             </button>
           ) : (
             <Link href="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-cyan-500 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl gradient-premium flex items-center justify-center shadow-lg neon-primary">
                 <Navigation className="w-5 h-5 text-white" />
               </div>
               <div>
-                <span className="font-bold text-xl text-foreground">MOVO</span>
+                <span className="font-bold text-2xl gradient-text">MOVO</span>
+                <p className="text-[9px] text-muted-foreground tracking-widest -mt-1">RIDE</p>
               </div>
             </Link>
           )}

@@ -1,14 +1,21 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
+
+const inter = Inter({ 
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
 
 export const metadata: Metadata = {
   title: {
-    default: "MOVO - Mobilidade Inteligente | Taxa de apenas 5%",
+    default: "MOVO - Mobilidade do Futuro | Taxa de apenas 5%",
     template: "%s | MOVO",
   },
   description:
-    "Plataforma completa de mobilidade urbana e gestão de serviços com a menor taxa do mercado (5%). Solicite corridas, seja motorista parceiro ou gerencie sua frota empresarial com segurança e tecnologia de ponta.",
+    "Plataforma completa de mobilidade urbana e gestao de servicos com a menor taxa do mercado (5%). Solicite corridas estilo Uber/99, seja motorista parceiro ou gerencie sua frota empresarial com seguranca e tecnologia de ponta.",
   keywords: [
     "movo",
     "app motoristas",
@@ -18,7 +25,7 @@ export const metadata: Metadata = {
     "motorista",
     "transporte",
     "mobilidade",
-    "táxi",
+    "taxi",
     "viagem",
     "transfer",
     "menor taxa",
@@ -27,10 +34,12 @@ export const metadata: Metadata = {
     "entrega",
     "corporativo",
     "frota",
+    "erp",
+    "gestao",
   ],
-  authors: [{ name: "MOVO - App Motoristas" }],
+  authors: [{ name: "MOVO" }],
   creator: "MOVO",
-  publisher: "MOVO - App Motoristas",
+  publisher: "MOVO",
   metadataBase: new URL("https://www.appmotoristas.com.br"),
   alternates: {
     canonical: "/",
@@ -39,22 +48,22 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pt_BR",
     url: "https://www.appmotoristas.com.br",
-    siteName: "MOVO - Mobilidade Inteligente",
+    siteName: "MOVO - Mobilidade do Futuro",
     title: "MOVO - A menor taxa do mercado | Apenas 5%",
     description:
-      "Plataforma de mobilidade com a menor taxa do mercado. Solicite corridas, seja motorista ou gerencie sua frota.",
+      "Plataforma de mobilidade com a menor taxa do mercado. Solicite corridas estilo Uber, seja motorista ou gerencie sua frota.",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "MOVO - Mobilidade Inteligente",
+        alt: "MOVO - Mobilidade do Futuro",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "MOVO - Mobilidade Inteligente | Taxa de apenas 5%",
+    title: "MOVO - Mobilidade do Futuro | Taxa de apenas 5%",
     description: "Plataforma de mobilidade com a menor taxa do mercado",
     images: ["/og-image.png"],
   },
@@ -82,8 +91,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#0ea5e9" },
-    { media: "(prefers-color-scheme: dark)", color: "#0ea5e9" },
+    { media: "(prefers-color-scheme: light)", color: "#6366f1" },
+    { media: "(prefers-color-scheme: dark)", color: "#818cf8" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -98,7 +107,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" className="bg-background">
+    <html lang="pt-BR" className={`${inter.variable} bg-background`}>
       <head>
         <meta name="application-name" content="MOVO" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -106,11 +115,9 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="MOVO" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="format-detection" content="telephone=no" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
 
-      <body className="antialiased">
+      <body className="font-sans antialiased">
         {children}
         <Analytics />
       </body>
