@@ -2,9 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import Header from "@/components/layout/header";
-import Sidebar from "@/components/layout/sidebar";
-import Footer from "@/components/layout/footer";
+import AppLayout from "@/components/layout/app-layout";
 import PageHeader from "@/components/ui/page-header";
 import StatsCard from "@/components/ui/stats-card";
 import {
@@ -16,21 +14,11 @@ import {
   Search,
   Filter,
   Download,
-  MoreVertical,
   Phone,
   Mail,
   MapPin,
-  FileText,
-  Star,
   ChevronRight,
-  Eye,
-  Edit,
-  Trash2,
-  CheckCircle,
-  XCircle,
   AlertTriangle,
-  Car,
-  Shield,
   Calendar,
   ExternalLink,
 } from "lucide-react";
@@ -178,203 +166,194 @@ export default function MotoristasPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header userType="admin" userName="Ricardo" />
-      <Sidebar userType="admin" />
-
-      <main className="pl-64 pt-16 min-h-screen">
-        <div className="p-8">
-          <PageHeader
-            title="Motoristas"
-            description="Gerencie todos os motoristas cadastrados na plataforma"
-            icon={Users}
-            breadcrumbs={[
-              { label: "Dashboard", href: "/plataforma" },
-              { label: "Motoristas" },
-            ]}
-            actions={
-              <div className="flex items-center gap-3">
-                <Link
-                  href="/quero-ser-motorista"
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm hover:border-primary/50 transition-all"
-                >
-                  <ExternalLink className="w-4 h-4" />
-                  Link Publico
-                </Link>
-                <Link
-                  href="/motoristas/cadastrar"
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl gradient-premium text-white text-sm font-medium hover:shadow-lg hover:shadow-primary/25 transition-all"
-                >
-                  <UserPlus className="w-4 h-4" />
-                  Novo Motorista
-                </Link>
-              </div>
-            }
-          />
-
-          {/* Stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {stats.map((stat, index) => (
-              <StatsCard key={index} {...stat} />
-            ))}
+    <AppLayout>
+      <PageHeader
+        title="Motoristas"
+        description="Gerencie todos os motoristas cadastrados na plataforma"
+        icon={Users}
+        breadcrumbs={[
+          { label: "Dashboard", href: "/plataforma" },
+          { label: "Motoristas" },
+        ]}
+        actions={
+          <div className="flex items-center gap-3">
+            <Link
+              href="/quero-ser-motorista"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm hover:border-primary/50 transition-all"
+            >
+              <ExternalLink className="w-4 h-4" />
+              Link Publico
+            </Link>
+            <Link
+              href="/motoristas/cadastrar"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl gradient-premium text-white text-sm font-medium hover:shadow-lg hover:shadow-primary/25 transition-all"
+            >
+              <UserPlus className="w-4 h-4" />
+              Novo Motorista
+            </Link>
           </div>
+        }
+      />
 
-          {/* Main Content */}
-          <div className="glass-card rounded-2xl border border-white/10 overflow-hidden">
-            {/* Toolbar */}
-            <div className="p-6 border-b border-white/10">
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="relative flex-1 lg:w-80">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <input
-                      type="text"
-                      placeholder="Buscar por nome, CPF, telefone..."
-                      value={busca}
-                      onChange={(e) => setBusca(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/10 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all text-sm"
-                    />
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 hover:border-primary/50 text-sm transition-all">
-                    <Filter className="w-4 h-4" />
-                    Filtros
-                  </button>
-                  <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 hover:border-primary/50 text-sm transition-all">
-                    <Download className="w-4 h-4" />
-                    Exportar
-                  </button>
-                </div>
-              </div>
+      {/* Stats */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {stats.map((stat, index) => (
+          <StatsCard key={index} {...stat} />
+        ))}
+      </div>
 
-              {/* Filter Tabs */}
-              <div className="flex items-center gap-2 mt-4 overflow-x-auto pb-2">
-                {filterButtons.map((btn) => (
-                  <button
-                    key={btn.key}
-                    onClick={() => setFiltroStatus(btn.key as FiltroStatus)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${
-                      filtroStatus === btn.key
-                        ? "gradient-premium text-white shadow-lg"
-                        : "bg-white/5 border border-white/10 hover:border-primary/50"
-                    }`}
-                  >
-                    {btn.label}
-                    <span className={`px-2 py-0.5 rounded-full text-xs ${
-                      filtroStatus === btn.key ? "bg-white/20" : "bg-white/10"
-                    }`}>
-                      {btn.count}
-                    </span>
-                  </button>
-                ))}
+      {/* Main Content */}
+      <div className="glass-card rounded-2xl border border-white/10 overflow-hidden">
+        {/* Toolbar */}
+        <div className="p-6 border-b border-white/10">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="relative flex-1 lg:w-80">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <input
+                  type="text"
+                  placeholder="Buscar por nome, CPF, telefone..."
+                  value={busca}
+                  onChange={(e) => setBusca(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/10 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all text-sm"
+                />
               </div>
             </div>
+            <div className="flex items-center gap-2">
+              <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 hover:border-primary/50 text-sm transition-all">
+                <Filter className="w-4 h-4" />
+                Filtros
+              </button>
+              <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 hover:border-primary/50 text-sm transition-all">
+                <Download className="w-4 h-4" />
+                Exportar
+              </button>
+            </div>
+          </div>
 
-            {/* Error */}
-            {erro && (
-              <div className="p-4 m-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 flex items-center gap-3">
-                <AlertTriangle className="w-5 h-5" />
-                {erro}
-              </div>
-            )}
-
-            {/* Loading */}
-            {carregando ? (
-              <div className="p-12 text-center">
-                <div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto mb-4" />
-                <p className="text-muted-foreground">Carregando motoristas...</p>
-              </div>
-            ) : motoristasFiltrados.length === 0 ? (
-              <div className="p-12 text-center">
-                <Users className="w-16 h-16 mx-auto mb-4 text-white/10" />
-                <p className="text-muted-foreground">
-                  {busca.trim() ? "Nenhum motorista encontrado para essa busca." : "Nenhum motorista cadastrado ainda."}
-                </p>
-              </div>
-            ) : (
-              <div className="divide-y divide-white/5">
-                {motoristasFiltrados.map((motorista) => {
-                  const status = obterStatusMotorista(motorista);
-                  const origemPublica = inferirOrigemPublica(motorista.observacoes);
-                  const endereco = [motorista.cidade, motorista.estado].filter(Boolean).join(", ");
-
-                  return (
-                    <Link
-                      key={motorista.id}
-                      href={`/motoristas/${motorista.id}`}
-                      className="block p-6 hover:bg-white/5 transition-colors group"
-                    >
-                      <div className="flex items-start gap-4">
-                        {/* Avatar */}
-                        <div className="w-14 h-14 rounded-2xl gradient-premium flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
-                          {(motorista.nome || "M").charAt(0).toUpperCase()}
-                        </div>
-
-                        {/* Info */}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between gap-4">
-                            <div>
-                              <div className="flex items-center gap-3 mb-1">
-                                <h3 className="font-bold text-lg group-hover:text-primary transition-colors">
-                                  {motorista.nome || "Sem nome"}
-                                </h3>
-                                <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${status.fundo} ${status.cor}`}>
-                                  {status.rotulo}
-                                </span>
-                                {origemPublica && (
-                                  <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500/20 text-blue-400">
-                                    Cadastro Publico
-                                  </span>
-                                )}
-                              </div>
-                              <p className="text-sm text-muted-foreground">
-                                CPF: {formatarCPF(motorista.cpf)}
-                              </p>
-                            </div>
-                            <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                          </div>
-
-                          {/* Details Grid */}
-                          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
-                            <div className="flex items-center gap-2 text-sm">
-                              <Phone className="w-4 h-4 text-muted-foreground" />
-                              <span className="text-muted-foreground">{formatarTelefone(motorista.telefone)}</span>
-                            </div>
-                            <div className="flex items-center gap-2 text-sm">
-                              <Mail className="w-4 h-4 text-muted-foreground" />
-                              <span className="text-muted-foreground truncate">{motorista.email || "---"}</span>
-                            </div>
-                            <div className="flex items-center gap-2 text-sm">
-                              <MapPin className="w-4 h-4 text-muted-foreground" />
-                              <span className="text-muted-foreground">{endereco || "---"}</span>
-                            </div>
-                            <div className="flex items-center gap-2 text-sm">
-                              <Calendar className="w-4 h-4 text-muted-foreground" />
-                              <span className="text-muted-foreground">{formatarData(motorista.created_at)}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            )}
-
-            {/* Pagination */}
-            {!carregando && motoristasFiltrados.length > 0 && (
-              <div className="p-4 border-t border-white/10 flex items-center justify-between">
-                <p className="text-sm text-muted-foreground">
-                  Mostrando {motoristasFiltrados.length} de {totais.total} motoristas
-                </p>
-              </div>
-            )}
+          {/* Filter Tabs */}
+          <div className="flex items-center gap-2 mt-4 overflow-x-auto pb-2">
+            {filterButtons.map((btn) => (
+              <button
+                key={btn.key}
+                onClick={() => setFiltroStatus(btn.key as FiltroStatus)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${
+                  filtroStatus === btn.key
+                    ? "gradient-premium text-white shadow-lg"
+                    : "bg-white/5 border border-white/10 hover:border-primary/50"
+                }`}
+              >
+                {btn.label}
+                <span className={`px-2 py-0.5 rounded-full text-xs ${
+                  filtroStatus === btn.key ? "bg-white/20" : "bg-white/10"
+                }`}>
+                  {btn.count}
+                </span>
+              </button>
+            ))}
           </div>
         </div>
 
-        <Footer />
-      </main>
-    </div>
+        {/* Error */}
+        {erro && (
+          <div className="p-4 m-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 flex items-center gap-3">
+            <AlertTriangle className="w-5 h-5" />
+            {erro}
+          </div>
+        )}
+
+        {/* Loading */}
+        {carregando ? (
+          <div className="p-12 text-center">
+            <div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto mb-4" />
+            <p className="text-muted-foreground">Carregando motoristas...</p>
+          </div>
+        ) : motoristasFiltrados.length === 0 ? (
+          <div className="p-12 text-center">
+            <Users className="w-16 h-16 mx-auto mb-4 text-white/10" />
+            <p className="text-muted-foreground">
+              {busca.trim() ? "Nenhum motorista encontrado para essa busca." : "Nenhum motorista cadastrado ainda."}
+            </p>
+          </div>
+        ) : (
+          <div className="divide-y divide-white/5">
+            {motoristasFiltrados.map((motorista) => {
+              const status = obterStatusMotorista(motorista);
+              const origemPublica = inferirOrigemPublica(motorista.observacoes);
+              const endereco = [motorista.cidade, motorista.estado].filter(Boolean).join(", ");
+
+              return (
+                <Link
+                  key={motorista.id}
+                  href={`/motoristas/${motorista.id}`}
+                  className="block p-6 hover:bg-white/5 transition-colors group"
+                >
+                  <div className="flex items-start gap-4">
+                    {/* Avatar */}
+                    <div className="w-14 h-14 rounded-2xl gradient-premium flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
+                      {(motorista.nome || "M").charAt(0).toUpperCase()}
+                    </div>
+
+                    {/* Info */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <div className="flex items-center gap-3 mb-1">
+                            <h3 className="font-bold text-lg group-hover:text-primary transition-colors">
+                              {motorista.nome || "Sem nome"}
+                            </h3>
+                            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${status.fundo} ${status.cor}`}>
+                              {status.rotulo}
+                            </span>
+                            {origemPublica && (
+                              <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500/20 text-blue-400">
+                                Cadastro Publico
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-sm text-muted-foreground">
+                            CPF: {formatarCPF(motorista.cpf)}
+                          </p>
+                        </div>
+                        <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                      </div>
+
+                      {/* Details Grid */}
+                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+                        <div className="flex items-center gap-2 text-sm">
+                          <Phone className="w-4 h-4 text-muted-foreground" />
+                          <span className="text-muted-foreground">{formatarTelefone(motorista.telefone)}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                          <Mail className="w-4 h-4 text-muted-foreground" />
+                          <span className="text-muted-foreground truncate">{motorista.email || "---"}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                          <MapPin className="w-4 h-4 text-muted-foreground" />
+                          <span className="text-muted-foreground">{endereco || "---"}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                          <Calendar className="w-4 h-4 text-muted-foreground" />
+                          <span className="text-muted-foreground">{formatarData(motorista.created_at)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Pagination */}
+        {!carregando && motoristasFiltrados.length > 0 && (
+          <div className="p-4 border-t border-white/10 flex items-center justify-between">
+            <p className="text-sm text-muted-foreground">
+              Mostrando {motoristasFiltrados.length} de {totais.total} motoristas
+            </p>
+          </div>
+        )}
+      </div>
+    </AppLayout>
   );
 }
