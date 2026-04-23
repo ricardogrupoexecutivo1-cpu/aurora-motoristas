@@ -1,8 +1,8 @@
 -- ============================================================================
--- APP MOTORISTAS - Sistema Completo Estilo Uber/99
+-- MOVO - Sistema Completo de Mobilidade e Entregas
 -- www.appmotoristas.com.br
--- Taxa de 5% - Menor que concorrentes
--- Segurança máxima, pontuação, IA e monetização
+-- Taxa de 5% - A menor do mercado
+-- Seguranca maxima, pontuacao, IA e monetizacao
 -- ============================================================================
 
 begin;
@@ -86,7 +86,7 @@ create index if not exists idx_am_documents_motorista_id on public.am_documents(
 create index if not exists idx_am_documents_status on public.am_documents(status);
 
 -- ============================================================================
--- TABELA DE CORRIDAS (ESTILO UBER/99)
+-- TABELA DE CORRIDAS (MOVO RIDE)
 -- ============================================================================
 
 create table if not exists public.am_rides (

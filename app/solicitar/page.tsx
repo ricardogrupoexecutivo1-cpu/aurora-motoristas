@@ -183,10 +183,10 @@ const LOCAIS_RECENTES = [
   { id: "4", endereco: "Hospital Albert Einstein - Morumbi", lat: -23.5988, lng: -46.7135 },
 ];
 
-// Precos da concorrencia (para comparacao)
-const PRECOS_CONCORRENCIA = {
-  uber: 1.10, // 10% mais caro
-  nineNine: 1.08, // 8% mais caro
+// Precos de mercado (para comparacao)
+const PRECOS_MERCADO = {
+  concorrenciaA: 1.10, // 10% mais caro
+  concorrenciaB: 1.08, // 8% mais caro
 };
 
 export default function SolicitarCorridaPage() {
@@ -212,8 +212,8 @@ export default function SolicitarCorridaPage() {
   const [distancia, setDistancia] = useState(0);
   const [duracao, setDuracao] = useState(0);
   const [preco, setPreco] = useState({ valorBase: 0, valorKm: 0, valorTempo: 0, valorTotal: 0, taxaPlataforma: 0, valorMotorista: 0 });
-  const [precoUber, setPrecoUber] = useState(0);
-  const [preco99, setPreco99] = useState(0);
+  const [precoMercado, setPrecoMercado] = useState(0);
+  const [precoMercado2, setPrecoMercado2] = useState(0);
 
   // Motorista encontrado
   const [motorista, setMotorista] = useState<Driver | null>(null);
@@ -245,9 +245,9 @@ export default function SolicitarCorridaPage() {
         valorTotal: total,
       });
 
-      // Calcular precos da concorrencia (5% mais caros)
-      setPrecoUber(Math.round(total * PRECOS_CONCORRENCIA.uber * 100) / 100);
-      setPreco99(Math.round(total * PRECOS_CONCORRENCIA.nineNine * 100) / 100);
+      // Calcular precos de mercado (MOVO e mais barato)
+      setPrecoMercado(Math.round(total * PRECOS_MERCADO.concorrenciaA * 100) / 100);
+      setPrecoMercado2(Math.round(total * PRECOS_MERCADO.concorrenciaB * 100) / 100);
     }
   }, [origem, destino, categoria, recursosEspeciais]);
 
@@ -376,8 +376,8 @@ export default function SolicitarCorridaPage() {
     setShowShareModal(false);
   };
 
-  const economiaTotal = precoUber - preco.valorTotal;
-  const economiaPercentual = Math.round((economiaTotal / precoUber) * 100);
+  const economiaTotal = precoMercado - preco.valorTotal;
+  const economiaPercentual = precoMercado > 0 ? Math.round((economiaTotal / precoMercado) * 100) : 0;
 
   return (
     <div className="min-h-screen bg-background">
@@ -563,7 +563,7 @@ export default function SolicitarCorridaPage() {
                       <p className="font-bold text-success">Economize ate {economiaPercentual}%!</p>
                       <p className="text-sm text-muted-foreground">
                         MOVO: <span className="font-bold text-foreground">{formatCurrency(preco.valorTotal)}</span>
-                        {" "}vs Uber: <span className="line-through text-muted-foreground">{formatCurrency(precoUber)}</span>
+                        {" "}vs mercado: <span className="line-through text-muted-foreground">{formatCurrency(precoMercado)}</span>
                       </p>
                     </div>
                     <div className="text-right">
@@ -585,7 +585,7 @@ export default function SolicitarCorridaPage() {
                   {CATEGORIAS.map((cat) => {
                     const catPrice = calculateRidePrice(distancia, duracao, cat.id);
                     const finalPrice = Math.round(catPrice.valorTotal * cat.multiplicador * 100) / 100;
-                    const uberPrice = Math.round(finalPrice * PRECOS_CONCORRENCIA.uber * 100) / 100;
+                    const mercadoPrice = Math.round(finalPrice * PRECOS_MERCADO.concorrenciaA * 100) / 100;
 
                     return (
                       <button
@@ -631,8 +631,8 @@ export default function SolicitarCorridaPage() {
                         </div>
                         <div className="text-right">
                           <p className="text-lg font-black gradient-text">{formatCurrency(finalPrice)}</p>
-                          <p className="text-xs text-muted-foreground line-through">{formatCurrency(uberPrice)}</p>
-                          <p className="text-xs text-success font-medium">-{Math.round((1 - finalPrice/uberPrice) * 100)}%</p>
+<p className="text-xs text-muted-foreground line-through">{formatCurrency(mercadoPrice)}</p>
+                <p className="text-xs text-success font-medium">-{Math.round((1 - finalPrice/mercadoPrice) * 100)}%</p>
                         </div>
                       </button>
                     );
@@ -809,7 +809,7 @@ export default function SolicitarCorridaPage() {
               </div>
               <div className="flex items-center justify-center gap-2 mt-2 text-sm text-success">
                 <TrendingDown className="w-4 h-4" />
-                <span>Economizando {formatCurrency(economiaTotal)} vs Uber</span>
+                <span>Economizando {formatCurrency(economiaTotal)} vs mercado</span>
               </div>
             </div>
 

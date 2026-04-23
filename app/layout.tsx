@@ -15,12 +15,10 @@ export const metadata: Metadata = {
     template: "%s | MOVO",
   },
   description:
-    "Plataforma completa de mobilidade urbana e gestao de servicos com a menor taxa do mercado (5%). Solicite corridas estilo Uber/99, seja motorista parceiro ou gerencie sua frota empresarial com seguranca e tecnologia de ponta.",
+    "Plataforma completa de mobilidade urbana, transporte de passageiros e entregas em todo Brasil com a menor taxa do mercado (apenas 5%). Solicite corridas, entregas, seja motorista parceiro ou gerencie sua frota empresarial com seguranca e tecnologia de ponta.",
   keywords: [
     "movo",
     "app motoristas",
-    "uber",
-    "99",
     "corrida",
     "motorista",
     "transporte",
@@ -32,10 +30,14 @@ export const metadata: Metadata = {
     "5%",
     "delivery",
     "entrega",
+    "busca e entrega",
+    "logistica",
+    "frete",
     "corporativo",
     "frota",
     "erp",
     "gestao",
+    "brasil",
   ],
   authors: [{ name: "MOVO" }],
   creator: "MOVO",
@@ -51,7 +53,7 @@ export const metadata: Metadata = {
     siteName: "MOVO - Mobilidade do Futuro",
     title: "MOVO - A menor taxa do mercado | Apenas 5%",
     description:
-      "Plataforma de mobilidade com a menor taxa do mercado. Solicite corridas estilo Uber, seja motorista ou gerencie sua frota.",
+      "Plataforma de mobilidade e entregas com a menor taxa do mercado. Solicite corridas, entregas em todo Brasil, seja motorista ou gerencie sua frota.",
     images: [
       {
         url: "/og-image.png",

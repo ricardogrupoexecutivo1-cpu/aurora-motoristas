@@ -25,8 +25,8 @@
   --radius: 1rem;
   
   /* Premium Colors */
-  --uber-black: #000000;
-  --uber-green: #276ef1;
+  --ride-black: #000000;
+  --ride-blue: #276ef1;
   --silicon-purple: #7c3aed;
   --silicon-pink: #ec4899;
   --silicon-cyan: #06b6d4;
@@ -58,8 +58,8 @@
   --color-ring: var(--ring);
   --radius: var(--radius);
   
-  --color-uber-black: var(--uber-black);
-  --color-uber-green: var(--uber-green);
+  --color-ride-black: var(--ride-black);
+  --color-ride-blue: var(--ride-blue);
   --color-silicon-purple: var(--silicon-purple);
   --color-silicon-pink: var(--silicon-pink);
   --color-silicon-cyan: var(--silicon-cyan);
@@ -358,7 +358,7 @@ body {
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
 }
 
-.gradient-uber {
+.gradient-ride {
   background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
 }
 

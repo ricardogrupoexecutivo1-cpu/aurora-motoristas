@@ -87,10 +87,10 @@ export function calculateDistance(
 }
 
 /**
- * Calcula o preco da corrida MOVO
- * MOVO cobra apenas 5% de taxa (vs 25% da Uber e 20% da 99)
- * Isso permite precos ate 20% mais baratos para o passageiro
- * mantendo o mesmo ganho para o motorista!
+ * Calcula o preco da corrida/entrega MOVO
+ * MOVO cobra apenas 5% de taxa (menor que a concorrencia que cobra 20-25%)
+ * Isso permite precos ate 20% mais baratos para o cliente
+ * mantendo o mesmo ganho para o motorista/entregador!
  */
 export function calculateRidePrice(
   distanceKm: number,
@@ -103,8 +103,8 @@ export function calculateRidePrice(
   valorTotal: number;
   taxaPlataforma: number;
   valorMotorista: number;
-  economiaVsUber: number;
-  economia99: number;
+  economiaVsConcorrencia: number;
+  percentualEconomia: number;
 } {
   // Precos base MOVO (otimizados para ser mais barato que concorrencia)
   const pricing: Record<
@@ -116,6 +116,11 @@ export function calculateRidePrice(
     conforto: { base: 6.50, perKm: 2.30, perMin: 0.35, min: 14.0 },
     executivo: { base: 11.0, perKm: 3.20, perMin: 0.55, min: 23.0 },
     van: { base: 14.0, perKm: 3.70, perMin: 0.45, min: 28.0 },
+    // Categorias de entrega
+    entrega_moto: { base: 5.0, perKm: 1.50, perMin: 0.10, min: 8.0 },
+    entrega_carro: { base: 8.0, perKm: 2.00, perMin: 0.15, min: 12.0 },
+    entrega_van: { base: 15.0, perKm: 3.00, perMin: 0.20, min: 25.0 },
+    entrega_caminhao: { base: 30.0, perKm: 4.50, perMin: 0.25, min: 50.0 },
   };
 
   const price = pricing[category] || pricing.padrao;
@@ -132,13 +137,11 @@ export function calculateRidePrice(
   const taxaPlataforma = valorTotal * 0.05;
   const valorMotorista = valorTotal - taxaPlataforma;
 
-  // Calcular quanto seria na Uber (25% taxa) e 99 (20% taxa)
-  // Para o motorista ganhar o mesmo, o passageiro pagaria mais
-  const valorUberEquivalente = valorMotorista / 0.75; // Uber fica com 25%
-  const valor99Equivalente = valorMotorista / 0.80; // 99 fica com 20%
-  
-  const economiaVsUber = valorUberEquivalente - valorTotal;
-  const economia99 = valor99Equivalente - valorTotal;
+  // Calcular economia vs concorrencia (media de 22.5% de taxa)
+  // Para o motorista ganhar o mesmo, o passageiro pagaria mais na concorrencia
+  const valorConcorrenciaEquivalente = valorMotorista / 0.775; // Concorrencia fica com ~22.5%
+  const economiaVsConcorrencia = valorConcorrenciaEquivalente - valorTotal;
+  const percentualEconomia = (economiaVsConcorrencia / valorConcorrenciaEquivalente) * 100;
 
   return {
     valorBase: Math.round(valorBase * 100) / 100,
@@ -147,8 +150,8 @@ export function calculateRidePrice(
     valorTotal: Math.round(valorTotal * 100) / 100,
     taxaPlataforma: Math.round(taxaPlataforma * 100) / 100,
     valorMotorista: Math.round(valorMotorista * 100) / 100,
-    economiaVsUber: Math.round(economiaVsUber * 100) / 100,
-    economia99: Math.round(economia99 * 100) / 100,
+    economiaVsConcorrencia: Math.round(economiaVsConcorrencia * 100) / 100,
+    percentualEconomia: Math.round(percentualEconomia),
   };
 }
 
