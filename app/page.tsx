@@ -155,7 +155,7 @@ export default function HomePage() {
       href: "/login",
       titulo: "Aurora Business",
       subtitulo: "Gestão empresarial protegida",
-      badge: "ACESSO SEGURO",
+      badge: "ACESSO Ambiente seguro",
       icon: Briefcase,
       cta: "Entrar com segurança",
       destaque: "gradient-premium",
@@ -340,7 +340,7 @@ export default function HomePage() {
 
               <div className="flex items-center gap-2">
                 <BadgeCheck className="w-5 h-5 text-success" />
-                <span className="text-sm font-medium text-muted-foreground">Ambiente seguro</span>
+                <span className="text-sm font-medium text-muted-foreground">Ambiente Ambiente seguro</span>
               </div>
             </div>
           </div>
@@ -508,7 +508,7 @@ export default function HomePage() {
             {[
               { icon: BadgeCheck, title: "Verificação completa", desc: "Motoristas e parceiros passam por validação." },
               { icon: MapPin, title: "GPS em tempo real", desc: "Acompanhe corrida ou entrega no mapa." },
-              { icon: Lock, title: "Área protegida", desc: "Painéis internos só via login seguro." },
+              { icon: Lock, title: "Área protegida", desc: "Painéis internos só via login Ambiente seguro." },
               { icon: AlertTriangle, title: "Botão SOS", desc: "Camada de emergência e suporte." },
               { icon: Camera, title: "Foto do pacote", desc: "Registro visual para comprovação." },
               { icon: Star, title: "Avaliação dupla", desc: "Qualidade monitorada por cliente e parceiro." },
@@ -848,7 +848,7 @@ export default function HomePage() {
 
             <div className="flex items-center gap-2">
               <Shield className="w-4 h-4 text-success" />
-              <span className="text-sm text-muted-foreground">Ambiente 100% seguro</span>
+              <span className="text-sm text-muted-foreground">Ambiente 100% Ambiente seguro</span>
             </div>
           </div>
         </div>
