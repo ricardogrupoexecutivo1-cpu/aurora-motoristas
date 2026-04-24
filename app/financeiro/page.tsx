@@ -75,8 +75,8 @@ function getDisplayRole(role: string) {
   if (role === "financeiro") return "Financeiro";
   if (role === "operacional") return "Operacional";
   if (role === "motorista") return "Motorista";
-  if (role === "visualizacao") return "VisualizaÃ§Ã£o";
-  return role || "NÃ£o identificado";
+  if (role === "visualizacao") return "Visualização";
+  return role || "Não identificado";
 }
 
 export default function FinanceiroPage() {
@@ -125,7 +125,7 @@ export default function FinanceiroPage() {
       return session.email;
     }
 
-    return "SessÃ£o protegida";
+    return "Sessão protegida";
   }, [session]);
 
   if (!mounted || accessState === "checking") {
@@ -136,12 +136,12 @@ export default function FinanceiroPage() {
             <span style={styles.kicker}>AURORA MOTORISTAS â€¢ FINANCEIRO</span>
             <h1 style={styles.title}>Validando acesso...</h1>
             <p style={styles.text}>
-              Aguarde enquanto o sistema confirma a sessÃ£o, o perfil e a
-              blindagem desta Ã¡rea financeira.
+              Aguarde enquanto o sistema confirma a sessão, o perfil e a
+              blindagem desta área financeira.
             </p>
 
             <div style={styles.loadingBox}>
-              Carregando proteÃ§Ã£o do financeiro...
+              Carregando proteção do financeiro...
             </div>
           </div>
         </section>
@@ -155,10 +155,10 @@ export default function FinanceiroPage() {
         <section style={styles.wrapper}>
           <div style={styles.card}>
             <span style={styles.kicker}>AURORA MOTORISTAS â€¢ FINANCEIRO</span>
-            <h1 style={styles.title}>SessÃ£o nÃ£o encontrada</h1>
+            <h1 style={styles.title}>Sessão não encontrada</h1>
             <p style={styles.text}>
-              O sistema nÃ£o encontrou uma sessÃ£o vÃ¡lida para esta Ã¡rea. VocÃª
-              estÃ¡ sendo redirecionado para o login.
+              O sistema não encontrou uma sessão válida para esta área. Você
+              está sendo redirecionado para o login.
             </p>
 
             <div style={styles.loadingBox}>Redirecionando para o login...</div>
@@ -176,9 +176,9 @@ export default function FinanceiroPage() {
             <span style={styles.kicker}>AURORA MOTORISTAS â€¢ FINANCEIRO</span>
             <h1 style={styles.title}>Acesso restrito</h1>
             <p style={styles.text}>
-              Sua sessÃ£o foi identificada, mas o perfil atual nÃ£o possui
-              permissÃ£o para visualizar o financeiro. VocÃª estÃ¡ sendo
-              redirecionado para a Ã¡rea de acesso negado.
+              Sua sessão foi identificada, mas o perfil atual não possui
+              permissão para visualizar o financeiro. Você está sendo
+              redirecionado para a área de acesso negado.
             </p>
 
             <div style={styles.loadingBox}>
@@ -199,27 +199,27 @@ export default function FinanceiroPage() {
           <h1 style={styles.title}>Financeiro protegido</h1>
 
           <p style={styles.text}>
-            Acesso liberado para <strong>{session.email || "usuÃ¡rio"}</strong>.
-            Esta Ã¡rea estÃ¡ protegida por perfil e disponÃ­vel apenas para usuÃ¡rios
+            Acesso liberado para <strong>{session.email || "usuário"}</strong>.
+            Esta área está protegida por perfil e disponível apenas para usuários
             autorizados.
           </p>
 
           <div style={styles.successBox}>
-            Acesso autorizado. ConteÃºdo financeiro visÃ­vel.
+            Acesso autorizado. Conteúdo financeiro visível.
           </div>
 
           <div style={styles.sessionGrid}>
             <SessionInfo
-              label="Perfil da sessÃ£o"
+              label="Perfil da sessão"
               value={getDisplayRole(session.role)}
             />
             <SessionInfo
               label="Empresa"
-              value={session.empresa || "NÃ£o informada"}
+              value={session.empresa || "Não informada"}
             />
             <SessionInfo
-              label="Status da sessÃ£o"
-              value={session.status || "NÃ£o informado"}
+              label="Status da sessão"
+              value={session.status || "Não informado"}
             />
             <SessionInfo
               label="Leitura principal"
@@ -229,7 +229,7 @@ export default function FinanceiroPage() {
 
           <div style={styles.grid}>
             <article style={styles.metricCard}>
-              <span style={styles.metricLabel}>Receitas do perÃ­odo</span>
+              <span style={styles.metricLabel}>Receitas do período</span>
               <strong style={styles.metricValue}>R$ 12.480,00</strong>
               <span style={styles.metricDetail}>Leitura protegida</span>
             </article>
@@ -255,11 +255,11 @@ export default function FinanceiroPage() {
 
           <div style={styles.actions}>
             <Link href="/" style={styles.secondaryButton}>
-              InÃ­cio
+              Início
             </Link>
 
             <Link href="/servicos" style={styles.secondaryButton}>
-              OperaÃ§Ã£o
+              Operação
             </Link>
 
             <Link href="/guia" style={styles.secondaryButton}>
@@ -437,3 +437,4 @@ const styles: Record<string, React.CSSProperties> = {
     lineHeight: 1.5,
   },
 };
+

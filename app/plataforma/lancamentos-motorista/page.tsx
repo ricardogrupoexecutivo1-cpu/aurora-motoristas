@@ -66,17 +66,17 @@ function getPerfilClasses(perfil: Perfil) {
 function getTipoDespesaLabel(tipo: DespesaItem['tipo']) {
   switch (tipo) {
     case 'combustivel':
-      return 'CombustÃ­vel'
+      return 'Combustível'
     case 'pedagio':
-      return 'PedÃ¡gio'
+      return 'Pedágio'
     case 'alimentacao':
-      return 'AlimentaÃ§Ã£o'
+      return 'Alimentação'
     case 'hospedagem':
       return 'Hospedagem'
     case 'estacionamento':
       return 'Estacionamento'
     case 'manutencao':
-      return 'ManutenÃ§Ã£o'
+      return 'Manutenção'
     default:
       return 'Outros'
   }
@@ -87,7 +87,7 @@ export default function PlataformaLancamentosMotoristaPage() {
 
   const [servicoId, setServicoId] = useState('SRV-001')
   const [cliente, setCliente] = useState('Vale')
-  const [empresaNome, setEmpresaNome] = useState('Aurora OperaÃ§Ãµes BH')
+  const [empresaNome, setEmpresaNome] = useState('Aurora Operações BH')
   const [motoristaNome, setMotoristaNome] = useState('Ricardo Moreira')
   const [dataServico, setDataServico] = useState('2026-04-19')
   const [rota, setRota] = useState('Belo Horizonte â†’ Confins')
@@ -187,7 +187,7 @@ export default function PlataformaLancamentosMotoristaPage() {
   function limparTudo() {
     setServicoId('SRV-001')
     setCliente('Vale')
-    setEmpresaNome('Aurora OperaÃ§Ãµes BH')
+    setEmpresaNome('Aurora Operações BH')
     setMotoristaNome('Ricardo Moreira')
     setDataServico('2026-04-19')
     setRota('Belo Horizonte â†’ Confins')
@@ -222,19 +222,19 @@ export default function PlataformaLancamentosMotoristaPage() {
       )
 
       showMessage(
-        'LanÃ§amentos salvos localmente com sucesso. Os totais jÃ¡ ficaram consolidados sem soma manual.',
+        'Lançamentos salvos localmente com sucesso. Os totais já ficaram consolidados sem soma manual.',
         'sucesso'
       )
     } catch {
-      showMessage('NÃ£o foi possÃ­vel salvar agora no navegador.', 'erro')
+      showMessage('Não foi possível salvar agora no navegador.', 'erro')
     }
   }
 
   const descricaoPerfil =
     perfil === 'admin'
-      ? 'VisÃ£o total para conferÃªncia e fechamento administrativo.'
+      ? 'Visão total para conferência e fechamento administrativo.'
       : perfil === 'empresa'
-      ? 'Leitura empresarial restrita aos prÃ³prios registros.'
+      ? 'Leitura empresarial restrita aos próprios registros.'
       : 'Leitura do motorista restrita ao que pertence a ele.'
 
   return (
@@ -245,7 +245,7 @@ export default function PlataformaLancamentosMotoristaPage() {
             <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
               <div className="space-y-4">
                 <span className="inline-flex rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-700">
-                  Aurora Motoristas â€¢ LanÃ§amentos isolados
+                  Aurora Motoristas â€¢ Lançamentos isolados
                 </span>
 
                 <div>
@@ -253,7 +253,7 @@ export default function PlataformaLancamentosMotoristaPage() {
                     Adiantamentos e despesas do motorista
                   </h1>
                   <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600 md:text-base">
-                    Camada nova criada para lanÃ§ar vÃ¡rios adiantamentos e vÃ¡rias despesas
+                    Camada nova criada para lançar vários adiantamentos e várias despesas
                     de uma viagem sem depender de soma manual depois. Tudo fica separado,
                     organizado e consolidado automaticamente.
                   </p>
@@ -261,20 +261,20 @@ export default function PlataformaLancamentosMotoristaPage() {
 
                 <div className="flex flex-wrap gap-3 text-sm">
                   <span className="rounded-2xl border border-cyan-200 bg-cyan-50 px-3 py-2 font-medium text-cyan-800">
-                    Admin vÃª tudo
+                    Admin vê tudo
                   </span>
                   <span className="rounded-2xl border border-indigo-200 bg-indigo-50 px-3 py-2 font-medium text-indigo-800">
-                    Empresa vÃª sÃ³ o dela
+                    Empresa vê só o dela
                   </span>
                   <span className="rounded-2xl border border-emerald-200 bg-emerald-50 px-3 py-2 font-medium text-emerald-800">
-                    Motorista vÃª sÃ³ o dele
+                    Motorista vê só o dele
                   </span>
                 </div>
               </div>
 
               <div className="w-full max-w-md rounded-[24px] border border-slate-200 bg-white/90 p-5 shadow-sm backdrop-blur">
                 <label className="mb-2 block text-sm font-semibold text-slate-700">
-                  Perfil de visualizaÃ§Ã£o
+                  Perfil de visualização
                 </label>
 
                 <select
@@ -304,7 +304,7 @@ export default function PlataformaLancamentosMotoristaPage() {
             </div>
 
             <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-              Sistema em constante atualizaÃ§Ã£o e podem ocorrer instabilidades momentÃ¢neas
+              Sistema em constante atualização e podem ocorrer instabilidades momentÃ¢neas
               durante melhorias.
             </div>
           </div>
@@ -328,7 +328,7 @@ export default function PlataformaLancamentosMotoristaPage() {
               <h2 className="text-lg font-semibold">Dados do atendimento</h2>
 
               <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                <Field label="ServiÃ§o">
+                <Field label="Serviço">
                   <input
                     value={servicoId}
                     onChange={(e) => setServicoId(e.target.value)}
@@ -351,7 +351,7 @@ export default function PlataformaLancamentosMotoristaPage() {
                     value={empresaNome}
                     onChange={(e) => setEmpresaNome(e.target.value)}
                     className="input"
-                    placeholder="Empresa responsÃ¡vel"
+                    placeholder="Empresa responsável"
                   />
                 </Field>
 
@@ -364,7 +364,7 @@ export default function PlataformaLancamentosMotoristaPage() {
                   />
                 </Field>
 
-                <Field label="Data do serviÃ§o">
+                <Field label="Data do serviço">
                   <input
                     type="date"
                     value={dataServico}
@@ -395,7 +395,7 @@ export default function PlataformaLancamentosMotoristaPage() {
                 <div>
                   <h2 className="text-lg font-semibold">Adiantamentos do motorista</h2>
                   <p className="mt-1 text-sm text-slate-500">
-                    Lance quantos adiantamentos forem necessÃ¡rios, um por vez.
+                    Lance quantos adiantamentos forem necessários, um por vez.
                   </p>
                 </div>
 
@@ -410,7 +410,7 @@ export default function PlataformaLancamentosMotoristaPage() {
 
               {adiantamentos.length === 0 ? (
                 <div className="mt-5 rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-600">
-                  Nenhum adiantamento lanÃ§ado ainda.
+                  Nenhum adiantamento lançado ainda.
                 </div>
               ) : (
                 <div className="mt-5 space-y-4">
@@ -435,7 +435,7 @@ export default function PlataformaLancamentosMotoristaPage() {
                           />
                         </Field>
 
-                        <Field label="DescriÃ§Ã£o">
+                        <Field label="Descrição">
                           <input
                             value={item.descricao}
                             onChange={(e) =>
@@ -492,7 +492,7 @@ export default function PlataformaLancamentosMotoristaPage() {
                 <div>
                   <h2 className="text-lg font-semibold">Despesas da viagem</h2>
                   <p className="mt-1 text-sm text-slate-500">
-                    Lance combustÃ­vel, pedÃ¡gio, alimentaÃ§Ã£o, hospedagem e demais gastos.
+                    Lance combustível, pedágio, alimentação, hospedagem e demais gastos.
                   </p>
                 </div>
 
@@ -507,7 +507,7 @@ export default function PlataformaLancamentosMotoristaPage() {
 
               {despesas.length === 0 ? (
                 <div className="mt-5 rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-600">
-                  Nenhuma despesa lanÃ§ada ainda.
+                  Nenhuma despesa lançada ainda.
                 </div>
               ) : (
                 <div className="mt-5 space-y-4">
@@ -540,17 +540,17 @@ export default function PlataformaLancamentosMotoristaPage() {
                             }
                             className="input"
                           >
-                            <option value="combustivel">CombustÃ­vel</option>
-                            <option value="pedagio">PedÃ¡gio</option>
-                            <option value="alimentacao">AlimentaÃ§Ã£o</option>
+                            <option value="combustivel">Combustível</option>
+                            <option value="pedagio">Pedágio</option>
+                            <option value="alimentacao">Alimentação</option>
                             <option value="hospedagem">Hospedagem</option>
                             <option value="estacionamento">Estacionamento</option>
-                            <option value="manutencao">ManutenÃ§Ã£o</option>
+                            <option value="manutencao">Manutenção</option>
                             <option value="outros">Outros</option>
                           </select>
                         </Field>
 
-                        <Field label="DescriÃ§Ã£o">
+                        <Field label="Descrição">
                           <input
                             value={item.descricao}
                             onChange={(e) =>
@@ -601,7 +601,7 @@ export default function PlataformaLancamentosMotoristaPage() {
               <h2 className="text-lg font-semibold">Resumo do fechamento</h2>
 
               <div className="mt-5 space-y-3">
-                <SummaryRow label="ServiÃ§o" value={servicoId} />
+                <SummaryRow label="Serviço" value={servicoId} />
                 <SummaryRow label="Cliente" value={cliente} />
                 <SummaryRow label="Empresa" value={empresaNome} />
                 <SummaryRow label="Motorista" value={motoristaNome} />
@@ -623,14 +623,14 @@ export default function PlataformaLancamentosMotoristaPage() {
               <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
                 <p className="font-semibold text-slate-900">Leitura segura</p>
                 <p className="mt-2">
-                  O saldo final jÃ¡ considera automaticamente o valor bruto do motorista
-                  menos todos os adiantamentos menos todas as despesas lanÃ§adas.
+                  O saldo final já considera automaticamente o valor bruto do motorista
+                  menos todos os adiantamentos menos todas as despesas lançadas.
                 </p>
               </div>
             </section>
 
             <section className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="text-lg font-semibold">AÃ§Ãµes</h2>
+              <h2 className="text-lg font-semibold">Ações</h2>
 
               <div className="mt-5 grid gap-3">
                 <button
@@ -638,7 +638,7 @@ export default function PlataformaLancamentosMotoristaPage() {
                   onClick={salvarLeituraLocal}
                   className="rounded-2xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:opacity-90"
                 >
-                  Salvar lanÃ§amentos
+                  Salvar lançamentos
                 </button>
 
                 <button
@@ -646,7 +646,7 @@ export default function PlataformaLancamentosMotoristaPage() {
                   onClick={limparTudo}
                   className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
                 >
-                  Limpar formulÃ¡rio
+                  Limpar formulário
                 </button>
               </div>
             </section>
@@ -657,17 +657,17 @@ export default function PlataformaLancamentosMotoristaPage() {
               <div className="mt-5 grid gap-4">
                 <RegraCard
                   titulo="Adiantamentos"
-                  texto="Pode lanÃ§ar quantos forem necessÃ¡rios, um por vez, sem soma manual depois."
+                  texto="Pode lançar quantos forem necessários, um por vez, sem soma manual depois."
                   classes="border-cyan-200 bg-cyan-50 text-cyan-900"
                 />
                 <RegraCard
                   titulo="Despesas"
-                  texto="Pode lanÃ§ar vÃ¡rias despesas de tipos diferentes na mesma viagem."
+                  texto="Pode lançar várias despesas de tipos diferentes na mesma viagem."
                   classes="border-indigo-200 bg-indigo-50 text-indigo-900"
                 />
                 <RegraCard
                   titulo="Fechamento"
-                  texto="O saldo do motorista Ã© calculado automaticamente para reduzir erro operacional."
+                  texto="O saldo do motorista é calculado automaticamente para reduzir erro operacional."
                   classes="border-emerald-200 bg-emerald-50 text-emerald-900"
                 />
               </div>
@@ -780,3 +780,4 @@ function RegraCard({
     </div>
   )
 }
+

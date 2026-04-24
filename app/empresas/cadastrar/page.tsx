@@ -94,7 +94,7 @@ export default function CadastrarEmpresaPage() {
 
     if (cnpj.length !== 14) {
       setFeedbackType("error");
-      setFeedback("Informe um CNPJ vÃ¡lido com 14 dÃ­gitos para consultar.");
+      setFeedback("Informe um CNPJ válido com 14 dígitos para consultar.");
       return;
     }
 
@@ -109,7 +109,7 @@ export default function CadastrarEmpresaPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data?.error || "NÃ£o foi possÃ­vel consultar o CNPJ.");
+        throw new Error(data?.error || "Não foi possível consultar o CNPJ.");
       }
 
       const company = data?.company || {};
@@ -150,7 +150,7 @@ export default function CadastrarEmpresaPage() {
 
     if (!form.razaoSocial.trim() && !form.nomeFantasia.trim()) {
       setFeedbackType("error");
-      setFeedback("Informe pelo menos a razÃ£o social ou o nome fantasia.");
+      setFeedback("Informe pelo menos a razão social ou o nome fantasia.");
       return;
     }
 
@@ -190,7 +190,7 @@ export default function CadastrarEmpresaPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data?.error || "NÃ£o foi possÃ­vel salvar a empresa.");
+        throw new Error(data?.error || "Não foi possível salvar a empresa.");
       }
 
       setFeedbackType("success");
@@ -235,7 +235,7 @@ export default function CadastrarEmpresaPage() {
           </a>
 
           <a href="/" style={pillButton(true)}>
-            InÃ­cio
+            Início
           </a>
 
           <a href="/guia" style={pillButton(false)}>
@@ -293,9 +293,9 @@ export default function CadastrarEmpresaPage() {
               fontSize: 16,
             }}
           >
-            Cadastre empresas, locadoras e operaÃ§Ãµes com visual claro premium,
-            preenchimento mais simples e consulta automÃ¡tica por CNPJ.
-            Sistema em constante atualizaÃ§Ã£o e podem ocorrer instabilidades
+            Cadastre empresas, locadoras e operações com visual claro premium,
+            preenchimento mais simples e consulta automática por CNPJ.
+            Sistema em constante atualização e podem ocorrer instabilidades
             momentÃ¢neas durante melhorias.
           </p>
         </section>
@@ -344,7 +344,7 @@ export default function CadastrarEmpresaPage() {
                     lineHeight: 1.6,
                   }}
                 >
-                  Estruture a base empresarial antes de ligar clientes, motoristas e serviÃ§os.
+                  Estruture a base empresarial antes de ligar clientes, motoristas e serviços.
                 </p>
               </div>
 
@@ -450,7 +450,7 @@ export default function CadastrarEmpresaPage() {
               </div>
 
               <Field
-                label="RazÃ£o social"
+                label="Razão social"
                 value={form.razaoSocial}
                 onChange={(value) => updateField("razaoSocial", value)}
                 placeholder="Ex.: LET'S RENT A CAR S/A"
@@ -465,7 +465,7 @@ export default function CadastrarEmpresaPage() {
               />
 
               <Field
-                label="ResponsÃ¡vel"
+                label="Responsável"
                 value={form.responsavel}
                 onChange={(value) => updateField("responsavel", value)}
                 placeholder="Nome do contato principal"
@@ -494,14 +494,14 @@ export default function CadastrarEmpresaPage() {
               />
 
               <Field
-                label="EndereÃ§o"
+                label="Endereço"
                 value={form.endereco}
                 onChange={(value) => updateField("endereco", value)}
                 placeholder="Rua, avenida ou rodovia"
               />
 
               <Field
-                label="NÃºmero"
+                label="Número"
                 value={form.numero}
                 onChange={(value) => updateField("numero", value)}
                 placeholder="Ex.: 120"
@@ -539,13 +539,13 @@ export default function CadastrarEmpresaPage() {
                   fontSize: 14,
                 }}
               >
-                ObservaÃ§Ãµes
+                Observações
               </label>
 
               <textarea
                 value={form.observacoes}
                 onChange={(e) => updateField("observacoes", e.target.value)}
-                placeholder="ObservaÃ§Ãµes comerciais, status da operaÃ§Ã£o, segmento, detalhes internos..."
+                placeholder="Observações comerciais, status da operação, segmento, detalhes internos..."
                 rows={5}
                 style={{
                   width: "100%",
@@ -640,7 +640,7 @@ export default function CadastrarEmpresaPage() {
                   fontSize: 15,
                 }}
               >
-                Limpar formulÃ¡rio
+                Limpar formulário
               </button>
             </div>
           </div>
@@ -654,17 +654,17 @@ export default function CadastrarEmpresaPage() {
           >
             <InfoCard
               title="Uso recomendado"
-              text="Cadastre primeiro a empresa para estruturar a base que vai receber clientes, motoristas e serviÃ§os."
+              text="Cadastre primeiro a empresa para estruturar a base que vai receber clientes, motoristas e serviços."
             />
 
             <InfoCard
               title="Consulta por CNPJ"
-              text="A busca automÃ¡tica ajuda a preencher razÃ£o social, nome fantasia, contato e endereÃ§o sem perder agilidade."
+              text="A busca automática ajuda a preencher razão social, nome fantasia, contato e endereço sem perder agilidade."
             />
 
             <InfoCard
-              title="PadrÃ£o Aurora"
-              text="Visual claro premium, leitura forte no celular e navegaÃ§Ã£o mais limpa para uso diÃ¡rio."
+              title="Padrão Aurora"
+              text="Visual claro premium, leitura forte no celular e navegação mais limpa para uso diário."
             />
           </aside>
         </section>
@@ -772,3 +772,4 @@ function InfoCard({ title, text }: { title: string; text: string }) {
     </div>
   );
 }
+

@@ -25,7 +25,7 @@ function getSupabaseAdmin() {
 
   if (!supabaseUrl || !supabaseServiceRoleKey) {
     throw new Error(
-      "VariÃ¡veis do Supabase ausentes. Verifique SUPABASE_URL/NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY."
+      "Variáveis do Supabase ausentes. Verifique SUPABASE_URL/NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY."
     );
   }
 
@@ -133,3 +133,4 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
+

@@ -152,7 +152,7 @@ export default function LoginPage() {
           }
         }
       } catch {
-        // mantÃ©m o login funcionando mesmo se localStorage falhar
+        // mantém o login funcionando mesmo se localStorage falhar
       }
 
       setStatus("Login realizado com sucesso!");
@@ -387,7 +387,7 @@ export default function LoginPage() {
                 className="flex items-center gap-2 p-3 bg-card border border-border rounded-xl hover:border-primary/50 transition-colors"
               >
                 <Briefcase className="w-5 h-5 text-primary" />
-                <span className="text-sm font-medium">Novo serviÃ§o</span>
+                <span className="text-sm font-medium">Novo serviço</span>
               </Link>
               <Link
                 href="/motoristas/cadastrar"
@@ -400,9 +400,9 @@ export default function LoginPage() {
 
             {/* Create Account */}
             <p className="text-center mt-8 text-muted-foreground">
-              Ainda nÃ£o tem conta?{" "}
+              Ainda não tem conta?{" "}
               <Link href="/cadastro" className="text-primary font-semibold hover:underline">
-                Criar conta grÃ¡tis
+                Criar conta grátis
               </Link>
             </p>
           </div>
@@ -427,18 +427,18 @@ export default function LoginPage() {
 
         <div className="relative text-white">
           <h2 className="text-4xl xl:text-5xl font-black mb-6 leading-tight">
-            A mobilidade inteligente que vocÃª merece
+            A mobilidade inteligente que você merece
           </h2>
           <p className="text-lg xl:text-xl text-white/80 mb-10 leading-relaxed">
-            Com o Aurora Motoristas, vocÃª viaja com seguranÃ§a, economia e praticidade.
-            A menor taxa do mercado e tecnologia de ponta para vocÃª.
+            Com o Aurora Motoristas, você viaja com segurança, economia e praticidade.
+            A menor taxa do mercado e tecnologia de ponta para você.
           </p>
 
           <div className="space-y-4">
             {[
               { icon: Shield, text: "100% dos motoristas verificados" },
               { icon: CheckCircle, text: "Taxa de apenas 5% - a menor do Brasil" },
-              { icon: Smartphone, text: "Pagamento via PIX, cartÃ£o ou dinheiro" },
+              { icon: Smartphone, text: "Pagamento via PIX, cartão ou dinheiro" },
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
@@ -462,7 +462,7 @@ export default function LoginPage() {
             ))}
           </div>
           <div>
-            <p className="font-bold text-lg">+800K usuÃ¡rios</p>
+            <p className="font-bold text-lg">+800K usuários</p>
             <p className="text-sm text-white/70">confiam no Aurora Motoristas</p>
           </div>
         </div>
@@ -470,4 +470,5 @@ export default function LoginPage() {
     </main>
   );
 }
+
 

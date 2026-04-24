@@ -13,9 +13,9 @@ export default function PainelPage() {
           </strong>
 
           <p style={alertText}>
-            NÃ£o alterar arquivos jÃ¡ em produÃ§Ã£o. Toda evoluÃ§Ã£o deve ser feita por
-            novas pÃ¡ginas, camadas isoladas ou melhorias controladas. AlteraÃ§Ãµes
-            diretas sÃ³ sÃ£o permitidas para correÃ§Ã£o de erros crÃ­ticos.
+            Não alterar arquivos já em produção. Toda evolução deve ser feita por
+            novas páginas, camadas isoladas ou melhorias controladas. Alterações
+            diretas só são permitidas para correção de erros críticos.
           </p>
         </section>
 
@@ -23,8 +23,8 @@ export default function PainelPage() {
         <section style={hero}>
           <h1 style={title}>Painel de Acessos Aurora Motoristas</h1>
           <p style={subtitle}>
-            Central de navegaÃ§Ã£o segura para operaÃ§Ã£o, administraÃ§Ã£o e evoluÃ§Ã£o
-            da plataforma sem risco de quebrar o que jÃ¡ estÃ¡ em produÃ§Ã£o.
+            Central de navegação segura para operação, administração e evolução
+            da plataforma sem risco de quebrar o que já está em produção.
           </p>
         </section>
 
@@ -38,35 +38,35 @@ export default function PainelPage() {
             <Link href="/login" style={btn}>Entrar</Link>
           </Card>
 
-          <Card title="Novo serviÃ§o" desc="Cadastro direto de serviÃ§o">
+          <Card title="Novo serviço" desc="Cadastro direto de serviço">
             <Link href="/servicos/novo" style={btnPrimary}>Cadastrar</Link>
           </Card>
 
-          <Card title="OperaÃ§Ã£o" desc="VisÃ£o operacional ativa">
+          <Card title="Operação" desc="Visão operacional ativa">
             <Link href="/servicos" style={btn}>Abrir</Link>
           </Card>
 
-          <Card title="Admin â€¢ ServiÃ§os" desc="Controle total da base">
+          <Card title="Admin â€¢ Serviços" desc="Controle total da base">
             <Link href="/admin/servicos" style={btn}>Abrir</Link>
           </Card>
 
-          <Card title="RelatÃ³rios" desc="VisÃ£o financeira estilo Excel">
+          <Card title="Relatórios" desc="Visão financeira estilo Excel">
             <Link href="/relatorios" style={btnPrimary}>Abrir</Link>
           </Card>
 
-          <Card title="Quero ser motorista" desc="Cadastro pÃºblico de motoristas">
+          <Card title="Quero ser motorista" desc="Cadastro público de motoristas">
             <Link href="/quero-ser-motorista" style={btn}>Acessar</Link>
           </Card>
         </section>
 
         {/* FUTURO */}
         <section style={future}>
-          <h2 style={{ margin: 0 }}>ExpansÃ£o planejada</h2>
+          <h2 style={{ margin: 0 }}>Expansão planejada</h2>
           <ul style={{ marginTop: 10, lineHeight: 1.8 }}>
-            <li>RelatÃ³rios diÃ¡rio / semanal / mensal / anual</li>
+            <li>Relatórios diário / semanal / mensal / anual</li>
             <li>Contas a receber integrado</li>
             <li>Contas a pagar integrado</li>
-            <li>Mapa de serviÃ§os (visual)</li>
+            <li>Mapa de serviços (visual)</li>
             <li>Controle por motorista</li>
             <li>Controle por empresa</li>
           </ul>
@@ -184,3 +184,4 @@ const future = {
   padding: 16,
   border: "1px solid #e5edf5",
 };
+

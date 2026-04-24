@@ -106,7 +106,7 @@ export default function PlataformaVisaoBlindadaPage() {
         id: 'SRV-001',
         cliente: 'Vale',
         empresa_id: 'empresa-1',
-        empresa_nome: 'Aurora OperaÃ§Ãµes BH',
+        empresa_nome: 'Aurora Operações BH',
         motorista_id: 'user-1',
         motorista_nome: 'Ricardo Moreira',
         status: 'pendente',
@@ -119,20 +119,20 @@ export default function PlataformaVisaoBlindadaPage() {
         id: 'SRV-002',
         cliente: 'Petrobras',
         empresa_id: 'empresa-2',
-        empresa_nome: 'Aurora Norte OperaÃ§Ãµes',
+        empresa_nome: 'Aurora Norte Operações',
         motorista_id: 'user-2',
         motorista_nome: 'Carlos Silva',
         status: 'pago',
         valor: 900,
         origem: 'Parauapebas',
-        destino: 'CarajÃ¡s',
+        destino: 'Carajás',
         data: '2026-04-18',
       },
       {
         id: 'SRV-003',
         cliente: 'Samarco',
         empresa_id: 'empresa-1',
-        empresa_nome: 'Aurora OperaÃ§Ãµes BH',
+        empresa_nome: 'Aurora Operações BH',
         motorista_id: 'user-3',
         motorista_nome: 'Neida Moreira',
         status: 'aguardando_pagamento',
@@ -145,7 +145,7 @@ export default function PlataformaVisaoBlindadaPage() {
         id: 'SRV-004',
         cliente: 'Usiminas',
         empresa_id: 'empresa-1',
-        empresa_nome: 'Aurora OperaÃ§Ãµes BH',
+        empresa_nome: 'Aurora Operações BH',
         motorista_id: 'user-1',
         motorista_nome: 'Ricardo Moreira',
         status: 'em_andamento',
@@ -186,10 +186,10 @@ export default function PlataformaVisaoBlindadaPage() {
 
   const descricaoPerfil =
     perfil === 'admin'
-      ? 'VisÃ£o administrativa total da base, com leitura completa dos registros da plataforma.'
+      ? 'Visão administrativa total da base, com leitura completa dos registros da plataforma.'
       : perfil === 'empresa'
-      ? 'A empresa visualiza apenas os registros vinculados ao prÃ³prio company_id, sem enxergar bases externas.'
-      : 'O motorista visualiza apenas o que Ã© dele e deixa de ver os registros apÃ³s o pagamento final.'
+      ? 'A empresa visualiza apenas os registros vinculados ao próprio company_id, sem enxergar bases externas.'
+      : 'O motorista visualiza apenas o que é dele e deixa de ver os registros após o pagamento final.'
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
@@ -204,31 +204,31 @@ export default function PlataformaVisaoBlindadaPage() {
 
                 <div>
                   <h1 className="text-2xl font-bold tracking-tight md:text-4xl">
-                    VisÃ£o blindada da plataforma
+                    Visão blindada da plataforma
                   </h1>
                   <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600 md:text-base">
-                    PÃ¡gina nova criada para validar a regra de acesso sem mexer no restante
-                    da operaÃ§Ã£o. Aqui a leitura fica separada por perfil, com blindagem
-                    clara entre administraÃ§Ã£o, empresa e motorista.
+                    Página nova criada para validar a regra de acesso sem mexer no restante
+                    da operação. Aqui a leitura fica separada por perfil, com blindagem
+                    clara entre administração, empresa e motorista.
                   </p>
                 </div>
 
                 <div className="flex flex-wrap gap-3 text-sm">
                   <span className="rounded-2xl border border-cyan-200 bg-cyan-50 px-3 py-2 font-medium text-cyan-800">
-                    Admin vÃª tudo
+                    Admin vê tudo
                   </span>
                   <span className="rounded-2xl border border-indigo-200 bg-indigo-50 px-3 py-2 font-medium text-indigo-800">
-                    Empresa vÃª sÃ³ o dela
+                    Empresa vê só o dela
                   </span>
                   <span className="rounded-2xl border border-emerald-200 bg-emerald-50 px-3 py-2 font-medium text-emerald-800">
-                    Motorista vÃª sÃ³ o dele
+                    Motorista vê só o dele
                   </span>
                 </div>
               </div>
 
               <div className="w-full max-w-md rounded-[24px] border border-slate-200 bg-white/90 p-5 shadow-sm backdrop-blur">
                 <label className="mb-2 block text-sm font-semibold text-slate-700">
-                  Perfil de visualizaÃ§Ã£o
+                  Perfil de visualização
                 </label>
 
                 <select
@@ -258,14 +258,14 @@ export default function PlataformaVisaoBlindadaPage() {
             </div>
 
             <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-              Sistema em constante atualizaÃ§Ã£o e podem ocorrer instabilidades momentÃ¢neas
+              Sistema em constante atualização e podem ocorrer instabilidades momentÃ¢neas
               durante melhorias.
             </div>
           </div>
         </section>
 
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
-          <ResumoCard label="Registros visÃ­veis" value={String(resumo.total)} />
+          <ResumoCard label="Registros visíveis" value={String(resumo.total)} />
           <ResumoCard label="Pendentes" value={String(resumo.pendentes)} />
           <ResumoCard label="Em andamento" value={String(resumo.andamento)} />
           <ResumoCard
@@ -281,7 +281,7 @@ export default function PlataformaVisaoBlindadaPage() {
             <div>
               <h2 className="text-lg font-semibold">Leitura protegida por perfil</h2>
               <p className="mt-1 text-sm text-slate-500">
-                Esta lista simula a regra final da plataforma com separaÃ§Ã£o rÃ­gida de
+                Esta lista simula a regra final da plataforma com separação rígida de
                 acesso.
               </p>
             </div>
@@ -297,7 +297,7 @@ export default function PlataformaVisaoBlindadaPage() {
 
           {filtrado.length === 0 ? (
             <div className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-10 text-center text-sm text-slate-600">
-              Nenhum registro visÃ­vel para este perfil no cenÃ¡rio atual.
+              Nenhum registro visível para este perfil no cenário atual.
             </div>
           ) : (
             <div className="mt-6 grid gap-4 xl:grid-cols-2">
@@ -309,7 +309,7 @@ export default function PlataformaVisaoBlindadaPage() {
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                        ServiÃ§o {item.id.replace('SRV-', '#')}
+                        Serviço {item.id.replace('SRV-', '#')}
                       </p>
                       <h3 className="mt-1 text-xl font-bold text-slate-900">
                         {item.cliente}
@@ -348,7 +348,7 @@ export default function PlataformaVisaoBlindadaPage() {
           <div className="mt-5 grid gap-4 md:grid-cols-3">
             <RegraCard
               titulo="Admin"
-              texto="VisÃ£o total da base para conferÃªncia, correÃ§Ã£o e gestÃ£o ampla."
+              texto="Visão total da base para conferência, correção e gestão ampla."
               classes="border-cyan-200 bg-cyan-50 text-cyan-900"
             />
             <RegraCard
@@ -358,7 +358,7 @@ export default function PlataformaVisaoBlindadaPage() {
             />
             <RegraCard
               titulo="Motorista"
-              texto="O motorista enxerga apenas o que Ã© dele e deixa de ver apÃ³s pagamento."
+              texto="O motorista enxerga apenas o que é dele e deixa de ver após pagamento."
               classes="border-emerald-200 bg-emerald-50 text-emerald-900"
             />
           </div>
@@ -413,3 +413,4 @@ function RegraCard({
     </div>
   )
 }
+

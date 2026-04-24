@@ -172,15 +172,15 @@ const RECURSOS_ESPECIAIS = [
 ];
 
 const LOCAIS_SALVOS = [
-  { id: "1", nome: "Casa", endereco: "Rua das Flores, 123 - Jardim Primavera", icon: Home, tipo: "casa" },
-  { id: "2", nome: "Trabalho", endereco: "Av. Paulista, 1000 - Bela Vista", icon: Briefcase, tipo: "trabalho" },
+  { id: "1", nome: "Casa", endereco: "Endereço residencial em qualquer cidade do Brasil", icon: Home, tipo: "casa" },
+  { id: "2", nome: "Trabalho", endereco: "Empresa, base operacional ou ponto comercial em todo o Brasil", icon: Briefcase, tipo: "trabalho" },
 ];
 
 const LOCAIS_RECENTES = [
-  { id: "1", endereco: "Shopping Ibirapuera - Moema", lat: -23.5876, lng: -46.6611 },
-  { id: "2", endereco: "Aeroporto de Congonhas - Campo Belo", lat: -23.6261, lng: -46.6558 },
-  { id: "3", endereco: "Parque do Ibirapuera - Vila Mariana", lat: -23.5874, lng: -46.6576 },
-  { id: "4", endereco: "Hospital Albert Einstein - Morumbi", lat: -23.5988, lng: -46.7135 },
+  { id: "1", endereco: "Aeroporto, rodoviária ou terminal em qualquer estado do Brasil", lat: -15.7939, lng: -47.8828 },
+  { id: "2", endereco: "Base de locadora, garagem ou pátio de veículos em qualquer cidade", lat: -19.9167, lng: -43.9345 },
+  { id: "3", endereco: "Cliente, empresa, hotel ou residência em território nacional", lat: -22.9068, lng: -43.1729 },
+  { id: "4", endereco: "Mobilização ou desmobilização de veículos entre cidades e estados", lat: -3.7319, lng: -38.5267 },
 ];
 
 // Precos de mercado (para comparacao)
@@ -503,7 +503,7 @@ export default function SolicitarCorridaPage() {
                 <div className="flex-1">
                   <p className="text-xs text-muted-foreground font-medium">ORIGEM</p>
                   <p className={`font-semibold ${origem ? "text-foreground" : "text-muted-foreground"}`}>
-                    {origem?.endereco || "De onde voce vai?"}
+                    {origem?.endereco || "Informe a origem em qualquer cidade do Brasil"}
                   </p>
                 </div>
                 {origem && <CheckCircle className="w-5 h-5 text-success" />}
@@ -524,7 +524,7 @@ export default function SolicitarCorridaPage() {
                 <div className="flex-1">
                   <p className="text-xs text-muted-foreground font-medium">DESTINO</p>
                   <p className={`font-semibold ${destino ? "text-foreground" : "text-muted-foreground"}`}>
-                    {destino?.endereco || "Para onde voce vai?"}
+                    {destino?.endereco || "Informe o destino em qualquer região do Brasil"}
                   </p>
                 </div>
                 {destino && <CheckCircle className="w-5 h-5 text-success" />}
@@ -1363,7 +1363,7 @@ export default function SolicitarCorridaPage() {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder={searchType === "origem" ? "De onde voce vai?" : "Para onde voce vai?"}
+                    placeholder={searchType === "origem" ? "Informe a origem em qualquer cidade do Brasil" : "Informe o destino em qualquer região do Brasil"}
                     className="w-full pl-12 pr-4 py-3.5 bg-secondary rounded-xl border border-border focus:border-primary outline-none font-medium"
                     autoFocus
                   />
@@ -1374,7 +1374,7 @@ export default function SolicitarCorridaPage() {
             <div className="flex-1 overflow-auto p-4">
               {searchType === "origem" && (
                 <button
-                  onClick={() => handleSelectLocation("Minha localizacao atual", -23.55, -46.63)}
+                  onClick={() => handleSelectLocation("Minha localização atual em todo o Brasil", -23.55, -46.63)}
                   className="w-full flex items-center gap-3 p-4 bg-gradient-to-r from-primary/10 to-cyan-500/10 rounded-xl mb-4 border border-primary/20"
                 >
                   <div className="w-10 h-10 gradient-premium rounded-xl flex items-center justify-center">
@@ -1602,4 +1602,5 @@ export default function SolicitarCorridaPage() {
     </div>
   );
 }
+
 

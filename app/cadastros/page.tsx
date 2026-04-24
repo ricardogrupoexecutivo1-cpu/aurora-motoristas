@@ -3,29 +3,29 @@
 export const metadata = {
   title: "Cadastros | Aurora Motoristas",
   description:
-    "Base de cadastros do Aurora Motoristas com segregaÃ§Ã£o por perfil, privacidade operacional, regras de acesso e proteÃ§Ã£o dos dados.",
+    "Base de cadastros do Aurora Motoristas com segregação por perfil, privacidade operacional, regras de acesso e proteção dos dados.",
 };
 
 const statCards = [
   {
     label: "Perfis segregados",
     value: "7",
-    detail: "Cada tipo vÃª sÃ³ o que precisa",
+    detail: "Cada tipo vê só o que precisa",
   },
   {
     label: "Base protegida",
     value: "Ativa",
-    detail: "SeparaÃ§Ã£o real entre operaÃ§Ã£o e financeiro",
+    detail: "Separação real entre operação e financeiro",
   },
   {
-    label: "ServiÃ§os pagos",
+    label: "Serviços pagos",
     value: "Ocultos",
-    detail: "ApÃ³s baixa, somem da visÃ£o do motorista",
+    detail: "Após baixa, somem da visão do motorista",
   },
   {
     label: "Controle",
     value: "Master",
-    detail: "AutorizaÃ§Ã£o central de administradores",
+    detail: "Autorização central de administradores",
   },
 ];
 
@@ -35,20 +35,20 @@ const profileCards = [
     badge: "Restrito",
     href: "/cadastros/motoristas",
     description:
-      "VÃª apenas os prÃ³prios dados, serviÃ§os ativos, status permitidos e pagamentos visÃ­veis atÃ© a baixa.",
+      "Vê apenas os próprios dados, serviços ativos, status permitidos e pagamentos visíveis até a baixa.",
     canView: [
-      "PrÃ³prio perfil",
-      "PrÃ³prios serviÃ§os em aberto",
-      "PrÃ³prio status",
+      "Próprio perfil",
+      "Próprios serviços em aberto",
+      "Próprio status",
       "Telefone do cliente quando autorizado",
-      "Pagamento visÃ­vel atÃ© receber",
+      "Pagamento visível até receber",
     ],
     cannotView: [
       "Base geral de clientes",
-      "RelatÃ³rios financeiros",
+      "Relatórios financeiros",
       "Custos internos",
-      "Margem da operaÃ§Ã£o",
-      "HistÃ³rico pago oculto apÃ³s baixa",
+      "Margem da operação",
+      "Histórico pago oculto após baixa",
     ],
   },
   {
@@ -56,62 +56,62 @@ const profileCards = [
     badge: "Isolado",
     href: "/cadastros/clientes",
     description:
-      "VÃª apenas o que pertence ao seu contrato, suas ordens, seus serviÃ§os e o acompanhamento autorizado.",
+      "Vê apenas o que pertence ao seu contrato, suas ordens, seus serviços e o acompanhamento autorizado.",
     canView: [
-      "ServiÃ§os do prÃ³prio cliente",
-      "Ordens do prÃ³prio cliente",
+      "Serviços do próprio cliente",
+      "Ordens do próprio cliente",
       "Status e andamento",
       "Documentos liberados",
-      "Campos pÃºblicos permitidos",
+      "Campos públicos permitidos",
     ],
     cannotView: [
       "Outros clientes",
       "Financeiro global",
       "Outras locadoras",
       "Dados internos da empresa",
-      "Motoristas sem vÃ­nculo necessÃ¡rio",
+      "Motoristas sem vínculo necessário",
     ],
   },
   {
     title: "Empresa / Locadora",
-    badge: "GestÃ£o",
+    badge: "Gestão",
     href: "/cadastros/empresas",
     description:
-      "Visualiza sua prÃ³pria base operacional, seus clientes, seus motoristas vinculados e suas ordens.",
+      "Visualiza sua própria base operacional, seus clientes, seus motoristas vinculados e suas ordens.",
     canView: [
-      "PrÃ³prios clientes",
-      "PrÃ³prios motoristas vinculados",
-      "PrÃ³prias OS e OC",
-      "PrÃ³prios serviÃ§os",
-      "Campos de operaÃ§Ã£o permitidos",
+      "Próprios clientes",
+      "Próprios motoristas vinculados",
+      "Próprias OS e OC",
+      "Próprios serviços",
+      "Campos de operação permitidos",
     ],
     cannotView: [
       "Base de outras empresas",
-      "Financeiro total sem autorizaÃ§Ã£o",
-      "Registros globais sem vÃ­nculo",
+      "Financeiro total sem autorização",
+      "Registros globais sem vínculo",
       "Clientes de outras empresas",
-      "RelatÃ³rios restritos do sistema",
+      "Relatórios restritos do sistema",
     ],
   },
   {
-    title: "UsuÃ¡rio interno operacional",
-    badge: "OperaÃ§Ã£o",
+    title: "Usuário interno operacional",
+    badge: "Operação",
     href: "/cadastros/operacional",
     description:
-      "Acompanha a operaÃ§Ã£o, mas nÃ£o entra no financeiro completo. VÃª apenas status como pago ou nÃ£o pago.",
+      "Acompanha a operação, mas não entra no financeiro completo. Vê apenas status como pago ou não pago.",
     canView: [
-      "Andamento de serviÃ§os",
+      "Andamento de serviços",
       "OS e OC operacionais",
-      "SituaÃ§Ã£o paga ou nÃ£o paga",
+      "Situação paga ou não paga",
       "Fluxo de atendimento",
-      "Campos de operaÃ§Ã£o",
+      "Campos de operação",
     ],
     cannotView: [
       "DRE",
       "Margem",
       "Fechamento detalhado",
-      "RelatÃ³rio financeiro completo",
-      "Repasse total sem autorizaÃ§Ã£o",
+      "Relatório financeiro completo",
+      "Repasse total sem autorização",
     ],
   },
   {
@@ -119,20 +119,20 @@ const profileCards = [
     badge: "Admin",
     href: "/cadastros/administradores",
     description:
-      "Recebe autorizaÃ§Ã£o do administrador master para acessar Ã¡reas crÃ­ticas, incluindo financeiro conforme o nÃ­vel.",
+      "Recebe autorização do administrador master para acessar áreas críticas, incluindo financeiro conforme o nível.",
     canView: [
       "Financeiro autorizado",
       "Auditoria",
-      "AprovaÃ§Ãµes",
-      "HistÃ³rico protegido",
-      "RelatÃ³rios completos conforme permissÃ£o",
+      "Aprovações",
+      "Histórico protegido",
+      "Relatórios completos conforme permissão",
     ],
     cannotView: [
-      "Nada fora do nÃ­vel concedido pelo master",
-      "PermissÃµes nÃ£o autorizadas",
-      "Ãreas acima do nÃ­vel delegado",
+      "Nada fora do nível concedido pelo master",
+      "Permissões não autorizadas",
+      "Ãreas acima do nível delegado",
       "Escopos removidos ou bloqueados",
-      "Dados sem vÃ­nculo ao acesso concedido",
+      "Dados sem vínculo ao acesso concedido",
     ],
   },
   {
@@ -140,18 +140,18 @@ const profileCards = [
     badge: "Master",
     href: "/cadastros/master",
     description:
-      "Controla quem pode administrar, quem entra no financeiro, quais nÃ­veis existem e quais bases podem ser acessadas.",
+      "Controla quem pode administrar, quem entra no financeiro, quais níveis existem e quais bases podem ser acessadas.",
     canView: [
       "Tudo com rastreabilidade",
-      "PermissÃµes",
+      "Permissões",
       "Financeiro total",
       "Auditoria completa",
-      "ConfiguraÃ§Ãµes crÃ­ticas",
+      "Configurações críticas",
     ],
     cannotView: [
       "Nada sem registro",
       "Nada fora da trilha de auditoria",
-      "Nada sem polÃ­tica",
+      "Nada sem política",
       "Nada sem regra definida",
       "Nada sem responsabilidade",
     ],
@@ -160,28 +160,28 @@ const profileCards = [
 
 const structuralRules = [
   {
-    title: "SegregaÃ§Ã£o por perfil",
-    text: "Cada perfil acessa apenas o que Ã© necessÃ¡rio para sua funÃ§Ã£o. O app nÃ£o mistura motorista, cliente, empresa, operaÃ§Ã£o e administraÃ§Ã£o.",
+    title: "Segregação por perfil",
+    text: "Cada perfil acessa apenas o que é necessário para sua função. O app não mistura motorista, cliente, empresa, operação e administração.",
   },
   {
-    title: "ProteÃ§Ã£o dos dados do cliente",
-    text: "Motorista nÃ£o vÃª dados completos do cliente. SÃ³ recebe telefone quando a locadora ou empresa liberar esse contato no serviÃ§o.",
+    title: "Proteção dos dados do cliente",
+    text: "Motorista não vê dados completos do cliente. Só recebe telefone quando a locadora ou empresa liberar esse contato no serviço.",
   },
   {
     title: "Financeiro blindado",
-    text: "UsuÃ¡rios internos comuns nÃ£o entram em relatÃ³rio financeiro completo. Eles enxergam apenas indicadores simples como pago e nÃ£o pago.",
+    text: "Usuários internos comuns não entram em relatório financeiro completo. Eles enxergam apenas indicadores simples como pago e não pago.",
   },
   {
-    title: "ServiÃ§o pago sai da visÃ£o do motorista",
-    text: "Depois da baixa, o serviÃ§o some da Ã¡rea do motorista e continua apenas no histÃ³rico interno protegido para administraÃ§Ã£o autorizada.",
+    title: "Serviço pago sai da visão do motorista",
+    text: "Depois da baixa, o serviço some da área do motorista e continua apenas no histórico interno protegido para administração autorizada.",
   },
   {
     title: "OS e OC sequenciais do sistema",
-    text: "A administraÃ§Ã£o terÃ¡ numeraÃ§Ã£o oficial Ãºnica e sequencial do sistema para ordem de serviÃ§o e ordem de compra.",
+    text: "A administração terá numeração oficial única e sequencial do sistema para ordem de serviço e ordem de compra.",
   },
   {
-    title: "NumeraÃ§Ã£o prÃ³pria do cliente",
-    text: "AlÃ©m do nÃºmero do sistema, haverÃ¡ campo para OS e OC prÃ³prias de cada cliente, facilitando conciliaÃ§Ã£o e operaÃ§Ã£o real.",
+    title: "Numeração própria do cliente",
+    text: "Além do número do sistema, haverá campo para OS e OC próprias de cada cliente, facilitando conciliação e operação real.",
   },
 ];
 
@@ -205,12 +205,12 @@ const numberingExamples = [
 ];
 
 const suggestions = [
-  "Campo de autorizaÃ§Ã£o para compartilhar contato do cliente com o motorista.",
-  "Modo de privacidade por cliente: restrito, parcial, operacional ou liberado por serviÃ§o.",
-  "Justificativa obrigatÃ³ria para alteraÃ§Ã£o apÃ³s salvamento.",
-  "HistÃ³rico de autorizaÃ§Ã£o financeira com quem autorizou e quando.",
-  "Fluxo de aprovaÃ§Ã£o em etapas: criado, revisado, aprovado, executado, faturado, pago e encerrado.",
-  "Controle de visualizaÃ§Ã£o por registro: somente admin, interno, cliente, motorista ou combinaÃ§Ãµes permitidas.",
+  "Campo de autorização para compartilhar contato do cliente com o motorista.",
+  "Modo de privacidade por cliente: restrito, parcial, operacional ou liberado por serviço.",
+  "Justificativa obrigatória para alteração após salvamento.",
+  "Histórico de autorização financeira com quem autorizou e quando.",
+  "Fluxo de aprovação em etapas: criado, revisado, aprovado, executado, faturado, pago e encerrado.",
+  "Controle de visualização por registro: somente admin, interno, cliente, motorista ou combinações permitidas.",
 ];
 
 export default function CadastrosPage() {
@@ -225,12 +225,12 @@ export default function CadastrosPage() {
             <div style={styles.heroTextBlock}>
               <div style={styles.eyebrow}>AURORA MOTORISTAS â€¢ CADASTROS</div>
               <h1 style={styles.heroTitle}>
-                Cadastros com segregaÃ§Ã£o real, privacidade forte e operaÃ§Ã£o sem mistura
+                Cadastros com segregação real, privacidade forte e operação sem mistura
               </h1>
               <p style={styles.heroText}>
-                Esta Ã¡rea organiza os perfis do app independente e define quem vÃª
-                o quÃª. Motorista, cliente, locadora, usuÃ¡rio interno, admin
-                autorizado e master seguem regras prÃ³prias para evitar mistura,
+                Esta área organiza os perfis do app independente e define quem vê
+                o quê. Motorista, cliente, locadora, usuário interno, admin
+                autorizado e master seguem regras próprias para evitar mistura,
                 vazamento e descontrole operacional.
               </p>
 
@@ -240,32 +240,32 @@ export default function CadastrosPage() {
                 </Link>
 
                 <Link href="/servicos" style={styles.primaryButton}>
-                  Ir para serviÃ§os
+                  Ir para serviços
                 </Link>
               </div>
             </div>
 
             <div style={styles.heroSideCard}>
               <span style={styles.sideKicker}>REGRA DE OURO</span>
-              <h2 style={styles.sideTitle}>ServiÃ§o pago some da visÃ£o do motorista</h2>
+              <h2 style={styles.sideTitle}>Serviço pago some da visão do motorista</h2>
               <p style={styles.sideText}>
-                O motorista acompanha o serviÃ§o atÃ© receber. Depois da baixa, o
-                registro deixa a visÃ£o dele e segue somente no histÃ³rico interno
-                protegido da administraÃ§Ã£o e autorizados.
+                O motorista acompanha o serviço até receber. Depois da baixa, o
+                registro deixa a visão dele e segue somente no histórico interno
+                protegido da administração e autorizados.
               </p>
 
               <div style={styles.sideBadgeList}>
                 <div style={styles.sideBadge}>Sem mistura indevida</div>
                 <div style={styles.sideBadge}>Blindagem operacional</div>
-                <div style={styles.sideBadge}>HistÃ³rico interno protegido</div>
+                <div style={styles.sideBadge}>Histórico interno protegido</div>
               </div>
             </div>
           </div>
 
           <div style={styles.noticeBox}>
-            Sistema em constante atualizaÃ§Ã£o. A estrutura jÃ¡ estÃ¡ sendo desenhada
-            para multiempresa, privacidade real, autorizaÃ§Ã£o por nÃ­vel e futura
-            integraÃ§Ã£o apenas com cadastro geral e acesso externo.
+            Sistema em constante atualização. A estrutura já está sendo desenhada
+            para multiempresa, privacidade real, autorização por nível e futura
+            integração apenas com cadastro geral e acesso externo.
           </div>
         </div>
       </section>
@@ -285,10 +285,10 @@ export default function CadastrosPage() {
       <section style={styles.contentSection}>
         <div style={styles.sectionHeader}>
           <span style={styles.sectionEyebrow}>PERFIS DO SISTEMA</span>
-          <h2 style={styles.sectionTitle}>Cada usuÃ¡rio vÃª apenas o necessÃ¡rio</h2>
+          <h2 style={styles.sectionTitle}>Cada usuário vê apenas o necessário</h2>
           <p style={styles.sectionText}>
-            O objetivo aqui Ã© impedir confusÃ£o operacional, proteger clientes,
-            evitar exposiÃ§Ã£o indevida e deixar o app preparado para contratos
+            O objetivo aqui é impedir confusão operacional, proteger clientes,
+            evitar exposição indevida e deixar o app preparado para contratos
             reais com empresas e locadoras.
           </p>
         </div>
@@ -299,7 +299,7 @@ export default function CadastrosPage() {
               <div style={styles.profileTop}>
                 <div style={styles.profileBadge}>{profile.badge}</div>
                 <Link href={profile.href} style={styles.profileLink}>
-                  Abrir Ã¡rea
+                  Abrir área
                 </Link>
               </div>
 
@@ -319,7 +319,7 @@ export default function CadastrosPage() {
                 </div>
 
                 <div style={styles.permissionBlock}>
-                  <span style={styles.permissionTitleDanger}>NÃ£o pode ver</span>
+                  <span style={styles.permissionTitleDanger}>Não pode ver</span>
                   <ul style={styles.permissionList}>
                     {profile.cannotView.map((item) => (
                       <li key={item} style={styles.permissionItem}>
@@ -337,10 +337,10 @@ export default function CadastrosPage() {
       <section style={styles.rulesSection}>
         <div style={styles.sectionHeader}>
           <span style={styles.sectionEyebrow}>REGRAS ESTRUTURAIS</span>
-          <h2 style={styles.sectionTitle}>Base oficial de seguranÃ§a operacional</h2>
+          <h2 style={styles.sectionTitle}>Base oficial de segurança operacional</h2>
           <p style={styles.sectionText}>
-            Estas regras entram no coraÃ§Ã£o do produto e devem guiar telas,
-            permissÃµes, banco e relatÃ³rios.
+            Estas regras entram no coração do produto e devem guiar telas,
+            permissões, banco e relatórios.
           </p>
         </div>
 
@@ -358,11 +358,11 @@ export default function CadastrosPage() {
         <div style={styles.mainNumberingGrid}>
           <div style={styles.numberingCard}>
             <span style={styles.sectionEyebrow}>OS E OC</span>
-            <h2 style={styles.sectionTitle}>Dupla numeraÃ§Ã£o para operaÃ§Ã£o real</h2>
+            <h2 style={styles.sectionTitle}>Dupla numeração para operação real</h2>
             <p style={styles.sectionText}>
-              O sistema terÃ¡ sua numeraÃ§Ã£o oficial sequencial, enquanto o cliente
-              poderÃ¡ manter suas prÃ³prias referÃªncias internas sem quebrar o
-              controle da administraÃ§Ã£o.
+              O sistema terá sua numeração oficial sequencial, enquanto o cliente
+              poderá manter suas próprias referências internas sem quebrar o
+              controle da administração.
             </p>
 
             <div style={styles.numberingGrid}>
@@ -395,18 +395,18 @@ export default function CadastrosPage() {
           <div style={styles.bottomTextBlock}>
             <span style={styles.sectionEyebrow}>PRÃ“XIMA ETAPA</span>
             <h2 style={styles.bottomTitle}>
-              Depois daqui, a Ã¡rea de motoristas jÃ¡ pode nascer com essas travas
+              Depois daqui, a área de motoristas já pode nascer com essas travas
             </h2>
             <p style={styles.bottomText}>
-              O prÃ³ximo arquivo ideal Ã© a pÃ¡gina interna dos motoristas no app
-              independente, jÃ¡ respeitando visibilidade prÃ³pria, contato
-              autorizado e remoÃ§Ã£o de serviÃ§os pagos da visÃ£o do condutor.
+              O próximo arquivo ideal é a página interna dos motoristas no app
+              independente, já respeitando visibilidade própria, contato
+              autorizado e remoção de serviços pagos da visão do condutor.
             </p>
           </div>
 
           <div style={styles.bottomActions}>
             <Link href="/servicos" style={styles.primaryButton}>
-              Explorar serviÃ§os
+              Explorar serviços
             </Link>
 
             <Link href="/financeiro" style={styles.secondaryButton}>
@@ -961,3 +961,4 @@ const styles: Record<string, React.CSSProperties> = {
     gap: 12,
   },
 };
+

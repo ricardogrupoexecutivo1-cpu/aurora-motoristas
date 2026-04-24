@@ -199,17 +199,17 @@ function totalDespesasFromList(despesas: DespesaItem[]) {
 function tipoDespesaLabel(tipo: TipoDespesa) {
   switch (tipo) {
     case 'combustivel':
-      return 'CombustÃ­vel'
+      return 'Combustível'
     case 'pedagio':
-      return 'PedÃ¡gio'
+      return 'Pedágio'
     case 'alimentacao':
-      return 'AlimentaÃ§Ã£o'
+      return 'Alimentação'
     case 'hospedagem':
       return 'Hospedagem'
     case 'estacionamento':
       return 'Estacionamento'
     case 'manutencao':
-      return 'ManutenÃ§Ã£o'
+      return 'Manutenção'
     default:
       return 'Outros'
   }
@@ -411,7 +411,7 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
 
   function adicionarDespesa() {
     if (!novaDespesaDescricao.trim()) {
-      showMessage('Informe a descriÃ§Ã£o da despesa antes de adicionar.', 'erro')
+      showMessage('Informe a descrição da despesa antes de adicionar.', 'erro')
       return
     }
 
@@ -454,34 +454,34 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
 
     if (!isValidDocumento(tipoPessoaCliente, documentoCliente)) {
       showMessage(
-        `${getDocumentoLabel(tipoPessoaCliente)} do cliente invÃ¡lido. Preencha com nÃºmeros suficientes.`,
+        `${getDocumentoLabel(tipoPessoaCliente)} do cliente inválido. Preencha com números suficientes.`,
         'erro'
       )
       return
     }
 
     if (!dataServico) {
-      showMessage('Informe a data do serviÃ§o.', 'erro')
+      showMessage('Informe a data do serviço.', 'erro')
       return
     }
 
     if (!horarioApresentacao) {
-      showMessage('Informe o horÃ¡rio de apresentaÃ§Ã£o.', 'erro')
+      showMessage('Informe o horário de apresentação.', 'erro')
       return
     }
 
     if (!origem.trim()) {
-      showMessage('Informe a origem da operaÃ§Ã£o.', 'erro')
+      showMessage('Informe a origem da operação.', 'erro')
       return
     }
 
     if (!destino.trim()) {
-      showMessage('Informe o destino da operaÃ§Ã£o.', 'erro')
+      showMessage('Informe o destino da operação.', 'erro')
       return
     }
 
     if (tipoFaturamentoCliente === 'mensal' && !competenciaFaturamento.trim()) {
-      showMessage('Informe a competÃªncia do faturamento mensal.', 'erro')
+      showMessage('Informe a competência do faturamento mensal.', 'erro')
       return
     }
 
@@ -503,11 +503,11 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
       horarioApresentacao,
       localApresentacao: localApresentacao.trim(),
       observacaoApresentacao: observacaoApresentacao.trim(),
-      tipoServico: 'MobilizaÃ§Ã£o + desmobilizaÃ§Ã£o',
+      tipoServico: 'Mobilização + desmobilização',
       modalidadeServico: 'pacote_personalizado',
       tipoOperacao: 'mobilizacao_desmobilizacao',
       quantidade: quantidadeFinal,
-      unidadeQuantidade: 'serviÃ§o',
+      unidadeQuantidade: 'serviço',
       baseMotorista,
       motoristaNome: motoristaNome.trim(),
       motoristaId: motoristaId.trim(),
@@ -586,11 +586,11 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(atualizado))
 
       showMessage(
-        `CotaÃ§Ã£o ${payload.id} salva com sucesso na pÃ¡gina enxuta de mobilizaÃ§Ã£o + desmobilizaÃ§Ã£o.`,
+        `Cotação ${payload.id} salva com sucesso na página enxuta de mobilização + desmobilização.`,
         'sucesso'
       )
     } catch {
-      showMessage('NÃ£o foi possÃ­vel salvar agora no navegador.', 'erro')
+      showMessage('Não foi possível salvar agora no navegador.', 'erro')
     }
   }
 
@@ -601,29 +601,29 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="space-y-3">
               <span className="inline-flex rounded-full bg-cyan-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">
-                Aurora Motoristas â€¢ CotaÃ§Ã£o enxuta
+                Aurora Motoristas â€¢ Cotação enxuta
               </span>
 
               <div>
                 <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
-                  MobilizaÃ§Ã£o + desmobilizaÃ§Ã£o
+                  Mobilização + desmobilização
                 </h1>
                 <p className="mt-2 max-w-3xl text-sm text-slate-600 md:text-base">
-                  PÃ¡gina nova e isolada, criada para operaÃ§Ã£o rÃ¡pida. Aqui entram sÃ³ os
-                  campos principais para este tipo de cotaÃ§Ã£o, sem abrir a pÃ¡gina grande
+                  Página nova e isolada, criada para operação rápida. Aqui entram só os
+                  campos principais para este tipo de cotação, sem abrir a página grande
                   para todo mundo.
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-3 text-sm">
                 <span className="rounded-2xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-emerald-700">
-                  Tipo jÃ¡ travado
+                  Tipo já travado
                 </span>
                 <span className="rounded-2xl border border-sky-200 bg-sky-50 px-3 py-2 text-sky-700">
-                  Cliente jÃ¡ puxado
+                  Cliente já puxado
                 </span>
                 <span className="rounded-2xl border border-amber-200 bg-amber-50 px-3 py-2 text-amber-700">
-                  Sem mexer na pÃ¡gina completa
+                  Sem mexer na página completa
                 </span>
               </div>
             </div>
@@ -633,20 +633,20 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                 href="/plataforma/cotacoes"
                 className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
               >
-                Ver cotaÃ§Ãµes
+                Ver cotações
               </Link>
               <Link
                 href="/plataforma/cotacoes/novo"
                 className="rounded-2xl border border-slate-900 bg-slate-900 px-4 py-3 text-center text-sm font-semibold text-white transition hover:opacity-90"
               >
-                Voltar Ã  entrada rÃ¡pida
+                Voltar Ã  entrada rápida
               </Link>
             </div>
           </div>
 
           <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-            Sistema em constante atualizaÃ§Ã£o. Esta pÃ¡gina foi criada em camada separada para
-            agilizar a operaÃ§Ã£o sem risco de quebrar a base jÃ¡ publicada.
+            Sistema em constante atualização. Esta página foi criada em camada separada para
+            agilizar a operação sem risco de quebrar a base já publicada.
           </div>
         </section>
 
@@ -666,7 +666,7 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
         <section className="grid gap-6 xl:grid-cols-[1.45fr_0.95fr]">
           <div className="space-y-6">
             <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="text-lg font-semibold">Cliente e identificaÃ§Ã£o</h2>
+              <h2 className="text-lg font-semibold">Cliente e identificação</h2>
 
               <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                 <Field label="Tipo de pessoa">
@@ -675,14 +675,14 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                     onChange={(e) => setTipoPessoaCliente(e.target.value as TipoPessoa)}
                     className="input"
                   >
-                    <option value="juridica">JurÃ­dica</option>
-                    <option value="fisica">FÃ­sica</option>
+                    <option value="juridica">Jurídica</option>
+                    <option value="fisica">Física</option>
                   </select>
                 </Field>
 
                 <Field
                   label={getDocumentoLabel(tipoPessoaCliente)}
-                  helper="ObrigatÃ³rio. Pode ser com ou sem mÃ¡scara."
+                  helper="Obrigatório. Pode ser com ou sem máscara."
                 >
                   <input
                     value={documentoCliente}
@@ -696,7 +696,7 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                   />
                 </Field>
 
-                <Field label="Contratante" helper="ObrigatÃ³rio.">
+                <Field label="Contratante" helper="Obrigatório.">
                   <input
                     value={contratante}
                     onChange={(e) => setContratante(e.target.value)}
@@ -732,21 +732,21 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                   />
                 </Field>
 
-                <Field label="ResponsÃ¡vel financeiro">
+                <Field label="Responsável financeiro">
                   <input
                     value={responsavelFinanceiroCliente}
                     onChange={(e) => setResponsavelFinanceiroCliente(e.target.value)}
                     className="input"
-                    placeholder="Nome do responsÃ¡vel"
+                    placeholder="Nome do responsável"
                   />
                 </Field>
 
-                <Field label="EndereÃ§o">
+                <Field label="Endereço">
                   <input
                     value={enderecoCliente}
                     onChange={(e) => setEnderecoCliente(e.target.value)}
                     className="input"
-                    placeholder="Rua, nÃºmero, bairro"
+                    placeholder="Rua, número, bairro"
                   />
                 </Field>
 
@@ -783,7 +783,7 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
               <h2 className="text-lg font-semibold">Dados operacionais principais</h2>
 
               <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                <Field label="Status da cotaÃ§Ã£o">
+                <Field label="Status da cotação">
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value as StatusCotacao)}
@@ -798,7 +798,7 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                   </select>
                 </Field>
 
-                <Field label="Data do serviÃ§o" helper="ObrigatÃ³rio.">
+                <Field label="Data do serviço" helper="Obrigatório.">
                   <input
                     type="date"
                     value={dataServico}
@@ -807,7 +807,7 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                   />
                 </Field>
 
-                <Field label="HorÃ¡rio de apresentaÃ§Ã£o" helper="ObrigatÃ³rio.">
+                <Field label="Horário de apresentação" helper="Obrigatório.">
                   <input
                     type="time"
                     value={horarioApresentacao}
@@ -816,7 +816,7 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                   />
                 </Field>
 
-                <Field label="HorÃ¡rio do serviÃ§o">
+                <Field label="Horário do serviço">
                   <input
                     type="time"
                     value={horarioServico}
@@ -825,7 +825,7 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                   />
                 </Field>
 
-                <Field label="Local de apresentaÃ§Ã£o">
+                <Field label="Local de apresentação">
                   <input
                     value={localApresentacao}
                     onChange={(e) => setLocalApresentacao(e.target.value)}
@@ -834,7 +834,7 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                   />
                 </Field>
 
-                <Field label="Origem" helper="ObrigatÃ³rio.">
+                <Field label="Origem" helper="Obrigatório.">
                   <input
                     value={origem}
                     onChange={(e) => setOrigem(e.target.value)}
@@ -843,7 +843,7 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                   />
                 </Field>
 
-                <Field label="Destino" helper="ObrigatÃ³rio.">
+                <Field label="Destino" helper="Obrigatório.">
                   <input
                     value={destino}
                     onChange={(e) => setDestino(e.target.value)}
@@ -887,17 +887,17 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                     <option value="a_combinar">A combinar</option>
                     <option value="pix">PIX</option>
                     <option value="boleto">Boleto</option>
-                    <option value="transferencia">TransferÃªncia</option>
-                    <option value="cartao">CartÃ£o</option>
+                    <option value="transferencia">Transferência</option>
+                    <option value="cartao">Cartão</option>
                   </select>
                 </Field>
 
-                <Field label="ObservaÃ§Ã£o da apresentaÃ§Ã£o">
+                <Field label="Observação da apresentação">
                   <input
                     value={observacaoApresentacao}
                     onChange={(e) => setObservacaoApresentacao(e.target.value)}
                     className="input"
-                    placeholder="Ponto, contato, instruÃ§Ã£o rÃ¡pida"
+                    placeholder="Ponto, contato, instrução rápida"
                   />
                 </Field>
               </div>
@@ -988,7 +988,7 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                     onChange={(e) => setAplicarReembolsoIda(e.target.value === 'sim')}
                     className="input"
                   >
-                    <option value="nao">NÃ£o</option>
+                    <option value="nao">Não</option>
                     <option value="sim">Sim</option>
                   </select>
                 </Field>
@@ -999,7 +999,7 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                     onChange={(e) => setAplicarReembolsoRetorno(e.target.value === 'sim')}
                     className="input"
                   >
-                    <option value="nao">NÃ£o</option>
+                    <option value="nao">Não</option>
                     <option value="sim">Sim</option>
                   </select>
                 </Field>
@@ -1011,13 +1011,13 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
 
               <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                 <MoneyField
-                  label="Valor unitÃ¡rio do cliente"
+                  label="Valor unitário do cliente"
                   value={valorUnitarioCliente}
                   onChange={setValorUnitarioCliente}
                 />
 
                 <MoneyField
-                  label="Valor unitÃ¡rio do motorista"
+                  label="Valor unitário do motorista"
                   value={valorUnitarioMotorista}
                   onChange={setValorUnitarioMotorista}
                 />
@@ -1032,12 +1032,12 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                     }
                     className="input"
                   >
-                    <option value="por_servico">Por serviÃ§o</option>
+                    <option value="por_servico">Por serviço</option>
                     <option value="mensal">Mensal</option>
                   </select>
                 </Field>
 
-                <Field label="CompetÃªncia">
+                <Field label="Competência">
                   <input
                     value={competenciaFaturamento}
                     onChange={(e) => setCompetenciaFaturamento(e.target.value)}
@@ -1046,7 +1046,7 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                   />
                 </Field>
 
-                <Field label="PerÃ­odo de referÃªncia">
+                <Field label="Período de referência">
                   <input
                     value={periodoReferencia}
                     onChange={(e) => setPeriodoReferencia(e.target.value)}
@@ -1056,13 +1056,13 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                 </Field>
 
                 <MoneyField
-                  label="AcrÃ©scimo urgente (%)"
+                  label="Acréscimo urgente (%)"
                   value={acrescimoUrgentePercentual}
                   onChange={setAcrescimoUrgentePercentual}
                 />
 
                 <MoneyField
-                  label="AcrÃ©scimo emergencial (%)"
+                  label="Acréscimo emergencial (%)"
                   value={acrescimoEmergencialPercentual}
                   onChange={setAcrescimoEmergencialPercentual}
                 />
@@ -1070,7 +1070,7 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
 
               <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-5">
                 <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-600">
-                  LanÃ§ar despesa rÃ¡pida
+                  Lançar despesa rápida
                 </h3>
 
                 <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -1080,17 +1080,17 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                       onChange={(e) => setNovaDespesaTipo(e.target.value as TipoDespesa)}
                       className="input"
                     >
-                      <option value="combustivel">CombustÃ­vel</option>
-                      <option value="pedagio">PedÃ¡gio</option>
-                      <option value="alimentacao">AlimentaÃ§Ã£o</option>
+                      <option value="combustivel">Combustível</option>
+                      <option value="pedagio">Pedágio</option>
+                      <option value="alimentacao">Alimentação</option>
                       <option value="hospedagem">Hospedagem</option>
                       <option value="estacionamento">Estacionamento</option>
-                      <option value="manutencao">ManutenÃ§Ã£o</option>
+                      <option value="manutencao">Manutenção</option>
                       <option value="outros">Outros</option>
                     </select>
                   </Field>
 
-                  <Field label="DescriÃ§Ã£o">
+                  <Field label="Descrição">
                     <input
                       value={novaDespesaDescricao}
                       onChange={(e) => setNovaDespesaDescricao(e.target.value)}
@@ -1118,7 +1118,7 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
 
                 {despesas.length === 0 ? (
                   <div className="mt-4 rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-6 text-sm text-slate-600">
-                    Nenhuma despesa lanÃ§ada ainda.
+                    Nenhuma despesa lançada ainda.
                   </div>
                 ) : (
                   <div className="mt-4 space-y-3">
@@ -1154,7 +1154,7 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
             </section>
 
             <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="text-lg font-semibold">Controle estratÃ©gico</h2>
+              <h2 className="text-lg font-semibold">Controle estratégico</h2>
 
               <div className="mt-5 grid gap-4 md:grid-cols-2">
                 <label className="flex items-start gap-3 rounded-2xl border border-slate-200 p-4">
@@ -1165,7 +1165,7 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                     className="mt-1 h-4 w-4"
                   />
                   <span className="text-sm text-slate-700">
-                    Confirmar que a cotaÃ§Ã£o precisa retornar como <strong>aceita</strong> ou <strong>recusada</strong>.
+                    Confirmar que a cotação precisa retornar como <strong>aceita</strong> ou <strong>recusada</strong>.
                   </span>
                 </label>
 
@@ -1177,7 +1177,7 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                     className="mt-1 h-4 w-4"
                   />
                   <span className="text-sm text-slate-700">
-                    Marcar como visÃ­vel para motorista quando a operaÃ§Ã£o jÃ¡ puder avanÃ§ar.
+                    Marcar como visível para motorista quando a operação já puder avançar.
                   </span>
                 </label>
 
@@ -1189,13 +1189,13 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                     className="mt-1 h-4 w-4"
                   />
                   <span className="text-sm text-slate-700">
-                    Marcar como pronto para virar serviÃ§o assim que o cliente aceitar.
+                    Marcar como pronto para virar serviço assim que o cliente aceitar.
                   </span>
                 </label>
               </div>
 
               <div className="mt-4 grid gap-4">
-                <Field label="ObservaÃ§Ãµes para o cliente">
+                <Field label="Observações para o cliente">
                   <textarea
                     value={observacoesCliente}
                     onChange={(e) => setObservacoesCliente(e.target.value)}
@@ -1205,13 +1205,13 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                   />
                 </Field>
 
-                <Field label="ObservaÃ§Ãµes internas">
+                <Field label="Observações internas">
                   <textarea
                     value={observacoesInternas}
                     onChange={(e) => setObservacoesInternas(e.target.value)}
                     rows={4}
                     className="textarea"
-                    placeholder="AnotaÃ§Ãµes internas, estratÃ©gia, pontos de atenÃ§Ã£o."
+                    placeholder="Anotações internas, estratégia, pontos de atenção."
                   />
                 </Field>
               </div>
@@ -1223,8 +1223,8 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
               <h2 className="text-lg font-semibold">Resumo enxuto</h2>
 
               <div className="mt-5 space-y-3">
-                <SummaryRow label="OperaÃ§Ã£o" value="MobilizaÃ§Ã£o + desmobilizaÃ§Ã£o" />
-                <SummaryRow label="Quantidade" value={`${quantidadeFinal} serviÃ§o`} />
+                <SummaryRow label="Operação" value="Mobilização + desmobilização" />
+                <SummaryRow label="Quantidade" value={`${quantidadeFinal} serviço`} />
                 <SummaryRow label="KM ida" value={`${kmIda} km`} />
                 <SummaryRow label="KM retorno" value={`${kmRetorno} km`} />
                 <SummaryRow label="Total ida" value={toMoney(totalOperacionalIda)} />
@@ -1234,9 +1234,9 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                 <SummaryRow label="Total base cliente" value={toMoney(valorTotalClienteBase)} />
                 <SummaryRow label="Total base motorista" value={toMoney(valorTotalMotorista)} />
                 <SummaryRow label="Subtotal custos" value={toMoney(subtotalCustos)} />
-                <SummaryRow label="AcrÃ©scimo urgente" value={toMoney(acrescimoUrgente)} />
-                <SummaryRow label="AcrÃ©scimo emergencial" value={toMoney(acrescimoEmergencial)} />
-                <SummaryRow label="Total da cotaÃ§Ã£o" value={toMoney(valorCobradoCliente)} strong />
+                <SummaryRow label="Acréscimo urgente" value={toMoney(acrescimoUrgente)} />
+                <SummaryRow label="Acréscimo emergencial" value={toMoney(acrescimoEmergencial)} />
+                <SummaryRow label="Total da cotação" value={toMoney(valorCobradoCliente)} strong />
                 <SummaryRow label="Margem bruta" value={toMoney(margemBruta)} strong />
               </div>
 
@@ -1244,14 +1244,14 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                 <p className="font-semibold text-slate-900">Leitura operacional</p>
                 <p className="mt-2">
                   {podeVincularServico
-                    ? 'Esta cotaÃ§Ã£o jÃ¡ estÃ¡ pronta para virar serviÃ§o com vÃ­nculo obrigatÃ³rio ao motorista.'
-                    : 'Para virar serviÃ§o: status aceita, motorista preenchido e opÃ§Ã£o pronta para vincular marcada.'}
+                    ? 'Esta cotação já está pronta para virar serviço com vínculo obrigatório ao motorista.'
+                    : 'Para virar serviço: status aceita, motorista preenchido e opção pronta para vincular marcada.'}
                 </p>
               </div>
             </section>
 
             <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="text-lg font-semibold">AÃ§Ãµes</h2>
+              <h2 className="text-lg font-semibold">Ações</h2>
 
               <div className="mt-5 grid gap-3">
                 <button
@@ -1259,7 +1259,7 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                   onClick={salvarCotacao}
                   className="rounded-2xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:opacity-90"
                 >
-                  Salvar cotaÃ§Ã£o enxuta
+                  Salvar cotação enxuta
                 </button>
 
                 <Link
@@ -1318,19 +1318,19 @@ export default function PlataformaCotacaoMobilizacaoDesmobilizacaoPage() {
           <div className="mx-auto flex min-h-screen w-full max-w-7xl items-center justify-center px-4 py-10 md:px-6 lg:px-8">
             <div className="w-full max-w-2xl rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm">
               <span className="inline-flex rounded-full bg-cyan-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">
-                Aurora Motoristas â€¢ CotaÃ§Ã£o enxuta
+                Aurora Motoristas â€¢ Cotação enxuta
               </span>
 
               <h1 className="mt-4 text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
-                Carregando mobilizaÃ§Ã£o + desmobilizaÃ§Ã£o
+                Carregando mobilização + desmobilização
               </h1>
 
               <p className="mt-3 text-sm text-slate-600 md:text-base">
-                Estamos preparando a pÃ¡gina rÃ¡pida sem interferir na plataforma principal.
+                Estamos preparando a página rápida sem interferir na plataforma principal.
               </p>
 
               <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-                Sistema em constante atualizaÃ§Ã£o. Esta camada nova foi criada para agregar valor sem mexer na plataforma jÃ¡ em produÃ§Ã£o.
+                Sistema em constante atualização. Esta camada nova foi criada para agregar valor sem mexer na plataforma já em produção.
               </div>
             </div>
           </div>
@@ -1404,3 +1404,4 @@ function SummaryRow({
     </div>
   )
 }
+

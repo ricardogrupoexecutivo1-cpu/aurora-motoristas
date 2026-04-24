@@ -52,7 +52,7 @@ export default function AcessoNegadoPage() {
             color: "#0f172a",
           }}
         >
-          VocÃª nÃ£o tem permissÃ£o para acessar esta Ã¡rea
+          Você não tem permissão para acessar esta área
         </h1>
 
         <p
@@ -63,9 +63,9 @@ export default function AcessoNegadoPage() {
             lineHeight: 1.8,
           }}
         >
-          Esta Ã¡rea estÃ¡ protegida por perfil de acesso. Isso ajuda a manter a
-          operaÃ§Ã£o organizada, proteger o financeiro e evitar exposiÃ§Ã£o de dados
-          que nÃ£o fazem parte da rotina do seu usuÃ¡rio.
+          Esta área está protegida por perfil de acesso. Isso ajuda a manter a
+          operação organizada, proteger o financeiro e evitar exposição de dados
+          que não fazem parte da rotina do seu usuário.
         </p>
 
         <div
@@ -77,15 +77,15 @@ export default function AcessoNegadoPage() {
         >
           <InfoCard
             title="Operacional"
-            text="Foco em cadastros, serviÃ§os, operaÃ§Ã£o e acompanhamento do fluxo."
+            text="Foco em cadastros, serviços, operação e acompanhamento do fluxo."
           />
           <InfoCard
             title="Financeiro"
-            text="Acesso especÃ­fico para pagamentos, valores, margens e relatÃ³rios financeiros."
+            text="Acesso específico para pagamentos, valores, margens e relatórios financeiros."
           />
           <InfoCard
-            title="AdministraÃ§Ã£o"
-            text="Controle mais amplo do sistema, permissÃµes e organizaÃ§Ã£o da base."
+            title="Administração"
+            text="Controle mais amplo do sistema, permissões e organização da base."
           />
         </div>
 
@@ -100,8 +100,8 @@ export default function AcessoNegadoPage() {
             lineHeight: 1.7,
           }}
         >
-          <strong style={{ color: "#123047" }}>OrientaÃ§Ã£o:</strong> se vocÃª
-          precisa acessar esta Ã¡rea, solicite liberaÃ§Ã£o ao administrador do
+          <strong style={{ color: "#123047" }}>Orientação:</strong> se você
+          precisa acessar esta área, solicite liberação ao administrador do
           sistema.
         </div>
 
@@ -117,7 +117,7 @@ export default function AcessoNegadoPage() {
           </Link>
 
           <Link href="/servicos" style={secondaryLink}>
-            Ir para operaÃ§Ã£o
+            Ir para operação
           </Link>
 
           <Link href="/guia" style={secondaryLink}>
@@ -134,7 +134,7 @@ export default function AcessoNegadoPage() {
             paddingTop: 4,
           }}
         >
-          Sistema em constante atualizaÃ§Ã£o â€¢ podem ocorrer instabilidades
+          Sistema em constante atualização â€¢ podem ocorrer instabilidades
           momentÃ¢neas durante melhorias.
         </div>
       </div>
@@ -202,3 +202,4 @@ const secondaryLink: React.CSSProperties = {
   padding: "12px 16px",
   fontWeight: 800,
 };
+

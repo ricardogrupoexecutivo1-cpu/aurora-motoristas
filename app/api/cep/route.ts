@@ -31,7 +31,7 @@ export async function GET(request: Request) {
 
     if (!cep || cep.length !== 8) {
       return NextResponse.json(
-        { error: "Informe um CEP vÃ¡lido com 8 dÃ­gitos." },
+        { error: "Informe um CEP válido com 8 dígitos." },
         { status: 400 }
       );
     }
@@ -89,11 +89,11 @@ export async function GET(request: Request) {
         });
       }
     } catch {
-      // fallback falhou tambÃ©m
+      // fallback falhou também
     }
 
     return NextResponse.json(
-      { error: "NÃ£o foi possÃ­vel consultar o CEP agora. Tente novamente em instantes." },
+      { error: "Não foi possível consultar o CEP agora. Tente novamente em instantes." },
       { status: 502 }
     );
   } catch (error) {
@@ -103,3 +103,4 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
+

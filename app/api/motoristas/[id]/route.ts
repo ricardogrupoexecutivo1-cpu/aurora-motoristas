@@ -1,327 +1,176 @@
-﻿import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+﻿import {
+  consumeStream,
+  convertToModelMessages,
+  streamText,
+  UIMessage,
+  tool,
+} from "ai";
+import { z } from "zod";
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+export const maxDuration = 30;
 
-type StatusMotorista = "pendente" | "ativo" | "bloqueado";
+export async function POST(req: Request) {
+  const { messages, context }: { messages: UIMessage[]; context?: Record<string, unknown> } =
+    await req.json();
 
-type MotoristaPayload = {
-  nome?: string;
-  cpf?: string;
-  cnh?: string;
-  telefone?: string;
-  email?: string;
-  cep?: string;
-  logradouro?: string;
-  numero?: string;
-  complemento?: string;
-  bairro?: string;
-  cidade?: string;
-  estado?: string;
-  observacoes?: string;
-  foto_url?: string;
-  status?: string;
-  ativo?: boolean;
-};
+  const systemPrompt = `Você é a MIA, assistente virtual da Aurora Motoristas.
 
-function limparDocumento(valor: string) {
-  return String(valor || "").replace(/\D/g, "");
-}
+REGRAS PRINCIPAIS:
+- Sempre responda em português brasileiro.
+- Não prometa seguro. Seguro, quando existir, é responsabilidade do cliente/contratante.
+- Não exponha informações internas de motorista para cliente.
+- Cliente vê somente a própria solicitação, nunca dados de outros clientes.
+- Motorista vê somente os próprios serviços ativos/pendentes.
+- Depois de pago/finalizado, o serviço sai da visão do motorista e fica no histórico/admin.
+- Somente admin master vê tudo.
+- A operação pode ser por diária, por valor por KM ou por valor fechado do serviço.
+- A cobrança pode ter KM com reembolso ou sem reembolso.
+- O pagamento ao motorista pode ser por valor do serviço.
+- Adiantamento + despesas = valor a receber/descontar do motorista, conforme operação.
+- A taxa comercial pública da Aurora pode ser 5% quando aplicada ao fluxo parceiro.
 
-function limparTexto(valor: unknown) {
-  return String(valor || "").trim();
-}
+CONTEXTO DO USUÁRIO:
+${context ? JSON.stringify(context, null, 2) : "Não disponível"}
 
-function getSupabaseAdmin() {
-  const supabaseUrl =
-    process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || "";
+Ajude com clareza, sem expor dados sensíveis e direcionando para a área correta do sistema.`;
 
-  const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+  const result = streamText({
+    model: "openai/gpt-5-mini",
+    system: systemPrompt,
+    messages: await convertToModelMessages(messages),
+    abortSignal: req.signal,
+    tools: {
+      calcularCorrida: tool({
+        description: "Calcula valor estimado por KM para corrida ou deslocamento.",
+        inputSchema: z.object({
+          distanciaKm: z.number().describe("Distância em quilômetros"),
+          valorKm: z.number().optional().describe("Valor por KM em reais"),
+          valorBase: z.number().optional().describe("Valor base em reais"),
+        }),
+        execute: async ({ distanciaKm, valorKm = 2.5, valorBase = 0 }) => {
+          const valorEstimado = valorBase + distanciaKm * valorKm;
 
-  if (!supabaseUrl || !supabaseServiceRoleKey) {
-    throw new Error(
-      "Variáveis do Supabase ausentes. Verifique NEXT_PUBLIC_SUPABASE_URL/SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY.",
-    );
-  }
+          return {
+            distanciaKm,
+            valorBase: valorBase.toFixed(2),
+            valorKm: valorKm.toFixed(2),
+            valorEstimado: valorEstimado.toFixed(2),
+            observacao:
+              "Estimativa operacional. Valores finais dependem da regra cadastrada: diária, KM ou valor fechado do serviço.",
+          };
+        },
+      }),
 
-  return createClient(supabaseUrl, supabaseServiceRoleKey, {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
+      calcularServicoMotorista: tool({
+        description:
+          "Calcula resumo operacional do serviço do motorista com valor do serviço, adiantamento e despesas.",
+        inputSchema: z.object({
+          valorServico: z.number().describe("Valor bruto do serviço"),
+          adiantamento: z.number().optional().describe("Valor adiantado ao motorista"),
+          despesas: z.number().optional().describe("Despesas lançadas no serviço"),
+          taxaPercentual: z.number().optional().describe("Taxa percentual da Aurora quando aplicável"),
+        }),
+        execute: async ({
+          valorServico,
+          adiantamento = 0,
+          despesas = 0,
+          taxaPercentual = 5,
+        }) => {
+          const taxaAurora = valorServico * (taxaPercentual / 100);
+          const valorLiquidoServico = valorServico - taxaAurora;
+          const valorAReceberDoMotorista = adiantamento + despesas;
+          const saldoMotorista = valorLiquidoServico - valorAReceberDoMotorista;
+
+          return {
+            valorServico: valorServico.toFixed(2),
+            taxaPercentual: `${taxaPercentual}%`,
+            taxaAurora: taxaAurora.toFixed(2),
+            valorLiquidoServico: valorLiquidoServico.toFixed(2),
+            adiantamento: adiantamento.toFixed(2),
+            despesas: despesas.toFixed(2),
+            valorAReceberDoMotorista: valorAReceberDoMotorista.toFixed(2),
+            saldoMotorista: saldoMotorista.toFixed(2),
+            regra:
+              "Adiantamento + despesas compõem valor a receber/descontar do motorista conforme a operação.",
+            visibilidade:
+              "Cliente não vê esta parte. Motorista vê apenas o que for dele. Admin master vê tudo.",
+          };
+        },
+      }),
+
+      simularDiaria: tool({
+        description: "Simula cobrança ou pagamento por diária.",
+        inputSchema: z.object({
+          quantidadeDiarias: z.number().describe("Quantidade de diárias"),
+          valorDiaria: z.number().describe("Valor de cada diária"),
+          despesas: z.number().optional().describe("Despesas adicionais"),
+        }),
+        execute: async ({ quantidadeDiarias, valorDiaria, despesas = 0 }) => {
+          const totalDiarias = quantidadeDiarias * valorDiaria;
+          const totalComDespesas = totalDiarias + despesas;
+
+          return {
+            quantidadeDiarias,
+            valorDiaria: valorDiaria.toFixed(2),
+            totalDiarias: totalDiarias.toFixed(2),
+            despesas: despesas.toFixed(2),
+            totalComDespesas: totalComDespesas.toFixed(2),
+          };
+        },
+      }),
+
+      simularKm: tool({
+        description: "Simula operação por KM com ou sem reembolso.",
+        inputSchema: z.object({
+          km: z.number().describe("Quantidade de quilômetros"),
+          valorKm: z.number().describe("Valor por KM"),
+          reembolso: z.number().optional().describe("Valor de reembolso quando existir"),
+          incluirReembolso: z.boolean().optional().describe("Se o reembolso entra no total"),
+        }),
+        execute: async ({ km, valorKm, reembolso = 0, incluirReembolso = false }) => {
+          const subtotalKm = km * valorKm;
+          const total = incluirReembolso ? subtotalKm + reembolso : subtotalKm;
+
+          return {
+            km,
+            valorKm: valorKm.toFixed(2),
+            subtotalKm: subtotalKm.toFixed(2),
+            reembolso: reembolso.toFixed(2),
+            incluirReembolso,
+            total: total.toFixed(2),
+          };
+        },
+      }),
+
+      explicarVisibilidade: tool({
+        description: "Explica regras de visibilidade por perfil.",
+        inputSchema: z.object({
+          perfil: z.enum(["cliente", "motorista", "empresa", "admin"]).describe("Perfil do usuário"),
+        }),
+        execute: async ({ perfil }) => {
+          const regras = {
+            cliente:
+              "Cliente vê somente os próprios serviços, status, informações de atendimento e dados necessários da própria operação. Nunca vê dados internos do motorista, valores internos, outros clientes ou visão administrativa.",
+            motorista:
+              "Motorista vê somente serviços atribuídos a ele. Após pagamento/finalização, o serviço sai da visão operacional do motorista e fica em histórico/admin.",
+            empresa:
+              "Empresa vê somente a própria operação, solicitações, serviços e relatórios autorizados. Não vê dados de outras empresas.",
+            admin:
+              "Admin master vê tudo: clientes, empresas, motoristas, serviços, financeiro, histórico, adiantamentos, despesas e auditoria.",
+          };
+
+          return {
+            perfil,
+            regra: regras[perfil],
+          };
+        },
+      }),
     },
+  });
+
+  return result.toUIMessageStreamResponse({
+    originalMessages: messages,
+    consumeSseStream: consumeStream,
   });
 }
 
-function normalizarStatus(valor: unknown): StatusMotorista | null {
-  if (typeof valor !== "string") return null;
-
-  const normalized = valor.toLowerCase().trim();
-
-  if (
-    normalized === "pendente" ||
-    normalized.includes("pendente") ||
-    normalized === "pending"
-  ) {
-    return "pendente";
-  }
-
-  if (
-    normalized === "ativo" ||
-    normalized.includes("ativo") ||
-    normalized.includes("aprovado") ||
-    normalized.includes("autorizado") ||
-    normalized === "active"
-  ) {
-    return "ativo";
-  }
-
-  if (
-    normalized === "bloqueado" ||
-    normalized.includes("bloqueado") ||
-    normalized.includes("inativo") ||
-    normalized.includes("suspenso") ||
-    normalized === "blocked" ||
-    normalized === "inactive"
-  ) {
-    return "bloqueado";
-  }
-
-  return null;
-}
-
-function statusParaAtivo(status: StatusMotorista): boolean {
-  return status === "ativo";
-}
-
-function montarPayloadAtualizacaoCompleta(body: MotoristaPayload) {
-  const payloadBase = {
-    nome: limparTexto(body.nome),
-    cnh: limparTexto(body.cnh),
-    telefone: limparDocumento(body.telefone || ""),
-    email: limparTexto(body.email),
-    cep: limparDocumento(body.cep || ""),
-    logradouro: limparTexto(body.logradouro),
-    numero: limparTexto(body.numero),
-    complemento: limparTexto(body.complemento),
-    bairro: limparTexto(body.bairro),
-    cidade: limparTexto(body.cidade),
-    estado: limparTexto(body.estado).toUpperCase().slice(0, 2),
-    observacoes: limparTexto(body.observacoes),
-    foto_url: limparTexto(body.foto_url),
-  };
-
-  const payload: Record<string, string> = {};
-
-  for (const [key, value] of Object.entries(payloadBase)) {
-    if (value !== "") {
-      payload[key] = value;
-    }
-  }
-
-  return payload;
-}
-
-export async function GET(
-  _request: Request,
-  context: { params: Promise<{ id: string }> },
-) {
-  try {
-    const { id } = await context.params;
-    const supabase = getSupabaseAdmin();
-
-    const { data, error } = await supabase
-      .from("motoristas_aurora")
-      .select("*")
-      .eq("id", id)
-      .maybeSingle();
-
-    if (error) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Erro ao buscar motorista.",
-          error: error.message,
-        },
-        { status: 500 },
-      );
-    }
-
-    if (!data) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Motorista não encontrado.",
-          motorista: null,
-        },
-        { status: 404 },
-      );
-    }
-
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Motorista carregado com sucesso.",
-        motorista: data,
-      },
-      { status: 200 },
-    );
-  } catch (error) {
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Erro interno ao buscar motorista.",
-        error: error instanceof Error ? error.message : "Erro desconhecido.",
-      },
-      { status: 500 },
-    );
-  }
-}
-
-export async function PATCH(
-  request: Request,
-  context: { params: Promise<{ id: string }> },
-) {
-  try {
-    const { id } = await context.params;
-    const body = (await request.json()) as MotoristaPayload;
-    const supabase = getSupabaseAdmin();
-
-    const statusNormalizado = normalizarStatus(body.status);
-    const payloadCompleto = montarPayloadAtualizacaoCompleta(body);
-
-    const enviouApenasStatus =
-      typeof body.status === "string" &&
-      !body.nome &&
-      !body.cnh &&
-      !body.telefone &&
-      !body.email &&
-      !body.cep &&
-      !body.logradouro &&
-      !body.numero &&
-      !body.complemento &&
-      !body.bairro &&
-      !body.cidade &&
-      !body.estado &&
-      !body.observacoes &&
-      !body.foto_url;
-
-    if (enviouApenasStatus) {
-      if (!statusNormalizado) {
-        return NextResponse.json(
-          {
-            success: false,
-            message: "Status inválido para atualização.",
-          },
-          { status: 400 },
-        );
-      }
-
-      const payloadStatus = {
-        ativo: statusParaAtivo(statusNormalizado),
-      };
-
-      const { data, error } = await supabase
-        .from("motoristas_aurora")
-        .update(payloadStatus)
-        .eq("id", id)
-        .select("*")
-        .maybeSingle();
-
-      if (error) {
-        return NextResponse.json(
-          {
-            success: false,
-            message: "Erro ao atualizar status do motorista.",
-            error: error.message,
-            details: error.details || null,
-            hint: error.hint || null,
-            code: error.code || null,
-            payload_enviado: payloadStatus,
-          },
-          { status: 500 },
-        );
-      }
-
-      if (!data) {
-        return NextResponse.json(
-          {
-            success: false,
-            message: "Motorista não encontrado para atualização de status.",
-          },
-          { status: 404 },
-        );
-      }
-
-      return NextResponse.json(
-        {
-          success: true,
-          message: "Status do motorista atualizado com sucesso.",
-          motorista: data,
-        },
-        { status: 200 },
-      );
-    }
-
-    if (!payloadCompleto.nome) {
-      return NextResponse.json(
-        {
-          success: false,
-          message:
-            "Nome é obrigatório nas atualizações completas do motorista.",
-        },
-        { status: 400 },
-      );
-    }
-
-    const { data, error } = await supabase
-      .from("motoristas_aurora")
-      .update(payloadCompleto)
-      .eq("id", id)
-      .select("*")
-      .maybeSingle();
-
-    if (error) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Erro ao atualizar motorista.",
-          error: error.message,
-          details: error.details || null,
-          hint: error.hint || null,
-          code: error.code || null,
-          payload_enviado: payloadCompleto,
-        },
-        { status: 500 },
-      );
-    }
-
-    if (!data) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Motorista não encontrado para atualização.",
-        },
-        { status: 404 },
-      );
-    }
-
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Motorista atualizado com sucesso.",
-        motorista: data,
-      },
-      { status: 200 },
-    );
-  } catch (error) {
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Erro interno ao atualizar motorista.",
-        error: error instanceof Error ? error.message : "Erro desconhecido.",
-      },
-      { status: 500 },
-    );
-  }
-}

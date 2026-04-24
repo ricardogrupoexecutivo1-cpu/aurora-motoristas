@@ -123,12 +123,12 @@ function getDisplayEmpresa(service: ServiceRow) {
     service.empresa ||
     service.contratante ||
     service.empresa_operadora ||
-    "NÃ£o informado"
+    "Não informado"
   );
 }
 
 function getDisplayCliente(service: ServiceRow) {
-  return service.cliente || service.cliente_final || "NÃ£o informado";
+  return service.cliente || service.cliente_final || "Não informado";
 }
 
 function getDisplayOS(service: ServiceRow) {
@@ -136,7 +136,7 @@ function getDisplayOS(service: ServiceRow) {
 }
 
 function getDisplayObservacao(service: ServiceRow) {
-  return service.observacoes || service.observacao || "Sem observaÃ§Ãµes.";
+  return service.observacoes || service.observacao || "Sem observações.";
 }
 
 function getStatusLabel(service: ServiceRow) {
@@ -333,7 +333,7 @@ export default function AdminServicosPage() {
       const data: ApiResponse = await response.json();
 
       if (!response.ok || !data?.success) {
-        throw new Error(data?.message || "Falha ao carregar serviÃ§os.");
+        throw new Error(data?.message || "Falha ao carregar serviços.");
       }
 
       const rows = Array.isArray(data.services) ? data.services : [];
@@ -346,12 +346,12 @@ export default function AdminServicosPage() {
       setServices(rows);
       setStatusText(
         rows.length > 0
-          ? `${rows.length} serviÃ§o(s) carregado(s) na visÃ£o administrativa.`
-          : "Nenhum serviÃ§o encontrado na base."
+          ? `${rows.length} serviço(s) carregado(s) na visão administrativa.`
+          : "Nenhum serviço encontrado na base."
       );
     } catch (error) {
       const messageText =
-        error instanceof Error ? error.message : "Erro ao carregar serviÃ§os.";
+        error instanceof Error ? error.message : "Erro ao carregar serviços.";
       setStatusText(messageText);
       setServices([]);
     } finally {
@@ -386,7 +386,7 @@ export default function AdminServicosPage() {
       const data = await response.json().catch(() => ({}));
 
       if (!response.ok || data?.success === false) {
-        throw new Error(data?.message || "Falha ao atualizar serviÃ§o.");
+        throw new Error(data?.message || "Falha ao atualizar serviço.");
       }
 
       setServices((prev) =>
@@ -406,7 +406,7 @@ export default function AdminServicosPage() {
       }
     } catch (error) {
       const messageText =
-        error instanceof Error ? error.message : "Erro ao atualizar serviÃ§o.";
+        error instanceof Error ? error.message : "Erro ao atualizar serviço.";
       setStatusText(messageText);
       alert(messageText);
     } finally {
@@ -624,7 +624,7 @@ export default function AdminServicosPage() {
       color: "#f59e0b",
     },
     { label: "Pagos", value: totais.pagos, color: "#22c55e" },
-    { label: "HistÃ³rico", value: totais.historico, color: "#fb923c" },
+    { label: "Histórico", value: totais.historico, color: "#fb923c" },
   ];
 
   const maiorBarra = Math.max(...graficoDados.map((item) => item.value), 1);
@@ -649,7 +649,7 @@ export default function AdminServicosPage() {
                 justifyContent: "space-between",
               }}
             >
-              <div style={heroBadge}>Admin â€¢ ServiÃ§os</div>
+              <div style={heroBadge}>Admin â€¢ Serviços</div>
 
               <div
                 style={{
@@ -687,7 +687,7 @@ export default function AdminServicosPage() {
                     width: isMobile ? "100%" : "auto",
                   }}
                 >
-                  OperaÃ§Ã£o
+                  Operação
                 </Link>
 
                 <Link
@@ -707,7 +707,7 @@ export default function AdminServicosPage() {
                     width: isMobile ? "100%" : "auto",
                   }}
                 >
-                  Novo serviÃ§o
+                  Novo serviço
                 </Link>
 
                 <button
@@ -724,14 +724,14 @@ export default function AdminServicosPage() {
             </div>
 
             <h1 style={heroTitle}>
-              Painel administrativo de serviÃ§os com leitura visual clara
+              Painel administrativo de serviços com leitura visual clara
             </h1>
 
             <p style={heroText}>
-              Aqui vocÃª enxerga a <strong>base total</strong>, sem limitar pela
-              empresa da sessÃ£o. Ã‰ a camada de conferÃªncia, correÃ§Ã£o e gestÃ£o
-              administrativa, com visÃ£o completa de ativos, pendentes,
-              aguardando pagamento, pagos, histÃ³rico protegido e situaÃ§Ã£o fiscal.
+              Aqui você enxerga a <strong>base total</strong>, sem limitar pela
+              empresa da sessão. É a camada de conferência, correção e gestão
+              administrativa, com visão completa de ativos, pendentes,
+              aguardando pagamento, pagos, histórico protegido e situação fiscal.
             </p>
 
             <div style={heroInfoRow}>
@@ -739,7 +739,7 @@ export default function AdminServicosPage() {
                 {loading ? "Atualizando..." : statusText}
               </span>
               <span style={chipWarning}>
-                Sistema em constante atualizaÃ§Ã£o e podem ocorrer instabilidades
+                Sistema em constante atualização e podem ocorrer instabilidades
                 momentÃ¢neas.
               </span>
             </div>
@@ -750,17 +750,17 @@ export default function AdminServicosPage() {
           <StatCard
             label="Base total"
             value={String(totais.total)}
-            help="Todos os serviÃ§os da base administrativa."
+            help="Todos os serviços da base administrativa."
           />
           <StatCard
             label="Ativos"
             value={String(totais.ativos)}
-            help="Ainda visÃ­veis na operaÃ§Ã£o."
+            help="Ainda visíveis na operação."
           />
           <StatCard
             label="Pendentes"
             value={String(totais.pendentes)}
-            help="Aguardando avanÃ§o operacional."
+            help="Aguardando avanço operacional."
           />
           <StatCard
             label="Aguardando pagamento"
@@ -770,10 +770,10 @@ export default function AdminServicosPage() {
           <StatCard
             label="Pagos"
             value={String(totais.pagos)}
-            help="Com baixa concluÃ­da."
+            help="Com baixa concluída."
           />
           <StatCard
-            label="HistÃ³rico protegido"
+            label="Histórico protegido"
             value={String(totais.historico)}
             help="Pagos ou ocultos do motorista."
           />
@@ -783,7 +783,7 @@ export default function AdminServicosPage() {
           <StatCard
             label="Sem nota"
             value={String(totais.semNota)}
-            help="ServiÃ§os sem dados fiscais informados."
+            help="Serviços sem dados fiscais informados."
           />
           <StatCard
             label="Notas a vencer"
@@ -793,7 +793,7 @@ export default function AdminServicosPage() {
           <StatCard
             label="Notas vencidas"
             value={String(totais.vencidas)}
-            help="Precisam de aÃ§Ã£o rÃ¡pida."
+            help="Precisam de ação rápida."
           />
           <StatCard
             label="Notas recebidas"
@@ -811,10 +811,10 @@ export default function AdminServicosPage() {
           }}
         >
           <div style={panelStyle}>
-            <div style={sectionEyebrow}>GrÃ¡fico principal</div>
-            <h2 style={sectionTitle}>Status da operaÃ§Ã£o</h2>
+            <div style={sectionEyebrow}>Gráfico principal</div>
+            <h2 style={sectionTitle}>Status da operação</h2>
             <p style={sectionText}>
-              Leitura visual imediata para entender onde a base estÃ¡
+              Leitura visual imediata para entender onde a base está
               concentrada.
             </p>
 
@@ -850,7 +850,7 @@ export default function AdminServicosPage() {
 
             <div style={{ display: "grid", gap: 12 }}>
               <MiniFinanceCard
-                label="CobranÃ§a total da base"
+                label="Cobrança total da base"
                 value={formatCurrency(totais.cobrancaTotal)}
               />
               <MiniFinanceCard
@@ -858,15 +858,15 @@ export default function AdminServicosPage() {
                 value={formatCurrency(totais.margemTotal)}
               />
               <MiniFinanceCard
-                label="Exibidos apÃ³s filtros"
+                label="Exibidos após filtros"
                 value={String(listaFiltrada.length)}
               />
             </div>
 
             <div style={adminNoteStyle}>
-              Este painel foi pensado para leitura rÃ¡pida, conferÃªncia geral,
-              correÃ§Ãµes administrativas e controle fiscal sem misturar a visÃ£o
-              operacional enxuta com a visÃ£o master.
+              Este painel foi pensado para leitura rápida, conferência geral,
+              correções administrativas e controle fiscal sem misturar a visão
+              operacional enxuta com a visão master.
             </div>
           </div>
         </section>
@@ -913,7 +913,7 @@ export default function AdminServicosPage() {
                   color: aba === "historico" ? "#ffffff" : "#123047",
                 }}
               >
-                HistÃ³rico protegido
+                Histórico protegido
               </button>
             </div>
 
@@ -957,7 +957,7 @@ export default function AdminServicosPage() {
                   Aguardando pagamento
                 </option>
                 <option value="pago">Pagos</option>
-                <option value="historico">HistÃ³rico protegido</option>
+                <option value="historico">Histórico protegido</option>
               </select>
             </div>
           </div>
@@ -967,7 +967,7 @@ export default function AdminServicosPage() {
           {loading ? (
             <EmptyState text="Carregando painel administrativo..." />
           ) : listaFiltrada.length === 0 ? (
-            <EmptyState text="Nenhum serviÃ§o encontrado com os filtros atuais." />
+            <EmptyState text="Nenhum serviço encontrado com os filtros atuais." />
           ) : (
             listaFiltrada.map((service) => {
               const statusBadge = getStatusStyles(service);
@@ -1002,7 +1002,7 @@ export default function AdminServicosPage() {
                       }}
                     >
                       <strong style={serviceTitleStyle}>
-                        {service.servico || "ServiÃ§o sem tÃ­tulo"}
+                        {service.servico || "Serviço sem título"}
                       </strong>
                       <span style={serviceMetaStyle}>
                         {getDisplayOS(service)} â€¢ {formatDate(service.data_servico)}
@@ -1040,14 +1040,14 @@ export default function AdminServicosPage() {
                     />
                     <Info
                       label="Motorista"
-                      value={service.motorista || "NÃ£o informado"}
+                      value={service.motorista || "Não informado"}
                     />
                     <Info
                       label="Placa"
-                      value={service.placa_veiculo || "NÃ£o informada"}
+                      value={service.placa_veiculo || "Não informada"}
                     />
                     <Info
-                      label="CobranÃ§a"
+                      label="Cobrança"
                       value={formatCurrency(
                         service.valor_cobranca ?? service.valor_total ?? 0
                       )}
@@ -1094,19 +1094,19 @@ export default function AdminServicosPage() {
                       }}
                     >
                       <Info
-                        label="NÃºmero da nota"
-                        value={getNotaNumero(service) || "NÃ£o informada"}
+                        label="Número da nota"
+                        value={getNotaNumero(service) || "Não informada"}
                       />
                       <Info
                         label="Valor da nota"
                         value={
                           hasNota(service)
                             ? formatCurrency(getNotaValor(service))
-                            : "NÃ£o informado"
+                            : "Não informado"
                         }
                       />
                       <Info
-                        label="Data de emissÃ£o"
+                        label="Data de emissão"
                         value={formatDate(getNotaEmissao(service) || null)}
                       />
                       <Info
@@ -1145,18 +1145,18 @@ export default function AdminServicosPage() {
                       }}
                     >
                       {notaStatus.label === "Sem nota"
-                        ? "Nota fiscal ainda nÃ£o informada neste serviÃ§o."
+                        ? "Nota fiscal ainda não informada neste serviço."
                         : notaStatus.label === "Vencida"
-                        ? "AtenÃ§Ã£o: esta nota fiscal estÃ¡ vencida e precisa de aÃ§Ã£o rÃ¡pida."
+                        ? "Atenção: esta nota fiscal está vencida e precisa de ação rápida."
                         : notaStatus.label === "A vencer"
                         ? "Nota fiscal em acompanhamento e ainda dentro do prazo."
                         : notaStatus.label === "Recebida"
-                        ? "Nota fiscal jÃ¡ recebida/baixada conforme status informado."
-                        : "Controle fiscal visual preparado para conferÃªncia rÃ¡pida."}
+                        ? "Nota fiscal já recebida/baixada conforme status informado."
+                        : "Controle fiscal visual preparado para conferência rápida."}
                     </div>
 
                     <div style={actionsBoxStyle}>
-                      <div style={actionsTitleStyle}>AÃ§Ã£o rÃ¡pida fiscal</div>
+                      <div style={actionsTitleStyle}>Ação rápida fiscal</div>
 
                       <div style={actionsRowStyle}>
                         <button
@@ -1198,25 +1198,25 @@ export default function AdminServicosPage() {
 
                       <div style={helperTextStyle}>
                         {disabled
-                          ? "Atualizando fiscal deste serviÃ§o..."
-                          : "O status fiscal ajuda a separar nota recebida, pendente, vencida e serviÃ§os sem nota."}
+                          ? "Atualizando fiscal deste serviço..."
+                          : "O status fiscal ajuda a separar nota recebida, pendente, vencida e serviços sem nota."}
                       </div>
                     </div>
                   </div>
 
                   <div style={observationBoxStyle}>
-                    <strong style={{ color: "#123047" }}>ObservaÃ§Ãµes:</strong>{" "}
+                    <strong style={{ color: "#123047" }}>Observações:</strong>{" "}
                     {getDisplayObservacao(service)}
                   </div>
 
                   <div style={actionsBoxStyle}>
-                    <div style={actionsTitleStyle}>AÃ§Ã£o rÃ¡pida administrativa</div>
+                    <div style={actionsTitleStyle}>Ação rápida administrativa</div>
 
                     {historicoProtegido ? (
                       <>
                         <div style={lockedNoteStyle}>
-                          Este item estÃ¡ no histÃ³rico protegido. Aqui vocÃª pode
-                          reabrir o serviÃ§o para voltar Ã  operaÃ§Ã£o ativa quando
+                          Este item está no histórico protegido. Aqui você pode
+                          reabrir o serviço para voltar Ã  operação ativa quando
                           precisar corrigir uma baixa, um pagamento ou uma
                           visibilidade indevida.
                         </div>
@@ -1251,8 +1251,8 @@ export default function AdminServicosPage() {
 
                         <div style={helperTextStyle}>
                           {disabled
-                            ? "Atualizando este serviÃ§o..."
-                            : "Ao reabrir, o item volta para a visÃ£o ativa e fica visÃ­vel novamente para a operaÃ§Ã£o."}
+                            ? "Atualizando este serviço..."
+                            : "Ao reabrir, o item volta para a visão ativa e fica visível novamente para a operação."}
                         </div>
                       </>
                     ) : (
@@ -1304,8 +1304,8 @@ export default function AdminServicosPage() {
 
                         <div style={helperTextStyle}>
                           {disabled
-                            ? "Atualizando este serviÃ§o..."
-                            : "Ao marcar como pago, ele sai da visÃ£o ativa e vai para o histÃ³rico protegido."}
+                            ? "Atualizando este serviço..."
+                            : "Ao marcar como pago, ele sai da visão ativa e vai para o histórico protegido."}
                         </div>
                       </>
                     )}
@@ -1335,7 +1335,7 @@ export default function AdminServicosPage() {
                         href={`/servicos/${service.id}`}
                         style={primaryLinkStyle}
                       >
-                        Editar serviÃ§o
+                        Editar serviço
                       </Link>
                     </div>
                   </div>
@@ -1894,3 +1894,4 @@ const primaryLinkStyle: CSSProperties = {
   padding: "10px 14px",
   fontWeight: 800,
 };
+

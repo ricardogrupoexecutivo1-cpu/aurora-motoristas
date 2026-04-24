@@ -123,19 +123,19 @@ function formatDate(value?: string | null) {
 function getTipoLabel(value?: string) {
   switch (value) {
     case "busca_veiculo":
-      return "Busca de veÃ­culo";
+      return "Busca de veículo";
     case "entrega_veiculo":
-      return "Entrega de veÃ­culo";
+      return "Entrega de veículo";
     case "transporte_executivo":
       return "Transporte executivo";
     case "transfer":
       return "Transfer";
     case "motorista_diaria":
-      return "Motorista por diÃ¡ria";
+      return "Motorista por diária";
     case "outro":
       return "Outro";
     default:
-      return value || "NÃ£o definido";
+      return value || "Não definido";
   }
 }
 
@@ -148,9 +148,9 @@ function getModoLabel(value?: string) {
     case "por_km_mais_reembolso":
       return "KM menor + reembolso";
     case "diaria_fechada":
-      return "DiÃ¡ria fechada";
+      return "Diária fechada";
     default:
-      return value || "NÃ£o definido";
+      return value || "Não definido";
   }
 }
 
@@ -185,7 +185,7 @@ function loadServices(): InternalService[] {
     if (!Array.isArray(parsed)) return [];
     return parsed as InternalService[];
   } catch (error) {
-    console.error("Erro ao carregar serviÃ§os:", error);
+    console.error("Erro ao carregar serviços:", error);
     return [];
   }
 }
@@ -403,13 +403,13 @@ export default function MotoristasContaCorrentePage() {
     const valorInformado = currencyStringToNumber(draft.valor);
 
     if (valorInformado <= 0) {
-      setFeedback(`Informe um valor vÃ¡lido para quitar ${row.motorista}.`);
+      setFeedback(`Informe um valor válido para quitar ${row.motorista}.`);
       return;
     }
 
     if (valorInformado > row.pagarAgora) {
       setFeedback(
-        `O valor informado para ${row.motorista} nÃ£o pode ser maior que o valor sugerido para pagar agora.`
+        `O valor informado para ${row.motorista} não pode ser maior que o valor sugerido para pagar agora.`
       );
       return;
     }
@@ -432,10 +432,10 @@ export default function MotoristasContaCorrentePage() {
         ...prev,
         [key]: { valor: "", observacao: "" },
       }));
-      setFeedback(`QuitaÃ§Ã£o registrada com sucesso para ${row.motorista}.`);
+      setFeedback(`Quitação registrada com sucesso para ${row.motorista}.`);
     } catch (error) {
-      console.error("Erro ao registrar quitaÃ§Ã£o:", error);
-      setFeedback("NÃ£o foi possÃ­vel registrar a quitaÃ§Ã£o.");
+      console.error("Erro ao registrar quitação:", error);
+      setFeedback("Não foi possível registrar a quitação.");
     }
   }
 
@@ -506,15 +506,15 @@ export default function MotoristasContaCorrentePage() {
                   fontSize: 15,
                 }}
               >
-                VisÃ£o consolidada por motorista, com saldo anterior, saldo do
-                serviÃ§o, saldo acumulado, valor sugerido para pagar agora e
-                histÃ³rico de quitaÃ§Ãµes, mantendo a margem da empresa separada.
+                Visão consolidada por motorista, com saldo anterior, saldo do
+                serviço, saldo acumulado, valor sugerido para pagar agora e
+                histórico de quitações, mantendo a margem da empresa separada.
               </p>
             </div>
 
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
               <Link href="/servicos/complementacao" style={linkSecondaryStyle}>
-                ComplementaÃ§Ã£o
+                Complementação
               </Link>
 
               <Link href="/servicos" style={linkPrimaryStyle}>
@@ -573,7 +573,7 @@ export default function MotoristasContaCorrentePage() {
 
         {filteredRows.length === 0 ? (
           <div style={emptyBoxStyle}>
-            Nenhum motorista com serviÃ§os complementados encontrado nesta leitura.
+            Nenhum motorista com serviços complementados encontrado nesta leitura.
           </div>
         ) : (
           <div style={{ display: "grid", gap: 16 }}>
@@ -623,7 +623,7 @@ export default function MotoristasContaCorrentePage() {
                           fontSize: 14,
                         }}
                       >
-                        {row.totalServicos} serviÃ§o(s) nesta leitura
+                        {row.totalServicos} serviço(s) nesta leitura
                       </p>
                     </div>
 
@@ -636,7 +636,7 @@ export default function MotoristasContaCorrentePage() {
                       }}
                     >
                       <InfoCard
-                        label="Total valor serviÃ§o"
+                        label="Total valor serviço"
                         value={moneyDisplay(row.totalValorServico)}
                       />
                       <InfoCard
@@ -710,7 +710,7 @@ export default function MotoristasContaCorrentePage() {
 
                   <section style={sectionBoxStyle}>
                     <SectionTitle
-                      title="Registrar quitaÃ§Ã£o"
+                      title="Registrar quitação"
                       subtitle="Use quando fizer o pagamento real ao motorista para abater do saldo acumulado."
                     />
 
@@ -739,7 +739,7 @@ export default function MotoristasContaCorrentePage() {
                       </label>
 
                       <label style={labelStyle}>
-                        <span style={labelTextStyle}>ObservaÃ§Ã£o</span>
+                        <span style={labelTextStyle}>Observação</span>
                         <input
                           value={paymentDraft.observacao}
                           onChange={(e) =>
@@ -771,15 +771,15 @@ export default function MotoristasContaCorrentePage() {
                           cursor: row.pagarAgora <= 0 ? "not-allowed" : "pointer",
                         }}
                       >
-                        Registrar quitaÃ§Ã£o
+                        Registrar quitação
                       </button>
                     </div>
                   </section>
 
                   <section style={sectionBoxStyle}>
                     <SectionTitle
-                      title="HistÃ³rico dos serviÃ§os"
-                      subtitle="Cada serviÃ§o mostra o saldo anterior, o saldo do serviÃ§o e o saldo acumulado do motorista."
+                      title="Histórico dos serviços"
+                      subtitle="Cada serviço mostra o saldo anterior, o saldo do serviço e o saldo acumulado do motorista."
                     />
 
                     <div style={{ display: "grid", gap: 12 }}>
@@ -857,7 +857,7 @@ export default function MotoristasContaCorrentePage() {
                               }}
                             >
                               <MiniInfo
-                                label="Valor do serviÃ§o"
+                                label="Valor do serviço"
                                 value={moneyDisplay(valorServico)}
                               />
                               <MiniInfo label="Vale" value={moneyDisplay(vale)} />
@@ -870,7 +870,7 @@ export default function MotoristasContaCorrentePage() {
                                 value={moneyDisplay(saldoAnterior)}
                               />
                               <MiniInfo
-                                label="Saldo do serviÃ§o"
+                                label="Saldo do serviço"
                                 value={moneyDisplay(saldoServico)}
                               />
                               <MiniInfo
@@ -926,13 +926,13 @@ export default function MotoristasContaCorrentePage() {
 
                   <section style={sectionBoxStyle}>
                     <SectionTitle
-                      title="HistÃ³rico de quitaÃ§Ãµes"
-                      subtitle="Pagamentos jÃ¡ registrados para este motorista."
+                      title="Histórico de quitações"
+                      subtitle="Pagamentos já registrados para este motorista."
                     />
 
                     {row.pagamentos.length === 0 ? (
                       <div style={emptyInnerBoxStyle}>
-                        Nenhuma quitaÃ§Ã£o registrada para este motorista.
+                        Nenhuma quitação registrada para este motorista.
                       </div>
                     ) : (
                       <div style={{ display: "grid", gap: 10 }}>
@@ -953,7 +953,7 @@ export default function MotoristasContaCorrentePage() {
                                 maxWidth: 420,
                               }}
                             >
-                              {safeText(payment.observacao, "Sem observaÃ§Ã£o.")}
+                              {safeText(payment.observacao, "Sem observação.")}
                             </div>
                           </div>
                         ))}
@@ -1183,3 +1183,4 @@ const linkPrimaryStyle: React.CSSProperties = {
   fontWeight: 700,
   background: "#f0f9ff",
 };
+

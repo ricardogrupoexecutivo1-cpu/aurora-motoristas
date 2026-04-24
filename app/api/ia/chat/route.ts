@@ -173,3 +173,4 @@ Ajude com clareza, sem expor dados sensíveis e direcionando para a área corret
     consumeSseStream: consumeStream,
   });
 }
+

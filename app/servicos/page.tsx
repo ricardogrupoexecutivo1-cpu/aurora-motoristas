@@ -113,12 +113,12 @@ function getDisplayEmpresa(service: ServiceRow) {
     service.empresa ||
     service.contratante ||
     service.empresa_operadora ||
-    "NÃ£o informado"
+    "Não informado"
   );
 }
 
 function getDisplayCliente(service: ServiceRow) {
-  return service.cliente || service.cliente_final || "NÃ£o informado";
+  return service.cliente || service.cliente_final || "Não informado";
 }
 
 function getDisplayOS(service: ServiceRow) {
@@ -126,7 +126,7 @@ function getDisplayOS(service: ServiceRow) {
 }
 
 function getDisplayObservacao(service: ServiceRow) {
-  return service.observacoes || service.observacao || "Sem observaÃ§Ãµes.";
+  return service.observacoes || service.observacao || "Sem observações.";
 }
 
 function getStatusLabel(service: ServiceRow) {
@@ -140,11 +140,11 @@ function getStatusLabel(service: ServiceRow) {
 
 function getTipoServicoLabel(tipo?: string | null) {
   const value = normalize(tipo);
-  if (value === "busca_veiculo") return "Busca de veÃ­culo";
-  if (value === "entrega_veiculo") return "Entrega de veÃ­culo";
+  if (value === "busca_veiculo") return "Busca de veículo";
+  if (value === "entrega_veiculo") return "Entrega de veículo";
   if (value === "transporte_executivo") return "Transporte executivo";
   if (value === "transfer") return "Transfer";
-  return tipo || "NÃ£o informado";
+  return tipo || "Não informado";
 }
 
 function getStatusStyles(service: ServiceRow) {
@@ -221,9 +221,9 @@ function buildWhatsappLink(service: ServiceRow) {
   const rota =
     service.origem && service.destino
       ? `${service.origem} x ${service.destino}`
-      : service.servico || "serviÃ§o";
+      : service.servico || "serviço";
 
-  const mensagem = `OlÃ¡, tudo bem? Estou falando sobre o serviÃ§o ${os} (${rota}) para ${nome}.`;
+  const mensagem = `Olá, tudo bem? Estou falando sobre o serviço ${os} (${rota}) para ${nome}.`;
   return `https://wa.me/${phone}?text=${encodeURIComponent(mensagem)}`;
 }
 
@@ -246,7 +246,7 @@ function serviceBelongsToEmpresa(service: ServiceRow, empresaLogada: string) {
 export default function ServicosPage() {
   const [services, setServices] = useState<ServiceRow[]>([]);
   const [loading, setLoading] = useState(true);
-  const [statusText, setStatusText] = useState("Carregando serviÃ§os...");
+  const [statusText, setStatusText] = useState("Carregando serviços...");
   const [search, setSearch] = useState("");
   const [aba, setAba] = useState<"ativos" | "historico">("ativos");
   const [statusFilter, setStatusFilter] = useState("todos");
@@ -268,7 +268,7 @@ export default function ServicosPage() {
       const data: ApiResponse = await response.json();
 
       if (!response.ok || !data?.success) {
-        throw new Error(data?.message || "Falha ao carregar serviÃ§os.");
+        throw new Error(data?.message || "Falha ao carregar serviços.");
       }
 
       const rows = Array.isArray(data.services) ? data.services : [];
@@ -281,12 +281,12 @@ export default function ServicosPage() {
       setServices(rows);
       setStatusText(
         rows.length > 0
-          ? `${rows.length} serviÃ§o(s) carregado(s) com sucesso.`
-          : "Nenhum serviÃ§o encontrado na base."
+          ? `${rows.length} serviço(s) carregado(s) com sucesso.`
+          : "Nenhum serviço encontrado na base."
       );
     } catch (error) {
       const messageText =
-        error instanceof Error ? error.message : "Erro ao carregar serviÃ§os.";
+        error instanceof Error ? error.message : "Erro ao carregar serviços.";
       setStatusText(messageText);
       setServices([]);
     } finally {
@@ -500,7 +500,7 @@ export default function ServicosPage() {
             </Link>
 
             <Link href="/servicos/novo" style={topPrimaryStyle}>
-              Novo serviÃ§o
+              Novo serviço
             </Link>
           </div>
 
@@ -531,7 +531,7 @@ export default function ServicosPage() {
                 wordBreak: "break-word",
               }}
             >
-              ServiÃ§os cadastrados
+              Serviços cadastrados
             </h1>
 
             <p
@@ -543,10 +543,10 @@ export default function ServicosPage() {
                 maxWidth: 980,
               }}
             >
-              VisÃ£o operacional premium com separaÃ§Ã£o entre serviÃ§os ativos e
-              histÃ³rico interno protegido. Quando um serviÃ§o Ã© marcado como pago
-              ou fica com <strong>visÃ­vel para motorista = nÃ£o</strong>, ele sai
-              da visÃ£o operacional e permanece preservado no histÃ³rico interno.
+              Visão operacional premium com separação entre serviços ativos e
+              histórico interno protegido. Quando um serviço é marcado como pago
+              ou fica com <strong>visível para motorista = não</strong>, ele sai
+              da visão operacional e permanece preservado no histórico interno.
             </p>
 
             <div
@@ -563,16 +563,16 @@ export default function ServicosPage() {
 
               {empresaLogada ? (
                 <span style={chipEmpresa}>
-                  Empresa da sessÃ£o: {empresaLogada}
+                  Empresa da sessão: {empresaLogada}
                 </span>
               ) : (
                 <span style={chipInfo}>
-                  Sem filtro por empresa na sessÃ£o
+                  Sem filtro por empresa na sessão
                 </span>
               )}
 
               <span style={chipWarning}>
-                Sistema em constante atualizaÃ§Ã£o e podem ocorrer instabilidades
+                Sistema em constante atualização e podem ocorrer instabilidades
                 momentÃ¢neas.
               </span>
             </div>
@@ -587,34 +587,34 @@ export default function ServicosPage() {
           }}
         >
           <StatCard
-            label="ServiÃ§os ativos"
+            label="Serviços ativos"
             value={String(totalAtivos)}
-            help="VisÃ­veis na operaÃ§Ã£o"
+            help="Visíveis na operação"
           />
           <StatCard
-            label="HistÃ³rico protegido"
+            label="Histórico protegido"
             value={String(totalHistorico)}
             help="Pagos ou ocultos do motorista"
           />
           <StatCard
             label="Pendentes"
             value={String(totalPendentes)}
-            help="Aguardando execuÃ§Ã£o"
+            help="Aguardando execução"
           />
           <StatCard
             label="Aguardando pagamento"
             value={String(totalAguardandoPagamento)}
-            help="ExecuÃ§Ã£o feita sem baixa final"
+            help="Execução feita sem baixa final"
           />
           <StatCard
             label="Pagos"
             value={String(totalPagos)}
-            help="Baixados no histÃ³rico"
+            help="Baixados no histórico"
           />
           <StatCard
             label="Base total"
             value={String(totalServicos)}
-            help="Resultado considerando a empresa da sessÃ£o"
+            help="Resultado considerando a empresa da sessão"
           />
         </section>
 
@@ -663,7 +663,7 @@ export default function ServicosPage() {
                         : "none",
                   }}
                 >
-                  ServiÃ§os ativos
+                  Serviços ativos
                 </button>
 
                 <button
@@ -678,7 +678,7 @@ export default function ServicosPage() {
                         : "none",
                   }}
                 >
-                  HistÃ³rico interno protegido
+                  Histórico interno protegido
                 </button>
               </div>
 
@@ -691,8 +691,8 @@ export default function ServicosPage() {
                 }}
               >
                 {aba === "ativos"
-                  ? "Aqui ficam apenas os serviÃ§os ainda visÃ­veis na operaÃ§Ã£o."
-                  : "Aqui ficam os serviÃ§os pagos ou ocultos da visÃ£o do motorista."}
+                  ? "Aqui ficam apenas os serviços ainda visíveis na operação."
+                  : "Aqui ficam os serviços pagos ou ocultos da visão do motorista."}
               </div>
             </div>
 
@@ -725,13 +725,13 @@ export default function ServicosPage() {
             </div>
 
             {loading ? (
-              <EmptyState text="Carregando serviÃ§os..." />
+              <EmptyState text="Carregando serviços..." />
             ) : listaFiltrada.length === 0 ? (
               <EmptyState
                 text={
                   aba === "ativos"
-                    ? "Nenhum serviÃ§o ativo encontrado com os filtros atuais."
-                    : "Nenhum item encontrado no histÃ³rico protegido com os filtros atuais."
+                    ? "Nenhum serviço ativo encontrado com os filtros atuais."
+                    : "Nenhum item encontrado no histórico protegido com os filtros atuais."
                 }
               />
             ) : (
@@ -805,7 +805,7 @@ export default function ServicosPage() {
                               wordBreak: "break-word",
                             }}
                           >
-                            {service.servico || "ServiÃ§o sem tÃ­tulo"}
+                            {service.servico || "Serviço sem título"}
                           </strong>
 
                           <span
@@ -847,7 +847,7 @@ export default function ServicosPage() {
                         }}
                       >
                         <span style={miniTag}>
-                          {historicoProtegido ? "HistÃ³rico protegido" : "Ativo"}
+                          {historicoProtegido ? "Histórico protegido" : "Ativo"}
                         </span>
                         <span style={miniTag}>
                           {service.modo_cobranca === "por_km"
@@ -855,8 +855,8 @@ export default function ServicosPage() {
                             : "Fechado total"}
                         </span>
                         <span style={miniTag}>
-                          VisÃ­vel ao motorista:{" "}
-                          {service.visivel_motorista === false ? "NÃ£o" : "Sim"}
+                          Visível ao motorista:{" "}
+                          {service.visivel_motorista === false ? "Não" : "Sim"}
                         </span>
                       </div>
 
@@ -879,11 +879,11 @@ export default function ServicosPage() {
                         />
                         <Info
                           label="Motorista"
-                          value={service.motorista || "NÃ£o informado"}
+                          value={service.motorista || "Não informado"}
                         />
                         <Info
                           label="Placa"
-                          value={service.placa_veiculo || "NÃ£o informada"}
+                          value={service.placa_veiculo || "Não informada"}
                         />
                         <Info
                           label="KM"
@@ -894,7 +894,7 @@ export default function ServicosPage() {
                           value={formatCurrency(service.valor_por_km ?? 0)}
                         />
                         <Info
-                          label="CobranÃ§a contratante"
+                          label="Cobrança contratante"
                           value={formatCurrency(
                             service.valor_cobranca ?? service.valor_total ?? 0
                           )}
@@ -927,7 +927,7 @@ export default function ServicosPage() {
                         <Info
                           label="Contato final"
                           value={
-                            service.contato_cliente_final || "NÃ£o informado"
+                            service.contato_cliente_final || "Não informado"
                           }
                         />
                       </div>
@@ -944,7 +944,7 @@ export default function ServicosPage() {
                           value={
                             service.endereco_retirada ||
                             service.origem ||
-                            "NÃ£o informada"
+                            "Não informada"
                           }
                         />
                         <WideInfo
@@ -952,7 +952,7 @@ export default function ServicosPage() {
                           value={
                             service.endereco_entrega ||
                             service.destino ||
-                            "NÃ£o informada"
+                            "Não informada"
                           }
                         />
                       </div>
@@ -973,17 +973,17 @@ export default function ServicosPage() {
                         {historicoProtegido ? (
                           <>
                             <strong style={{ color: "#9a3412" }}>
-                              Baixa concluÃ­da:
+                              Baixa concluída:
                             </strong>{" "}
-                            esta operaÃ§Ã£o jÃ¡ saiu da visÃ£o do motorista e segue
+                            esta operação já saiu da visão do motorista e segue
                             preservada apenas para controle interno.
                           </>
                         ) : (
                           <>
                             <strong style={{ color: "#1d4ed8" }}>
-                              OperaÃ§Ã£o ativa:
+                              Operação ativa:
                             </strong>{" "}
-                            este serviÃ§o ainda estÃ¡ em fluxo operacional e
+                            este serviço ainda está em fluxo operacional e
                             permanece na camada ativa do sistema.
                           </>
                         )}
@@ -1001,7 +1001,7 @@ export default function ServicosPage() {
                         }}
                       >
                         <strong style={{ color: "#123047" }}>
-                          ObservaÃ§Ãµes:
+                          Observações:
                         </strong>{" "}
                         {getDisplayObservacao(service)}
                       </div>
@@ -1018,10 +1018,10 @@ export default function ServicosPage() {
                         <Info
                           label="WhatsApp contato final"
                           value={
-                            service.telefone_cliente_final || "NÃ£o informado"
+                            service.telefone_cliente_final || "Não informado"
                           }
                         />
-                        <Info label="Pago" value={isPago(service) ? "Sim" : "NÃ£o"} />
+                        <Info label="Pago" value={isPago(service) ? "Sim" : "Não"} />
                         <Info
                           label="Pago em"
                           value={
@@ -1054,7 +1054,7 @@ export default function ServicosPage() {
                             color: "#123047",
                           }}
                         >
-                          AÃ§Ã£o rÃ¡pida de status
+                          Ação rápida de status
                         </div>
 
                         {historicoProtegido ? (
@@ -1070,9 +1070,9 @@ export default function ServicosPage() {
                               fontWeight: 700,
                             }}
                           >
-                            Baixa jÃ¡ concluÃ­da. Esta operaÃ§Ã£o estÃ¡ travada no
-                            histÃ³rico protegido e nÃ£o deve receber novas aÃ§Ãµes
-                            rÃ¡pidas nesta tela.
+                            Baixa já concluída. Esta operação está travada no
+                            histórico protegido e não deve receber novas ações
+                            rápidas nesta tela.
                           </div>
                         ) : (
                           <>
@@ -1137,8 +1137,8 @@ export default function ServicosPage() {
                               }}
                             >
                               {disabled
-                                ? "Atualizando este serviÃ§o..."
-                                : "Ao marcar como pago, o item sai da visÃ£o ativa e vai para o histÃ³rico protegido."}
+                                ? "Atualizando este serviço..."
+                                : "Ao marcar como pago, o item sai da visão ativa e vai para o histórico protegido."}
                             </div>
                           </>
                         )}
@@ -1161,7 +1161,7 @@ export default function ServicosPage() {
                             fontWeight: 700,
                           }}
                         >
-                          Sistema em constante atualizaÃ§Ã£o â€¢ podem ocorrer
+                          Sistema em constante atualização â€¢ podem ocorrer
                           instabilidades momentÃ¢neas
                         </div>
 
@@ -1194,7 +1194,7 @@ export default function ServicosPage() {
                             href={`/servicos/${service.id}`}
                             style={actionPrimaryStyle}
                           >
-                            Editar serviÃ§o
+                            Editar serviço
                           </Link>
                         </div>
                       </div>
@@ -1217,24 +1217,24 @@ export default function ServicosPage() {
             <SideCard
               title="Exibidos agora"
               value={String(listaFiltrada.length)}
-              help="Resultado apÃ³s filtros e busca."
+              help="Resultado após filtros e busca."
             />
             <SideCard
-              title={`CobranÃ§a da visÃ£o ${aba === "ativos" ? "ativa" : "histÃ³rica"}`}
+              title={`Cobrança da visão ${aba === "ativos" ? "ativa" : "histórica"}`}
               value={formatCurrency(somaCobrancaVisao)}
               help={
                 aba === "ativos"
-                  ? "Soma apenas dos serviÃ§os ainda ativos na operaÃ§Ã£o."
-                  : "Soma do histÃ³rico protegido atualmente exibido."
+                  ? "Soma apenas dos serviços ainda ativos na operação."
+                  : "Soma do histórico protegido atualmente exibido."
               }
             />
             <SideCard
-              title={`Margem da visÃ£o ${aba === "ativos" ? "ativa" : "histÃ³rica"}`}
+              title={`Margem da visão ${aba === "ativos" ? "ativa" : "histórica"}`}
               value={formatCurrency(somaMargemVisao)}
               help={
                 aba === "ativos"
-                  ? "NÃ£o mistura histÃ³rico pago com operaÃ§Ã£o atual."
-                  : "ConsolidaÃ§Ã£o visual do histÃ³rico protegido."
+                  ? "Não mistura histórico pago com operação atual."
+                  : "Consolidação visual do histórico protegido."
               }
             />
 
@@ -1268,8 +1268,8 @@ export default function ServicosPage() {
                 }}
               >
                 {aba === "ativos"
-                  ? "VocÃª estÃ¡ vendo apenas a camada ativa da operaÃ§Ã£o. Pagos e ocultos do motorista ficam fora desta visÃ£o."
-                  : "VocÃª estÃ¡ vendo a camada protegida do histÃ³rico interno, preservando a regra de ocultaÃ§Ã£o ao motorista."}
+                  ? "Você está vendo apenas a camada ativa da operação. Pagos e ocultos do motorista ficam fora desta visão."
+                  : "Você está vendo a camada protegida do histórico interno, preservando a regra de ocultação ao motorista."}
               </div>
 
               <div
@@ -1283,9 +1283,9 @@ export default function ServicosPage() {
                   lineHeight: 1.7,
                 }}
               >
-                Esta lateral foi pensada para leitura rÃ¡pida de lanÃ§amentos,
-                totais e situaÃ§Ã£o da visÃ£o atual, sem confundir operaÃ§Ã£o ativa
-                com histÃ³rico jÃ¡ baixado.
+                Esta lateral foi pensada para leitura rápida de lançamentos,
+                totais e situação da visão atual, sem confundir operação ativa
+                com histórico já baixado.
               </div>
             </div>
           </aside>
@@ -1667,3 +1667,4 @@ const quickActionPrimaryStyle: React.CSSProperties = {
   cursor: "pointer",
   boxShadow: "0 12px 24px rgba(22, 163, 74, 0.18)",
 };
+

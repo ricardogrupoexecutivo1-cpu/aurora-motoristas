@@ -6,11 +6,11 @@ import { useMemo, useState } from "react";
 type CompanyRecord = {
   id: string;
   nome: string;
-  tipo: "Locadora" | "Empresa" | "OperaÃ§Ã£o" | "Parceiro";
+  tipo: "Locadora" | "Empresa" | "Operação" | "Parceiro";
   cidade: string;
   estado: string;
-  status: "Ativa" | "Em implantaÃ§Ã£o" | "Bloqueada";
-  escopo: "Base prÃ³pria" | "Base controlada" | "OperaÃ§Ã£o limitada";
+  status: "Ativa" | "Em implantação" | "Bloqueada";
+  escopo: "Base própria" | "Base controlada" | "Operação limitada";
   responsavel: string;
   whatsapp: string;
   email: string;
@@ -19,7 +19,7 @@ type CompanyRecord = {
   servicosAtivos: number;
   osSistemaInicial: string;
   ocSistemaInicial: string;
-  politicaContato: "Liberado por serviÃ§o" | "Somente interno" | "Parcial";
+  politicaContato: "Liberado por serviço" | "Somente interno" | "Parcial";
   observacao: string;
 };
 
@@ -31,7 +31,7 @@ const companies: CompanyRecord[] = [
     cidade: "Belo Horizonte",
     estado: "MG",
     status: "Ativa",
-    escopo: "Base prÃ³pria",
+    escopo: "Base própria",
     responsavel: "Ricardo Leonardo Moreira",
     whatsapp: "(31) 99999-0001",
     email: "contato@auroramotoristas.local",
@@ -40,9 +40,9 @@ const companies: CompanyRecord[] = [
     servicosAtivos: 12,
     osSistemaInicial: "OS-2026-000001",
     ocSistemaInicial: "OC-2026-000001",
-    politicaContato: "Liberado por serviÃ§o",
+    politicaContato: "Liberado por serviço",
     observacao:
-      "Empresa principal da operaÃ§Ã£o com segregaÃ§Ã£o total da prÃ³pria base, clientes, motoristas e fluxo interno.",
+      "Empresa principal da operação com segregação total da própria base, clientes, motoristas e fluxo interno.",
   },
   {
     id: "EMP-0002",
@@ -50,9 +50,9 @@ const companies: CompanyRecord[] = [
     tipo: "Empresa",
     cidade: "Contagem",
     estado: "MG",
-    status: "Em implantaÃ§Ã£o",
+    status: "Em implantação",
     escopo: "Base controlada",
-    responsavel: "PatrÃ­cia Alves",
+    responsavel: "Patrícia Alves",
     whatsapp: "(31) 98888-2211",
     email: "implantacao@executivomobilidade.local",
     clientes: 9,
@@ -62,17 +62,17 @@ const companies: CompanyRecord[] = [
     ocSistemaInicial: "OC-2026-000201",
     politicaContato: "Somente interno",
     observacao:
-      "Empresa em implantaÃ§Ã£o com regras mais restritas de contato e maior controle administrativo.",
+      "Empresa em implantação com regras mais restritas de contato e maior controle administrativo.",
   },
   {
     id: "EMP-0003",
-    nome: "OperaÃ§Ã£o Nacional Eventos",
-    tipo: "OperaÃ§Ã£o",
-    cidade: "SÃ£o Paulo",
+    nome: "Operação Nacional Eventos",
+    tipo: "Operação",
+    cidade: "São Paulo",
     estado: "SP",
     status: "Ativa",
-    escopo: "OperaÃ§Ã£o limitada",
-    responsavel: "Marcos VinÃ­cius",
+    escopo: "Operação limitada",
+    responsavel: "Marcos Vinícius",
     whatsapp: "(11) 97777-3300",
     email: "operacao@eventosnacional.local",
     clientes: 6,
@@ -82,36 +82,36 @@ const companies: CompanyRecord[] = [
     ocSistemaInicial: "OC-2026-000451",
     politicaContato: "Parcial",
     observacao:
-      "OperaÃ§Ã£o de eventos com visualizaÃ§Ã£o limitada ao escopo operacional definido pela administraÃ§Ã£o master.",
+      "Operação de eventos com visualização limitada ao escopo operacional definido pela administração master.",
   },
 ];
 
 const governanceRules = [
   {
-    title: "Cada empresa tem sua prÃ³pria base",
-    text: "Clientes, motoristas, serviÃ§os e relacionamentos ficam separados por empresa para evitar mistura operacional.",
+    title: "Cada empresa tem sua própria base",
+    text: "Clientes, motoristas, serviços e relacionamentos ficam separados por empresa para evitar mistura operacional.",
   },
   {
-    title: "Escopo de visualizaÃ§Ã£o controlado",
-    text: "A empresa sÃ³ enxerga aquilo que foi liberado no seu escopo: base prÃ³pria, base controlada ou operaÃ§Ã£o limitada.",
+    title: "Escopo de visualização controlado",
+    text: "A empresa só enxerga aquilo que foi liberado no seu escopo: base própria, base controlada ou operação limitada.",
   },
   {
     title: "Sem acesso cruzado entre empresas",
-    text: "Uma empresa nÃ£o vÃª base, ordens, clientes ou motoristas de outra empresa sem autorizaÃ§Ã£o especÃ­fica.",
+    text: "Uma empresa não vê base, ordens, clientes ou motoristas de outra empresa sem autorização específica.",
   },
   {
     title: "OS e OC seguem o sistema",
-    text: "Cada empresa opera com numeraÃ§Ã£o oficial do sistema e tambÃ©m pode guardar a numeraÃ§Ã£o prÃ³pria do cliente quando necessÃ¡rio.",
+    text: "Cada empresa opera com numeração oficial do sistema e também pode guardar a numeração própria do cliente quando necessário.",
   },
 ];
 
 const suggestions = [
   "Definir administrador master por empresa ou grupo econÃ´mico.",
-  "Permitir mÃºltiplos administradores autorizados por base.",
-  "Criar centro de custo prÃ³prio por empresa.",
-  "Separar polÃ­ticas de contato e privacidade por empresa.",
-  "Definir modelo de pagamento por empresa: salÃ¡rio, diÃ¡ria, fixo, km ou hÃ­brido.",
-  "Controlar acesso ao financeiro por empresa e por nÃ­vel autorizado.",
+  "Permitir múltiplos administradores autorizados por base.",
+  "Criar centro de custo próprio por empresa.",
+  "Separar políticas de contato e privacidade por empresa.",
+  "Definir modelo de pagamento por empresa: salário, diária, fixo, km ou híbrido.",
+  "Controlar acesso ao financeiro por empresa e por nível autorizado.",
 ];
 
 function getStatusStyle(status: CompanyRecord["status"]): React.CSSProperties {
@@ -123,7 +123,7 @@ function getStatusStyle(status: CompanyRecord["status"]): React.CSSProperties {
     };
   }
 
-  if (status === "Em implantaÃ§Ã£o") {
+  if (status === "Em implantação") {
     return {
       background: "rgba(245, 158, 11, 0.12)",
       color: "#b45309",
@@ -139,7 +139,7 @@ function getStatusStyle(status: CompanyRecord["status"]): React.CSSProperties {
 }
 
 function getScopeStyle(scope: CompanyRecord["escopo"]): React.CSSProperties {
-  if (scope === "Base prÃ³pria") {
+  if (scope === "Base própria") {
     return {
       background: "rgba(6, 182, 212, 0.10)",
       color: "#0e7490",
@@ -205,12 +205,12 @@ export default function EmpresasCadastroPage() {
             <div style={styles.heroLeft}>
               <div style={styles.eyebrow}>AURORA MOTORISTAS â€¢ EMPRESAS</div>
               <h1 style={styles.heroTitle}>
-                Empresas e locadoras com base prÃ³pria, escopo controlado e governanÃ§a real
+                Empresas e locadoras com base própria, escopo controlado e governança real
               </h1>
               <p style={styles.heroText}>
-                Esta Ã¡rea organiza as empresas do app independente, deixando clara
-                a separaÃ§Ã£o de base, clientes, motoristas, serviÃ§os, escopo de
-                visualizaÃ§Ã£o e polÃ­tica de privacidade operacional.
+                Esta área organiza as empresas do app independente, deixando clara
+                a separação de base, clientes, motoristas, serviços, escopo de
+                visualização e política de privacidade operacional.
               </p>
 
               <div style={styles.heroActions}>
@@ -225,16 +225,16 @@ export default function EmpresasCadastroPage() {
             </div>
 
             <div style={styles.heroRightCard}>
-              <span style={styles.sideKicker}>GOVERNANÃ‡A DA BASE</span>
-              <h2 style={styles.sideTitle}>Cada empresa com seu prÃ³prio territÃ³rio</h2>
+              <span style={styles.sideKicker}>GOVERNANÇA DA BASE</span>
+              <h2 style={styles.sideTitle}>Cada empresa com seu próprio território</h2>
               <p style={styles.sideText}>
-                A lÃ³gica aqui Ã© clara: cada empresa vÃª a prÃ³pria base, opera no
-                prÃ³prio escopo e nÃ£o cruza clientes, motoristas ou relatÃ³rios com
-                outras empresas sem autorizaÃ§Ã£o expressa.
+                A lógica aqui é clara: cada empresa vê a própria base, opera no
+                próprio escopo e não cruza clientes, motoristas ou relatórios com
+                outras empresas sem autorização expressa.
               </p>
 
               <div style={styles.sidePills}>
-                <div style={styles.sidePill}>Base prÃ³pria</div>
+                <div style={styles.sidePill}>Base própria</div>
                 <div style={styles.sidePill}>Escopo controlado</div>
                 <div style={styles.sidePill}>Sem acesso cruzado</div>
               </div>
@@ -242,9 +242,9 @@ export default function EmpresasCadastroPage() {
           </div>
 
           <div style={styles.noticeBox}>
-            Sistema em constante atualizaÃ§Ã£o. Esta camada jÃ¡ estÃ¡ sendo preparada
-            para multiempresa real, com segregaÃ§Ã£o de base, permissÃµes por nÃ­vel
-            e futuras integraÃ§Ãµes sem misturar operaÃ§Ãµes.
+            Sistema em constante atualização. Esta camada já está sendo preparada
+            para multiempresa real, com segregação de base, permissões por nível
+            e futuras integrações sem misturar operações.
           </div>
         </div>
       </section>
@@ -252,7 +252,7 @@ export default function EmpresasCadastroPage() {
       <section style={styles.statsSection}>
         <div style={styles.statsGrid}>
           <article style={styles.statCard}>
-            <span style={styles.statLabel}>Empresas visÃ­veis</span>
+            <span style={styles.statLabel}>Empresas visíveis</span>
             <strong style={styles.statValue}>{stats.total}</strong>
             <span style={styles.statDetail}>Base empresarial carregada</span>
           </article>
@@ -260,19 +260,19 @@ export default function EmpresasCadastroPage() {
           <article style={styles.statCard}>
             <span style={styles.statLabel}>Empresas ativas</span>
             <strong style={styles.statValue}>{stats.ativas}</strong>
-            <span style={styles.statDetail}>OperaÃ§Ã£o em curso</span>
+            <span style={styles.statDetail}>Operação em curso</span>
           </article>
 
           <article style={styles.statCard}>
             <span style={styles.statLabel}>Clientes totais</span>
             <strong style={styles.statValue}>{stats.clientes}</strong>
-            <span style={styles.statDetail}>SomatÃ³rio da base filtrada</span>
+            <span style={styles.statDetail}>Somatório da base filtrada</span>
           </article>
 
           <article style={styles.statCard}>
             <span style={styles.statLabel}>Motoristas totais</span>
             <strong style={styles.statValue}>{stats.motoristas}</strong>
-            <span style={styles.statDetail}>SomatÃ³rio da base filtrada</span>
+            <span style={styles.statDetail}>Somatório da base filtrada</span>
           </article>
         </div>
       </section>
@@ -284,7 +284,7 @@ export default function EmpresasCadastroPage() {
               <div style={styles.sectionHeader}>
                 <div>
                   <span style={styles.sectionEyebrow}>BASE DE EMPRESAS</span>
-                  <h2 style={styles.sectionTitle}>Empresas, locadoras e operaÃ§Ãµes</h2>
+                  <h2 style={styles.sectionTitle}>Empresas, locadoras e operações</h2>
                 </div>
 
                 <div style={styles.searchBox}>
@@ -292,7 +292,7 @@ export default function EmpresasCadastroPage() {
                     type="text"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Buscar por empresa, cidade, tipo, escopo ou responsÃ¡vel"
+                    placeholder="Buscar por empresa, cidade, tipo, escopo ou responsável"
                     style={styles.searchInput}
                   />
                 </div>
@@ -326,7 +326,7 @@ export default function EmpresasCadastroPage() {
 
                       <div style={styles.companyGrid}>
                         <div style={styles.dataItem}>
-                          <span style={styles.dataLabel}>ResponsÃ¡vel</span>
+                          <span style={styles.dataLabel}>Responsável</span>
                           <strong style={styles.dataValue}>{company.responsavel}</strong>
                         </div>
 
@@ -351,7 +351,7 @@ export default function EmpresasCadastroPage() {
                         </div>
 
                         <div style={styles.dataItem}>
-                          <span style={styles.dataLabel}>ServiÃ§os ativos</span>
+                          <span style={styles.dataLabel}>Serviços ativos</span>
                           <strong style={styles.dataValue}>{company.servicosAtivos}</strong>
                         </div>
 
@@ -366,12 +366,12 @@ export default function EmpresasCadastroPage() {
                         </div>
 
                         <div style={styles.dataItem}>
-                          <span style={styles.dataLabel}>PolÃ­tica de contato</span>
+                          <span style={styles.dataLabel}>Política de contato</span>
                           <strong style={styles.dataValue}>{company.politicaContato}</strong>
                         </div>
 
                         <div style={styles.dataItemWide}>
-                          <span style={styles.dataLabel}>ObservaÃ§Ã£o</span>
+                          <span style={styles.dataLabel}>Observação</span>
                           <strong style={styles.dataValue}>{company.observacao}</strong>
                         </div>
                       </div>
@@ -384,7 +384,7 @@ export default function EmpresasCadastroPage() {
 
           <aside style={styles.rightColumn}>
             <div style={styles.rulesCard}>
-              <span style={styles.sectionEyebrow}>REGRAS DE GOVERNANÃ‡A</span>
+              <span style={styles.sectionEyebrow}>REGRAS DE GOVERNANÇA</span>
               <h2 style={styles.sidebarTitle}>Base empresarial protegida</h2>
 
               <div style={styles.ruleList}>
@@ -399,7 +399,7 @@ export default function EmpresasCadastroPage() {
 
             <div style={styles.darkCard}>
               <div style={styles.robotTag}>SUGESTÃ•ES EXTRAS</div>
-              <h2 style={styles.sidebarTitleDark}>Ajustes para fortalecer o mÃ³dulo</h2>
+              <h2 style={styles.sidebarTitleDark}>Ajustes para fortalecer o módulo</h2>
 
               <div style={styles.robotList}>
                 {suggestions.map((item) => (
@@ -411,8 +411,8 @@ export default function EmpresasCadastroPage() {
             </div>
 
             <div style={styles.navCard}>
-              <span style={styles.sectionEyebrow}>NAVEGAÃ‡ÃƒO</span>
-              <h2 style={styles.sidebarTitle}>PrÃ³ximos blocos</h2>
+              <span style={styles.sectionEyebrow}>NAVEGAÇÃƒO</span>
+              <h2 style={styles.sidebarTitle}>Próximos blocos</h2>
 
               <div style={styles.navList}>
                 <Link href="/cadastros" style={styles.navItem}>
@@ -968,3 +968,4 @@ const styles: Record<string, React.CSSProperties> = {
     border: "1px solid rgba(125, 211, 252, 0.18)",
   },
 };
+

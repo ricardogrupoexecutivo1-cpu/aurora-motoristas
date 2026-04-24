@@ -128,19 +128,19 @@ function formatDate(value?: string | null) {
 function getTipoLabel(value?: string) {
   switch (value) {
     case "busca_veiculo":
-      return "Busca de veÃ­culo";
+      return "Busca de veículo";
     case "entrega_veiculo":
-      return "Entrega de veÃ­culo";
+      return "Entrega de veículo";
     case "transporte_executivo":
       return "Transporte executivo";
     case "transfer":
       return "Transfer";
     case "motorista_diaria":
-      return "Motorista por diÃ¡ria";
+      return "Motorista por diária";
     case "outro":
       return "Outro";
     default:
-      return value || "NÃ£o definido";
+      return value || "Não definido";
   }
 }
 
@@ -153,9 +153,9 @@ function getModoLabel(value?: string) {
     case "por_km_mais_reembolso":
       return "KM menor + reembolso";
     case "diaria_fechada":
-      return "DiÃ¡ria fechada";
+      return "Diária fechada";
     default:
-      return value || "NÃ£o definido";
+      return value || "Não definido";
   }
 }
 
@@ -171,7 +171,7 @@ function loadRequests(): QuoteRequest[] {
 
     return parsed as QuoteRequest[];
   } catch (error) {
-    console.error("Erro ao carregar pedidos de cotaÃ§Ã£o:", error);
+    console.error("Erro ao carregar pedidos de cotação:", error);
     return [];
   }
 }
@@ -224,7 +224,7 @@ function buildInternalServiceFromQuote(item: QuoteRequest): InternalService {
 
     checklist_obrigatorio: true,
     checklist_instrucoes:
-      "Completar checklist interno antes da liberaÃ§Ã£o/finalizaÃ§Ã£o do serviÃ§o.",
+      "Completar checklist interno antes da liberação/finalização do serviço.",
 
     pedido_cotacao: item.id || null,
     observacoes: item.observacoes || null,
@@ -290,7 +290,7 @@ export default function PedidosCotacaoPage() {
 
     if (item.converted_to_service) {
       setFeedback(
-        `Este pedido jÃ¡ foi convertido em serviÃ§o interno (${item.converted_service_id || "sem ID"}).`
+        `Este pedido já foi convertido em serviço interno (${item.converted_service_id || "sem ID"}).`
       );
       return;
     }
@@ -327,11 +327,11 @@ export default function PedidosCotacaoPage() {
 
       setRequests(updatedQuotes);
       setFeedback(
-        `Pedido ${item.id} convertido em serviÃ§o interno com sucesso. ID do serviÃ§o: ${newService.id}`
+        `Pedido ${item.id} convertido em serviço interno com sucesso. ID do serviço: ${newService.id}`
       );
     } catch (error) {
-      console.error("Erro ao converter pedido em serviÃ§o:", error);
-      setFeedback("NÃ£o foi possÃ­vel converter o pedido em serviÃ§o interno.");
+      console.error("Erro ao converter pedido em serviço:", error);
+      setFeedback("Não foi possível converter o pedido em serviço interno.");
     }
   }
 
@@ -392,7 +392,7 @@ export default function PedidosCotacaoPage() {
                   lineHeight: 1.1,
                 }}
               >
-                Pedidos de cotaÃ§Ã£o
+                Pedidos de cotação
               </h1>
               <p
                 style={{
@@ -403,18 +403,18 @@ export default function PedidosCotacaoPage() {
                 }}
               >
                 Ãrea interna para leitura dos pedidos aprovados pelo cliente.
-                Esta tela organiza a entrada comercial antes da conversÃ£o em
-                operaÃ§Ã£o interna, sem mexer no disparo dos motoristas.
+                Esta tela organiza a entrada comercial antes da conversão em
+                operação interna, sem mexer no disparo dos motoristas.
               </p>
             </div>
 
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
               <Link href="/pedido-cotacao" style={linkSecondaryStyle}>
-                Abrir pÃ¡gina do cliente
+                Abrir página do cliente
               </Link>
 
               <Link href="/servicos" style={linkPrimaryStyle}>
-                Ir para serviÃ§os
+                Ir para serviços
               </Link>
             </div>
           </div>
@@ -496,7 +496,7 @@ export default function PedidosCotacaoPage() {
 
           {filteredRequests.length === 0 ? (
             <div style={emptyBoxStyle}>
-              Nenhum pedido de cotaÃ§Ã£o encontrado nesta leitura.
+              Nenhum pedido de cotação encontrado nesta leitura.
             </div>
           ) : (
             <div style={{ display: "grid", gap: 14 }}>
@@ -602,8 +602,8 @@ export default function PedidosCotacaoPage() {
                         }}
                       >
                         {item.converted_to_service
-                          ? "JÃ¡ convertido"
-                          : "Converter em serviÃ§o interno"}
+                          ? "Já convertido"
+                          : "Converter em serviço interno"}
                       </button>
                     </div>
                   </div>
@@ -620,7 +620,7 @@ export default function PedidosCotacaoPage() {
                         lineHeight: 1.55,
                       }}
                     >
-                      <strong>ConversÃ£o concluÃ­da:</strong> serviÃ§o interno criado
+                      <strong>Conversão concluída:</strong> serviço interno criado
                       com ID {safeText(item.converted_service_id)} em{" "}
                       {formatDate(item.converted_at)}.
                     </div>
@@ -654,7 +654,7 @@ export default function PedidosCotacaoPage() {
                       value={safeText(item.destino_resumido)}
                     />
                     <MiniInfo
-                      label="CobranÃ§a apresentada"
+                      label="Cobrança apresentada"
                       value={moneyDisplay(item.valor_cotacao_apresentado)}
                     />
                     <MiniInfo
@@ -663,7 +663,7 @@ export default function PedidosCotacaoPage() {
                     />
                     <MiniInfo
                       label="NF emitida"
-                      value={item.nf_emitida ? "Sim" : "NÃ£o"}
+                      value={item.nf_emitida ? "Sim" : "Não"}
                     />
                   </div>
 
@@ -716,29 +716,29 @@ export default function PedidosCotacaoPage() {
                       value={moneyDisplay(item.valor_pacote_fechado)}
                     />
                     <MiniInfo
-                      label="Qtd. diÃ¡rias"
+                      label="Qtd. diárias"
                       value={String(item.quantidade_diarias ?? 0)}
                     />
                     <MiniInfo
-                      label="Valor diÃ¡ria"
+                      label="Valor diária"
                       value={moneyDisplay(item.valor_diaria)}
                     />
                     <MiniInfo
-                      label="Total diÃ¡rias"
+                      label="Total diárias"
                       value={moneyDisplay(item.total_diarias)}
                     />
                   </div>
 
                   <div style={detailBoxStyle}>
-                    <strong style={detailTitleStyle}>ObservaÃ§Ãµes</strong>
+                    <strong style={detailTitleStyle}>Observações</strong>
                     <div style={detailValueStyle}>
-                      {safeText(item.observacoes, "Sem observaÃ§Ãµes.")}
+                      {safeText(item.observacoes, "Sem observações.")}
                     </div>
                   </div>
 
                   <div style={noticeBoxStyle}>
-                    <strong>PrÃ³ximo passo operacional:</strong> apÃ³s a conversÃ£o,
-                    o serviÃ§o interno fica disponÃ­vel na base local para a equipe
+                    <strong>Próximo passo operacional:</strong> após a conversão,
+                    o serviço interno fica disponível na base local para a equipe
                     completar motorista, placa, checklist, fechamento e demais
                     dados protegidos. O disparo dos motoristas continua intacto.
                   </div>
@@ -848,3 +848,4 @@ const linkPrimaryStyle: React.CSSProperties = {
   fontWeight: 700,
   background: "#f0f9ff",
 };
+

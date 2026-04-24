@@ -41,7 +41,7 @@ function getSupabaseAdmin() {
 
   if (!supabaseUrl || !supabaseServiceRoleKey) {
     throw new Error(
-      "VariÃ¡veis do Supabase ausentes. Verifique NEXT_PUBLIC_SUPABASE_URL/SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY.",
+      "Variáveis do Supabase ausentes. Verifique NEXT_PUBLIC_SUPABASE_URL/SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY.",
     );
   }
 
@@ -123,7 +123,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: "RazÃ£o social Ã© obrigatÃ³ria.",
+          message: "Razão social é obrigatória.",
         },
         { status: 400 },
       );
@@ -133,7 +133,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: "CNPJ invÃ¡lido. Informe 14 nÃºmeros.",
+          message: "CNPJ inválido. Informe 14 números.",
         },
         { status: 400 },
       );
@@ -162,7 +162,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: "JÃ¡ existe empresa cadastrada com este CNPJ.",
+          message: "Já existe empresa cadastrada com este CNPJ.",
         },
         { status: 409 },
       );
@@ -207,3 +207,4 @@ export async function POST(request: Request) {
     );
   }
 }
+

@@ -13,19 +13,19 @@ const PERFIS: Array<{
     value: "motorista",
     label: "Motorista interno",
     descricao:
-      "Acesso individual e restrito. VÃª apenas os prÃ³prios serviÃ§os autorizados.",
+      "Acesso individual e restrito. Vê apenas os próprios serviços autorizados.",
   },
   {
     value: "operadora",
     label: "Operadora externa",
     descricao:
-      "Acesso segregado por empresa, sem qualquer visÃ£o da base interna master.",
+      "Acesso segregado por empresa, sem qualquer visão da base interna master.",
   },
   {
     value: "admin",
     label: "Admin master",
     descricao:
-      "VisÃ£o protegida de governanÃ§a, liberaÃ§Ã£o, auditoria e blindagem da operaÃ§Ã£o.",
+      "Visão protegida de governança, liberação, auditoria e blindagem da operação.",
   },
 ];
 
@@ -65,7 +65,7 @@ export default function PlataformaEntrarPage() {
   const cores = corPorPerfil(perfil);
 
   const rotaPainel = `/plataforma/motoristas/painel?perfil=${perfil}&empresa=${encodeURIComponent(
-    empresa.trim() || "Empresa nÃ£o informada"
+    empresa.trim() || "Empresa não informada"
   )}`;
 
   return (
@@ -106,10 +106,10 @@ export default function PlataformaEntrarPage() {
               </h1>
 
               <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600 md:text-lg">
-                Esta pÃ¡gina funciona como uma ponte segura entre a camada nova
-                da plataforma e o painel por perfil. Aqui vocÃª escolhe o tipo de
+                Esta página funciona como uma ponte segura entre a camada nova
+                da plataforma e o painel por perfil. Aqui você escolhe o tipo de
                 acesso e a empresa de contexto sem tocar no login real nem na
-                base jÃ¡ publicada.
+                base já publicada.
               </p>
             </div>
 
@@ -119,12 +119,12 @@ export default function PlataformaEntrarPage() {
               </p>
 
               <h2 className="mt-3 text-2xl font-bold">
-                Preparar a ligaÃ§Ã£o futura com sessÃ£o real
+                Preparar a ligação futura com sessão real
               </h2>
 
               <p className="mt-4 text-sm leading-7 text-slate-200">
-                Primeiro validamos a experiÃªncia e a segregaÃ§Ã£o por perfil.
-                Depois, em passo separado e Ambiente seguro, conectamos isso Ã  sessÃ£o
+                Primeiro validamos a experiência e a segregação por perfil.
+                Depois, em passo separado e Ambiente seguro, conectamos isso Ã  sessão
                 verdadeira do sistema.
               </p>
             </div>
@@ -136,7 +136,7 @@ export default function PlataformaEntrarPage() {
         <div className="grid gap-6 lg:grid-cols-[0.95fr,1.05fr]">
           <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm md:p-8">
             <span className="inline-flex rounded-full border border-slate-200 bg-slate-100 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-700">
-              SeleÃ§Ã£o controlada
+              Seleção controlada
             </span>
 
             <h2 className="mt-3 text-2xl font-bold text-slate-900">
@@ -190,7 +190,7 @@ export default function PlataformaEntrarPage() {
                   id="empresa"
                   value={empresa}
                   onChange={(event) => setEmpresa(event.target.value)}
-                  placeholder="Ex.: Base Interna, Operadora Parceira, OperaÃ§Ã£o Principal"
+                  placeholder="Ex.: Base Interna, Operadora Parceira, Operação Principal"
                   className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-cyan-500"
                 />
               </div>
@@ -221,7 +221,7 @@ export default function PlataformaEntrarPage() {
               </p>
 
               <div className={`mt-5 rounded-2xl border p-4 text-sm leading-7 ${cores.destaque}`}>
-                Empresa atual: <strong>{empresa.trim() || "Empresa nÃ£o informada"}</strong>
+                Empresa atual: <strong>{empresa.trim() || "Empresa não informada"}</strong>
               </div>
             </div>
 
@@ -231,7 +231,7 @@ export default function PlataformaEntrarPage() {
               </span>
 
               <h2 className="mt-3 text-2xl font-bold text-slate-900">
-                O que esta pÃ¡gina faz e o que ela ainda nÃ£o faz
+                O que esta página faz e o que ela ainda não faz
               </h2>
 
               <ul className="mt-6 space-y-4">
@@ -241,15 +241,15 @@ export default function PlataformaEntrarPage() {
                 </li>
                 <li className="flex gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-7 text-slate-700">
                   <span className="mt-2 inline-block h-2.5 w-2.5 rounded-full bg-cyan-500" />
-                  <span>NÃ£o altera login, sessÃ£o real, API ou banco de dados.</span>
+                  <span>Não altera login, sessão real, API ou banco de dados.</span>
                 </li>
                 <li className="flex gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-7 text-slate-700">
                   <span className="mt-2 inline-block h-2.5 w-2.5 rounded-full bg-cyan-500" />
-                  <span>Prepara o caminho para a prÃ³xima etapa de ligaÃ§Ã£o controlada com sessÃ£o real.</span>
+                  <span>Prepara o caminho para a próxima etapa de ligação controlada com sessão real.</span>
                 </li>
                 <li className="flex gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-7 text-slate-700">
                   <span className="mt-2 inline-block h-2.5 w-2.5 rounded-full bg-cyan-500" />
-                  <span>Respeita a regra de crescer por novas pÃ¡ginas sem tocar na produÃ§Ã£o publicada.</span>
+                  <span>Respeita a regra de crescer por novas páginas sem tocar na produção publicada.</span>
                 </li>
               </ul>
             </div>
@@ -260,13 +260,14 @@ export default function PlataformaEntrarPage() {
       <section className="border-t border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-6 py-6 md:px-8">
           <p className="text-sm leading-7 text-slate-500">
-            Sistema em constante atualizaÃ§Ã£o e podem ocorrer instabilidades
-            momentÃ¢neas durante melhorias. Esta pÃ¡gina foi criada como ponte
+            Sistema em constante atualização e podem ocorrer instabilidades
+            momentÃ¢neas durante melhorias. Esta página foi criada como ponte
             nova e isolada para validar a entrada por perfil sem tocar na base
-            jÃ¡ publicada.
+            já publicada.
           </p>
         </div>
       </section>
     </main>
   );
 }
+

@@ -8,7 +8,7 @@ export default function MotoristasPage() {
   const [cidade, setCidade] = useState("");
 
   function salvar() {
-    alert("Motorista salvo (versÃ£o inicial)");
+    alert("Motorista salvo (versão inicial)");
     setNome("");
     setTelefone("");
     setCidade("");
@@ -28,3 +28,4 @@ export default function MotoristasPage() {
     </main>
   );
 }
+

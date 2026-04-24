@@ -3,12 +3,12 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
-type RiskLevel = "Baixo" | "MÃ©dio" | "Alto";
+type RiskLevel = "Baixo" | "Médio" | "Alto";
 type TransferStatus =
   | "Agendado"
   | "Em deslocamento"
   | "Aguardando passageiro"
-  | "ConcluÃ­do"
+  | "Concluído"
   | "Reagendado";
 
 type FormState = {
@@ -220,13 +220,13 @@ export default function NovoTransladoPage() {
 
     const newDraft: PersistedTransfer = {
       id: `TRA-LOCAL-${String(existing.length + 1).padStart(4, "0")}`,
-      empresa: form.empresa.trim() || "Empresa nÃ£o informada",
-      locadora: form.locadora.trim() || "Locadora nÃ£o informada",
+      empresa: form.empresa.trim() || "Empresa não informada",
+      locadora: form.locadora.trim() || "Locadora não informada",
       cliente: form.cliente.trim(),
       motorista: form.motorista.trim(),
-      motoristaReserva: form.motoristaReserva.trim() || "NÃ£o informado",
-      veiculoReserva: form.veiculoReserva.trim() || "NÃ£o informado",
-      aeroporto: form.aeroporto.trim() || "NÃ£o informado",
+      motoristaReserva: form.motoristaReserva.trim() || "Não informado",
+      veiculoReserva: form.veiculoReserva.trim() || "Não informado",
+      aeroporto: form.aeroporto.trim() || "Não informado",
       origem: form.origem.trim(),
       destino: form.destino.trim(),
       horarioPrevisto: form.horarioPrevisto.trim(),
@@ -241,7 +241,7 @@ export default function NovoTransladoPage() {
       status: form.status,
       observacao:
         form.observacao.trim() ||
-        "Translado salvo localmente para integraÃ§Ã£o com escala e operaÃ§Ã£o.",
+        "Translado salvo localmente para integração com escala e operação.",
       createdAt: new Date().toISOString(),
     };
 
@@ -271,12 +271,12 @@ export default function NovoTransladoPage() {
             <div style={styles.heroLeft}>
               <div style={styles.eyebrow}>AURORA MOTORISTAS â€¢ NOVO TRANSLADO</div>
               <h1 style={styles.heroTitle}>
-                Cadastro real de translado com persistÃªncia local, ETA, risco e reserva
+                Cadastro real de translado com persistência local, ETA, risco e reserva
               </h1>
               <p style={styles.heroText}>
-                Esta Ã¡rea agora salva de verdade no navegador e prepara o translado
-                para aparecer nas prÃ³ximas telas do mÃ³dulo, mantendo risco, reserva,
-                horÃ¡rios e leitura financeira.
+                Esta área agora salva de verdade no navegador e prepara o translado
+                para aparecer nas próximas telas do módulo, mantendo risco, reserva,
+                horários e leitura financeira.
               </p>
 
               <div style={styles.heroActions}>
@@ -291,23 +291,23 @@ export default function NovoTransladoPage() {
 
             <div style={styles.heroRightCard}>
               <span style={styles.sideKicker}>ENTRADA PERSISTENTE</span>
-              <h2 style={styles.sideTitle}>O translado agora nÃ£o some</h2>
+              <h2 style={styles.sideTitle}>O translado agora não some</h2>
               <p style={styles.sideText}>
-                O lanÃ§amento fica salvo localmente e pronto para alimentar a visÃ£o
-                de translados e a escala operacional no prÃ³ximo passo.
+                O lançamento fica salvo localmente e pronto para alimentar a visão
+                de translados e a escala operacional no próximo passo.
               </p>
 
               <div style={styles.sidePills}>
                 <div style={styles.sidePill}>Salva em localStorage</div>
                 <div style={styles.sidePill}>Pronto para escala</div>
-                <div style={styles.sidePill}>Pronto para operaÃ§Ã£o</div>
+                <div style={styles.sidePill}>Pronto para operação</div>
               </div>
             </div>
           </div>
 
           <div style={styles.noticeBox}>
-            Sistema em constante atualizaÃ§Ã£o. Esta tela jÃ¡ persiste os translados
-            para integraÃ§Ã£o direta com o restante do mÃ³dulo.
+            Sistema em constante atualização. Esta tela já persiste os translados
+            para integração direta com o restante do módulo.
           </div>
         </div>
       </section>
@@ -337,7 +337,7 @@ export default function NovoTransladoPage() {
             <strong style={styles.statValue}>
               {totals.eta ? formatDateTime(totals.eta) : "--/--/---- --:--"}
             </strong>
-            <span style={styles.statDetail}>PrevisÃ£o de chegada</span>
+            <span style={styles.statDetail}>Previsão de chegada</span>
           </article>
         </div>
       </section>
@@ -359,7 +359,7 @@ export default function NovoTransladoPage() {
               <div style={styles.sectionHeader}>
                 <div>
                   <span style={styles.sectionEyebrow}>CADASTRO COMPLETO</span>
-                  <h2 style={styles.sectionTitle}>LanÃ§ar novo translado</h2>
+                  <h2 style={styles.sectionTitle}>Lançar novo translado</h2>
                 </div>
               </div>
 
@@ -408,12 +408,12 @@ export default function NovoTransladoPage() {
                     value={form.motoristaReserva}
                     onChange={(e) => updateField("motoristaReserva", e.target.value)}
                     style={styles.input}
-                    placeholder="Ex.: JoÃ£o Pedro"
+                    placeholder="Ex.: João Pedro"
                   />
                 </div>
 
                 <div style={styles.field}>
-                  <label style={styles.label}>VeÃ­culo reserva</label>
+                  <label style={styles.label}>Veículo reserva</label>
                   <input
                     value={form.veiculoReserva}
                     onChange={(e) => updateField("veiculoReserva", e.target.value)}
@@ -452,7 +452,7 @@ export default function NovoTransladoPage() {
                 </div>
 
                 <div style={styles.field}>
-                  <label style={styles.label}>HorÃ¡rio previsto</label>
+                  <label style={styles.label}>Horário previsto</label>
                   <input
                     value={form.horarioPrevisto}
                     onChange={(e) => updateField("horarioPrevisto", e.target.value)}
@@ -462,7 +462,7 @@ export default function NovoTransladoPage() {
                 </div>
 
                 <div style={styles.field}>
-                  <label style={styles.label}>HorÃ¡rio atualizado</label>
+                  <label style={styles.label}>Horário atualizado</label>
                   <input
                     value={form.horarioAtualizado}
                     onChange={(e) => updateField("horarioAtualizado", e.target.value)}
@@ -482,7 +482,7 @@ export default function NovoTransladoPage() {
                 </div>
 
                 <div style={styles.field}>
-                  <label style={styles.label}>AcrÃ©scimo trÃ¢nsito (min)</label>
+                  <label style={styles.label}>Acréscimo trÃ¢nsito (min)</label>
                   <input
                     value={form.acrescimoTransitoMin}
                     onChange={(e) => updateField("acrescimoTransitoMin", e.target.value)}
@@ -499,7 +499,7 @@ export default function NovoTransladoPage() {
                     style={styles.select}
                   >
                     <option>Baixo</option>
-                    <option>MÃ©dio</option>
+                    <option>Médio</option>
                     <option>Alto</option>
                   </select>
                 </div>
@@ -516,7 +516,7 @@ export default function NovoTransladoPage() {
                     <option>Agendado</option>
                     <option>Em deslocamento</option>
                     <option>Aguardando passageiro</option>
-                    <option>ConcluÃ­do</option>
+                    <option>Concluído</option>
                     <option>Reagendado</option>
                   </select>
                 </div>
@@ -562,12 +562,12 @@ export default function NovoTransladoPage() {
                 </div>
 
                 <div style={styles.fieldWide}>
-                  <label style={styles.label}>ObservaÃ§Ã£o operacional</label>
+                  <label style={styles.label}>Observação operacional</label>
                   <textarea
                     value={form.observacao}
                     onChange={(e) => updateField("observacao", e.target.value)}
                     style={styles.textarea}
-                    placeholder="Descreva atraso de voo, combinaÃ§Ã£o com locadora, bagagem extra, ponto de encontro e riscos."
+                    placeholder="Descreva atraso de voo, combinação com locadora, bagagem extra, ponto de encontro e riscos."
                   />
                 </div>
               </div>
@@ -578,7 +578,7 @@ export default function NovoTransladoPage() {
                 </button>
 
                 <button type="button" onClick={resetForm} style={styles.secondaryAction}>
-                  Limpar formulÃ¡rio
+                  Limpar formulário
                 </button>
 
                 <button type="button" onClick={clearSavedTransfers} style={styles.dangerAction}>
@@ -592,7 +592,7 @@ export default function NovoTransladoPage() {
 
           <aside style={styles.rightColumn}>
             <div style={styles.previewCard}>
-              <span style={styles.sectionEyebrow}>PRÃ‰VIA OPERACIONAL</span>
+              <span style={styles.sectionEyebrow}>PRÉVIA OPERACIONAL</span>
               <h2 style={styles.sidebarTitle}>Como o translado nasce</h2>
 
               <div style={styles.ruleList}>
@@ -606,15 +606,15 @@ export default function NovoTransladoPage() {
                 <div style={styles.ruleItem}>
                   <strong style={styles.ruleItemTitle}>Motorista principal</strong>
                   <span style={styles.ruleItemText}>
-                    {form.motorista || "NÃ£o informado"}
+                    {form.motorista || "Não informado"}
                   </span>
                 </div>
 
                 <div style={styles.ruleItem}>
                   <strong style={styles.ruleItemTitle}>Reserva</strong>
                   <span style={styles.ruleItemText}>
-                    {form.motoristaReserva || "NÃ£o informado"} /{" "}
-                    {form.veiculoReserva || "NÃ£o informado"}
+                    {form.motoristaReserva || "Não informado"} /{" "}
+                    {form.veiculoReserva || "Não informado"}
                   </span>
                 </div>
 
@@ -1173,3 +1173,4 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 700,
   },
 };
+

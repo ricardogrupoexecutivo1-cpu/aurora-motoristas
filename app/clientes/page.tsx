@@ -54,7 +54,7 @@ export default function ClientesListPage() {
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data?.error || "NÃ£o foi possÃ­vel carregar os clientes.");
+          throw new Error(data?.error || "Não foi possível carregar os clientes.");
         }
 
         setClientes(Array.isArray(data?.clients) ? data.clients : []);
@@ -124,7 +124,7 @@ export default function ClientesListPage() {
           </a>
 
           <a href="/" style={pillButton(true)}>
-            InÃ­cio
+            Início
           </a>
 
           <a href="/cadastros/clientes" style={pillButton(false)}>
@@ -182,9 +182,9 @@ export default function ClientesListPage() {
               fontSize: 16,
             }}
           >
-            Visualize a base real de clientes jÃ¡ cadastrados no Aurora
-            Motoristas. Esta Ã¡rea prepara a operaÃ§Ã£o comercial para serviÃ§os,
-            relacionamento e evoluÃ§Ã£o do sistema.
+            Visualize a base real de clientes já cadastrados no Aurora
+            Motoristas. Esta área prepara a operação comercial para serviços,
+            relacionamento e evolução do sistema.
           </p>
 
           <div
@@ -196,8 +196,8 @@ export default function ClientesListPage() {
             }}
           >
             <MiniInfo title="Base real" text="Leitura direta da base de clientes salva." />
-            <MiniInfo title="OperaÃ§Ã£o" text="Clientes prontos para uso em fluxo real." />
-            <MiniInfo title="ExpansÃ£o" text="Estrutura pronta para filtros e vÃ­nculos futuros." />
+            <MiniInfo title="Operação" text="Clientes prontos para uso em fluxo real." />
+            <MiniInfo title="Expansão" text="Estrutura pronta para filtros e vínculos futuros." />
           </div>
         </section>
 
@@ -394,7 +394,7 @@ export default function ClientesListPage() {
 
                   <InfoLine label="Empresa" value={cliente.empresa} />
                   <InfoLine label="CPF/CNPJ" value={cliente.cpf_cnpj} />
-                  <InfoLine label="ResponsÃ¡vel" value={cliente.responsavel} />
+                  <InfoLine label="Responsável" value={cliente.responsavel} />
                   <InfoLine label="Telefone" value={cliente.telefone} />
                   <InfoLine label="E-mail" value={cliente.email} />
                   <InfoLine
@@ -426,7 +426,7 @@ export default function ClientesListPage() {
                           marginBottom: 6,
                         }}
                       >
-                        ObservaÃ§Ãµes
+                        Observações
                       </div>
                       <div
                         style={{
@@ -535,3 +535,4 @@ function InfoLine({
     </div>
   );
 }
+

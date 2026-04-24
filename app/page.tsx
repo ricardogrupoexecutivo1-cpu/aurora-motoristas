@@ -26,11 +26,9 @@ import {
   Mic,
   Navigation,
   Package,
-  PackageCheck,
   Percent,
   PhoneCall,
   Play,
-  Rocket,
   Send,
   Shield,
   Smartphone,
@@ -114,6 +112,7 @@ export default function HomePage() {
   const chatSugestoes = [
     "Como pedir uma corrida?",
     "Como enviar uma entrega?",
+    "Como cadastrar operação no Brasil?",
     "Como ser motorista parceiro?",
     "Como acessar minha empresa?",
   ];
@@ -123,7 +122,7 @@ export default function HomePage() {
       href: "/solicitar",
       titulo: "Aurora Ride",
       subtitulo: "Transporte de passageiros",
-      badge: "MAIS POPULAR",
+      badge: "MOBILIDADE",
       icon: Car,
       cta: "Para onde?",
       destaque: "bg-gradient-to-br from-ride-black via-gray-900 to-gray-800",
@@ -132,7 +131,7 @@ export default function HomePage() {
         "Moto, carro, conforto, black e van",
         "GPS em tempo real",
         "Preço competitivo",
-        "Segurança total",
+        "Atendimento em expansão nacional",
       ],
     },
     {
@@ -154,8 +153,8 @@ export default function HomePage() {
     {
       href: "/login",
       titulo: "Aurora Business",
-      subtitulo: "Gestão empresarial protegida",
-      badge: "ACESSO Ambiente seguro",
+      subtitulo: "Gestão completa da operação",
+      badge: "ÁREA SEGURA",
       icon: Briefcase,
       cta: "Entrar com segurança",
       destaque: "gradient-premium",
@@ -165,6 +164,22 @@ export default function HomePage() {
         "Controle de serviços",
         "Dashboard completo",
         "IA para otimizar operação",
+      ],
+    },
+    {
+      href: "/cadastro",
+      titulo: "Aurora Brasil",
+      subtitulo: "Plataforma nacional para todas as atividades",
+      badge: "NACIONAL",
+      icon: Globe,
+      cta: "Cadastro nacional",
+      destaque: "bg-gradient-to-br from-blue-700 via-indigo-700 to-purple-800",
+      card: "text-white",
+      features: [
+        "Cadastro para todo o Brasil",
+        "Clientes, motoristas, empresas e parceiros",
+        "Mobilização e desmobilização de frotas",
+        "Todas as atividades da plataforma",
       ],
     },
   ];
@@ -191,7 +206,7 @@ export default function HomePage() {
                   Aurora Motoristas
                 </span>
                 <p className="text-[10px] text-muted-foreground tracking-[0.2em] -mt-1 hidden sm:block">
-                  MOBILIDADE DO FUTURO
+                  PLATAFORMA NACIONAL
                 </p>
               </div>
             </Link>
@@ -200,7 +215,7 @@ export default function HomePage() {
               {[
                 { href: "#plataformas", label: "Serviços" },
                 { href: "#motoristas", label: "Seja parceiro" },
-                { href: "#empresas", label: "Empresas" },
+                { href: "#empresas", label: "Operações" },
                 { href: "#seguranca", label: "Segurança" },
               ].map((link) => (
                 <Link
@@ -266,8 +281,8 @@ export default function HomePage() {
               {[
                 { href: "/solicitar", label: "Pedir corrida", icon: Car, desc: "Transporte de passageiros" },
                 { href: "/entregas", label: "Enviar entrega", icon: Package, desc: "Busca e entrega Brasil" },
+                { href: "/cadastro", label: "Cadastro nacional", icon: Globe, desc: "Todas as atividades da plataforma" },
                 { href: "/motoristas/cadastrar", label: "Ser parceiro", icon: TrendingUp, desc: "Cadastro de motorista" },
-                { href: "/cadastro", label: "Criar conta", icon: UserCircle, desc: "Grátis e rápido" },
                 { href: "/login", label: "Área segura", icon: Lock, desc: "Empresas, motoristas e admin" },
               ].map((item) => (
                 <Link
@@ -308,7 +323,7 @@ export default function HomePage() {
             <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-success/10 border border-success/30 rounded-full mb-8">
               <Crown className="w-4 h-4 text-success" />
               <span className="text-sm font-bold text-success">
-                Taxa de apenas 5% para parceiros
+                Plataforma nacional com taxa de apenas 5% para parceiros
               </span>
               <Sparkles className="w-4 h-4 text-success" />
             </div>
@@ -318,17 +333,18 @@ export default function HomePage() {
               <br />
               <span className="gradient-text">Entregas.</span>
               <br />
-              <span className="text-foreground">Gestão.</span>
+              <span className="text-foreground">Operação Brasil.</span>
             </h1>
 
             <p className="text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">
-              A Aurora Motoristas une mobilidade, entregas e gestão empresarial em uma plataforma preparada para operar em todo o Brasil com segurança, tecnologia e atendimento inteligente.
+              A Aurora Motoristas é uma plataforma completa que une mobilidade, entregas,
+              gestão, serviços, motoristas, clientes, empresas, parceiros e operações em todo o Brasil.
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-6 lg:gap-10">
               <div className="flex items-center gap-2">
                 <Globe className="w-5 h-5 text-primary" />
-                <span className="text-sm font-medium text-muted-foreground">Operação Brasil</span>
+                <span className="text-sm font-medium text-muted-foreground">Atendimento nacional</span>
               </div>
 
               <div className="flex items-center gap-2">
@@ -340,18 +356,18 @@ export default function HomePage() {
 
               <div className="flex items-center gap-2">
                 <BadgeCheck className="w-5 h-5 text-success" />
-                <span className="text-sm font-medium text-muted-foreground">Ambiente Ambiente seguro</span>
+                <span className="text-sm font-medium text-muted-foreground">Ambiente operacional protegido</span>
               </div>
             </div>
           </div>
 
-          <div id="plataformas" className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <div id="plataformas" className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
             {plataformas.map((item) => (
               <Link key={item.titulo} href={item.href} className="group relative">
                 <div className={`absolute inset-0 ${item.destaque} rounded-[2rem] transform group-hover:scale-[1.02] transition-transform duration-500`} />
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] bg-white/10" />
 
-                <div className={`relative p-6 lg:p-8 ${item.card}`}>
+                <div className={`relative p-6 lg:p-7 ${item.card}`}>
                   <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/15 backdrop-blur rounded-full mb-5">
                     <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
                     <span className="text-xs font-semibold text-white">{item.badge}</span>
@@ -419,11 +435,11 @@ export default function HomePage() {
             </div>
 
             <h2 className="text-3xl lg:text-4xl font-black mb-4">
-              Busca e entrega em todo Brasil
+              Busca, entrega e operação em todo Brasil
             </h2>
 
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Escolha buscar, entregar ou fazer ida e volta. Uma solução flexível para pessoas, empresas, documentos, compras e encomendas.
+              Escolha buscar, entregar, fazer ida e volta ou integrar a operação dentro da plataforma. Uma solução flexível para pessoas, empresas, parceiros, documentos, compras e encomendas.
             </p>
           </div>
 
@@ -492,7 +508,7 @@ export default function HomePage() {
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-success/10 rounded-full mb-4">
               <Shield className="w-4 h-4 text-success" />
-              <span className="text-sm font-semibold text-success">SEGURANÇA TOTAL</span>
+              <span className="text-sm font-semibold text-success">SEGURANÇA OPERACIONAL</span>
             </div>
 
             <h2 className="text-3xl lg:text-4xl font-black mb-4">
@@ -500,7 +516,7 @@ export default function HomePage() {
             </h2>
 
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              A experiência pública apresenta os serviços. Áreas de operação, painel, motoristas e administração ficam protegidas por login.
+              A experiência pública apresenta os serviços. Áreas de operação, painel, motoristas e administração ficam protegidas por login e regras de acesso.
             </p>
           </div>
 
@@ -508,7 +524,7 @@ export default function HomePage() {
             {[
               { icon: BadgeCheck, title: "Verificação completa", desc: "Motoristas e parceiros passam por validação." },
               { icon: MapPin, title: "GPS em tempo real", desc: "Acompanhe corrida ou entrega no mapa." },
-              { icon: Lock, title: "Área protegida", desc: "Painéis internos só via login Ambiente seguro." },
+              { icon: Lock, title: "Área protegida", desc: "Painéis internos só via login." },
               { icon: AlertTriangle, title: "Botão SOS", desc: "Camada de emergência e suporte." },
               { icon: Camera, title: "Foto do pacote", desc: "Registro visual para comprovação." },
               { icon: Star, title: "Avaliação dupla", desc: "Qualidade monitorada por cliente e parceiro." },
@@ -541,7 +557,7 @@ export default function HomePage() {
               </h2>
 
               <p className="text-lg text-muted-foreground mb-8">
-                Na Aurora Motoristas, o parceiro tem uma proposta simples: taxa de apenas 5%, rotina flexível e oportunidade de atender corridas, entregas e serviços empresariais.
+                Na Aurora Motoristas, o parceiro tem uma proposta simples: taxa de apenas 5%, rotina flexível e oportunidade de atender corridas, entregas e serviços operacionais em todo o Brasil.
               </p>
 
               <div className="space-y-4 mb-8">
@@ -612,15 +628,15 @@ export default function HomePage() {
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-4">
               <Building2 className="w-4 h-4 text-primary" />
-              <span className="text-sm font-semibold text-primary">AURORA BUSINESS</span>
+              <span className="text-sm font-semibold text-primary">AURORA OPERAÇÕES</span>
             </div>
 
             <h2 className="text-3xl lg:text-4xl font-black mb-4">
-              Soluções para empresas
+              Soluções para toda a plataforma
             </h2>
 
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Gestão completa de serviços, cotações, motoristas, financeiro e operação. Acesso protegido para empresas cadastradas.
+              Gestão completa de serviços, cotações, motoristas, financeiro, clientes, parceiros, mobilização, desmobilização e operação nacional. Acesso protegido para usuários cadastrados.
             </p>
           </div>
 
@@ -629,7 +645,7 @@ export default function HomePage() {
               { icon: FileText, title: "Cotações automáticas", desc: "Orçamentos em segundos." },
               { icon: BarChart3, title: "Dashboard completo", desc: "Métricas e performance em tempo real." },
               { icon: Bot, title: "IA integrada", desc: "Assistente virtual para operação." },
-              { icon: Users, title: "Gestão de equipe", desc: "Controle de motoristas e serviços." },
+              { icon: Users, title: "Gestão de usuários", desc: "Controle de motoristas, clientes, parceiros e serviços." },
               { icon: CreditCard, title: "Financeiro", desc: "Pagamentos, comissões e faturamento." },
               { icon: Bell, title: "Notificações", desc: "Alertas operacionais em tempo real." },
             ].map((item) => (
@@ -645,11 +661,11 @@ export default function HomePage() {
 
           <div className="text-center mt-10">
             <Link
-              href="/login"
+              href="/cadastro"
               className="inline-flex items-center gap-3 px-8 py-4 gradient-premium text-white font-bold rounded-xl btn-premium shadow-xl"
             >
-              <Briefcase className="w-5 h-5" />
-              Acessar área segura
+              <Globe className="w-5 h-5" />
+              Cadastrar operação no Brasil
               <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
@@ -669,7 +685,7 @@ export default function HomePage() {
                 </h2>
 
                 <p className="text-white/80 text-lg mb-8">
-                  Peça corridas, envie entregas, acompanhe serviços e acesse a operação com uma experiência simples, rápida e segura.
+                  Peça corridas, envie entregas, acompanhe serviços, cadastre operações nacionais e acesse a plataforma com uma experiência simples, rápida e segura.
                 </p>
 
                 <div className="flex flex-wrap gap-4">
@@ -697,7 +713,7 @@ export default function HomePage() {
                     <div className="text-center">
                       <Navigation className="w-16 h-16 mx-auto mb-4 text-primary" />
                       <p className="text-2xl font-black gradient-text">Aurora Motoristas</p>
-                      <p className="text-xs text-muted-foreground">Mobilidade do futuro</p>
+                      <p className="text-xs text-muted-foreground">Plataforma nacional</p>
                     </div>
                   </div>
                 </div>
@@ -728,7 +744,7 @@ export default function HomePage() {
           <div className="p-4 space-y-4">
             <div className="p-4 rounded-2xl bg-secondary">
               <p className="text-sm text-muted-foreground">
-                Olá! Eu posso te orientar sobre corrida, entrega, cadastro de parceiro ou acesso empresarial.
+                Olá! Eu posso te orientar sobre corrida, entrega, cadastro nacional, parceiro, empresa ou acesso seguro.
               </p>
             </div>
 
@@ -789,7 +805,7 @@ export default function HomePage() {
               </div>
 
               <p className="text-sm text-muted-foreground mb-4">
-                Transporte, entregas e gestão em uma plataforma preparada para todo o Brasil.
+                Transporte, entregas, gestão e operações em uma plataforma preparada para todo o Brasil.
               </p>
 
               <p className="text-xs text-muted-foreground">www.appmotoristas.com.br</p>
@@ -801,6 +817,7 @@ export default function HomePage() {
                 {[
                   { label: "Aurora Ride", href: "/solicitar" },
                   { label: "Aurora Express", href: "/entregas" },
+                  { label: "Cadastro nacional", href: "/cadastro" },
                   { label: "Seja parceiro", href: "/motoristas/cadastrar" },
                   { label: "Área segura", href: "/login" },
                 ].map((link) => (
@@ -848,7 +865,7 @@ export default function HomePage() {
 
             <div className="flex items-center gap-2">
               <Shield className="w-4 h-4 text-success" />
-              <span className="text-sm text-muted-foreground">Ambiente 100% Ambiente seguro</span>
+              <span className="text-sm text-muted-foreground">Ambiente operacional protegido</span>
             </div>
           </div>
         </div>

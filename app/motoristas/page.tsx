@@ -101,7 +101,7 @@ function obterStatusMotorista(motorista: Motorista) {
   if (motorista.ativo === false && inferirOrigemPublica(motorista.observacoes)) {
     return {
       chave: "pendentes" as const,
-      rotulo: "Pendente para anÃ¡lise",
+      rotulo: "Pendente para análise",
       cor: "#9a3412",
       fundo: "rgba(251,146,60,0.12)",
       borda: "1px solid rgba(251,146,60,0.22)",
@@ -280,7 +280,7 @@ export default function MotoristasPage() {
                   width: isMobile ? "100%" : "auto",
                 }}
               >
-                Fluxo pÃºblico
+                Fluxo público
               </Link>
             </div>
           </div>
@@ -297,10 +297,10 @@ export default function MotoristasPage() {
               <h1 style={heroTitle}>Motoristas cadastrados</h1>
 
               <p style={heroText}>
-                Visualize a base real de motoristas jÃ¡ salvos no Aurora
-                Motoristas, com separaÃ§Ã£o clara entre <strong>pendentes</strong>,{" "}
+                Visualize a base real de motoristas já salvos no Aurora
+                Motoristas, com separação clara entre <strong>pendentes</strong>,{" "}
                 <strong>ativos</strong> e <strong>inativos</strong>, facilitando a
-                validaÃ§Ã£o final antes de liberar testes sÃ©rios com sua equipe.
+                validação final antes de liberar testes sérios com sua equipe.
               </p>
 
               <div style={heroPills}>
@@ -319,8 +319,8 @@ export default function MotoristasPage() {
               </div>
               <div style={heroSideLabel}>Motoristas</div>
               <div style={heroSideText}>
-                Total filtrado da base operacional para conferÃªncia final antes da
-                versÃ£o de testes com sua equipe.
+                Total filtrado da base operacional para conferência final antes da
+                versão de testes com sua equipe.
               </div>
             </div>
           </div>
@@ -340,17 +340,17 @@ export default function MotoristasPage() {
           <SummaryCard
             title="Pendentes"
             value={carregando ? "..." : String(totais.pendentes)}
-            note="Cadastros pÃºblicos aguardando anÃ¡lise."
+            note="Cadastros públicos aguardando análise."
           />
           <SummaryCard
             title="Ativos"
             value={carregando ? "..." : String(totais.ativos)}
-            note="Prontos para operaÃ§Ã£o na base."
+            note="Prontos para operação na base."
           />
           <SummaryCard
             title="Inativos"
             value={carregando ? "..." : String(totais.inativos)}
-            note="Internos ou nÃ£o liberados na operaÃ§Ã£o."
+            note="Internos ou não liberados na operação."
           />
         </section>
 
@@ -372,7 +372,7 @@ export default function MotoristasPage() {
               <h2 style={sectionTitle}>Lista de motoristas</h2>
               <p style={sectionText}>
                 Consulte por nome, CPF, telefone, e-mail, cidade ou estado e
-                filtre a leitura para homologaÃ§Ã£o final.
+                filtre a leitura para homologação final.
               </p>
             </div>
 
@@ -495,20 +495,20 @@ export default function MotoristasPage() {
                           label="Origem"
                           value={
                             origemPublica
-                              ? "Cadastro pÃºblico"
+                              ? "Cadastro público"
                               : "Cadastro interno / base"
                           }
                         />
                         <Detail label="CNH" value={motorista.cnh || "â€”"} />
                         <Detail label="E-mail" value={motorista.email || "â€”"} />
                         <Detail label="CEP" value={motorista.cep || "â€”"} />
-                        <Detail label="EndereÃ§o" value={endereco || "â€”"} />
+                        <Detail label="Endereço" value={endereco || "â€”"} />
                         <Detail
                           label="Complemento"
                           value={motorista.complemento || "â€”"}
                         />
                         <Detail
-                          label="ObservaÃ§Ãµes"
+                          label="Observações"
                           value={motorista.observacoes || "â€”"}
                         />
                         <Detail
@@ -1017,3 +1017,4 @@ const detailValueStyle: CSSProperties = {
   whiteSpace: "pre-wrap",
   wordBreak: "break-word",
 };
+

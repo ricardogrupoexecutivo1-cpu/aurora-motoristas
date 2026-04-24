@@ -178,14 +178,14 @@ export default function SegurancaPage() {
       observacao: "",
     });
 
-    setFeedback("PermissÃ£o salva com sucesso.");
+    setFeedback("Permissão salva com sucesso.");
   }
 
   function removePermission(id: string) {
     const updated = permissions.filter((item) => item.id !== id);
     setPermissions(updated);
     safeWritePermissions(updated);
-    setFeedback("PermissÃ£o removida com sucesso.");
+    setFeedback("Permissão removida com sucesso.");
   }
 
   function togglePermission(
@@ -203,7 +203,7 @@ export default function SegurancaPage() {
     );
     setPermissions(updated);
     safeWritePermissions(updated);
-    setFeedback("PermissÃ£o atualizada com sucesso.");
+    setFeedback("Permissão atualizada com sucesso.");
   }
 
   const filteredPermissions = useMemo(() => {
@@ -234,12 +234,12 @@ export default function SegurancaPage() {
         <div style={styles.heroCard}>
           <div style={styles.heroGrid}>
             <div style={styles.heroLeft}>
-              <div style={styles.eyebrow}>AURORA MOTORISTAS â€¢ SEGURANÃ‡A</div>
+              <div style={styles.eyebrow}>AURORA MOTORISTAS â€¢ SEGURANÇA</div>
               <h1 style={styles.heroTitle}>
-                Blindagem de acesso por administrador e usuÃ¡rios autorizados
+                Blindagem de acesso por administrador e usuários autorizados
               </h1>
               <p style={styles.heroText}>
-                Esta central organiza quem pode entrar nas Ã¡reas sensÃ­veis do app,
+                Esta central organiza quem pode entrar nas áreas sensíveis do app,
                 separando acesso administrativo, financeiro, operacional e leitura.
               </p>
 
@@ -255,10 +255,10 @@ export default function SegurancaPage() {
 
             <div style={styles.heroRightCard}>
               <span style={styles.sideKicker}>BLINDAGEM INTERNA</span>
-              <h2 style={styles.sideTitle}>Quem vÃª o quÃª</h2>
+              <h2 style={styles.sideTitle}>Quem vê o quê</h2>
               <p style={styles.sideText}>
-                Esta camada jÃ¡ separa papÃ©is e mÃ³dulos autorizados para preparar
-                a proteÃ§Ã£o real do sistema sem atrapalhar a evoluÃ§Ã£o.
+                Esta camada já separa papéis e módulos autorizados para preparar
+                a proteção real do sistema sem atrapalhar a evolução.
               </p>
 
               <div style={styles.sidePills}>
@@ -270,8 +270,8 @@ export default function SegurancaPage() {
           </div>
 
           <div style={styles.noticeBox}>
-            Sistema em constante atualizaÃ§Ã£o. Esta central jÃ¡ salva permissÃµes no
-            navegador e prepara a amarraÃ§Ã£o das pÃ¡ginas sensÃ­veis no prÃ³ximo passo.
+            Sistema em constante atualização. Esta central já salva permissões no
+            navegador e prepara a amarração das páginas sensíveis no próximo passo.
           </div>
         </div>
       </section>
@@ -293,13 +293,13 @@ export default function SegurancaPage() {
           <article style={styles.statCard}>
             <span style={styles.statLabel}>Administradores</span>
             <strong style={styles.statValue}>{stats.administradores}</strong>
-            <span style={styles.statDetail}>GestÃ£o liberada</span>
+            <span style={styles.statDetail}>Gestão liberada</span>
           </article>
 
           <article style={styles.statCard}>
             <span style={styles.statLabel}>Acesso financeiro</span>
             <strong style={styles.statValue}>{stats.financeiro}</strong>
-            <span style={styles.statDetail}>MÃ³dulo sensÃ­vel</span>
+            <span style={styles.statDetail}>Módulo sensível</span>
           </article>
         </div>
       </section>
@@ -309,11 +309,11 @@ export default function SegurancaPage() {
           <article style={styles.statCard}>
             <span style={styles.statLabel}>Leitura</span>
             <strong style={styles.statValue}>{stats.leitura}</strong>
-            <span style={styles.statDetail}>VisualizaÃ§Ã£o limitada</span>
+            <span style={styles.statDetail}>Visualização limitada</span>
           </article>
 
           <article style={styles.statCard}>
-            <span style={styles.statLabel}>OperaÃ§Ã£o liberada</span>
+            <span style={styles.statLabel}>Operação liberada</span>
             <strong style={styles.statValue}>{stats.operacao}</strong>
             <span style={styles.statDetail}>Fluxo operacional</span>
           </article>
@@ -326,7 +326,7 @@ export default function SegurancaPage() {
             <div style={styles.formCard}>
               <div style={styles.sectionHeader}>
                 <div>
-                  <span style={styles.sectionEyebrow}>NOVA LIBERAÃ‡ÃƒO</span>
+                  <span style={styles.sectionEyebrow}>NOVA LIBERAÇÃƒO</span>
                   <h2 style={styles.sectionTitle}>Cadastrar autorizado</h2>
                 </div>
               </div>
@@ -338,7 +338,7 @@ export default function SegurancaPage() {
                     value={form.nome}
                     onChange={(e) => updateForm("nome", e.target.value)}
                     style={styles.input}
-                    placeholder="Ex.: Nome do usuÃ¡rio"
+                    placeholder="Ex.: Nome do usuário"
                   />
                 </div>
 
@@ -368,18 +368,18 @@ export default function SegurancaPage() {
                 </div>
 
                 <div style={styles.fieldWide}>
-                  <label style={styles.label}>ObservaÃ§Ã£o</label>
+                  <label style={styles.label}>Observação</label>
                   <textarea
                     value={form.observacao}
                     onChange={(e) => updateForm("observacao", e.target.value)}
                     style={styles.textarea}
-                    placeholder="Ex.: pode ver financeiro, nÃ£o pode alterar cadastros."
+                    placeholder="Ex.: pode ver financeiro, não pode alterar cadastros."
                   />
                 </div>
               </div>
 
               <div style={styles.permissionBox}>
-                <div style={styles.permissionTitle}>MÃ³dulos liberados</div>
+                <div style={styles.permissionTitle}>Módulos liberados</div>
 
                 <div style={styles.checkboxGrid}>
                   <label style={styles.checkboxItem}>
@@ -406,7 +406,7 @@ export default function SegurancaPage() {
                       checked={form.diarias}
                       onChange={(e) => updateForm("diarias", e.target.checked)}
                     />
-                    <span>DiÃ¡rias</span>
+                    <span>Diárias</span>
                   </label>
 
                   <label style={styles.checkboxItem}>
@@ -415,7 +415,7 @@ export default function SegurancaPage() {
                       checked={form.relatorios}
                       onChange={(e) => updateForm("relatorios", e.target.checked)}
                     />
-                    <span>RelatÃ³rios</span>
+                    <span>Relatórios</span>
                   </label>
 
                   <label style={styles.checkboxItem}>
@@ -424,7 +424,7 @@ export default function SegurancaPage() {
                       checked={form.operacao}
                       onChange={(e) => updateForm("operacao", e.target.checked)}
                     />
-                    <span>OperaÃ§Ã£o</span>
+                    <span>Operação</span>
                   </label>
 
                   <label style={styles.checkboxItem}>
@@ -451,7 +451,7 @@ export default function SegurancaPage() {
               <div style={styles.sectionHeader}>
                 <div>
                   <span style={styles.sectionEyebrow}>BASE DE PERMISSÃ•ES</span>
-                  <h2 style={styles.sectionTitle}>UsuÃ¡rios autorizados</h2>
+                  <h2 style={styles.sectionTitle}>Usuários autorizados</h2>
                 </div>
 
                 <input
@@ -515,7 +515,7 @@ export default function SegurancaPage() {
                         </div>
 
                         <div style={styles.switchCard}>
-                          <span style={styles.switchLabel}>DiÃ¡rias</span>
+                          <span style={styles.switchLabel}>Diárias</span>
                           <button
                             type="button"
                             onClick={() => togglePermission(item.id, "diarias")}
@@ -526,7 +526,7 @@ export default function SegurancaPage() {
                         </div>
 
                         <div style={styles.switchCard}>
-                          <span style={styles.switchLabel}>RelatÃ³rios</span>
+                          <span style={styles.switchLabel}>Relatórios</span>
                           <button
                             type="button"
                             onClick={() => togglePermission(item.id, "relatorios")}
@@ -537,7 +537,7 @@ export default function SegurancaPage() {
                         </div>
 
                         <div style={styles.switchCard}>
-                          <span style={styles.switchLabel}>OperaÃ§Ã£o</span>
+                          <span style={styles.switchLabel}>Operação</span>
                           <button
                             type="button"
                             onClick={() => togglePermission(item.id, "operacao")}
@@ -559,9 +559,9 @@ export default function SegurancaPage() {
                         </div>
 
                         <div style={styles.dataItemWide}>
-                          <span style={styles.dataLabel}>ObservaÃ§Ã£o</span>
+                          <span style={styles.dataLabel}>Observação</span>
                           <strong style={styles.dataValue}>
-                            {item.observacao || "Sem observaÃ§Ã£o."}
+                            {item.observacao || "Sem observação."}
                           </strong>
                         </div>
                       </div>
@@ -581,28 +581,28 @@ export default function SegurancaPage() {
                 <div style={styles.ruleItem}>
                   <strong style={styles.ruleItemTitle}>Admin Master</strong>
                   <span style={styles.ruleItemText}>
-                    MantÃ©m controle total sobre o sistema.
+                    Mantém controle total sobre o sistema.
                   </span>
                 </div>
 
                 <div style={styles.ruleItem}>
                   <strong style={styles.ruleItemTitle}>Financeiro protegido</strong>
                   <span style={styles.ruleItemText}>
-                    SÃ³ quem for liberado poderÃ¡ acessar o mÃ³dulo sensÃ­vel.
+                    Só quem for liberado poderá acessar o módulo sensível.
                   </span>
                 </div>
 
                 <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>PermissÃ£o por mÃ³dulo</strong>
+                  <strong style={styles.ruleItemTitle}>Permissão por módulo</strong>
                   <span style={styles.ruleItemText}>
-                    Cada usuÃ¡rio pode ter uma combinaÃ§Ã£o diferente de acessos.
+                    Cada usuário pode ter uma combinação diferente de acessos.
                   </span>
                 </div>
 
                 <div style={styles.ruleItem}>
                   <strong style={styles.ruleItemTitle}>Base pronta</strong>
                   <span style={styles.ruleItemText}>
-                    JÃ¡ deixa o app preparado para a trava real nas pÃ¡ginas.
+                    Já deixa o app preparado para a trava real nas páginas.
                   </span>
                 </div>
               </div>
@@ -610,10 +610,10 @@ export default function SegurancaPage() {
 
             <div style={styles.darkCard}>
               <div style={styles.robotTag}>ROBÃ” AURORA</div>
-              <h2 style={styles.sidebarTitleDark}>Apoio Ã  seguranÃ§a</h2>
+              <h2 style={styles.sidebarTitleDark}>Apoio Ã  segurança</h2>
               <p style={styles.sidebarTextDark}>
-                O RobÃ´ Aurora poderÃ¡ apontar acesso excessivo, usuÃ¡rio sem perfil claro,
-                mÃ³dulo sensÃ­vel exposto e distribuiÃ§Ã£o ruim de permissÃµes.
+                O RobÃ´ Aurora poderá apontar acesso excessivo, usuário sem perfil claro,
+                módulo sensível exposto e distribuição ruim de permissões.
               </p>
 
               <div style={styles.robotList}>
@@ -625,8 +625,8 @@ export default function SegurancaPage() {
             </div>
 
             <div style={styles.navCard}>
-              <span style={styles.sectionEyebrow}>NAVEGAÃ‡ÃƒO</span>
-              <h2 style={styles.sidebarTitle}>PrÃ³ximos blocos</h2>
+              <span style={styles.sectionEyebrow}>NAVEGAÇÃƒO</span>
+              <h2 style={styles.sidebarTitle}>Próximos blocos</h2>
 
               <div style={styles.navList}>
                 <Link href="/financeiro" style={styles.navItem}>
@@ -636,10 +636,10 @@ export default function SegurancaPage() {
                   Abrir cadastros
                 </Link>
                 <Link href="/operacao" style={styles.navItem}>
-                  Abrir operaÃ§Ã£o
+                  Abrir operação
                 </Link>
                 <Link href="/relatorios" style={styles.navItem}>
-                  Abrir relatÃ³rios
+                  Abrir relatórios
                 </Link>
               </div>
             </div>
@@ -1353,3 +1353,4 @@ const styles: Record<string, React.CSSProperties> = {
     border: "1px solid rgba(125, 211, 252, 0.18)",
   },
 };
+

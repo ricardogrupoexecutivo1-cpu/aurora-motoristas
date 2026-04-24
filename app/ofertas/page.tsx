@@ -46,7 +46,7 @@ const initialDrivers: Driver[] = [
   },
   {
     id: "MOT-0003",
-    nome: "JoÃ£o Pedro",
+    nome: "João Pedro",
     telefone: "5531990001003",
     status: "disponivel",
     base: "Aurora Frotas Executivas",
@@ -93,21 +93,21 @@ function buildOfferMessage(
 ) {
   return `ðŸš— Aurora Motoristas
 
-Oferta de serviÃ§o
+Oferta de serviço
 OS: ${service.os}
 Motorista acionado: ${driver.nome}
 Cliente: ${service.cliente}
 Rota: ${service.rota}
 Data/Hora: ${service.dataHora}
-Valor do serviÃ§o: ${service.valor}
+Valor do serviço: ${service.valor}
 
-ObservaÃ§Ã£o:
+Observação:
 ${service.observacao}
 
 Regras:
-- VocÃª pode aceitar ou recusar livremente.
-- NÃ£o hÃ¡ puniÃ§Ã£o por recusa.
-- O serviÃ§o serÃ¡ fechado com quem der o aceite primeiro.
+- Você pode aceitar ou recusar livremente.
+- Não há punição por recusa.
+- O serviço será fechado com quem der o aceite primeiro.
 - Os demais permanecem livres para outros chamados.
 
 Responda com:
@@ -234,7 +234,7 @@ export default function OfertasPage() {
     setOfferStatus("enviado");
     setClosedWith("");
     setFeedback(
-      "Oferta enviada. Agora o primeiro aceite vÃ¡lido fecha o serviÃ§o."
+      "Oferta enviada. Agora o primeiro aceite válido fecha o serviço."
     );
   }
 
@@ -244,7 +244,7 @@ export default function OfertasPage() {
 
   function acceptOffer(driver: Driver) {
     if (offerStatus === "fechado") {
-      setFeedback(`ServiÃ§o jÃ¡ fechado com ${closedWith}.`);
+      setFeedback(`Serviço já fechado com ${closedWith}.`);
       return;
     }
 
@@ -273,13 +273,13 @@ export default function OfertasPage() {
     setOfferStatus("fechado");
     setClosedWith(driver.nome);
     setFeedback(
-      `ServiÃ§o fechado com ${driver.nome}. Os demais ficaram livres para outros chamados.`
+      `Serviço fechado com ${driver.nome}. Os demais ficaram livres para outros chamados.`
     );
   }
 
   function refuseOffer(driver: Driver) {
     if (offerStatus === "fechado") {
-      setFeedback(`ServiÃ§o jÃ¡ fechado com ${closedWith}.`);
+      setFeedback(`Serviço já fechado com ${closedWith}.`);
       return;
     }
 
@@ -296,7 +296,7 @@ export default function OfertasPage() {
     );
 
     setFeedback(
-      `${driver.nome} recusou sem puniÃ§Ã£o. O serviÃ§o segue aberto aos demais.`
+      `${driver.nome} recusou sem punição. O serviço segue aberto aos demais.`
     );
   }
 
@@ -318,7 +318,7 @@ export default function OfertasPage() {
           <div style={styles.heroGrid}>
             <div style={styles.heroLeft}>
               <div style={styles.eyebrow}>
-                AURORA MOTORISTAS â€¢ OFERTA DE SERVIÃ‡O
+                AURORA MOTORISTAS â€¢ OFERTA DE SERVIÇO
               </div>
 
               <h1 style={styles.heroTitle}>
@@ -326,9 +326,9 @@ export default function OfertasPage() {
               </h1>
 
               <p style={styles.heroText}>
-                Esta tela prepara a oferta para vÃ¡rios motoristas, respeitando a
-                regra de liberdade total de aceite ou recusa, sem puniÃ§Ã£o e com
-                fechamento automÃ¡tico para quem confirmar primeiro.
+                Esta tela prepara a oferta para vários motoristas, respeitando a
+                regra de liberdade total de aceite ou recusa, sem punição e com
+                fechamento automático para quem confirmar primeiro.
               </p>
 
               <div style={styles.heroActions}>
@@ -337,7 +337,7 @@ export default function OfertasPage() {
                 </Link>
 
                 <Link href="/operacao" style={styles.primaryButton}>
-                  Ir para operaÃ§Ã£o
+                  Ir para operação
                 </Link>
               </div>
             </div>
@@ -346,12 +346,12 @@ export default function OfertasPage() {
               <span style={styles.sideKicker}>REGRA OPERACIONAL</span>
               <h2 style={styles.sideTitle}>Livre aceite e recusa</h2>
               <p style={styles.sideText}>
-                O serviÃ§o Ã© disparado para vÃ¡rios motoristas, pode ser recusado
-                sem puniÃ§Ã£o e serÃ¡ fechado com o primeiro aceite vÃ¡lido.
+                O serviço é disparado para vários motoristas, pode ser recusado
+                sem punição e será fechado com o primeiro aceite válido.
               </p>
 
               <div style={styles.sidePills}>
-                <div style={styles.sidePill}>Sem puniÃ§Ã£o por recusa</div>
+                <div style={styles.sidePill}>Sem punição por recusa</div>
                 <div style={styles.sidePill}>Primeiro aceite leva</div>
                 <div style={styles.sidePill}>Demais ficam livres</div>
               </div>
@@ -359,8 +359,8 @@ export default function OfertasPage() {
           </div>
 
           <div style={styles.noticeBox}>
-            Sistema em constante atualizaÃ§Ã£o. Esta camada prepara o fluxo Ambiente seguro
-            de oferta para serviÃ§os esporÃ¡dicos, com mais controle da operaÃ§Ã£o e
+            Sistema em constante atualização. Esta camada prepara o fluxo Ambiente seguro
+            de oferta para serviços esporádicos, com mais controle da operação e
             menos atravessamento.
           </div>
 
@@ -373,11 +373,11 @@ export default function OfertasPage() {
           <article style={styles.statCard}>
             <span style={styles.statLabel}>Motoristas no filtro</span>
             <strong style={styles.statValue}>{stats.total}</strong>
-            <span style={styles.statDetail}>Base visÃ­vel</span>
+            <span style={styles.statDetail}>Base visível</span>
           </article>
 
           <article style={styles.statCard}>
-            <span style={styles.statLabel}>DisponÃ­veis</span>
+            <span style={styles.statLabel}>Disponíveis</span>
             <strong style={styles.statValue}>{stats.disponiveis}</strong>
             <span style={styles.statDetail}>Prontos para receber oferta</span>
           </article>
@@ -385,7 +385,7 @@ export default function OfertasPage() {
           <article style={styles.statCard}>
             <span style={styles.statLabel}>Ocupados</span>
             <strong style={styles.statValue}>{stats.ocupados}</strong>
-            <span style={styles.statDetail}>Exigem atenÃ§Ã£o operacional</span>
+            <span style={styles.statDetail}>Exigem atenção operacional</span>
           </article>
 
           <article style={styles.statCard}>
@@ -413,19 +413,19 @@ export default function OfertasPage() {
           <article style={styles.statCard}>
             <span style={styles.statLabel}>Aceites</span>
             <strong style={styles.statValue}>{stats.aceites}</strong>
-            <span style={styles.statDetail}>ConfirmaÃ§Ãµes registradas</span>
+            <span style={styles.statDetail}>Confirmações registradas</span>
           </article>
 
           <article style={styles.statCard}>
             <span style={styles.statLabel}>Recusas</span>
             <strong style={styles.statValue}>{stats.recusas}</strong>
-            <span style={styles.statDetail}>Sem puniÃ§Ã£o</span>
+            <span style={styles.statDetail}>Sem punição</span>
           </article>
 
           <article style={styles.statCard}>
             <span style={styles.statLabel}>Fechado com</span>
             <strong style={styles.statValue}>{closedWith || "â€”"}</strong>
-            <span style={styles.statDetail}>Primeiro aceite vÃ¡lido</span>
+            <span style={styles.statDetail}>Primeiro aceite válido</span>
           </article>
         </div>
       </section>
@@ -513,7 +513,7 @@ export default function OfertasPage() {
                 </div>
 
                 <div style={styles.dataItemWide}>
-                  <span style={styles.dataLabel}>ObservaÃ§Ã£o operacional</span>
+                  <span style={styles.dataLabel}>Observação operacional</span>
                   <textarea
                     value={service.observacao}
                     onChange={(e) =>
@@ -589,7 +589,7 @@ export default function OfertasPage() {
                             }}
                           >
                             {driver.status === "disponivel"
-                              ? "DisponÃ­vel"
+                              ? "Disponível"
                               : "Ocupado"}
                           </span>
 
@@ -654,7 +654,7 @@ export default function OfertasPage() {
 
                       {log?.respondedAt ? (
                         <div style={styles.logBox}>
-                          Ãšltima atualizaÃ§Ã£o: {log.respondedAt}
+                          Ãšltima atualização: {log.respondedAt}
                         </div>
                       ) : null}
                     </article>
@@ -673,7 +673,7 @@ export default function OfertasPage() {
                 <div style={styles.ruleItem}>
                   <strong style={styles.ruleItemTitle}>Livre recusa</strong>
                   <span style={styles.ruleItemText}>
-                    O motorista pode recusar quantas vezes quiser, sem puniÃ§Ã£o.
+                    O motorista pode recusar quantas vezes quiser, sem punição.
                   </span>
                 </div>
 
@@ -682,7 +682,7 @@ export default function OfertasPage() {
                     Sem volume garantido
                   </strong>
                   <span style={styles.ruleItemText}>
-                    Os serviÃ§os sÃ£o esporÃ¡dicos e dependem da necessidade real
+                    Os serviços são esporádicos e dependem da necessidade real
                     dos clientes.
                   </span>
                 </div>
@@ -693,7 +693,7 @@ export default function OfertasPage() {
                   </strong>
                   <span style={styles.ruleItemText}>
                     O atendimento fica com quem confirmar primeiro de forma
-                    vÃ¡lida.
+                    válida.
                   </span>
                 </div>
 
@@ -702,7 +702,7 @@ export default function OfertasPage() {
                     Demais ficam livres
                   </strong>
                   <span style={styles.ruleItemText}>
-                    Os outros motoristas seguem disponÃ­veis para novos chamados.
+                    Os outros motoristas seguem disponíveis para novos chamados.
                   </span>
                 </div>
               </div>
@@ -710,7 +710,7 @@ export default function OfertasPage() {
 
             <div style={styles.infoCard}>
               <span style={styles.sectionEyebrow}>CAMADA CONTRATUAL</span>
-              <h2 style={styles.sidebarTitle}>SeguranÃ§a operacional</h2>
+              <h2 style={styles.sidebarTitle}>Segurança operacional</h2>
 
               <div style={styles.ruleList}>
                 <div style={styles.ruleItem}>
@@ -718,16 +718,16 @@ export default function OfertasPage() {
                     Freelance / eventual
                   </strong>
                   <span style={styles.ruleItemText}>
-                    O sistema parte do modelo de serviÃ§os livres, sem garantia
+                    O sistema parte do modelo de serviços livres, sem garantia
                     de continuidade.
                   </span>
                 </div>
 
                 <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>CTB e conduÃ§Ã£o</strong>
+                  <strong style={styles.ruleItemTitle}>CTB e condução</strong>
                   <span style={styles.ruleItemText}>
                     O motorista deve conduzir em conformidade com o CTB e com as
-                    regras aplicÃ¡veis da operaÃ§Ã£o.
+                    regras aplicáveis da operação.
                   </span>
                 </div>
 
@@ -736,8 +736,8 @@ export default function OfertasPage() {
                     Telemetria quando houver
                   </strong>
                   <span style={styles.ruleItemText}>
-                    Se o veÃ­culo tiver telemetria, a conduÃ§Ã£o deve seguir os
-                    parÃ¢metros informados para a operaÃ§Ã£o.
+                    Se o veículo tiver telemetria, a condução deve seguir os
+                    parÃ¢metros informados para a operação.
                   </span>
                 </div>
               </div>
@@ -745,15 +745,15 @@ export default function OfertasPage() {
 
             <div style={styles.darkCard}>
               <div style={styles.robotTag}>ROBÃ” AURORA</div>
-              <h2 style={styles.sidebarTitleDark}>Apoio Ã  distribuiÃ§Ã£o</h2>
+              <h2 style={styles.sidebarTitleDark}>Apoio Ã  distribuição</h2>
               <p style={styles.sidebarTextDark}>
-                O RobÃ´ Aurora poderÃ¡ sugerir qual motorista acionar primeiro,
-                ler histÃ³rico de aceite, separar base por cidade e reduzir tempo
+                O RobÃ´ Aurora poderá sugerir qual motorista acionar primeiro,
+                ler histórico de aceite, separar base por cidade e reduzir tempo
                 de resposta.
               </p>
 
               <div style={styles.robotList}>
-                <div style={styles.robotItem}>Priorizar disponÃ­vel</div>
+                <div style={styles.robotItem}>Priorizar disponível</div>
                 <div style={styles.robotItem}>Ler tempo de resposta</div>
                 <div style={styles.robotItem}>Reduzir duplicidade</div>
                 <div style={styles.robotItem}>Fechar no primeiro aceite</div>
@@ -761,21 +761,21 @@ export default function OfertasPage() {
             </div>
 
             <div style={styles.navCard}>
-              <span style={styles.sectionEyebrow}>NAVEGAÃ‡ÃƒO</span>
-              <h2 style={styles.sidebarTitle}>PrÃ³ximos blocos</h2>
+              <span style={styles.sectionEyebrow}>NAVEGAÇÃƒO</span>
+              <h2 style={styles.sidebarTitle}>Próximos blocos</h2>
 
               <div style={styles.navList}>
                 <Link href="/escala" style={styles.navItem}>
                   Abrir escala
                 </Link>
                 <Link href="/operacao" style={styles.navItem}>
-                  Abrir operaÃ§Ã£o
+                  Abrir operação
                 </Link>
                 <Link href="/pagamentos" style={styles.navItem}>
                   Abrir pagamentos
                 </Link>
                 <Link href="/historico" style={styles.navItem}>
-                  Abrir histÃ³rico
+                  Abrir histórico
                 </Link>
               </div>
             </div>
@@ -1481,3 +1481,4 @@ const styles: Record<string, React.CSSProperties> = {
     border: "1px solid rgba(125, 211, 252, 0.18)",
   },
 };
+

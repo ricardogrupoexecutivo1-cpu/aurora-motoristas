@@ -132,19 +132,19 @@ function formatPlate(value: string) {
 function getTipoLabel(value?: string) {
   switch (value) {
     case "busca_veiculo":
-      return "Busca de veÃ­culo";
+      return "Busca de veículo";
     case "entrega_veiculo":
-      return "Entrega de veÃ­culo";
+      return "Entrega de veículo";
     case "transporte_executivo":
       return "Transporte executivo";
     case "transfer":
       return "Transfer";
     case "motorista_diaria":
-      return "Motorista por diÃ¡ria";
+      return "Motorista por diária";
     case "outro":
       return "Outro";
     default:
-      return value || "NÃ£o definido";
+      return value || "Não definido";
   }
 }
 
@@ -157,9 +157,9 @@ function getModoLabel(value?: string) {
     case "por_km_mais_reembolso":
       return "KM menor + reembolso";
     case "diaria_fechada":
-      return "DiÃ¡ria fechada";
+      return "Diária fechada";
     default:
-      return value || "NÃ£o definido";
+      return value || "Não definido";
   }
 }
 
@@ -181,7 +181,7 @@ function loadServices(): InternalService[] {
     if (!Array.isArray(parsed)) return [];
     return parsed as InternalService[];
   } catch (error) {
-    console.error("Erro ao carregar serviÃ§os:", error);
+    console.error("Erro ao carregar serviços:", error);
     return [];
   }
 }
@@ -328,7 +328,7 @@ export default function ServicosComplementacaoPage() {
       }
     });
     setDrafts(nextDrafts);
-    setFeedback("Leitura de serviÃ§os convertidos atualizada.");
+    setFeedback("Leitura de serviços convertidos atualizada.");
   }
 
   function updateDraft<K extends keyof DraftFields>(
@@ -452,10 +452,10 @@ export default function ServicosComplementacaoPage() {
 
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
       setServices(updated);
-      setFeedback(`ServiÃ§o ${service.os || service.id} atualizado com sucesso.`);
+      setFeedback(`Serviço ${service.os || service.id} atualizado com sucesso.`);
     } catch (error) {
-      console.error("Erro ao salvar complementaÃ§Ã£o:", error);
-      setFeedback("NÃ£o foi possÃ­vel salvar a complementaÃ§Ã£o do serviÃ§o.");
+      console.error("Erro ao salvar complementação:", error);
+      setFeedback("Não foi possível salvar a complementação do serviço.");
     }
   }
 
@@ -516,7 +516,7 @@ export default function ServicosComplementacaoPage() {
                   lineHeight: 1.1,
                 }}
               >
-                ComplementaÃ§Ã£o de serviÃ§os convertidos
+                Complementação de serviços convertidos
               </h1>
               <p
                 style={{
@@ -527,14 +527,14 @@ export default function ServicosComplementacaoPage() {
                 }}
               >
                 Tela interna para completar motorista, placa, checklist, status e
-                fechamento bÃ¡sico dos serviÃ§os vindos de pedido de cotaÃ§Ã£o, sem
+                fechamento básico dos serviços vindos de pedido de cotação, sem
                 mexer na tela operacional principal.
               </p>
             </div>
 
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
               <Link href="/pedidos-cotacao" style={linkSecondaryStyle}>
-                Pedidos de cotaÃ§Ã£o
+                Pedidos de cotação
               </Link>
 
               <Link href="/servicos" style={linkPrimaryStyle}>
@@ -573,7 +573,7 @@ export default function ServicosComplementacaoPage() {
 
         {filteredServices.length === 0 ? (
           <div style={emptyBoxStyle}>
-            Nenhum serviÃ§o convertido encontrado nesta leitura.
+            Nenhum serviço convertido encontrado nesta leitura.
           </div>
         ) : (
           <div style={{ display: "grid", gap: 14 }}>
@@ -668,16 +668,16 @@ export default function ServicosComplementacaoPage() {
                   >
                     <MiniInfo label="Contato" value={safeText(service.contato_cliente_final)} />
                     <MiniInfo label="Telefone" value={safeText(service.telefone_cliente_final)} />
-                    <MiniInfo label="Data do serviÃ§o" value={formatDate(service.data_servico)} />
+                    <MiniInfo label="Data do serviço" value={formatDate(service.data_servico)} />
                     <MiniInfo label="Origem" value={safeText(service.origem)} />
                     <MiniInfo label="Destino" value={safeText(service.destino)} />
-                    <MiniInfo label="CobranÃ§a ao contratante" value={moneyDisplay(service.valor_cobranca)} />
+                    <MiniInfo label="Cobrança ao contratante" value={moneyDisplay(service.valor_cobranca)} />
                   </div>
 
                   <section style={sectionBoxStyle}>
                     <SectionTitle
-                      title="ComplementaÃ§Ã£o interna"
-                      subtitle="Preencha aqui o que faltou da operaÃ§Ã£o interna."
+                      title="Complementação interna"
+                      subtitle="Preencha aqui o que faltou da operação interna."
                     />
 
                     <div
@@ -694,7 +694,7 @@ export default function ServicosComplementacaoPage() {
                           onChange={(e) =>
                             updateDraft(service.id || "", "motorista", e.target.value)
                           }
-                          placeholder="Ex.: JoÃ£o Carlos"
+                          placeholder="Ex.: João Carlos"
                           style={inputStyle}
                         />
                       </label>
@@ -734,7 +734,7 @@ export default function ServicosComplementacaoPage() {
                       </label>
 
                       <label style={labelStyle}>
-                        <span style={labelTextStyle}>Valor do serviÃ§o do motorista</span>
+                        <span style={labelTextStyle}>Valor do serviço do motorista</span>
                         <input
                           value={draft.valor_motorista}
                           onChange={(e) =>
@@ -770,8 +770,8 @@ export default function ServicosComplementacaoPage() {
 
                     <section style={sectionBoxStyle}>
                       <SectionTitle
-                        title="Despesas editÃ¡veis"
-                        subtitle="Adicione quantas despesas forem necessÃ¡rias, com nomes livres e valores independentes."
+                        title="Despesas editáveis"
+                        subtitle="Adicione quantas despesas forem necessárias, com nomes livres e valores independentes."
                       />
 
                       <div style={{ display: "grid", gap: 12 }}>
@@ -787,7 +787,7 @@ export default function ServicosComplementacaoPage() {
                           >
                             <label style={labelStyle}>
                               <span style={labelTextStyle}>
-                                Despesa {index + 1} â€¢ descriÃ§Ã£o
+                                Despesa {index + 1} â€¢ descrição
                               </span>
                               <input
                                 value={expense.descricao}
@@ -799,7 +799,7 @@ export default function ServicosComplementacaoPage() {
                                     e.target.value
                                   )
                                 }
-                                placeholder="Ex.: combustÃ­vel, pedÃ¡gio, hotel, alimentaÃ§Ã£o..."
+                                placeholder="Ex.: combustível, pedágio, hotel, alimentação..."
                                 style={inputStyle}
                               />
                             </label>
@@ -852,7 +852,7 @@ export default function ServicosComplementacaoPage() {
                       }}
                     >
                       <MiniInfo
-                        label="Valor do serviÃ§o"
+                        label="Valor do serviço"
                         value={moneyDisplay(valorMotorista)}
                       />
                       <MiniInfo label="Vale" value={moneyDisplay(vale)} />
@@ -865,7 +865,7 @@ export default function ServicosComplementacaoPage() {
                         value={moneyDisplay(saldoAnteriorMotorista)}
                       />
                       <MiniInfo
-                        label="Saldo do serviÃ§o"
+                        label="Saldo do serviço"
                         value={moneyDisplay(saldoServicoMotorista)}
                       />
                       <MiniInfo
@@ -877,7 +877,7 @@ export default function ServicosComplementacaoPage() {
                         value={moneyDisplay(pagarAgora)}
                       />
                       <MiniInfo
-                        label="Margem da operaÃ§Ã£o"
+                        label="Margem da operação"
                         value={moneyDisplay(margem)}
                       />
                     </div>
@@ -899,8 +899,8 @@ export default function ServicosComplementacaoPage() {
                       >
                         <strong style={{ display: "block", marginBottom: 6 }}>
                           {saldoNegativo
-                            ? "Saldo do serviÃ§o negativo"
-                            : "Saldo do serviÃ§o positivo"}
+                            ? "Saldo do serviço negativo"
+                            : "Saldo do serviço positivo"}
                         </strong>
                         <span>{moneyDisplay(saldoServicoMotorista)}</span>
                       </div>
@@ -934,8 +934,8 @@ export default function ServicosComplementacaoPage() {
                       >
                         <strong style={{ display: "block", marginBottom: 6 }}>
                           {margemNegativa
-                            ? "OperaÃ§Ã£o em prejuÃ­zo"
-                            : "OperaÃ§Ã£o com margem positiva"}
+                            ? "Operação em prejuízo"
+                            : "Operação com margem positiva"}
                         </strong>
                         <span>{moneyDisplay(margem)}</span>
                       </div>
@@ -945,7 +945,7 @@ export default function ServicosComplementacaoPage() {
                   <section style={sectionBoxStyle}>
                     <SectionTitle
                       title="Checklist interno"
-                      subtitle="Continua interno e nÃ£o interfere no fluxo pÃºblico."
+                      subtitle="Continua interno e não interfere no fluxo público."
                     />
 
                     <label
@@ -967,11 +967,11 @@ export default function ServicosComplementacaoPage() {
                           )
                         }
                       />
-                      Checklist obrigatÃ³rio
+                      Checklist obrigatório
                     </label>
 
                     <label style={labelStyle}>
-                      <span style={labelTextStyle}>InstruÃ§Ãµes do checklist</span>
+                      <span style={labelTextStyle}>Instruções do checklist</span>
                       <textarea
                         value={draft.checklist_instrucoes}
                         onChange={(e) =>
@@ -982,7 +982,7 @@ export default function ServicosComplementacaoPage() {
                           )
                         }
                         rows={4}
-                        placeholder="Fotos, avarias, combustÃ­vel, documentos, quilometragem..."
+                        placeholder="Fotos, avarias, combustível, documentos, quilometragem..."
                         style={{
                           ...inputStyle,
                           resize: "vertical",
@@ -1010,7 +1010,7 @@ export default function ServicosComplementacaoPage() {
                           )
                         }
                       />
-                      Checklist enviado / concluÃ­do
+                      Checklist enviado / concluído
                     </label>
                   </section>
 
@@ -1025,14 +1025,14 @@ export default function ServicosComplementacaoPage() {
                       onClick={() => saveServiceCompletion(service)}
                       style={actionPrimaryButtonStyle}
                     >
-                      Salvar complementaÃ§Ã£o
+                      Salvar complementação
                     </button>
                   </div>
 
                   <div style={noticeBoxStyle}>
-                    <strong>Blindagem mantida:</strong> esta pÃ¡gina existe para
-                    complementar o serviÃ§o convertido sem mexer na tela operacional
-                    principal que jÃ¡ estÃ¡ funcionando.
+                    <strong>Blindagem mantida:</strong> esta página existe para
+                    complementar o serviço convertido sem mexer na tela operacional
+                    principal que já está funcionando.
                   </div>
                 </article>
               );
@@ -1207,3 +1207,4 @@ const linkPrimaryStyle: React.CSSProperties = {
   fontWeight: 700,
   background: "#f0f9ff",
 };
+

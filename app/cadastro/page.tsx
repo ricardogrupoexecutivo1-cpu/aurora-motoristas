@@ -51,7 +51,7 @@ export default function CadastroPage() {
     cnh: "",
     categoriaCnh: "",
     validadeCnh: "",
-    // VeÃ­culo
+    // Veículo
     placaVeiculo: "",
     modeloVeiculo: "",
     anoVeiculo: "",
@@ -95,7 +95,7 @@ export default function CadastroPage() {
 
   const handleSubmit = async () => {
     setLoading(true);
-    // SimulaÃ§Ã£o de envio
+    // Simulação de envio
     await new Promise((resolve) => setTimeout(resolve, 2000));
     setLoading(false);
     setStep("sucesso");
@@ -103,14 +103,14 @@ export default function CadastroPage() {
 
   const renderStepIndicator = () => {
     const steps = userType === "passageiro" 
-      ? ["Tipo", "Dados", "VerificaÃ§Ã£o", "Sucesso"]
-      : ["Tipo", "Dados", "Documentos", "VerificaÃ§Ã£o", "Sucesso"];
+      ? ["Tipo", "Dados", "Verificação", "Sucesso"]
+      : ["Tipo", "Dados", "Documentos", "Verificação", "Sucesso"];
     
     const currentIndex = steps.indexOf(
       step === "tipo" ? "Tipo" : 
       step === "dados" ? "Dados" : 
       step === "documentos" ? "Documentos" :
-      step === "verificacao" ? "VerificaÃ§Ã£o" : "Sucesso"
+      step === "verificacao" ? "Verificação" : "Sucesso"
     );
 
     return (
@@ -172,7 +172,7 @@ export default function CadastroPage() {
               href="/login"
               className="text-sm font-semibold text-muted-foreground hover:text-primary transition-colors"
             >
-              JÃ¡ tenho conta
+              Já tenho conta
             </Link>
           </div>
         </div>
@@ -181,7 +181,7 @@ export default function CadastroPage() {
       <div className="max-w-2xl mx-auto px-4 py-8 lg:py-12">
         {step !== "sucesso" && renderStepIndicator()}
 
-        {/* Tipo de UsuÃ¡rio */}
+        {/* Tipo de Usuário */}
         {step === "tipo" && (
           <div className="space-y-6">
             <div className="text-center mb-8">
@@ -189,7 +189,7 @@ export default function CadastroPage() {
                 Criar sua conta Aurora Motoristas
               </h1>
               <p className="text-muted-foreground">
-                Escolha como vocÃª quer usar a plataforma
+                Escolha como você quer usar a plataforma
               </p>
             </div>
 
@@ -199,8 +199,8 @@ export default function CadastroPage() {
                   id: "passageiro",
                   icon: User,
                   title: "Quero solicitar corridas",
-                  desc: "Viaje com seguranÃ§a, praticidade e os melhores preÃ§os",
-                  features: ["GPS em tempo real", "Pagamento flexÃ­vel", "AvaliaÃ§Ã£o de motoristas"],
+                  desc: "Viaje com segurança, praticidade e os melhores preços",
+                  features: ["GPS em tempo real", "Pagamento flexível", "Avaliação de motoristas"],
                   color: "primary",
                 },
                 {
@@ -208,7 +208,7 @@ export default function CadastroPage() {
                   icon: Car,
                   title: "Quero ser motorista parceiro",
                   desc: "Ganhe dinheiro dirigindo com a menor taxa do mercado",
-                  features: ["Taxa de apenas 5%", "Receba em 24h via PIX", "Sem metas obrigatÃ³rias"],
+                  features: ["Taxa de apenas 5%", "Receba em 24h via PIX", "Sem metas obrigatórias"],
                   color: "success",
                   highlight: true,
                 },
@@ -216,8 +216,8 @@ export default function CadastroPage() {
                   id: "empresa",
                   icon: Building2,
                   title: "Quero conta empresarial",
-                  desc: "Gerencie a mobilidade da sua equipe em um sÃ³ lugar",
-                  features: ["Dashboard completo", "Faturamento mensal", "MÃºltiplos usuÃ¡rios"],
+                  desc: "Gerencie a mobilidade da sua equipe em um só lugar",
+                  features: ["Dashboard completo", "Faturamento mensal", "Múltiplos usuários"],
                   color: "warning",
                 },
               ].map((type) => (
@@ -342,7 +342,7 @@ export default function CadastroPage() {
                 </div>
               )}
 
-              {/* Campos especÃ­ficos de empresa */}
+              {/* Campos específicos de empresa */}
               {userType === "empresa" && (
                 <>
                   <div>
@@ -362,13 +362,13 @@ export default function CadastroPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2">RazÃ£o Social</label>
+                    <label className="block text-sm font-medium mb-2">Razão Social</label>
                     <input
                       type="text"
                       name="razaoSocial"
                       value={formData.razaoSocial}
                       onChange={handleInputChange}
-                      placeholder="RazÃ£o social da empresa"
+                      placeholder="Razão social da empresa"
                       className="w-full px-4 py-3 bg-secondary rounded-xl border border-transparent focus:border-primary focus:outline-none transition-colors"
                     />
                   </div>
@@ -387,7 +387,7 @@ export default function CadastroPage() {
                 </>
               )}
 
-              {/* Campos especÃ­ficos de motorista */}
+              {/* Campos específicos de motorista */}
               {userType === "motorista" && (
                 <>
                   <div className="pt-4 border-t border-border">
@@ -399,7 +399,7 @@ export default function CadastroPage() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium mb-2">NÃºmero da CNH</label>
+                      <label className="block text-sm font-medium mb-2">Número da CNH</label>
                       <input
                         type="text"
                         name="cnh"
@@ -442,7 +442,7 @@ export default function CadastroPage() {
                   <div className="pt-4 border-t border-border">
                     <h3 className="font-bold mb-4 flex items-center gap-2">
                       <Car className="w-5 h-5 text-primary" />
-                      Dados do VeÃ­culo
+                      Dados do Veículo
                     </h3>
                   </div>
 
@@ -473,7 +473,7 @@ export default function CadastroPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2">Modelo do veÃ­culo</label>
+                    <label className="block text-sm font-medium mb-2">Modelo do veículo</label>
                     <input
                       type="text"
                       name="modeloVeiculo"
@@ -485,7 +485,7 @@ export default function CadastroPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2">Cor do veÃ­culo</label>
+                    <label className="block text-sm font-medium mb-2">Cor do veículo</label>
                     <select
                       name="corVeiculo"
                       value={formData.corVeiculo}
@@ -522,7 +522,7 @@ export default function CadastroPage() {
                     name="senha"
                     value={formData.senha}
                     onChange={handleInputChange}
-                    placeholder="MÃ­nimo 8 caracteres"
+                    placeholder="Mínimo 8 caracteres"
                     className="w-full pl-12 pr-12 py-3 bg-secondary rounded-xl border border-transparent focus:border-primary focus:outline-none transition-colors"
                   />
                   <button
@@ -576,16 +576,16 @@ export default function CadastroPage() {
                 Envio de documentos
               </h1>
               <p className="text-muted-foreground">
-                Envie os documentos para verificaÃ§Ã£o. Ã‰ rÃ¡pido e Ambiente seguro.
+                Envie os documentos para verificação. É rápido e Ambiente seguro.
               </p>
             </div>
 
             <div className="bg-primary/10 rounded-2xl p-4 flex items-start gap-3">
               <Shield className="w-6 h-6 text-primary flex-shrink-0" />
               <div>
-                <p className="font-semibold text-primary">Seus dados estÃ£o Ambiente seguros</p>
+                <p className="font-semibold text-primary">Seus dados estão Ambiente seguros</p>
                 <p className="text-sm text-muted-foreground">
-                  Todos os documentos sÃ£o criptografados e armazenados de forma segura.
+                  Todos os documentos são criptografados e armazenados de forma segura.
                 </p>
               </div>
             </div>
@@ -684,8 +684,8 @@ export default function CadastroPage() {
                         <Car className="w-5 h-5 text-primary" />
                       </div>
                       <div>
-                        <p className="font-semibold">CRLV do veÃ­culo</p>
-                        <p className="text-xs text-muted-foreground">Documento do veÃ­culo</p>
+                        <p className="font-semibold">CRLV do veículo</p>
+                        <p className="text-xs text-muted-foreground">Documento do veículo</p>
                       </div>
                     </div>
                     {documents.crlv && <CheckCircle className="w-6 h-6 text-success" />}
@@ -715,7 +715,7 @@ export default function CadastroPage() {
           </div>
         )}
 
-        {/* VerificaÃ§Ã£o */}
+        {/* Verificação */}
         {step === "verificacao" && (
           <div className="space-y-6">
             <div className="text-center mb-8">
@@ -758,7 +758,7 @@ export default function CadastroPage() {
                     </h3>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-muted-foreground">NÃºmero:</span>
+                        <span className="text-muted-foreground">Número:</span>
                         <span className="font-medium">{formData.cnh || "-"}</span>
                       </div>
                       <div className="flex justify-between">
@@ -771,7 +771,7 @@ export default function CadastroPage() {
                   <div className="p-4 bg-card rounded-2xl border border-border">
                     <h3 className="font-semibold mb-3 flex items-center gap-2">
                       <Car className="w-5 h-5 text-primary" />
-                      VeÃ­culo
+                      Veículo
                     </h3>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
@@ -805,7 +805,7 @@ export default function CadastroPage() {
                   </Link>{" "}
                   e a{" "}
                   <Link href="/privacidade" className="text-primary hover:underline">
-                    PolÃ­tica de Privacidade
+                    Política de Privacidade
                   </Link>{" "}
                   do Aurora Motoristas.
                 </span>
@@ -844,9 +844,9 @@ export default function CadastroPage() {
             </h1>
 
             <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-              {userType === "passageiro" && "Sua conta foi criada. Agora vocÃª pode solicitar corridas e aproveitar todos os benefÃ­cios do Aurora Motoristas."}
-              {userType === "motorista" && "Recebemos seus dados! Nossa equipe irÃ¡ verificar seus documentos em atÃ© 48 horas. VocÃª receberÃ¡ um e-mail com a confirmaÃ§Ã£o."}
-              {userType === "empresa" && "Sua conta empresarial foi criada. Nossa equipe comercial entrarÃ¡ em contato em breve."}
+              {userType === "passageiro" && "Sua conta foi criada. Agora você pode solicitar corridas e aproveitar todos os benefícios do Aurora Motoristas."}
+              {userType === "motorista" && "Recebemos seus dados! Nossa equipe irá verificar seus documentos em até 48 horas. Você receberá um e-mail com a confirmação."}
+              {userType === "empresa" && "Sua conta empresarial foi criada. Nossa equipe comercial entrará em contato em breve."}
             </p>
 
             {userType === "motorista" && (
@@ -854,9 +854,9 @@ export default function CadastroPage() {
                 <div className="flex items-start gap-3">
                   <Clock className="w-6 h-6 text-warning flex-shrink-0" />
                   <div>
-                    <p className="font-semibold text-warning">VerificaÃ§Ã£o em andamento</p>
+                    <p className="font-semibold text-warning">Verificação em andamento</p>
                     <p className="text-sm text-muted-foreground">
-                      Seus documentos estÃ£o sendo analisados. Prazo: 24-48 horas Ãºteis.
+                      Seus documentos estão sendo analisados. Prazo: 24-48 horas úteis.
                     </p>
                   </div>
                 </div>
@@ -886,4 +886,5 @@ export default function CadastroPage() {
     </main>
   );
 }
+
 
