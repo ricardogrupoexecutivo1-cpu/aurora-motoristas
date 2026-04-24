@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
@@ -83,49 +83,49 @@ const TIPOS_COTACAO: TipoCotacaoCard[] = [
   {
     id: 'transfer',
     titulo: 'Transfer',
-    descricao: 'Cotação rápida para origem, destino, apresentação e deslocamento.',
+    descricao: 'CotaÃ§Ã£o rÃ¡pida para origem, destino, apresentaÃ§Ã£o e deslocamento.',
     rotaPadrao: '/plataforma/cotacoes/nova?tipo=transfer',
   },
   {
     id: 'mobilizacao',
-    titulo: 'Mobilização',
-    descricao: 'Leitura focada em levar equipe, veículo ou operação até o destino.',
+    titulo: 'MobilizaÃ§Ã£o',
+    descricao: 'Leitura focada em levar equipe, veÃ­culo ou operaÃ§Ã£o atÃ© o destino.',
     rotaPadrao: '/plataforma/cotacoes/nova?tipo=mobilizacao',
   },
   {
     id: 'desmobilizacao',
-    titulo: 'Desmobilização',
+    titulo: 'DesmobilizaÃ§Ã£o',
     descricao: 'Leitura focada em retorno, busca e encerramento operacional.',
     rotaPadrao: '/plataforma/cotacoes/nova?tipo=desmobilizacao',
   },
   {
     id: 'mobilizacao_desmobilizacao',
-    titulo: 'Mobilização + desmobilização',
-    descricao: 'Ida e retorno na mesma cotação, com valores separados.',
+    titulo: 'MobilizaÃ§Ã£o + desmobilizaÃ§Ã£o',
+    descricao: 'Ida e retorno na mesma cotaÃ§Ã£o, com valores separados.',
     rotaPadrao: '/plataforma/cotacoes/tipos/mobilizacao-desmobilizacao',
   },
   {
     id: 'diaria',
-    titulo: 'Diária',
-    descricao: 'Para motorista por diária, com espera, extras e despesas.',
+    titulo: 'DiÃ¡ria',
+    descricao: 'Para motorista por diÃ¡ria, com espera, extras e despesas.',
     rotaPadrao: '/plataforma/cotacoes/nova?tipo=diaria',
   },
   {
     id: 'semanal',
     titulo: 'Semanal',
-    descricao: 'Para contratação por semana, com base mais recorrente.',
+    descricao: 'Para contrataÃ§Ã£o por semana, com base mais recorrente.',
     rotaPadrao: '/plataforma/cotacoes/nova?tipo=semanal',
   },
   {
     id: 'mensal',
     titulo: 'Mensal',
-    descricao: 'Para cliente mensalista e fechamento por competência.',
+    descricao: 'Para cliente mensalista e fechamento por competÃªncia.',
     rotaPadrao: '/plataforma/cotacoes/nova?tipo=mensal',
   },
   {
     id: 'pacote_personalizado',
     titulo: 'Pacote personalizado',
-    descricao: 'Formato livre para operação especial ou estrutura personalizada.',
+    descricao: 'Formato livre para operaÃ§Ã£o especial ou estrutura personalizada.',
     rotaPadrao: '/plataforma/cotacoes/nova?tipo=pacote_personalizado',
   },
 ]
@@ -201,29 +201,29 @@ export default function PlataformaCotacoesNovoPage() {
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="space-y-3">
               <span className="inline-flex rounded-full bg-cyan-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">
-                Aurora Motoristas • Entrada rápida de cotação
+                Aurora Motoristas â€¢ Entrada rÃ¡pida de cotaÃ§Ã£o
               </span>
 
               <div>
                 <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
-                  Nova cotação por tipo
+                  Nova cotaÃ§Ã£o por tipo
                 </h1>
                 <p className="mt-2 max-w-3xl text-sm text-slate-600 md:text-base">
-                  Primeiro identificamos o cliente por documento. Depois você escolhe o tipo
-                  de cotação por botão e entra direto no fluxo certo, sem depender de uma
-                  página grande para todo mundo.
+                  Primeiro identificamos o cliente por documento. Depois vocÃª escolhe o tipo
+                  de cotaÃ§Ã£o por botÃ£o e entra direto no fluxo certo, sem depender de uma
+                  pÃ¡gina grande para todo mundo.
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-3 text-sm">
                 <span className="rounded-2xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-emerald-700">
-                  Entrada mais rápida
+                  Entrada mais rÃ¡pida
                 </span>
                 <span className="rounded-2xl border border-sky-200 bg-sky-50 px-3 py-2 text-sky-700">
                   CNPJ/CPF primeiro
                 </span>
                 <span className="rounded-2xl border border-amber-200 bg-amber-50 px-3 py-2 text-amber-700">
-                  Sem cobrança nesta etapa
+                  Sem cobranÃ§a nesta etapa
                 </span>
               </div>
             </div>
@@ -233,29 +233,29 @@ export default function PlataformaCotacoesNovoPage() {
                 href="/plataforma/cotacoes"
                 className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
               >
-                Ver cotações
+                Ver cotaÃ§Ãµes
               </Link>
 
               <Link
                 href="/plataforma"
                 className="rounded-2xl border border-slate-900 bg-slate-900 px-4 py-3 text-center text-sm font-semibold text-white transition hover:opacity-90"
               >
-                Voltar à plataforma
+                Voltar Ã  plataforma
               </Link>
             </div>
           </div>
 
           <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-            Sistema em constante atualização. Nesta etapa a cobrança ainda não é exigida.
-            A cobrança e a nota de débito ficam para depois do serviço concluído.
+            Sistema em constante atualizaÃ§Ã£o. Nesta etapa a cobranÃ§a ainda nÃ£o Ã© exigida.
+            A cobranÃ§a e a nota de dÃ©bito ficam para depois do serviÃ§o concluÃ­do.
           </div>
         </section>
 
         <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold">Identificação do cliente</h2>
+          <h2 className="text-lg font-semibold">IdentificaÃ§Ã£o do cliente</h2>
           <p className="mt-1 text-sm text-slate-500">
-            Digite o documento do cliente. No próximo passo o formulário já entra com base
-            nessas informações.
+            Digite o documento do cliente. No prÃ³ximo passo o formulÃ¡rio jÃ¡ entra com base
+            nessas informaÃ§Ãµes.
           </p>
 
           <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -269,14 +269,14 @@ export default function PlataformaCotacoesNovoPage() {
                 }}
                 className="input"
               >
-                <option value="juridica">Jurídica</option>
-                <option value="fisica">Física</option>
+                <option value="juridica">JurÃ­dica</option>
+                <option value="fisica">FÃ­sica</option>
               </select>
             </Field>
 
             <Field
               label={tipoPessoa === 'juridica' ? 'CNPJ' : 'CPF'}
-              helper="Obrigatório. Pode ser com ou sem máscara."
+              helper="ObrigatÃ³rio. Pode ser com ou sem mÃ¡scara."
             >
               <input
                 value={documento}
@@ -290,7 +290,7 @@ export default function PlataformaCotacoesNovoPage() {
               />
             </Field>
 
-            <Field label="Nome / razão social">
+            <Field label="Nome / razÃ£o social">
               <input
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
@@ -317,21 +317,21 @@ export default function PlataformaCotacoesNovoPage() {
               />
             </Field>
 
-            <Field label="Responsável financeiro">
+            <Field label="ResponsÃ¡vel financeiro">
               <input
                 value={responsavelFinanceiro}
                 onChange={(e) => setResponsavelFinanceiro(e.target.value)}
                 className="input"
-                placeholder="Nome do responsável"
+                placeholder="Nome do responsÃ¡vel"
               />
             </Field>
 
-            <Field label="Endereço">
+            <Field label="EndereÃ§o">
               <input
                 value={endereco}
                 onChange={(e) => setEndereco(e.target.value)}
                 className="input"
-                placeholder="Rua, número, bairro"
+                placeholder="Rua, nÃºmero, bairro"
               />
             </Field>
 
@@ -365,19 +365,19 @@ export default function PlataformaCotacoesNovoPage() {
 
           <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
             <p className="text-sm font-semibold text-slate-900">
-              Documento validado agora: {documentoValido ? 'sim' : 'ainda não'}
+              Documento validado agora: {documentoValido ? 'sim' : 'ainda nÃ£o'}
             </p>
             <p className="mt-2 text-sm text-slate-600">
-              No próximo passo nós podemos trocar isso pela busca automática na base real das empresas.
+              No prÃ³ximo passo nÃ³s podemos trocar isso pela busca automÃ¡tica na base real das empresas.
             </p>
           </div>
         </section>
 
         <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold">Escolha o tipo da cotação</h2>
+          <h2 className="text-lg font-semibold">Escolha o tipo da cotaÃ§Ã£o</h2>
           <p className="mt-1 text-sm text-slate-500">
-            Clique em um botão e vá direto para o tipo correto de cotação, sem precisar abrir
-            uma página genérica para todo mundo.
+            Clique em um botÃ£o e vÃ¡ direto para o tipo correto de cotaÃ§Ã£o, sem precisar abrir
+            uma pÃ¡gina genÃ©rica para todo mundo.
           </p>
 
           <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -395,15 +395,15 @@ export default function PlataformaCotacoesNovoPage() {
                   href={card.href}
                   className="mt-5 inline-flex items-center justify-center rounded-2xl border border-slate-900 bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:opacity-90"
                 >
-                  Entrar nesta cotação
+                  Entrar nesta cotaÃ§Ã£o
                 </Link>
               </article>
             ))}
           </div>
 
           <div className="mt-5 rounded-2xl border border-cyan-200 bg-cyan-50 px-4 py-3 text-sm text-cyan-800">
-            Fluxo aprovado: primeiro documento do cliente, depois escolha rápida do tipo de cotação,
-            e só mais tarde cobrança e nota de débito.
+            Fluxo aprovado: primeiro documento do cliente, depois escolha rÃ¡pida do tipo de cotaÃ§Ã£o,
+            e sÃ³ mais tarde cobranÃ§a e nota de dÃ©bito.
           </div>
         </section>
       </div>

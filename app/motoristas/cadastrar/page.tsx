@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -85,7 +85,7 @@ export default function CadastroMotoristaPage() {
     categoriaCnh: "",
     validadeCnh: "",
     ufCnh: "",
-    // Veículo
+    // VeÃ­culo
     tipoVeiculo: "",
     placaVeiculo: "",
     renavamVeiculo: "",
@@ -154,7 +154,7 @@ export default function CadastroMotoristaPage() {
           endereco: formData.endereco.trim(),
           cidade: formData.cidade.trim(),
           estado: formData.estado.trim(),
-          ativo: false, // Pendente de aprovação
+          ativo: false, // Pendente de aprovaÃ§Ã£o
         }),
       });
 
@@ -221,7 +221,7 @@ export default function CadastroMotoristaPage() {
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-cyan-500 flex items-center justify-center">
                     <Navigation className="w-5 h-5 text-white" />
                   </div>
-                  <span className="text-xl font-black">MOVO</span>
+                  <span className="text-xl font-black">Aurora Motoristas</span>
                 </Link>
               )}
             </div>
@@ -249,10 +249,10 @@ export default function CadastroMotoristaPage() {
               </div>
 
               <h1 className="text-3xl lg:text-4xl font-black text-foreground mb-4">
-                Dirija com o MOVO e ganhe mais
+                Dirija com o Aurora Motoristas e ganhe mais
               </h1>
               <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-                A plataforma com a menor taxa do mercado. Você dirige, você decide seus horários, você ganha mais.
+                A plataforma com a menor taxa do mercado. VocÃª dirige, vocÃª decide seus horÃ¡rios, vocÃª ganha mais.
               </p>
             </div>
 
@@ -260,9 +260,9 @@ export default function CadastroMotoristaPage() {
             <div className="grid sm:grid-cols-2 gap-4">
               {[
                 { icon: DollarSign, title: "Taxa de apenas 5%", desc: "A menor taxa do Brasil. Mais dinheiro no seu bolso.", color: "text-success" },
-                { icon: Zap, title: "Receba em 24h", desc: "Seus ganhos via PIX em até 24 horas.", color: "text-primary" },
-                { icon: Clock, title: "Seus horários", desc: "Trabalhe quando quiser, sem metas obrigatórias.", color: "text-warning" },
-                { icon: Shield, title: "Seguro incluso", desc: "Proteção para você e seus passageiros.", color: "text-cyan-500" },
+                { icon: Zap, title: "Receba em 24h", desc: "Seus ganhos via PIX em atÃ© 24 horas.", color: "text-primary" },
+                { icon: Clock, title: "Seus horÃ¡rios", desc: "Trabalhe quando quiser, sem metas obrigatÃ³rias.", color: "text-warning" },
+                { icon: Shield, title: "Ambiente seguro incluso", desc: "ProteÃ§Ã£o para vocÃª e seus passageiros.", color: "text-cyan-500" },
               ].map((item, i) => (
                 <div key={i} className="p-5 bg-card rounded-2xl border border-border">
                   <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center mb-3">
@@ -278,7 +278,7 @@ export default function CadastroMotoristaPage() {
             <div className="bg-gradient-to-br from-success/10 to-emerald-500/10 rounded-2xl p-6 border border-success/20">
               <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
                 <Wallet className="w-5 h-5 text-success" />
-                Simulação de ganhos
+                SimulaÃ§Ã£o de ganhos
               </h3>
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
@@ -291,11 +291,11 @@ export default function CadastroMotoristaPage() {
                 </div>
                 <div>
                   <p className="text-2xl font-black text-success">R$ 3.600</p>
-                  <p className="text-xs text-muted-foreground">Por mês</p>
+                  <p className="text-xs text-muted-foreground">Por mÃªs</p>
                 </div>
               </div>
               <p className="text-xs text-muted-foreground text-center mt-4">
-                *Valores estimados com base na média de corridas da plataforma
+                *Valores estimados com base na mÃ©dia de corridas da plataforma
               </p>
             </div>
 
@@ -306,9 +306,9 @@ export default function CadastroMotoristaPage() {
                 {[
                   "Ter 21 anos ou mais",
                   "CNH categoria B ou superior com EAR (Exerce Atividade Remunerada)",
-                  "Veículo com até 10 anos de fabricação",
-                  "Documentos do veículo em dia (CRLV)",
-                  "Não ter antecedentes criminais graves",
+                  "VeÃ­culo com atÃ© 10 anos de fabricaÃ§Ã£o",
+                  "Documentos do veÃ­culo em dia (CRLV)",
+                  "NÃ£o ter antecedentes criminais graves",
                 ].map((req, i) => (
                   <div key={i} className="flex items-center gap-3">
                     <CheckCircle className="w-5 h-5 text-success flex-shrink-0" />
@@ -322,12 +322,12 @@ export default function CadastroMotoristaPage() {
               onClick={() => setStep("dados")}
               className="w-full py-4 bg-success text-white font-bold rounded-xl shadow-lg shadow-success/30 hover:bg-success/90 transition-colors flex items-center justify-center gap-2"
             >
-              Começar cadastro
+              ComeÃ§ar cadastro
               <ArrowRight className="w-5 h-5" />
             </button>
 
             <p className="text-center text-sm text-muted-foreground">
-              Já tem cadastro?{" "}
+              JÃ¡ tem cadastro?{" "}
               <Link href="/login" className="text-primary font-semibold hover:underline">
                 Entrar
               </Link>
@@ -415,11 +415,11 @@ export default function CadastroMotoristaPage() {
                 />
               </div>
 
-              {/* Endereço */}
+              {/* EndereÃ§o */}
               <div className="pt-4 border-t border-border">
                 <h3 className="font-semibold mb-4 flex items-center gap-2">
                   <MapPin className="w-5 h-5 text-primary" />
-                  Endereço
+                  EndereÃ§o
                 </h3>
                 
                 <div className="space-y-4">
@@ -447,13 +447,13 @@ export default function CadastroMotoristaPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2">Endereço</label>
+                    <label className="block text-sm font-medium mb-2">EndereÃ§o</label>
                     <input
                       type="text"
                       name="endereco"
                       value={formData.endereco}
                       onChange={handleInputChange}
-                      placeholder="Rua, número, bairro"
+                      placeholder="Rua, nÃºmero, bairro"
                       className="w-full px-4 py-3.5 bg-secondary rounded-xl border border-transparent focus:border-primary focus:outline-none"
                     />
                   </div>
@@ -495,7 +495,7 @@ export default function CadastroMotoristaPage() {
                     name="senha"
                     value={formData.senha}
                     onChange={handleInputChange}
-                    placeholder="Mínimo 8 caracteres"
+                    placeholder="MÃ­nimo 8 caracteres"
                     className="w-full pl-12 pr-12 py-3.5 bg-secondary rounded-xl border border-transparent focus:border-primary focus:outline-none"
                   />
                   <button
@@ -539,19 +539,19 @@ export default function CadastroMotoristaPage() {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <h1 className="text-2xl font-black text-foreground mb-2">Dados da CNH</h1>
-              <p className="text-muted-foreground">Informe os dados da sua habilitação</p>
+              <p className="text-muted-foreground">Informe os dados da sua habilitaÃ§Ã£o</p>
             </div>
 
             <div className="bg-warning/10 rounded-xl p-4 flex items-start gap-3">
               <Info className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
               <p className="text-sm">
-                Sua CNH precisa ter a observação <strong>EAR</strong> (Exerce Atividade Remunerada) para dirigir pelo MOVO.
+                Sua CNH precisa ter a observaÃ§Ã£o <strong>EAR</strong> (Exerce Atividade Remunerada) para dirigir pelo Aurora Motoristas.
               </p>
             </div>
 
             <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
               <div>
-                <label className="block text-sm font-medium mb-2">Número da CNH</label>
+                <label className="block text-sm font-medium mb-2">NÃºmero da CNH</label>
                 <input
                   type="text"
                   name="cnh"
@@ -618,17 +618,17 @@ export default function CadastroMotoristaPage() {
           </div>
         )}
 
-        {/* Veículo */}
+        {/* VeÃ­culo */}
         {step === "veiculo" && (
           <div className="space-y-6">
             <div className="text-center mb-8">
-              <h1 className="text-2xl font-black text-foreground mb-2">Dados do veículo</h1>
-              <p className="text-muted-foreground">Informe os dados do veículo que você vai usar</p>
+              <h1 className="text-2xl font-black text-foreground mb-2">Dados do veÃ­culo</h1>
+              <p className="text-muted-foreground">Informe os dados do veÃ­culo que vocÃª vai usar</p>
             </div>
 
             <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
               <div>
-                <label className="block text-sm font-medium mb-2">Tipo de veículo</label>
+                <label className="block text-sm font-medium mb-2">Tipo de veÃ­culo</label>
                 <select
                   name="tipoVeiculo"
                   value={formData.tipoVeiculo}
@@ -726,7 +726,7 @@ export default function CadastroMotoristaPage() {
                 />
               </div>
 
-              {/* Dados bancários */}
+              {/* Dados bancÃ¡rios */}
               <div className="pt-4 border-t border-border">
                 <h3 className="font-semibold mb-4 flex items-center gap-2">
                   <CreditCard className="w-5 h-5 text-primary" />
@@ -741,7 +741,7 @@ export default function CadastroMotoristaPage() {
                       name="chavePix"
                       value={formData.chavePix}
                       onChange={handleInputChange}
-                      placeholder="CPF, telefone, e-mail ou chave aleatória"
+                      placeholder="CPF, telefone, e-mail ou chave aleatÃ³ria"
                       className="w-full px-4 py-3.5 bg-secondary rounded-xl border border-transparent focus:border-primary focus:outline-none"
                     />
                   </div>
@@ -764,13 +764,13 @@ export default function CadastroMotoristaPage() {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <h1 className="text-2xl font-black text-foreground mb-2">Envio de documentos</h1>
-              <p className="text-muted-foreground">Envie fotos dos documentos para verificação</p>
+              <p className="text-muted-foreground">Envie fotos dos documentos para verificaÃ§Ã£o</p>
             </div>
 
             <div className="bg-primary/10 rounded-xl p-4 flex items-start gap-3">
               <Shield className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
               <p className="text-sm">
-                Seus documentos são criptografados e armazenados com segurança. Ninguém terá acesso além da nossa equipe de verificação.
+                Seus documentos sÃ£o criptografados e armazenados com seguranÃ§a. NinguÃ©m terÃ¡ acesso alÃ©m da nossa equipe de verificaÃ§Ã£o.
               </p>
             </div>
 
@@ -779,7 +779,7 @@ export default function CadastroMotoristaPage() {
                 { key: "selfie", title: "Selfie com documento", desc: "Foto sua segurando a CNH ao lado do rosto", icon: Camera },
                 { key: "cnhFrente", title: "CNH - Frente", desc: "Foto da frente da CNH", icon: FileText },
                 { key: "cnhVerso", title: "CNH - Verso", desc: "Foto do verso da CNH", icon: FileText },
-                { key: "crlv", title: "CRLV do veículo", desc: "Documento do veículo atualizado", icon: Car },
+                { key: "crlv", title: "CRLV do veÃ­culo", desc: "Documento do veÃ­culo atualizado", icon: Car },
               ].map((doc) => (
                 <div key={doc.key} className="p-4 bg-card rounded-2xl border border-border">
                   <div className="flex items-center justify-between mb-3">
@@ -832,7 +832,7 @@ export default function CadastroMotoristaPage() {
         {step === "termos" && (
           <div className="space-y-6">
             <div className="text-center mb-8">
-              <h1 className="text-2xl font-black text-foreground mb-2">Termos e condições</h1>
+              <h1 className="text-2xl font-black text-foreground mb-2">Termos e condiÃ§Ãµes</h1>
               <p className="text-muted-foreground">Leia e aceite para finalizar seu cadastro</p>
             </div>
 
@@ -853,7 +853,7 @@ export default function CadastroMotoristaPage() {
                   <Link href="/contrato-motorista" className="text-primary hover:underline">
                     Contrato de Parceria
                   </Link>{" "}
-                  do MOVO.
+                  do Aurora Motoristas.
                 </span>
               </label>
 
@@ -867,7 +867,7 @@ export default function CadastroMotoristaPage() {
                 <span className="text-sm">
                   Concordo com a{" "}
                   <Link href="/privacidade" className="text-primary hover:underline">
-                    Política de Privacidade
+                    PolÃ­tica de Privacidade
                   </Link>{" "}
                   e autorizo o tratamento dos meus dados pessoais conforme a LGPD.
                 </span>
@@ -880,9 +880,9 @@ export default function CadastroMotoristaPage() {
                 Importante
               </h4>
               <ul className="text-sm text-muted-foreground space-y-1">
-                <li>• Seus documentos serão analisados em até 48 horas úteis</li>
-                <li>• Você receberá um e-mail com o resultado da verificação</li>
-                <li>• Após aprovação, você poderá começar a dirigir imediatamente</li>
+                <li>â€¢ Seus documentos serÃ£o analisados em atÃ© 48 horas Ãºteis</li>
+                <li>â€¢ VocÃª receberÃ¡ um e-mail com o resultado da verificaÃ§Ã£o</li>
+                <li>â€¢ ApÃ³s aprovaÃ§Ã£o, vocÃª poderÃ¡ comeÃ§ar a dirigir imediatamente</li>
               </ul>
             </div>
 
@@ -918,16 +918,16 @@ export default function CadastroMotoristaPage() {
             </h1>
 
             <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-              Recebemos seus dados e documentos. Nossa equipe irá analisar tudo e você receberá uma resposta em até 48 horas.
+              Recebemos seus dados e documentos. Nossa equipe irÃ¡ analisar tudo e vocÃª receberÃ¡ uma resposta em atÃ© 48 horas.
             </p>
 
             <div className="bg-card rounded-2xl border border-border p-6 mb-8 text-left max-w-md mx-auto">
-              <h3 className="font-bold mb-4">Próximos passos:</h3>
+              <h3 className="font-bold mb-4">PrÃ³ximos passos:</h3>
               <div className="space-y-3">
                 {[
-                  { step: "1", text: "Verificação dos documentos (até 48h)" },
-                  { step: "2", text: "E-mail de confirmação ou pendência" },
-                  { step: "3", text: "Liberação para começar a dirigir" },
+                  { step: "1", text: "VerificaÃ§Ã£o dos documentos (atÃ© 48h)" },
+                  { step: "2", text: "E-mail de confirmaÃ§Ã£o ou pendÃªncia" },
+                  { step: "3", text: "LiberaÃ§Ã£o para comeÃ§ar a dirigir" },
                 ].map((item) => (
                   <div key={item.step} className="flex items-center gap-3">
                     <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-sm font-bold text-primary">
@@ -959,3 +959,4 @@ export default function CadastroMotoristaPage() {
     </main>
   );
 }
+

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -55,7 +55,7 @@ const initialItems: ProjectionItem[] = [
     descontos: 0,
     adiantamentos: 100,
     extras: 80,
-    observacao: "Motorista em operação intensiva de aeroporto.",
+    observacao: "Motorista em operaÃ§Ã£o intensiva de aeroporto.",
   },
   {
     id: "DIA-0002",
@@ -69,7 +69,7 @@ const initialItems: ProjectionItem[] = [
     descontos: 50,
     adiantamentos: 150,
     extras: 120,
-    observacao: "Cliente corporativo com operação semanal recorrente.",
+    observacao: "Cliente corporativo com operaÃ§Ã£o semanal recorrente.",
   },
 ];
 
@@ -162,7 +162,7 @@ export default function DiariasPage() {
       setAccessGranted(false);
       setAccessChecked(true);
       setPermissionName("");
-      setAccessMessage("Informe o e-mail de sessão local para validar acesso às diárias.");
+      setAccessMessage("Informe o e-mail de sessÃ£o local para validar acesso Ã s diÃ¡rias.");
       return;
     }
 
@@ -174,7 +174,7 @@ export default function DiariasPage() {
       setAccessGranted(false);
       setAccessChecked(true);
       setPermissionName("");
-      setAccessMessage("Este e-mail não está na base de autorizados.");
+      setAccessMessage("Este e-mail nÃ£o estÃ¡ na base de autorizados.");
       return;
     }
 
@@ -182,7 +182,7 @@ export default function DiariasPage() {
       setAccessGranted(false);
       setAccessChecked(true);
       setPermissionName(found.nome);
-      setAccessMessage("Este usuário existe, mas não possui liberação para o módulo de diárias.");
+      setAccessMessage("Este usuÃ¡rio existe, mas nÃ£o possui liberaÃ§Ã£o para o mÃ³dulo de diÃ¡rias.");
       return;
     }
 
@@ -275,18 +275,18 @@ export default function DiariasPage() {
         <div style={styles.heroCard}>
           <div style={styles.heroGrid}>
             <div style={styles.heroLeft}>
-              <div style={styles.eyebrow}>AURORA MOTORISTAS • DIÁRIAS</div>
+              <div style={styles.eyebrow}>AURORA MOTORISTAS â€¢ DIÃRIAS</div>
               <h1 style={styles.heroTitle}>
-                Projeção de pagamento por diária com visão semanal, quinzenal e mensal
+                ProjeÃ§Ã£o de pagamento por diÃ¡ria com visÃ£o semanal, quinzenal e mensal
               </h1>
               <p style={styles.heroText}>
-                Esta área agora também valida se o e-mail de sessão local possui
-                liberação para acessar o módulo de diárias.
+                Esta Ã¡rea agora tambÃ©m valida se o e-mail de sessÃ£o local possui
+                liberaÃ§Ã£o para acessar o mÃ³dulo de diÃ¡rias.
               </p>
 
               <div style={styles.heroActions}>
                 <Link href="/seguranca" style={styles.secondaryButton}>
-                  Voltar para segurança
+                  Voltar para seguranÃ§a
                 </Link>
                 <Link href="/financeiro" style={styles.primaryButton}>
                   Ir para financeiro
@@ -295,11 +295,11 @@ export default function DiariasPage() {
             </div>
 
             <div style={styles.heroRightCard}>
-              <span style={styles.sideKicker}>DIÁRIAS PROTEGIDAS</span>
-              <h2 style={styles.sideTitle}>Acesso só para autorizados</h2>
+              <span style={styles.sideKicker}>DIÃRIAS PROTEGIDAS</span>
+              <h2 style={styles.sideTitle}>Acesso sÃ³ para autorizados</h2>
               <p style={styles.sideText}>
-                Esta camada já bloqueia o módulo para quem não tiver permissão
-                específica de diárias na central de segurança.
+                Esta camada jÃ¡ bloqueia o mÃ³dulo para quem nÃ£o tiver permissÃ£o
+                especÃ­fica de diÃ¡rias na central de seguranÃ§a.
               </p>
 
               <div style={styles.sidePills}>
@@ -311,8 +311,8 @@ export default function DiariasPage() {
           </div>
 
           <div style={styles.noticeBox}>
-            Sistema em constante atualização. Esta tela já faz a trava real por
-            permissão local e será conectada depois à sessão completa do app.
+            Sistema em constante atualizaÃ§Ã£o. Esta tela jÃ¡ faz a trava real por
+            permissÃ£o local e serÃ¡ conectada depois Ã  sessÃ£o completa do app.
           </div>
         </div>
       </section>
@@ -321,19 +321,19 @@ export default function DiariasPage() {
         <div style={styles.accessCard}>
           <div style={styles.sectionHeader}>
             <div>
-              <span style={styles.sectionEyebrow}>VALIDAÇÃO DE ACESSO</span>
-              <h2 style={styles.sectionTitle}>Sessão local das diárias</h2>
+              <span style={styles.sectionEyebrow}>VALIDAÃ‡ÃƒO DE ACESSO</span>
+              <h2 style={styles.sectionTitle}>SessÃ£o local das diÃ¡rias</h2>
             </div>
           </div>
 
           <div style={styles.accessGrid}>
             <div style={styles.field}>
-              <label style={styles.label}>E-mail da sessão local</label>
+              <label style={styles.label}>E-mail da sessÃ£o local</label>
               <input
                 value={sessionEmail}
                 onChange={(e) => setSessionEmail(e.target.value)}
                 style={styles.input}
-                placeholder="Digite o e-mail liberado no módulo segurança"
+                placeholder="Digite o e-mail liberado no mÃ³dulo seguranÃ§a"
               />
             </div>
 
@@ -351,7 +351,7 @@ export default function DiariasPage() {
               }
             >
               {accessMessage}
-              {permissionName ? ` Usuário reconhecido: ${permissionName}.` : ""}
+              {permissionName ? ` UsuÃ¡rio reconhecido: ${permissionName}.` : ""}
             </div>
           ) : null}
         </div>
@@ -361,18 +361,18 @@ export default function DiariasPage() {
         <section style={styles.contentSection}>
           <div style={styles.blockedCard}>
             <span style={styles.sectionEyebrow}>ACESSO BLOQUEADO</span>
-            <h2 style={styles.sidebarTitle}>Diárias protegidas</h2>
+            <h2 style={styles.sidebarTitle}>DiÃ¡rias protegidas</h2>
             <p style={styles.blockedText}>
-              Esta área é sensível e só pode ser vista por administrador ou por quem
-              tiver liberação específica no módulo de segurança.
+              Esta Ã¡rea Ã© sensÃ­vel e sÃ³ pode ser vista por administrador ou por quem
+              tiver liberaÃ§Ã£o especÃ­fica no mÃ³dulo de seguranÃ§a.
             </p>
 
             <div style={styles.navList}>
               <Link href="/seguranca" style={styles.navItem}>
-                Abrir segurança
+                Abrir seguranÃ§a
               </Link>
               <Link href="/operacao" style={styles.navItem}>
-                Voltar para operação
+                Voltar para operaÃ§Ã£o
               </Link>
             </div>
           </div>
@@ -382,27 +382,27 @@ export default function DiariasPage() {
           <section style={styles.statsSection}>
             <div style={styles.statsGrid}>
               <article style={styles.statCard}>
-                <span style={styles.statLabel}>Projeção semanal</span>
+                <span style={styles.statLabel}>ProjeÃ§Ã£o semanal</span>
                 <strong style={styles.statValue}>{formatCurrency(totals.semanal)}</strong>
                 <span style={styles.statDetail}>Base consolidada</span>
               </article>
 
               <article style={styles.statCard}>
-                <span style={styles.statLabel}>Projeção quinzenal</span>
+                <span style={styles.statLabel}>ProjeÃ§Ã£o quinzenal</span>
                 <strong style={styles.statValue}>{formatCurrency(totals.quinzenal)}</strong>
-                <span style={styles.statDetail}>Leitura intermediária</span>
+                <span style={styles.statDetail}>Leitura intermediÃ¡ria</span>
               </article>
 
               <article style={styles.statCard}>
-                <span style={styles.statLabel}>Projeção mensal</span>
+                <span style={styles.statLabel}>ProjeÃ§Ã£o mensal</span>
                 <strong style={styles.statValue}>{formatCurrency(totals.mensal)}</strong>
-                <span style={styles.statDetail}>Visão de caixa</span>
+                <span style={styles.statDetail}>VisÃ£o de caixa</span>
               </article>
 
               <article style={styles.statCard}>
-                <span style={styles.statLabel}>Total líquido</span>
+                <span style={styles.statLabel}>Total lÃ­quido</span>
                 <strong style={styles.statValue}>{formatCurrency(totals.total)}</strong>
-                <span style={styles.statDetail}>Após ajustes</span>
+                <span style={styles.statDetail}>ApÃ³s ajustes</span>
               </article>
             </div>
           </section>
@@ -413,8 +413,8 @@ export default function DiariasPage() {
                 <div style={styles.formCard}>
                   <div style={styles.sectionHeader}>
                     <div>
-                      <span style={styles.sectionEyebrow}>LANÇAMENTO</span>
-                      <h2 style={styles.sectionTitle}>Nova projeção de diária</h2>
+                      <span style={styles.sectionEyebrow}>LANÃ‡AMENTO</span>
+                      <h2 style={styles.sectionTitle}>Nova projeÃ§Ã£o de diÃ¡ria</h2>
                     </div>
                   </div>
 
@@ -449,7 +449,7 @@ export default function DiariasPage() {
                     </div>
 
                     <div style={styles.field}>
-                      <label style={styles.label}>Valor da diária</label>
+                      <label style={styles.label}>Valor da diÃ¡ria</label>
                       <input
                         value={String(form.valorDiaria)}
                         onChange={(e) =>
@@ -461,7 +461,7 @@ export default function DiariasPage() {
                     </div>
 
                     <div style={styles.field}>
-                      <label style={styles.label}>Diárias por semana</label>
+                      <label style={styles.label}>DiÃ¡rias por semana</label>
                       <input
                         value={String(form.diariasSemana)}
                         onChange={(e) =>
@@ -533,19 +533,19 @@ export default function DiariasPage() {
                     </div>
 
                     <div style={styles.fieldWide}>
-                      <label style={styles.label}>Observação</label>
+                      <label style={styles.label}>ObservaÃ§Ã£o</label>
                       <textarea
                         value={form.observacao}
                         onChange={(e) => updateForm("observacao", e.target.value)}
                         style={styles.textarea}
-                        placeholder="Ex.: cliente com operação intensa, possíveis faltas, previsão de caixa apertado."
+                        placeholder="Ex.: cliente com operaÃ§Ã£o intensa, possÃ­veis faltas, previsÃ£o de caixa apertado."
                       />
                     </div>
                   </div>
 
                   <div style={styles.actionRow}>
                     <button type="button" onClick={addProjection} style={styles.primaryAction}>
-                      Salvar projeção
+                      Salvar projeÃ§Ã£o
                     </button>
                   </div>
                 </div>
@@ -553,8 +553,8 @@ export default function DiariasPage() {
                 <div style={styles.listCard}>
                   <div style={styles.sectionHeader}>
                     <div>
-                      <span style={styles.sectionEyebrow}>BASE DE PROJEÇÃO</span>
-                      <h2 style={styles.sectionTitle}>Motoristas por diária</h2>
+                      <span style={styles.sectionEyebrow}>BASE DE PROJEÃ‡ÃƒO</span>
+                      <h2 style={styles.sectionTitle}>Motoristas por diÃ¡ria</h2>
                     </div>
 
                     <input
@@ -567,7 +567,7 @@ export default function DiariasPage() {
 
                   <div style={styles.list}>
                     {filteredItems.length === 0 ? (
-                      <div style={styles.emptyState}>Nenhuma projeção encontrada.</div>
+                      <div style={styles.emptyState}>Nenhuma projeÃ§Ã£o encontrada.</div>
                     ) : (
                       filteredItems.map((item) => {
                         const calc = calculateProjection(item);
@@ -578,7 +578,7 @@ export default function DiariasPage() {
                               <div>
                                 <h3 style={styles.itemTitle}>{item.motorista}</h3>
                                 <p style={styles.itemSubline}>
-                                  {item.cliente} • {item.empresa} • {item.id}
+                                  {item.cliente} â€¢ {item.empresa} â€¢ {item.id}
                                 </p>
                               </div>
 
@@ -589,14 +589,14 @@ export default function DiariasPage() {
 
                             <div style={styles.itemGrid}>
                               <div style={styles.dataItem}>
-                                <span style={styles.dataLabel}>Valor diária</span>
+                                <span style={styles.dataLabel}>Valor diÃ¡ria</span>
                                 <strong style={styles.dataValue}>
                                   {formatCurrency(item.valorDiaria)}
                                 </strong>
                               </div>
 
                               <div style={styles.dataItem}>
-                                <span style={styles.dataLabel}>Diárias líquidas</span>
+                                <span style={styles.dataLabel}>DiÃ¡rias lÃ­quidas</span>
                                 <strong style={styles.dataValue}>{calc.diariasLiquidas}</strong>
                               </div>
 
@@ -650,8 +650,8 @@ export default function DiariasPage() {
                               </div>
 
                               <div style={styles.dataItemWide}>
-                                <span style={styles.dataLabel}>Observação</span>
-                                <strong style={styles.dataValue}>{item.observacao || "Sem observação."}</strong>
+                                <span style={styles.dataLabel}>ObservaÃ§Ã£o</span>
+                                <strong style={styles.dataValue}>{item.observacao || "Sem observaÃ§Ã£o."}</strong>
                               </div>
                             </div>
                           </article>
@@ -664,8 +664,8 @@ export default function DiariasPage() {
 
               <aside style={styles.rightColumn}>
                 <div style={styles.previewCard}>
-                  <span style={styles.sectionEyebrow}>PRÉVIA RÁPIDA</span>
-                  <h2 style={styles.sidebarTitle}>Projeção do lançamento atual</h2>
+                  <span style={styles.sectionEyebrow}>PRÃ‰VIA RÃPIDA</span>
+                  <h2 style={styles.sidebarTitle}>ProjeÃ§Ã£o do lanÃ§amento atual</h2>
 
                   <div style={styles.ruleList}>
                     <div style={styles.ruleItem}>
@@ -697,7 +697,7 @@ export default function DiariasPage() {
                     </div>
 
                     <div style={styles.ruleItem}>
-                      <strong style={styles.ruleItemTitle}>Total líquido</strong>
+                      <strong style={styles.ruleItemTitle}>Total lÃ­quido</strong>
                       <span style={styles.ruleItemText}>
                         {formatCurrency(preview.total)}
                       </span>
@@ -706,11 +706,11 @@ export default function DiariasPage() {
                 </div>
 
                 <div style={styles.darkCard}>
-                  <div style={styles.robotTag}>ROBÔ AURORA</div>
-                  <h2 style={styles.sidebarTitleDark}>Apoio à projeção</h2>
+                  <div style={styles.robotTag}>ROBÃ” AURORA</div>
+                  <h2 style={styles.sidebarTitleDark}>Apoio Ã  projeÃ§Ã£o</h2>
                   <p style={styles.sidebarTextDark}>
-                    O Robô Aurora poderá apontar motorista caro para a margem atual,
-                    excesso de adiantamento, cliente pesado na semana e pressão no caixa.
+                    O RobÃ´ Aurora poderÃ¡ apontar motorista caro para a margem atual,
+                    excesso de adiantamento, cliente pesado na semana e pressÃ£o no caixa.
                   </p>
 
                   <div style={styles.robotList}>
@@ -722,21 +722,21 @@ export default function DiariasPage() {
                 </div>
 
                 <div style={styles.navCard}>
-                  <span style={styles.sectionEyebrow}>NAVEGAÇÃO</span>
-                  <h2 style={styles.sidebarTitle}>Próximos blocos</h2>
+                  <span style={styles.sectionEyebrow}>NAVEGAÃ‡ÃƒO</span>
+                  <h2 style={styles.sidebarTitle}>PrÃ³ximos blocos</h2>
 
                   <div style={styles.navList}>
                     <Link href="/seguranca" style={styles.navItem}>
-                      Abrir segurança
+                      Abrir seguranÃ§a
                     </Link>
                     <Link href="/financeiro" style={styles.navItem}>
                       Abrir financeiro
                     </Link>
                     <Link href="/relatorios" style={styles.navItem}>
-                      Abrir relatórios
+                      Abrir relatÃ³rios
                     </Link>
                     <Link href="/operacao" style={styles.navItem}>
-                      Abrir operação
+                      Abrir operaÃ§Ã£o
                     </Link>
                   </div>
                 </div>

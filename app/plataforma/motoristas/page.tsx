@@ -1,39 +1,39 @@
-export default function PlataformaMotoristasPage() {
+﻿export default function PlataformaMotoristasPage() {
   const pilares = [
     {
       titulo: "Motorista interno",
       descricao:
-        "O motorista interno acessa apenas a própria área operacional, vê somente o que é dele e nunca enxerga a base completa da plataforma.",
+        "O motorista interno acessa apenas a prÃ³pria Ã¡rea operacional, vÃª somente o que Ã© dele e nunca enxerga a base completa da plataforma.",
       pontos: [
-        "Vê apenas os próprios serviços autorizados.",
-        "Não enxerga lista completa de motoristas.",
-        "Não acessa relatórios estratégicos.",
-        "Não acessa margem, inteligência comercial ou visão consolidada.",
-        "Após pagamento ou baixa final, o serviço deixa de aparecer para o motorista.",
+        "VÃª apenas os prÃ³prios serviÃ§os autorizados.",
+        "NÃ£o enxerga lista completa de motoristas.",
+        "NÃ£o acessa relatÃ³rios estratÃ©gicos.",
+        "NÃ£o acessa margem, inteligÃªncia comercial ou visÃ£o consolidada.",
+        "ApÃ³s pagamento ou baixa final, o serviÃ§o deixa de aparecer para o motorista.",
       ],
     },
     {
       titulo: "Operadora externa",
       descricao:
-        "A operadora externa pode usar a plataforma apenas dentro da própria estrutura aprovada, sem qualquer acesso à base interna da operação principal.",
+        "A operadora externa pode usar a plataforma apenas dentro da prÃ³pria estrutura aprovada, sem qualquer acesso Ã  base interna da operaÃ§Ã£o principal.",
       pontos: [
-        "Usa somente a própria base de motoristas.",
-        "Não pode pesquisar motoristas internos da operação master.",
-        "Não pode exportar, listar ou sugerir base interna.",
-        "Não pode visualizar histórico da rede interna.",
-        "Só opera com autorização formal e plano ativo.",
+        "Usa somente a prÃ³pria base de motoristas.",
+        "NÃ£o pode pesquisar motoristas internos da operaÃ§Ã£o master.",
+        "NÃ£o pode exportar, listar ou sugerir base interna.",
+        "NÃ£o pode visualizar histÃ³rico da rede interna.",
+        "SÃ³ opera com autorizaÃ§Ã£o formal e plano ativo.",
       ],
     },
     {
       titulo: "Admin master",
       descricao:
-        "A administração master controla a governança, a segregação e a segurança geral da plataforma, sem expor a rede interna para terceiros.",
+        "A administraÃ§Ã£o master controla a governanÃ§a, a segregaÃ§Ã£o e a seguranÃ§a geral da plataforma, sem expor a rede interna para terceiros.",
       pontos: [
-        "Vê a base protegida completa conforme permissão máxima.",
-        "Controla liberação de operadoras e acessos.",
-        "Valida segregação por empresa.",
+        "VÃª a base protegida completa conforme permissÃ£o mÃ¡xima.",
+        "Controla liberaÃ§Ã£o de operadoras e acessos.",
+        "Valida segregaÃ§Ã£o por empresa.",
         "Protege a rede interna de freelancers e motoristas.",
-        "Audita serviços, históricos e regras de exposição.",
+        "Audita serviÃ§os, histÃ³ricos e regras de exposiÃ§Ã£o.",
       ],
     },
   ];
@@ -41,66 +41,66 @@ export default function PlataformaMotoristasPage() {
   const regrasAbsolutas = [
     {
       numero: "1",
-      titulo: "Motorista só vê o que é dele",
+      titulo: "Motorista sÃ³ vÃª o que Ã© dele",
       texto:
-        "Nenhum motorista deve ter acesso à base completa. A leitura operacional do motorista deve ser individual, restrita e vinculada apenas aos próprios serviços autorizados.",
+        "Nenhum motorista deve ter acesso Ã  base completa. A leitura operacional do motorista deve ser individual, restrita e vinculada apenas aos prÃ³prios serviÃ§os autorizados.",
     },
     {
       numero: "2",
       titulo: "Operadora externa nunca acessa a base interna",
       texto:
-        "Empresas externas do mesmo segmento não podem visualizar, pesquisar, exportar, sugerir ou aproveitar a base interna de motoristas da operação principal.",
+        "Empresas externas do mesmo segmento nÃ£o podem visualizar, pesquisar, exportar, sugerir ou aproveitar a base interna de motoristas da operaÃ§Ã£o principal.",
     },
     {
       numero: "3",
-      titulo: "Cada empresa enxerga apenas a própria estrutura",
+      titulo: "Cada empresa enxerga apenas a prÃ³pria estrutura",
       texto:
-        "A segregação por empresa deve ser rígida em motoristas, serviços, relatórios, documentos, histórico e demais dados operacionais.",
+        "A segregaÃ§Ã£o por empresa deve ser rÃ­gida em motoristas, serviÃ§os, relatÃ³rios, documentos, histÃ³rico e demais dados operacionais.",
     },
     {
       numero: "4",
-      titulo: "Histórico interno continua protegido",
+      titulo: "HistÃ³rico interno continua protegido",
       texto:
-        "Serviços pagos, baixados ou ocultos deixam de aparecer para o motorista e permanecem apenas em histórico interno protegido para administração autorizada.",
+        "ServiÃ§os pagos, baixados ou ocultos deixam de aparecer para o motorista e permanecem apenas em histÃ³rico interno protegido para administraÃ§Ã£o autorizada.",
     },
     {
       numero: "5",
-      titulo: "Sem inteligência comercial para terceiros",
+      titulo: "Sem inteligÃªncia comercial para terceiros",
       texto:
-        "Operadoras externas não podem acessar margens globais, rede estratégica, contatos internos, avaliações completas, lógica de distribuição ou visão consolidada da operação master.",
+        "Operadoras externas nÃ£o podem acessar margens globais, rede estratÃ©gica, contatos internos, avaliaÃ§Ãµes completas, lÃ³gica de distribuiÃ§Ã£o ou visÃ£o consolidada da operaÃ§Ã£o master.",
     },
     {
       numero: "6",
-      titulo: "A plataforma protege a rede construída pela operação principal",
+      titulo: "A plataforma protege a rede construÃ­da pela operaÃ§Ã£o principal",
       texto:
-        "A plataforma não pode servir como vitrine para captação da rede interna por outras operadoras. A base principal deve permanecer blindada em caráter permanente.",
+        "A plataforma nÃ£o pode servir como vitrine para captaÃ§Ã£o da rede interna por outras operadoras. A base principal deve permanecer blindada em carÃ¡ter permanente.",
     },
   ];
 
   const comparativo = [
     {
       perfil: "Motorista interno",
-      acesso: "Somente ao que é dele",
-      base: "Não vê base completa",
-      servicos: "Somente próprios e autorizados",
-      relatorios: "Não acessa estratégicos",
-      observacao: "Após pagamento, serviço some da visão dele",
+      acesso: "Somente ao que Ã© dele",
+      base: "NÃ£o vÃª base completa",
+      servicos: "Somente prÃ³prios e autorizados",
+      relatorios: "NÃ£o acessa estratÃ©gicos",
+      observacao: "ApÃ³s pagamento, serviÃ§o some da visÃ£o dele",
     },
     {
       perfil: "Operadora externa",
-      acesso: "Somente à própria estrutura",
-      base: "Nunca vê base interna master",
-      servicos: "Somente os vinculados à própria empresa",
-      relatorios: "Sem visão estratégica global",
-      observacao: "Depende de autorização formal e plano ativo",
+      acesso: "Somente Ã  prÃ³pria estrutura",
+      base: "Nunca vÃª base interna master",
+      servicos: "Somente os vinculados Ã  prÃ³pria empresa",
+      relatorios: "Sem visÃ£o estratÃ©gica global",
+      observacao: "Depende de autorizaÃ§Ã£o formal e plano ativo",
     },
     {
       perfil: "Admin master",
-      acesso: "Visão máxima protegida",
-      base: "Vê a base completa conforme papel master",
-      servicos: "Administra e audita a operação",
+      acesso: "VisÃ£o mÃ¡xima protegida",
+      base: "VÃª a base completa conforme papel master",
+      servicos: "Administra e audita a operaÃ§Ã£o",
       relatorios: "Acesso administrativo completo autorizado",
-      observacao: "Responsável pela blindagem e governança",
+      observacao: "ResponsÃ¡vel pela blindagem e governanÃ§a",
     },
   ];
 
@@ -109,25 +109,25 @@ export default function PlataformaMotoristasPage() {
       numero: "01",
       titulo: "Classificar o perfil de acesso",
       texto:
-        "Separar corretamente motorista interno, operadora externa e administração master antes de liberar qualquer leitura operacional.",
+        "Separar corretamente motorista interno, operadora externa e administraÃ§Ã£o master antes de liberar qualquer leitura operacional.",
     },
     {
       numero: "02",
-      titulo: "Aplicar a segregação por empresa",
+      titulo: "Aplicar a segregaÃ§Ã£o por empresa",
       texto:
-        "Garantir que cada empresa trabalhe apenas com a própria estrutura, sem mistura de bases, relatórios ou motoristas.",
+        "Garantir que cada empresa trabalhe apenas com a prÃ³pria estrutura, sem mistura de bases, relatÃ³rios ou motoristas.",
     },
     {
       numero: "03",
       titulo: "Proteger a base interna master",
       texto:
-        "Bloquear qualquer listagem, busca, exportação, sugestão ou visualização da rede interna para terceiros.",
+        "Bloquear qualquer listagem, busca, exportaÃ§Ã£o, sugestÃ£o ou visualizaÃ§Ã£o da rede interna para terceiros.",
     },
     {
       numero: "04",
-      titulo: "Controlar a visibilidade do serviço",
+      titulo: "Controlar a visibilidade do serviÃ§o",
       texto:
-        "Serviço visível para motorista apenas enquanto estiver dentro da janela operacional permitida. Após baixa final, fica somente no histórico interno protegido.",
+        "ServiÃ§o visÃ­vel para motorista apenas enquanto estiver dentro da janela operacional permitida. ApÃ³s baixa final, fica somente no histÃ³rico interno protegido.",
     },
   ];
 
@@ -154,17 +154,17 @@ export default function PlataformaMotoristasPage() {
           <div className="mt-8 grid gap-8 lg:grid-cols-[1.25fr,0.75fr]">
             <div>
               <span className="inline-flex rounded-full border border-cyan-200 bg-cyan-50 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">
-                Aurora Motoristas • Blindagem da base
+                Aurora Motoristas â€¢ Blindagem da base
               </span>
 
               <h1 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 md:text-5xl">
-                Regras de proteção da base de motoristas
+                Regras de proteÃ§Ã£o da base de motoristas
               </h1>
 
               <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600 md:text-lg">
-                Esta página define a blindagem da base interna de motoristas na
-                nova camada isolada da plataforma. O objetivo é permitir
-                crescimento com segurança, sem expor a rede interna da operação
+                Esta pÃ¡gina define a blindagem da base interna de motoristas na
+                nova camada isolada da plataforma. O objetivo Ã© permitir
+                crescimento com seguranÃ§a, sem expor a rede interna da operaÃ§Ã£o
                 principal e sem criar brechas para aproveitamento por operadoras
                 externas.
               </p>
@@ -180,9 +180,9 @@ export default function PlataformaMotoristasPage() {
               </h2>
 
               <p className="mt-4 text-sm leading-7 text-slate-200">
-                Motorista vê apenas o que é dele. Operadora externa nunca vê a
-                base interna. Administração master controla a governança e a
-                segregação com visão protegida.
+                Motorista vÃª apenas o que Ã© dele. Operadora externa nunca vÃª a
+                base interna. AdministraÃ§Ã£o master controla a governanÃ§a e a
+                segregaÃ§Ã£o com visÃ£o protegida.
               </p>
             </div>
           </div>
@@ -222,12 +222,12 @@ export default function PlataformaMotoristasPage() {
                 Comparativo de acesso
               </span>
               <h2 className="mt-3 text-2xl font-bold text-slate-900">
-                Quem pode ver o quê
+                Quem pode ver o quÃª
               </h2>
             </div>
             <p className="max-w-2xl text-sm leading-7 text-slate-600">
-              A leitura abaixo resume a lógica que a plataforma deve respeitar
-              para proteger a operação principal e impedir exposição indevida da
+              A leitura abaixo resume a lÃ³gica que a plataforma deve respeitar
+              para proteger a operaÃ§Ã£o principal e impedir exposiÃ§Ã£o indevida da
               rede interna.
             </p>
           </div>
@@ -246,13 +246,13 @@ export default function PlataformaMotoristasPage() {
                     Base de motoristas
                   </th>
                   <th className="border-b border-slate-200 bg-slate-100 px-4 py-4 text-left text-sm font-semibold text-slate-700">
-                    Serviços
+                    ServiÃ§os
                   </th>
                   <th className="border-b border-slate-200 bg-slate-100 px-4 py-4 text-left text-sm font-semibold text-slate-700">
-                    Relatórios
+                    RelatÃ³rios
                   </th>
                   <th className="border-b border-slate-200 bg-slate-100 px-4 py-4 text-left text-sm font-semibold text-slate-700">
-                    Observação
+                    ObservaÃ§Ã£o
                   </th>
                 </tr>
               </thead>
@@ -293,7 +293,7 @@ export default function PlataformaMotoristasPage() {
             </span>
 
             <h2 className="mt-3 text-2xl font-bold text-slate-900">
-              Blindagem obrigatória da rede interna
+              Blindagem obrigatÃ³ria da rede interna
             </h2>
 
             <div className="mt-6 space-y-4">
@@ -324,22 +324,22 @@ export default function PlataformaMotoristasPage() {
           <div className="space-y-6">
             <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm md:p-8">
               <span className="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">
-                Proteção contra aproveitamento
+                ProteÃ§Ã£o contra aproveitamento
               </span>
 
               <h2 className="mt-3 text-2xl font-bold text-slate-900">
-                O uso da plataforma não transfere a sua rede para terceiros
+                O uso da plataforma nÃ£o transfere a sua rede para terceiros
               </h2>
 
               <p className="mt-4 text-sm leading-7 text-slate-600">
                 Nenhuma operadora externa deve obter vantagem estrutural sobre a
-                rede interna de freelancers, motoristas, contatos, histórico,
-                avaliações, documentos ou inteligência operacional construída
-                pela operação principal.
+                rede interna de freelancers, motoristas, contatos, histÃ³rico,
+                avaliaÃ§Ãµes, documentos ou inteligÃªncia operacional construÃ­da
+                pela operaÃ§Ã£o principal.
               </p>
 
               <div className="mt-5 rounded-2xl border border-cyan-100 bg-cyan-50 p-4 text-sm leading-7 text-cyan-900">
-                A plataforma deve crescer sem abrir a porta para assédio
+                A plataforma deve crescer sem abrir a porta para assÃ©dio
                 comercial, aproveitamento da base interna ou captura da sua rede
                 por terceiros.
               </div>
@@ -347,18 +347,18 @@ export default function PlataformaMotoristasPage() {
 
             <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm md:p-8">
               <span className="inline-flex rounded-full border border-slate-200 bg-slate-100 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-700">
-                Próximo módulo de governança
+                PrÃ³ximo mÃ³dulo de governanÃ§a
               </span>
 
               <h2 className="mt-3 text-2xl font-bold text-slate-900">
-                Próximo passo recomendado
+                PrÃ³ximo passo recomendado
               </h2>
 
               <p className="mt-4 text-sm leading-7 text-slate-600">
-                Depois desta camada institucional, o próximo movimento seguro é
-                ligar essa lógica a páginas reais por perfil, mantendo a mesma
-                blindagem: motorista vê apenas o dele, operadora externa só vê a
-                própria base e administração master controla tudo.
+                Depois desta camada institucional, o prÃ³ximo movimento Ambiente seguro Ã©
+                ligar essa lÃ³gica a pÃ¡ginas reais por perfil, mantendo a mesma
+                blindagem: motorista vÃª apenas o dele, operadora externa sÃ³ vÃª a
+                prÃ³pria base e administraÃ§Ã£o master controla tudo.
               </p>
 
               <a
@@ -380,14 +380,14 @@ export default function PlataformaMotoristasPage() {
                 Fluxo recomendado
               </span>
               <h2 className="mt-3 text-2xl font-bold text-slate-900">
-                Ordem segura de proteção operacional
+                Ordem segura de proteÃ§Ã£o operacional
               </h2>
             </div>
 
             <p className="max-w-2xl text-sm leading-7 text-slate-600">
-              A governança precisa vir antes da liberação ampla. Esta ordem
+              A governanÃ§a precisa vir antes da liberaÃ§Ã£o ampla. Esta ordem
               ajuda a crescer sem misturar empresas, sem expor dados e sem
-              quebrar a base já publicada.
+              quebrar a base jÃ¡ publicada.
             </p>
           </div>
 
@@ -415,10 +415,10 @@ export default function PlataformaMotoristasPage() {
       <section className="border-t border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-6 py-6 md:px-8">
           <p className="text-sm leading-7 text-slate-500">
-            Sistema em constante atualização e podem ocorrer instabilidades
-            momentâneas durante melhorias. Esta página foi criada como camada
+            Sistema em constante atualizaÃ§Ã£o e podem ocorrer instabilidades
+            momentÃ¢neas durante melhorias. Esta pÃ¡gina foi criada como camada
             nova e isolada para evoluir a blindagem da plataforma sem tocar na
-            base já publicada.
+            base jÃ¡ publicada.
           </p>
         </div>
       </section>

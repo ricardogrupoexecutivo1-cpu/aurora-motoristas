@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
 type ClientePayload = {
@@ -25,7 +25,7 @@ function getSupabaseAdmin() {
 
   if (!supabaseUrl || !supabaseServiceRoleKey) {
     throw new Error(
-      "Variáveis do Supabase ausentes. Verifique SUPABASE_URL/NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY."
+      "VariÃ¡veis do Supabase ausentes. Verifique SUPABASE_URL/NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY."
     );
   }
 

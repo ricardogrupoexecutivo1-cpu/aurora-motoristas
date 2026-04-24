@@ -1,11 +1,11 @@
-import type { MetadataRoute } from "next";
+﻿import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Aurora Motoristas",
     short_name: "Aurora Motoristas",
     description:
-      "Aurora Motoristas - operação inteligente com serviços, histórico protegido e uso rápido no celular ou PC.",
+      "Aurora Motoristas - operaÃ§Ã£o inteligente com serviÃ§os, histÃ³rico protegido e uso rÃ¡pido no celular ou PC.",
     start_url: "/",
     scope: "/",
     display: "standalone",

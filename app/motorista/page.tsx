@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -84,7 +84,7 @@ export default function MotoristaPainel() {
     taxaCancelamento: 2,
   });
 
-  // Histórico de corridas
+  // HistÃ³rico de corridas
   const [historicoGanhos, setHistoricoGanhos] = useState([
     { data: "Hoje", valor: 285.50, corridas: 8 },
     { data: "Ontem", valor: 320.00, corridas: 10 },
@@ -92,7 +92,7 @@ export default function MotoristaPainel() {
     { data: "Dom", valor: 450.00, corridas: 14 },
   ]);
 
-  // Simulação de corridas chegando
+  // SimulaÃ§Ã£o de corridas chegando
   useEffect(() => {
     if (isOnline && !currentRide) {
       const timer = setTimeout(() => {
@@ -222,9 +222,9 @@ export default function MotoristaPainel() {
               <PowerOff className="w-6 h-6" />
             )}
             <div className="text-left">
-              <p className="font-bold">{isOnline ? "Você está online" : "Você está offline"}</p>
+              <p className="font-bold">{isOnline ? "VocÃª estÃ¡ online" : "VocÃª estÃ¡ offline"}</p>
               <p className="text-sm opacity-80">
-                {isOnline ? "Recebendo solicitações de corridas" : "Toque para ficar online"}
+                {isOnline ? "Recebendo solicitaÃ§Ãµes de corridas" : "Toque para ficar online"}
               </p>
             </div>
           </div>
@@ -298,7 +298,7 @@ export default function MotoristaPainel() {
                 <User className="w-5 h-5 text-muted-foreground" />
                 <div>
                   <p className="font-medium">{currentRide.cliente_nome}</p>
-                  <p className="text-xs text-muted-foreground">Código: {currentRide.codigo_verificacao}</p>
+                  <p className="text-xs text-muted-foreground">CÃ³digo: {currentRide.codigo_verificacao}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -377,7 +377,7 @@ export default function MotoristaPainel() {
                   <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
                     <Wallet className="w-4 h-4 text-primary" />
                   </div>
-                  <span className="text-sm text-muted-foreground">Disponível</span>
+                  <span className="text-sm text-muted-foreground">DisponÃ­vel</span>
                 </div>
                 <p className="text-2xl font-bold text-primary">{formatCurrency(motorista.saldoDisponivel)}</p>
                 <p className="text-xs text-muted-foreground">Para saque</p>
@@ -387,7 +387,7 @@ export default function MotoristaPainel() {
             {/* Weekly Chart */}
             <div className="bg-card rounded-2xl border border-border p-4">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold">Últimos dias</h3>
+                <h3 className="font-semibold">Ãšltimos dias</h3>
                 <span className="text-sm text-muted-foreground">Esta semana</span>
               </div>
               <div className="flex items-end justify-between gap-2 h-24">
@@ -415,7 +415,7 @@ export default function MotoristaPainel() {
                     <Target className="w-6 h-6 text-success" />
                   </div>
                   <p className="text-lg font-bold">{motorista.taxaAceitacao}%</p>
-                  <p className="text-xs text-muted-foreground">Aceitação</p>
+                  <p className="text-xs text-muted-foreground">AceitaÃ§Ã£o</p>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 bg-destructive/10 rounded-xl flex items-center justify-center mx-auto mb-2">
@@ -457,7 +457,7 @@ export default function MotoristaPainel() {
                   <History className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <p className="font-medium">Histórico</p>
+                  <p className="font-medium">HistÃ³rico</p>
                   <p className="text-xs text-muted-foreground">Suas corridas</p>
                 </div>
               </Link>
@@ -471,7 +471,7 @@ export default function MotoristaPainel() {
                 </div>
                 <div>
                   <p className="font-medium">Documentos</p>
-                  <p className="text-xs text-muted-foreground">Verificação</p>
+                  <p className="text-xs text-muted-foreground">VerificaÃ§Ã£o</p>
                 </div>
               </Link>
 
@@ -494,7 +494,7 @@ export default function MotoristaPainel() {
         {activeTab === "ganhos" && (
           <div className="space-y-4">
             <div className="bg-gradient-to-br from-success to-emerald-600 rounded-2xl p-6 text-white">
-              <p className="text-sm opacity-80">Saldo disponível</p>
+              <p className="text-sm opacity-80">Saldo disponÃ­vel</p>
               <p className="text-4xl font-bold my-2">{formatCurrency(motorista.saldoDisponivel)}</p>
               <button className="mt-4 w-full py-3 bg-white/20 rounded-xl font-semibold hover:bg-white/30 transition-colors">
                 Sacar agora
@@ -511,13 +511,13 @@ export default function MotoristaPainel() {
                 <p className="text-lg font-bold">{formatCurrency(motorista.ganhosSemana)}</p>
               </div>
               <div className="bg-card rounded-xl border border-border p-3 text-center">
-                <p className="text-xs text-muted-foreground">Mês</p>
+                <p className="text-xs text-muted-foreground">MÃªs</p>
                 <p className="text-lg font-bold">{formatCurrency(motorista.ganhosMes)}</p>
               </div>
             </div>
 
             <div className="bg-card rounded-2xl border border-border p-4">
-              <h3 className="font-semibold mb-4">Histórico de ganhos</h3>
+              <h3 className="font-semibold mb-4">HistÃ³rico de ganhos</h3>
               <div className="space-y-3">
                 {historicoGanhos.map((dia, i) => (
                   <div key={i} className="flex items-center justify-between p-3 bg-secondary rounded-xl">
@@ -552,7 +552,7 @@ export default function MotoristaPainel() {
                         </div>
                         <div>
                           <p className="font-medium">Corrida #{motorista.corridasHoje - i}</p>
-                          <p className="text-xs text-muted-foreground">Concluída</p>
+                          <p className="text-xs text-muted-foreground">ConcluÃ­da</p>
                         </div>
                       </div>
                       <span className="px-3 py-1 bg-success/10 text-success text-xs font-medium rounded-full">
@@ -565,7 +565,7 @@ export default function MotoristaPainel() {
                 <div className="text-center py-8 text-muted-foreground">
                   <Car className="w-12 h-12 mx-auto mb-2 opacity-50" />
                   <p>Nenhuma corrida hoje</p>
-                  <p className="text-sm">Fique online para receber solicitações</p>
+                  <p className="text-sm">Fique online para receber solicitaÃ§Ãµes</p>
                 </div>
               )}
             </div>
@@ -590,7 +590,7 @@ export default function MotoristaPainel() {
               <Link href="/motorista/veiculo" className="flex items-center justify-between p-4 hover:bg-secondary transition-colors">
                 <div className="flex items-center gap-3">
                   <Car className="w-5 h-5 text-muted-foreground" />
-                  <span>Meu veículo</span>
+                  <span>Meu veÃ­culo</span>
                 </div>
                 <ChevronRight className="w-5 h-5 text-muted-foreground" />
               </Link>
@@ -606,7 +606,7 @@ export default function MotoristaPainel() {
               <Link href="/motorista/conta" className="flex items-center justify-between p-4 hover:bg-secondary transition-colors">
                 <div className="flex items-center gap-3">
                   <CreditCard className="w-5 h-5 text-muted-foreground" />
-                  <span>Dados bancários</span>
+                  <span>Dados bancÃ¡rios</span>
                 </div>
                 <ChevronRight className="w-5 h-5 text-muted-foreground" />
               </Link>
@@ -614,7 +614,7 @@ export default function MotoristaPainel() {
               <Link href="/motorista/configuracoes" className="flex items-center justify-between p-4 hover:bg-secondary transition-colors">
                 <div className="flex items-center gap-3">
                   <Settings className="w-5 h-5 text-muted-foreground" />
-                  <span>Configurações</span>
+                  <span>ConfiguraÃ§Ãµes</span>
                 </div>
                 <ChevronRight className="w-5 h-5 text-muted-foreground" />
               </Link>
@@ -639,7 +639,7 @@ export default function MotoristaPainel() {
       <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border px-4 py-2 safe-area-bottom">
         <div className="flex items-center justify-around">
           {[
-            { id: "inicio", label: "Início", icon: Home },
+            { id: "inicio", label: "InÃ­cio", icon: Home },
             { id: "corridas", label: "Corridas", icon: Car },
             { id: "ganhos", label: "Ganhos", icon: Wallet },
             { id: "perfil", label: "Perfil", icon: User },
@@ -737,3 +737,4 @@ export default function MotoristaPainel() {
     </div>
   );
 }
+

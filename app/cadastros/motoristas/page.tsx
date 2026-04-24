@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 
@@ -8,7 +8,7 @@ export default function MotoristasPage() {
   const [cidade, setCidade] = useState("");
 
   function salvar() {
-    alert("Motorista salvo (versão inicial)");
+    alert("Motorista salvo (versÃ£o inicial)");
     setNome("");
     setTelefone("");
     setCidade("");

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 
@@ -103,7 +103,7 @@ export default function ClientesPage() {
   const tituloPrincipal = useMemo(() => {
     return form.tipoPessoa === "PJ"
       ? "Cadastro de clientes empresariais"
-      : "Cadastro de clientes pessoa física";
+      : "Cadastro de clientes pessoa fÃ­sica";
   }, [form.tipoPessoa]);
 
   function updateField<K extends keyof ClienteForm>(field: K, value: ClienteForm[K]) {
@@ -119,7 +119,7 @@ export default function ClientesPage() {
 
     if (form.tipoPessoa !== "PJ") {
       setFeedbackType("info");
-      setFeedback("A busca automática na Receita está disponível no modo PJ com CNPJ.");
+      setFeedback("A busca automÃ¡tica na Receita estÃ¡ disponÃ­vel no modo PJ com CNPJ.");
       return;
     }
 
@@ -127,7 +127,7 @@ export default function ClientesPage() {
 
     if (cnpj.length !== 14) {
       setFeedbackType("error");
-      setFeedback("Informe um CNPJ válido com 14 dígitos para consultar.");
+      setFeedback("Informe um CNPJ vÃ¡lido com 14 dÃ­gitos para consultar.");
       return;
     }
 
@@ -142,7 +142,7 @@ export default function ClientesPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data?.error || "Não foi possível consultar o CNPJ.");
+        throw new Error(data?.error || "NÃ£o foi possÃ­vel consultar o CNPJ.");
       }
 
       const company = data?.company || {};
@@ -221,7 +221,7 @@ export default function ClientesPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data?.error || "Não foi possível salvar o cliente.");
+        throw new Error(data?.error || "NÃ£o foi possÃ­vel salvar o cliente.");
       }
 
       setFeedbackType("success");
@@ -290,7 +290,7 @@ export default function ClientesPage() {
               fontSize: 14,
             }}
           >
-            Início
+            InÃ­cio
           </a>
         </div>
 
@@ -323,7 +323,7 @@ export default function ClientesPage() {
               textTransform: "uppercase",
             }}
           >
-            Aurora Motoristas • Clientes
+            Aurora Motoristas â€¢ Clientes
           </div>
 
           <h1
@@ -347,8 +347,8 @@ export default function ClientesPage() {
             }}
           >
             Cadastre clientes corporativos e clientes finais em um fluxo bonito,
-            simples e pronto para crescer com filtros, integrações, CPF/CNPJ e
-            histórico comercial. Sistema em constante atualização e pode haver
+            simples e pronto para crescer com filtros, integraÃ§Ãµes, CPF/CNPJ e
+            histÃ³rico comercial. Sistema em constante atualizaÃ§Ã£o e pode haver
             momentos de instabilidade durante melhorias.
           </p>
 
@@ -361,9 +361,9 @@ export default function ClientesPage() {
             }}
           >
             {[
-              ["Base comercial", "Cadastro estruturado para operação real"],
-              ["Contato rápido", "Telefone, e-mail e responsável"],
-              ["Expansão pronta", "Fluxo preparado para CPF/CNPJ e filtros"],
+              ["Base comercial", "Cadastro estruturado para operaÃ§Ã£o real"],
+              ["Contato rÃ¡pido", "Telefone, e-mail e responsÃ¡vel"],
+              ["ExpansÃ£o pronta", "Fluxo preparado para CPF/CNPJ e filtros"],
             ].map(([title, text]) => (
               <div
                 key={title}
@@ -448,7 +448,7 @@ export default function ClientesPage() {
                     lineHeight: 1.6,
                   }}
                 >
-                  Preencha os dados principais para salvar a base comercial com padrão premium.
+                  Preencha os dados principais para salvar a base comercial com padrÃ£o premium.
                 </p>
               </div>
 
@@ -588,7 +588,7 @@ export default function ClientesPage() {
               </div>
 
               <Field
-                label="Responsável"
+                label="ResponsÃ¡vel"
                 value={form.responsavel}
                 onChange={(value) => updateField("responsavel", value)}
                 placeholder="Nome do contato principal"
@@ -617,14 +617,14 @@ export default function ClientesPage() {
               />
 
               <Field
-                label="Endereço"
+                label="EndereÃ§o"
                 value={form.endereco}
                 onChange={(value) => updateField("endereco", value)}
                 placeholder="Rua, avenida ou rodovia"
               />
 
               <Field
-                label="Número"
+                label="NÃºmero"
                 value={form.numero}
                 onChange={(value) => updateField("numero", value)}
                 placeholder="Ex.: 120"
@@ -662,12 +662,12 @@ export default function ClientesPage() {
                   fontSize: 14,
                 }}
               >
-                Observações
+                ObservaÃ§Ãµes
               </label>
               <textarea
                 value={form.observacoes}
                 onChange={(e) => updateField("observacoes", e.target.value)}
-                placeholder="Anotações comerciais, origem do lead, necessidades, histórico de atendimento..."
+                placeholder="AnotaÃ§Ãµes comerciais, origem do lead, necessidades, histÃ³rico de atendimento..."
                 rows={5}
                 style={{
                   width: "100%",
@@ -765,7 +765,7 @@ export default function ClientesPage() {
                   width: isMobile ? "100%" : "auto",
                 }}
               >
-                Limpar formulário
+                Limpar formulÃ¡rio
               </button>
             </div>
           </div>
@@ -779,18 +779,18 @@ export default function ClientesPage() {
             }}
           >
             <InfoCard
-              title="Orientação operacional"
-              text="Cadastre primeiro o cliente com o contato principal. Depois nós dois ligamos este fluxo com serviços, propostas, pagamentos e histórico protegido."
+              title="OrientaÃ§Ã£o operacional"
+              text="Cadastre primeiro o cliente com o contato principal. Depois nÃ³s dois ligamos este fluxo com serviÃ§os, propostas, pagamentos e histÃ³rico protegido."
             />
 
             <InfoCard
               title="Estrutura preparada"
-              text="A tela agora já suporta busca por CNPJ e preenchimento automático quando a fonte responder."
+              text="A tela agora jÃ¡ suporta busca por CNPJ e preenchimento automÃ¡tico quando a fonte responder."
             />
 
             <InfoCard
-              title="Padrão Aurora"
-              text="Visual claro premium, leitura forte no desktop e no celular, sem quebrar a operação atual."
+              title="PadrÃ£o Aurora"
+              text="Visual claro premium, leitura forte no desktop e no celular, sem quebrar a operaÃ§Ã£o atual."
             />
           </aside>
         </section>

@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
 type UserRole =
@@ -25,12 +25,12 @@ function getSupabaseAdmin() {
 
   if (!supabaseUrl) {
     throw new Error(
-      "SUPABASE_URL ou NEXT_PUBLIC_SUPABASE_URL não configurado."
+      "SUPABASE_URL ou NEXT_PUBLIC_SUPABASE_URL nÃ£o configurado."
     );
   }
 
   if (!serviceRoleKey) {
-    throw new Error("SUPABASE_SERVICE_ROLE_KEY não configurado.");
+    throw new Error("SUPABASE_SERVICE_ROLE_KEY nÃ£o configurado.");
   }
 
   return createClient(supabaseUrl, serviceRoleKey, {
@@ -142,7 +142,7 @@ async function tentarCriarProfile({
     profile_created: false,
     profile_warning:
       lastError ||
-      "Usuário criado no Auth, mas não foi possível criar o profile com o schema atual.",
+      "UsuÃ¡rio criado no Auth, mas nÃ£o foi possÃ­vel criar o profile com o schema atual.",
   };
 }
 
@@ -160,11 +160,11 @@ export async function POST(request: Request) {
     const status = (body?.status || "ativo") as "ativo" | "inativo";
 
     if (!nome) {
-      return jsonError("Informe o nome do usuário.");
+      return jsonError("Informe o nome do usuÃ¡rio.");
     }
 
     if (!email) {
-      return jsonError("Informe o e-mail do usuário.");
+      return jsonError("Informe o e-mail do usuÃ¡rio.");
     }
 
     if (!senhaInicial) {
@@ -172,7 +172,7 @@ export async function POST(request: Request) {
     }
 
     if (!empresa) {
-      return jsonError("Informe a empresa do usuário.");
+      return jsonError("Informe a empresa do usuÃ¡rio.");
     }
 
     if (senhaInicial.length < 6) {
@@ -202,19 +202,19 @@ export async function POST(request: Request) {
       });
 
     if (createAuthError || !createdUser?.user?.id) {
-      const message = createAuthError?.message || "ID do usuário não retornado.";
+      const message = createAuthError?.message || "ID do usuÃ¡rio nÃ£o retornado.";
 
       if (
         message.toLowerCase().includes("already") ||
         message.toLowerCase().includes("exists") ||
         message.toLowerCase().includes("registered")
       ) {
-        return jsonError("Já existe um usuário com este e-mail no Auth.", 409, {
+        return jsonError("JÃ¡ existe um usuÃ¡rio com este e-mail no Auth.", 409, {
           auth_error: message,
         });
       }
 
-      return jsonError(`Falha ao criar usuário no Auth: ${message}`, 500, {
+      return jsonError(`Falha ao criar usuÃ¡rio no Auth: ${message}`, 500, {
         auth_error: message,
         debug_env: {
           has_supabase_url: Boolean(
@@ -238,8 +238,8 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       message: profileResult.profile_created
-        ? "Usuário criado no Auth e profile atualizado com sucesso."
-        : "Usuário criado no Auth. O profile precisa de ajuste fino no schema.",
+        ? "UsuÃ¡rio criado no Auth e profile atualizado com sucesso."
+        : "UsuÃ¡rio criado no Auth. O profile precisa de ajuste fino no schema.",
       user: {
         id: createdUser.user.id,
         email,
@@ -253,7 +253,7 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     const message =
-      error instanceof Error ? error.message : "Erro interno ao criar usuário.";
+      error instanceof Error ? error.message : "Erro interno ao criar usuÃ¡rio.";
 
     return jsonError(message, 500, {
       debug_env: {

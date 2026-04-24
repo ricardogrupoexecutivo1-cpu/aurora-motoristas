@@ -1,14 +1,14 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 type PaymentStatus = "Aguardando baixa" | "Baixado" | "Pago ao motorista";
-type PaymentMethod = "PIX" | "Transferência" | "Dinheiro" | "Faturado";
+type PaymentMethod = "PIX" | "TransferÃªncia" | "Dinheiro" | "Faturado";
 type PaymentOrigin =
-  | "Serviço padrão"
-  | "Serviço local"
-  | "Translado padrão"
+  | "ServiÃ§o padrÃ£o"
+  | "ServiÃ§o local"
+  | "Translado padrÃ£o"
   | "Translado local";
 
 type PaymentItem = {
@@ -44,7 +44,7 @@ type LocalService = {
   valorTotal: number;
   valorMotorista: number;
   despesas: number;
-  etapa: "Cotação" | "Em andamento" | "Aguardando pagamento" | "Pago";
+  etapa: "CotaÃ§Ã£o" | "Em andamento" | "Aguardando pagamento" | "Pago";
   observacao: string;
 };
 
@@ -63,7 +63,7 @@ type LocalTransfer = {
   horarioAtualizado: string;
   tempoEstimadoMin: number;
   acrescimoTransitoMin: number;
-  risco: "Baixo" | "Médio" | "Alto";
+  risco: "Baixo" | "MÃ©dio" | "Alto";
   valorTransfer: number;
   valorMotorista: number;
   despesas: number;
@@ -72,7 +72,7 @@ type LocalTransfer = {
     | "Agendado"
     | "Em deslocamento"
     | "Aguardando passageiro"
-    | "Concluído"
+    | "ConcluÃ­do"
     | "Reagendado";
   observacao: string;
   createdAt: string;
@@ -104,7 +104,7 @@ const initialPayments: PaymentItem[] = [
     osSistema: "OS-2026-000153",
     empresa: "Aurora Locadoras Premium",
     cliente: "Evento Nacional",
-    motorista: "João Pedro",
+    motorista: "JoÃ£o Pedro",
     servico: "BH x Confins",
     dataServico: "10/04/2026",
     valorTotal: 400,
@@ -115,8 +115,8 @@ const initialPayments: PaymentItem[] = [
     metodoPagamento: "PIX",
     status: "Aguardando baixa",
     observacaoFinanceira:
-      "Serviço concluído aguardando conferência e baixa financeira.",
-    origemBase: "Serviço padrão",
+      "ServiÃ§o concluÃ­do aguardando conferÃªncia e baixa financeira.",
+    origemBase: "ServiÃ§o padrÃ£o",
   },
   {
     id: "PAG-0002",
@@ -131,11 +131,11 @@ const initialPayments: PaymentItem[] = [
     despesas: 40,
     adiantamento: 50,
     valorTransfer: 390,
-    metodoPagamento: "Transferência",
+    metodoPagamento: "TransferÃªncia",
     status: "Baixado",
     observacaoFinanceira:
-      "Baixa da empresa concluída. Falta repasse final ao motorista.",
-    origemBase: "Serviço padrão",
+      "Baixa da empresa concluÃ­da. Falta repasse final ao motorista.",
+    origemBase: "ServiÃ§o padrÃ£o",
   },
   {
     id: "PAG-0003",
@@ -153,8 +153,8 @@ const initialPayments: PaymentItem[] = [
     metodoPagamento: "Faturado",
     status: "Pago ao motorista",
     observacaoFinanceira:
-      "Baixa concluída e repasse ao motorista finalizado.",
-    origemBase: "Serviço padrão",
+      "Baixa concluÃ­da e repasse ao motorista finalizado.",
+    origemBase: "ServiÃ§o padrÃ£o",
   },
   {
     id: "PAG-TRA-0001",
@@ -172,14 +172,14 @@ const initialPayments: PaymentItem[] = [
     metodoPagamento: "PIX",
     status: "Aguardando baixa",
     observacaoFinanceira:
-      "Translado reagendado aguardando conferência financeira.",
-    origemBase: "Translado padrão",
+      "Translado reagendado aguardando conferÃªncia financeira.",
+    origemBase: "Translado padrÃ£o",
   },
   {
     id: "PAG-TRA-0002",
     osSistema: "TRA-0002",
     empresa: "Grupo Executivo Mobilidade",
-    cliente: "Delegação Internacional",
+    cliente: "DelegaÃ§Ã£o Internacional",
     motorista: "Maria Fernanda",
     servico: "Hotel Ouro Minas x Aeroporto de Confins",
     dataServico: "10/04/2026 11:00",
@@ -191,7 +191,7 @@ const initialPayments: PaymentItem[] = [
     metodoPagamento: "Faturado",
     status: "Baixado",
     observacaoFinanceira: "Translado confirmado e pronto para repasse.",
-    origemBase: "Translado padrão",
+    origemBase: "Translado padrÃ£o",
   },
 ];
 
@@ -227,7 +227,7 @@ function getStatusStyle(status: PaymentStatus): React.CSSProperties {
 }
 
 function getOriginStyle(origin: PaymentOrigin): React.CSSProperties {
-  if (origin === "Serviço padrão") {
+  if (origin === "ServiÃ§o padrÃ£o") {
     return {
       background: "rgba(148, 163, 184, 0.12)",
       color: "#475569",
@@ -235,7 +235,7 @@ function getOriginStyle(origin: PaymentOrigin): React.CSSProperties {
     };
   }
 
-  if (origin === "Serviço local") {
+  if (origin === "ServiÃ§o local") {
     return {
       background: "rgba(37, 99, 235, 0.10)",
       color: "#1d4ed8",
@@ -243,7 +243,7 @@ function getOriginStyle(origin: PaymentOrigin): React.CSSProperties {
     };
   }
 
-  if (origin === "Translado padrão") {
+  if (origin === "Translado padrÃ£o") {
     return {
       background: "rgba(6, 182, 212, 0.10)",
       color: "#0e7490",
@@ -377,9 +377,9 @@ function mapLocalServiceToPayment(item: LocalService): PaymentItem | null {
     status,
     observacaoFinanceira:
       status === "Aguardando baixa"
-        ? "Serviço vindo da base local aguardando conferência e baixa."
-        : "Serviço vindo da base local já marcado como pago ao motorista.",
-    origemBase: "Serviço local",
+        ? "ServiÃ§o vindo da base local aguardando conferÃªncia e baixa."
+        : "ServiÃ§o vindo da base local jÃ¡ marcado como pago ao motorista.",
+    origemBase: "ServiÃ§o local",
   };
 }
 
@@ -395,7 +395,7 @@ function inferPaymentStatusFromTransferStatus(
     return "Aguardando baixa";
   }
 
-  if (status === "Concluído") {
+  if (status === "ConcluÃ­do") {
     return "Baixado";
   }
 
@@ -423,8 +423,8 @@ function mapLocalTransferToPayment(item: LocalTransfer): PaymentItem | null {
     status,
     observacaoFinanceira:
       status === "Aguardando baixa"
-        ? "Translado local aguardando conferência financeira."
-        : "Translado local concluído e pronto para repasse.",
+        ? "Translado local aguardando conferÃªncia financeira."
+        : "Translado local concluÃ­do e pronto para repasse.",
     origemBase: "Translado local",
   };
 }
@@ -474,7 +474,7 @@ export default function PagamentosPage() {
               ...item,
               status: "Pago ao motorista",
               observacaoFinanceira:
-                "Repasse ao motorista confirmado. Item local pronto para histórico protegido.",
+                "Repasse ao motorista confirmado. Item local pronto para histÃ³rico protegido.",
             };
 
             appendPaymentToHistory(updatedItem);
@@ -509,7 +509,7 @@ export default function PagamentosPage() {
             ...item,
             status: "Pago ao motorista",
             observacaoFinanceira:
-              "Repasse ao motorista confirmado. Item pronto para histórico protegido.",
+              "Repasse ao motorista confirmado. Item pronto para histÃ³rico protegido.",
           };
 
           appendPaymentToHistory(updatedItem);
@@ -520,7 +520,7 @@ export default function PagamentosPage() {
       })
     );
 
-    setFeedback("Pagamento da base padrão atualizado com sucesso.");
+    setFeedback("Pagamento da base padrÃ£o atualizado com sucesso.");
   }
 
   function backPayment(paymentId: string, isLocal: boolean) {
@@ -538,7 +538,7 @@ export default function PagamentosPage() {
               ...item,
               status: "Baixado",
               observacaoFinanceira:
-                "Repasse voltou para conferência administrativa.",
+                "Repasse voltou para conferÃªncia administrativa.",
             };
           }
 
@@ -547,7 +547,7 @@ export default function PagamentosPage() {
               ...item,
               status: "Aguardando baixa",
               observacaoFinanceira:
-                "Baixa revertida para validação financeira.",
+                "Baixa revertida para validaÃ§Ã£o financeira.",
             };
           }
 
@@ -572,7 +572,7 @@ export default function PagamentosPage() {
             ...item,
             status: "Baixado",
             observacaoFinanceira:
-              "Repasse voltou para conferência administrativa.",
+              "Repasse voltou para conferÃªncia administrativa.",
           };
         }
 
@@ -581,7 +581,7 @@ export default function PagamentosPage() {
             ...item,
             status: "Aguardando baixa",
             observacaoFinanceira:
-              "Baixa revertida para validação financeira.",
+              "Baixa revertida para validaÃ§Ã£o financeira.",
           };
         }
 
@@ -589,7 +589,7 @@ export default function PagamentosPage() {
       })
     );
 
-    setFeedback("Pagamento da base padrão voltou uma etapa.");
+    setFeedback("Pagamento da base padrÃ£o voltou uma etapa.");
   }
 
   function changeMethod(
@@ -668,12 +668,12 @@ export default function PagamentosPage() {
       totalAdiantamento: allPayments.reduce((acc, item) => acc + item.adiantamento, 0),
       locais: allPayments.filter(
         (item) =>
-          item.origemBase === "Serviço local" ||
+          item.origemBase === "ServiÃ§o local" ||
           item.origemBase === "Translado local"
       ).length,
       translados: allPayments.filter(
         (item) =>
-          item.origemBase === "Translado padrão" ||
+          item.origemBase === "Translado padrÃ£o" ||
           item.origemBase === "Translado local"
       ).length,
     };
@@ -688,33 +688,33 @@ export default function PagamentosPage() {
         <div style={styles.heroCard}>
           <div style={styles.heroGrid}>
             <div style={styles.heroLeft}>
-              <div style={styles.eyebrow}>AURORA MOTORISTAS • PAGAMENTOS</div>
+              <div style={styles.eyebrow}>AURORA MOTORISTAS â€¢ PAGAMENTOS</div>
               <h1 style={styles.heroTitle}>
-                Baixa financeira, repasse e fechamento com serviços e translados integrados
+                Baixa financeira, repasse e fechamento com serviÃ§os e translados integrados
               </h1>
               <p style={styles.heroText}>
-                Esta área agora junta serviços e translados no mesmo financeiro,
+                Esta Ã¡rea agora junta serviÃ§os e translados no mesmo financeiro,
                 mantendo baixa, repasse, adiantamento, despesas e leitura clara da
-                origem de cada operação.
+                origem de cada operaÃ§Ã£o.
               </p>
 
               <div style={styles.heroActions}>
                 <Link href="/servicos" style={styles.secondaryButton}>
-                  Voltar para serviços
+                  Voltar para serviÃ§os
                 </Link>
 
                 <Link href="/historico" style={styles.primaryButton}>
-                  Ir para histórico
+                  Ir para histÃ³rico
                 </Link>
               </div>
             </div>
 
             <div style={styles.heroRightCard}>
               <span style={styles.sideKicker}>CAMADA FINANCEIRA</span>
-              <h2 style={styles.sideTitle}>Serviços + translados</h2>
+              <h2 style={styles.sideTitle}>ServiÃ§os + translados</h2>
               <p style={styles.sideText}>
-                Aqui o financeiro lê a operação principal e também o módulo de
-                translados, deixando a baixa mais próxima da sua rotina real.
+                Aqui o financeiro lÃª a operaÃ§Ã£o principal e tambÃ©m o mÃ³dulo de
+                translados, deixando a baixa mais prÃ³xima da sua rotina real.
               </p>
 
               <div style={styles.sidePills}>
@@ -726,8 +726,8 @@ export default function PagamentosPage() {
           </div>
 
           <div style={styles.noticeBox}>
-            Sistema em constante atualização. Esta tela já integra serviços,
-            translados, base padrão e base local no mesmo fluxo financeiro.
+            Sistema em constante atualizaÃ§Ã£o. Esta tela jÃ¡ integra serviÃ§os,
+            translados, base padrÃ£o e base local no mesmo fluxo financeiro.
           </div>
         </div>
       </section>
@@ -743,7 +743,7 @@ export default function PagamentosPage() {
           <article style={styles.statCard}>
             <span style={styles.statLabel}>Aguardando baixa</span>
             <strong style={styles.statValue}>{stats.aguardando}</strong>
-            <span style={styles.statDetail}>Conferência pendente</span>
+            <span style={styles.statDetail}>ConferÃªncia pendente</span>
           </article>
 
           <article style={styles.statCard}>
@@ -755,7 +755,7 @@ export default function PagamentosPage() {
           <article style={styles.statCard}>
             <span style={styles.statLabel}>Finalizados</span>
             <strong style={styles.statValue}>{stats.finalizados}</strong>
-            <span style={styles.statDetail}>Prontos para histórico</span>
+            <span style={styles.statDetail}>Prontos para histÃ³rico</span>
           </article>
         </div>
       </section>
@@ -801,7 +801,7 @@ export default function PagamentosPage() {
           <article style={styles.statCard}>
             <span style={styles.statLabel}>Base local integrada</span>
             <strong style={styles.statValue}>{stats.locais}</strong>
-            <span style={styles.statDetail}>Serviços e translados locais</span>
+            <span style={styles.statDetail}>ServiÃ§os e translados locais</span>
           </article>
 
           <article style={styles.statCard}>
@@ -851,7 +851,7 @@ export default function PagamentosPage() {
                 ) : (
                   filteredPayments.map((item) => {
                     const isLocal =
-                      item.origemBase === "Serviço local" ||
+                      item.origemBase === "ServiÃ§o local" ||
                       item.origemBase === "Translado local";
 
                     return (
@@ -871,7 +871,7 @@ export default function PagamentosPage() {
 
                             <h3 style={styles.paymentTitle}>{item.servico}</h3>
                             <p style={styles.paymentSubline}>
-                              {item.osSistema} • {item.dataServico} • {item.empresa}
+                              {item.osSistema} â€¢ {item.dataServico} â€¢ {item.empresa}
                             </p>
                           </div>
 
@@ -942,7 +942,7 @@ export default function PagamentosPage() {
                           </div>
 
                           <div style={styles.dataItem}>
-                            <span style={styles.dataLabel}>Método</span>
+                            <span style={styles.dataLabel}>MÃ©todo</span>
                             <select
                               value={item.metodoPagamento}
                               onChange={(e) =>
@@ -955,14 +955,14 @@ export default function PagamentosPage() {
                               style={styles.select}
                             >
                               <option>PIX</option>
-                              <option>Transferência</option>
+                              <option>TransferÃªncia</option>
                               <option>Dinheiro</option>
                               <option>Faturado</option>
                             </select>
                           </div>
 
                           <div style={styles.dataItemWide}>
-                            <span style={styles.dataLabel}>Observação financeira</span>
+                            <span style={styles.dataLabel}>ObservaÃ§Ã£o financeira</span>
                             <strong style={styles.dataValue}>
                               {item.observacaoFinanceira}
                             </strong>
@@ -981,7 +981,7 @@ export default function PagamentosPage() {
                             </button>
                           ) : (
                             <div style={styles.doneBox}>
-                              Registro finalizado. Pronto para histórico interno protegido.
+                              Registro finalizado. Pronto para histÃ³rico interno protegido.
                             </div>
                           )}
 
@@ -1010,16 +1010,16 @@ export default function PagamentosPage() {
 
               <div style={styles.ruleList}>
                 <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Serviços e translados</strong>
+                  <strong style={styles.ruleItemTitle}>ServiÃ§os e translados</strong>
                   <span style={styles.ruleItemText}>
-                    O financeiro agora lê os dois fluxos no mesmo painel.
+                    O financeiro agora lÃª os dois fluxos no mesmo painel.
                   </span>
                 </div>
 
                 <div style={styles.ruleItem}>
                   <strong style={styles.ruleItemTitle}>Baixa separada</strong>
                   <span style={styles.ruleItemText}>
-                    Primeiro confirma entrada e baixa da operação.
+                    Primeiro confirma entrada e baixa da operaÃ§Ã£o.
                   </span>
                 </div>
 
@@ -1031,21 +1031,21 @@ export default function PagamentosPage() {
                 </div>
 
                 <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Origem visível</strong>
+                  <strong style={styles.ruleItemTitle}>Origem visÃ­vel</strong>
                   <span style={styles.ruleItemText}>
-                    Você sabe se o item veio de serviço ou translado, padrão ou local.
+                    VocÃª sabe se o item veio de serviÃ§o ou translado, padrÃ£o ou local.
                   </span>
                 </div>
               </div>
             </div>
 
             <div style={styles.darkCard}>
-              <div style={styles.robotTag}>ROBÔ AURORA</div>
+              <div style={styles.robotTag}>ROBÃ” AURORA</div>
               <h2 style={styles.sidebarTitleDark}>Apoio financeiro</h2>
               <p style={styles.sidebarTextDark}>
-                O Robô Aurora poderá alertar pagamentos travados, repasses
-                atrasados, inconsistências entre valor total, despesas,
-                adiantamentos e origem da operação.
+                O RobÃ´ Aurora poderÃ¡ alertar pagamentos travados, repasses
+                atrasados, inconsistÃªncias entre valor total, despesas,
+                adiantamentos e origem da operaÃ§Ã£o.
               </p>
 
               <div style={styles.robotList}>
@@ -1057,8 +1057,8 @@ export default function PagamentosPage() {
             </div>
 
             <div style={styles.navCard}>
-              <span style={styles.sectionEyebrow}>NAVEGAÇÃO</span>
-              <h2 style={styles.sidebarTitle}>Próximos blocos</h2>
+              <span style={styles.sectionEyebrow}>NAVEGAÃ‡ÃƒO</span>
+              <h2 style={styles.sidebarTitle}>PrÃ³ximos blocos</h2>
 
               <div style={styles.navList}>
                 <Link href="/translados" style={styles.navItem}>
@@ -1068,10 +1068,10 @@ export default function PagamentosPage() {
                   Abrir escala
                 </Link>
                 <Link href="/historico" style={styles.navItem}>
-                  Abrir histórico
+                  Abrir histÃ³rico
                 </Link>
                 <Link href="/relatorios" style={styles.navItem}>
-                  Abrir relatórios
+                  Abrir relatÃ³rios
                 </Link>
               </div>
             </div>

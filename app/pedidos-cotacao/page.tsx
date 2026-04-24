@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
@@ -111,13 +111,13 @@ function moneyDisplay(value?: number | null) {
   });
 }
 
-function safeText(value?: string | null, fallback = "—") {
+function safeText(value?: string | null, fallback = "â€”") {
   if (!value || !String(value).trim()) return fallback;
   return String(value);
 }
 
 function formatDate(value?: string | null) {
-  if (!value) return "—";
+  if (!value) return "â€”";
 
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
@@ -128,19 +128,19 @@ function formatDate(value?: string | null) {
 function getTipoLabel(value?: string) {
   switch (value) {
     case "busca_veiculo":
-      return "Busca de veículo";
+      return "Busca de veÃ­culo";
     case "entrega_veiculo":
-      return "Entrega de veículo";
+      return "Entrega de veÃ­culo";
     case "transporte_executivo":
       return "Transporte executivo";
     case "transfer":
       return "Transfer";
     case "motorista_diaria":
-      return "Motorista por diária";
+      return "Motorista por diÃ¡ria";
     case "outro":
       return "Outro";
     default:
-      return value || "Não definido";
+      return value || "NÃ£o definido";
   }
 }
 
@@ -153,9 +153,9 @@ function getModoLabel(value?: string) {
     case "por_km_mais_reembolso":
       return "KM menor + reembolso";
     case "diaria_fechada":
-      return "Diária fechada";
+      return "DiÃ¡ria fechada";
     default:
-      return value || "Não definido";
+      return value || "NÃ£o definido";
   }
 }
 
@@ -171,7 +171,7 @@ function loadRequests(): QuoteRequest[] {
 
     return parsed as QuoteRequest[];
   } catch (error) {
-    console.error("Erro ao carregar pedidos de cotação:", error);
+    console.error("Erro ao carregar pedidos de cotaÃ§Ã£o:", error);
     return [];
   }
 }
@@ -224,7 +224,7 @@ function buildInternalServiceFromQuote(item: QuoteRequest): InternalService {
 
     checklist_obrigatorio: true,
     checklist_instrucoes:
-      "Completar checklist interno antes da liberação/finalização do serviço.",
+      "Completar checklist interno antes da liberaÃ§Ã£o/finalizaÃ§Ã£o do serviÃ§o.",
 
     pedido_cotacao: item.id || null,
     observacoes: item.observacoes || null,
@@ -290,7 +290,7 @@ export default function PedidosCotacaoPage() {
 
     if (item.converted_to_service) {
       setFeedback(
-        `Este pedido já foi convertido em serviço interno (${item.converted_service_id || "sem ID"}).`
+        `Este pedido jÃ¡ foi convertido em serviÃ§o interno (${item.converted_service_id || "sem ID"}).`
       );
       return;
     }
@@ -327,11 +327,11 @@ export default function PedidosCotacaoPage() {
 
       setRequests(updatedQuotes);
       setFeedback(
-        `Pedido ${item.id} convertido em serviço interno com sucesso. ID do serviço: ${newService.id}`
+        `Pedido ${item.id} convertido em serviÃ§o interno com sucesso. ID do serviÃ§o: ${newService.id}`
       );
     } catch (error) {
-      console.error("Erro ao converter pedido em serviço:", error);
-      setFeedback("Não foi possível converter o pedido em serviço interno.");
+      console.error("Erro ao converter pedido em serviÃ§o:", error);
+      setFeedback("NÃ£o foi possÃ­vel converter o pedido em serviÃ§o interno.");
     }
   }
 
@@ -392,7 +392,7 @@ export default function PedidosCotacaoPage() {
                   lineHeight: 1.1,
                 }}
               >
-                Pedidos de cotação
+                Pedidos de cotaÃ§Ã£o
               </h1>
               <p
                 style={{
@@ -402,19 +402,19 @@ export default function PedidosCotacaoPage() {
                   fontSize: 15,
                 }}
               >
-                Área interna para leitura dos pedidos aprovados pelo cliente.
-                Esta tela organiza a entrada comercial antes da conversão em
-                operação interna, sem mexer no disparo dos motoristas.
+                Ãrea interna para leitura dos pedidos aprovados pelo cliente.
+                Esta tela organiza a entrada comercial antes da conversÃ£o em
+                operaÃ§Ã£o interna, sem mexer no disparo dos motoristas.
               </p>
             </div>
 
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
               <Link href="/pedido-cotacao" style={linkSecondaryStyle}>
-                Abrir página do cliente
+                Abrir pÃ¡gina do cliente
               </Link>
 
               <Link href="/servicos" style={linkPrimaryStyle}>
-                Ir para serviços
+                Ir para serviÃ§os
               </Link>
             </div>
           </div>
@@ -496,7 +496,7 @@ export default function PedidosCotacaoPage() {
 
           {filteredRequests.length === 0 ? (
             <div style={emptyBoxStyle}>
-              Nenhum pedido de cotação encontrado nesta leitura.
+              Nenhum pedido de cotaÃ§Ã£o encontrado nesta leitura.
             </div>
           ) : (
             <div style={{ display: "grid", gap: 14 }}>
@@ -530,7 +530,7 @@ export default function PedidosCotacaoPage() {
                           marginBottom: 6,
                         }}
                       >
-                        {getTipoLabel(item.tipo_servico)} •{" "}
+                        {getTipoLabel(item.tipo_servico)} â€¢{" "}
                         {getModoLabel(item.modo_cobranca)}
                       </div>
                       <h2
@@ -540,7 +540,7 @@ export default function PedidosCotacaoPage() {
                           lineHeight: 1.2,
                         }}
                       >
-                        {safeText(item.contratante)} → {safeText(item.cliente_final)}
+                        {safeText(item.contratante)} â†’ {safeText(item.cliente_final)}
                       </h2>
                       <p
                         style={{
@@ -549,7 +549,7 @@ export default function PedidosCotacaoPage() {
                           fontSize: 14,
                         }}
                       >
-                        Protocolo: {safeText(item.id)} • Aprovado em:{" "}
+                        Protocolo: {safeText(item.id)} â€¢ Aprovado em:{" "}
                         {formatDate(item.approved_at || item.created_at)}
                       </p>
                     </div>
@@ -602,8 +602,8 @@ export default function PedidosCotacaoPage() {
                         }}
                       >
                         {item.converted_to_service
-                          ? "Já convertido"
-                          : "Converter em serviço interno"}
+                          ? "JÃ¡ convertido"
+                          : "Converter em serviÃ§o interno"}
                       </button>
                     </div>
                   </div>
@@ -620,7 +620,7 @@ export default function PedidosCotacaoPage() {
                         lineHeight: 1.55,
                       }}
                     >
-                      <strong>Conversão concluída:</strong> serviço interno criado
+                      <strong>ConversÃ£o concluÃ­da:</strong> serviÃ§o interno criado
                       com ID {safeText(item.converted_service_id)} em{" "}
                       {formatDate(item.converted_at)}.
                     </div>
@@ -654,7 +654,7 @@ export default function PedidosCotacaoPage() {
                       value={safeText(item.destino_resumido)}
                     />
                     <MiniInfo
-                      label="Cobrança apresentada"
+                      label="CobranÃ§a apresentada"
                       value={moneyDisplay(item.valor_cotacao_apresentado)}
                     />
                     <MiniInfo
@@ -663,7 +663,7 @@ export default function PedidosCotacaoPage() {
                     />
                     <MiniInfo
                       label="NF emitida"
-                      value={item.nf_emitida ? "Sim" : "Não"}
+                      value={item.nf_emitida ? "Sim" : "NÃ£o"}
                     />
                   </div>
 
@@ -716,29 +716,29 @@ export default function PedidosCotacaoPage() {
                       value={moneyDisplay(item.valor_pacote_fechado)}
                     />
                     <MiniInfo
-                      label="Qtd. diárias"
+                      label="Qtd. diÃ¡rias"
                       value={String(item.quantidade_diarias ?? 0)}
                     />
                     <MiniInfo
-                      label="Valor diária"
+                      label="Valor diÃ¡ria"
                       value={moneyDisplay(item.valor_diaria)}
                     />
                     <MiniInfo
-                      label="Total diárias"
+                      label="Total diÃ¡rias"
                       value={moneyDisplay(item.total_diarias)}
                     />
                   </div>
 
                   <div style={detailBoxStyle}>
-                    <strong style={detailTitleStyle}>Observações</strong>
+                    <strong style={detailTitleStyle}>ObservaÃ§Ãµes</strong>
                     <div style={detailValueStyle}>
-                      {safeText(item.observacoes, "Sem observações.")}
+                      {safeText(item.observacoes, "Sem observaÃ§Ãµes.")}
                     </div>
                   </div>
 
                   <div style={noticeBoxStyle}>
-                    <strong>Próximo passo operacional:</strong> após a conversão,
-                    o serviço interno fica disponível na base local para a equipe
+                    <strong>PrÃ³ximo passo operacional:</strong> apÃ³s a conversÃ£o,
+                    o serviÃ§o interno fica disponÃ­vel na base local para a equipe
                     completar motorista, placa, checklist, fechamento e demais
                     dados protegidos. O disparo dos motoristas continua intacto.
                   </div>

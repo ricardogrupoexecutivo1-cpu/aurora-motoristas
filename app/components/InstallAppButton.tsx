@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 
@@ -12,7 +12,7 @@ export default function InstallAppButton() {
     useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(false);
   const [statusText, setStatusText] = useState(
-    "Instale o app no celular ou PC para acesso rápido."
+    "Instale o app no celular ou PC para acesso rÃ¡pido."
   );
 
   useEffect(() => {
@@ -23,13 +23,13 @@ export default function InstallAppButton() {
 
     if (isStandalone) {
       setIsInstalled(true);
-      setStatusText("App já instalado neste dispositivo.");
+      setStatusText("App jÃ¡ instalado neste dispositivo.");
     }
 
     function handleBeforeInstallPrompt(event: Event) {
       event.preventDefault();
       setDeferredPrompt(event as BeforeInstallPromptEvent);
-      setStatusText("Instalação disponível para este dispositivo.");
+      setStatusText("InstalaÃ§Ã£o disponÃ­vel para este dispositivo.");
     }
 
     function handleAppInstalled() {
@@ -52,13 +52,13 @@ export default function InstallAppButton() {
 
   async function instalar() {
     if (isInstalled) {
-      setStatusText("O app já está instalado neste dispositivo.");
+      setStatusText("O app jÃ¡ estÃ¡ instalado neste dispositivo.");
       return;
     }
 
     if (!deferredPrompt) {
       setStatusText(
-        "Se o botão não abrir a instalação automaticamente, use o menu do navegador e escolha “Instalar app” ou “Adicionar à tela inicial”."
+        "Se o botÃ£o nÃ£o abrir a instalaÃ§Ã£o automaticamente, use o menu do navegador e escolha â€œInstalar appâ€ ou â€œAdicionar Ã  tela inicialâ€."
       );
       return;
     }
@@ -68,15 +68,15 @@ export default function InstallAppButton() {
       const choice = await deferredPrompt.userChoice;
 
       if (choice.outcome === "accepted") {
-        setStatusText("Instalação aceita. Finalizando no dispositivo...");
+        setStatusText("InstalaÃ§Ã£o aceita. Finalizando no dispositivo...");
       } else {
-        setStatusText("Instalação cancelada pelo usuário.");
+        setStatusText("InstalaÃ§Ã£o cancelada pelo usuÃ¡rio.");
       }
 
       setDeferredPrompt(null);
     } catch {
       setStatusText(
-        "Não foi possível abrir a instalação automática agora. Tente pelo menu do navegador."
+        "NÃ£o foi possÃ­vel abrir a instalaÃ§Ã£o automÃ¡tica agora. Tente pelo menu do navegador."
       );
     }
   }

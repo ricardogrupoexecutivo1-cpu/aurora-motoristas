@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
@@ -65,13 +65,13 @@ type DraftFields = {
 
 const STORAGE_KEY = "aurora_motoristas_services";
 
-function safeText(value?: string | null, fallback = "—") {
+function safeText(value?: string | null, fallback = "â€”") {
   if (!value || !String(value).trim()) return fallback;
   return String(value);
 }
 
 function formatDate(value?: string | null) {
-  if (!value) return "—";
+  if (!value) return "â€”";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
   return date.toLocaleString("pt-BR");
@@ -115,19 +115,19 @@ function formatPlate(value: string) {
 function getTipoLabel(value?: string) {
   switch (value) {
     case "busca_veiculo":
-      return "Busca de veículo";
+      return "Busca de veÃ­culo";
     case "entrega_veiculo":
-      return "Entrega de veículo";
+      return "Entrega de veÃ­culo";
     case "transporte_executivo":
       return "Transporte executivo";
     case "transfer":
       return "Transfer";
     case "motorista_diaria":
-      return "Motorista por diária";
+      return "Motorista por diÃ¡ria";
     case "outro":
       return "Outro";
     default:
-      return value || "Não definido";
+      return value || "NÃ£o definido";
   }
 }
 
@@ -140,9 +140,9 @@ function getModoLabel(value?: string) {
     case "por_km_mais_reembolso":
       return "KM menor + reembolso";
     case "diaria_fechada":
-      return "Diária fechada";
+      return "DiÃ¡ria fechada";
     default:
-      return value || "Não definido";
+      return value || "NÃ£o definido";
   }
 }
 
@@ -158,7 +158,7 @@ function loadServices(): InternalService[] {
 
     return parsed as InternalService[];
   } catch (error) {
-    console.error("Erro ao carregar serviços:", error);
+    console.error("Erro ao carregar serviÃ§os:", error);
     return [];
   }
 }
@@ -260,7 +260,7 @@ export default function ServicosPage() {
       nextDrafts[service.id || `tmp-${Math.random()}`] = buildDraftFromService(service);
     });
     setDrafts(nextDrafts);
-    setFeedback("Leitura de serviços atualizada.");
+    setFeedback("Leitura de serviÃ§os atualizada.");
   }
 
   function updateDraft<K extends keyof DraftFields>(
@@ -314,10 +314,10 @@ export default function ServicosPage() {
 
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
       setServices(updated);
-      setFeedback(`Serviço ${service.os || service.id} atualizado com sucesso.`);
+      setFeedback(`ServiÃ§o ${service.os || service.id} atualizado com sucesso.`);
     } catch (error) {
-      console.error("Erro ao salvar complementação do serviço:", error);
-      setFeedback("Não foi possível salvar a complementação do serviço.");
+      console.error("Erro ao salvar complementaÃ§Ã£o do serviÃ§o:", error);
+      setFeedback("NÃ£o foi possÃ­vel salvar a complementaÃ§Ã£o do serviÃ§o.");
     }
   }
 
@@ -378,7 +378,7 @@ export default function ServicosPage() {
                   lineHeight: 1.1,
                 }}
               >
-                Serviços internos
+                ServiÃ§os internos
               </h1>
               <p
                 style={{
@@ -388,20 +388,20 @@ export default function ServicosPage() {
                   fontSize: 15,
                 }}
               >
-                Área interna para leitura e complementação dos serviços já
+                Ãrea interna para leitura e complementaÃ§Ã£o dos serviÃ§os jÃ¡
                 convertidos. Aqui a equipe completa motorista, placa,
-                checklist, status e fechamento básico, sem mexer no fluxo já
+                checklist, status e fechamento bÃ¡sico, sem mexer no fluxo jÃ¡
                 pronto de disparo dos motoristas.
               </p>
             </div>
 
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
               <Link href="/pedidos-cotacao" style={linkSecondaryStyle}>
-                Pedidos de cotação
+                Pedidos de cotaÃ§Ã£o
               </Link>
 
               <Link href="/servicos/novo" style={linkPrimaryStyle}>
-                Novo serviço interno
+                Novo serviÃ§o interno
               </Link>
             </div>
           </div>
@@ -413,8 +413,8 @@ export default function ServicosPage() {
               gap: 12,
             }}
           >
-            <InfoCard label="Total de serviços" value={String(total)} />
-            <InfoCard label="Vindos de cotação" value={String(convertidos)} />
+            <InfoCard label="Total de serviÃ§os" value={String(total)} />
+            <InfoCard label="Vindos de cotaÃ§Ã£o" value={String(convertidos)} />
             <InfoCard label="Sem motorista" value={String(semMotorista)} />
             <InfoCard
               label="Checklist pendente"
@@ -463,7 +463,7 @@ export default function ServicosPage() {
 
           {filteredServices.length === 0 ? (
             <div style={emptyBoxStyle}>
-              Nenhum serviço encontrado nesta leitura.
+              Nenhum serviÃ§o encontrado nesta leitura.
             </div>
           ) : (
             <div style={{ display: "grid", gap: 14 }}>
@@ -510,7 +510,7 @@ export default function ServicosPage() {
                             marginBottom: 6,
                           }}
                         >
-                          {getTipoLabel(service.tipo_servico)} •{" "}
+                          {getTipoLabel(service.tipo_servico)} â€¢{" "}
                           {getModoLabel(service.modo_cobranca)}
                         </div>
                         <h2
@@ -520,7 +520,7 @@ export default function ServicosPage() {
                             lineHeight: 1.2,
                           }}
                         >
-                          {safeText(service.os)} • {safeText(service.contratante)} →{" "}
+                          {safeText(service.os)} â€¢ {safeText(service.contratante)} â†’{" "}
                           {safeText(service.cliente_final)}
                         </h2>
                         <p
@@ -530,9 +530,9 @@ export default function ServicosPage() {
                             fontSize: 14,
                           }}
                         >
-                          Criado em {formatDate(service.created_at)} • Origem:{" "}
+                          Criado em {formatDate(service.created_at)} â€¢ Origem:{" "}
                           {service.source === "pedido_cotacao_convertido"
-                            ? "Pedido de cotação"
+                            ? "Pedido de cotaÃ§Ã£o"
                             : safeText(service.source)}
                         </p>
                       </div>
@@ -565,10 +565,10 @@ export default function ServicosPage() {
                     >
                       <MiniInfo label="Contato do cliente" value={safeText(service.contato_cliente_final)} />
                       <MiniInfo label="Telefone" value={safeText(service.telefone_cliente_final)} />
-                      <MiniInfo label="Data do serviço" value={formatDate(service.data_servico)} />
+                      <MiniInfo label="Data do serviÃ§o" value={formatDate(service.data_servico)} />
                       <MiniInfo label="Origem resumida" value={safeText(service.origem)} />
                       <MiniInfo label="Destino resumido" value={safeText(service.destino)} />
-                      <MiniInfo label="Cobrança ao contratante" value={moneyDisplay(service.valor_cobranca)} />
+                      <MiniInfo label="CobranÃ§a ao contratante" value={moneyDisplay(service.valor_cobranca)} />
                     </div>
 
                     <div
@@ -579,14 +579,14 @@ export default function ServicosPage() {
                       }}
                     >
                       <div style={detailBoxStyle}>
-                        <strong style={detailTitleStyle}>Endereço de retirada</strong>
+                        <strong style={detailTitleStyle}>EndereÃ§o de retirada</strong>
                         <div style={detailValueStyle}>
                           {safeText(service.endereco_retirada)}
                         </div>
                       </div>
 
                       <div style={detailBoxStyle}>
-                        <strong style={detailTitleStyle}>Endereço de entrega</strong>
+                        <strong style={detailTitleStyle}>EndereÃ§o de entrega</strong>
                         <div style={detailValueStyle}>
                           {safeText(service.endereco_entrega)}
                         </div>
@@ -602,8 +602,8 @@ export default function ServicosPage() {
 
                     <section style={sectionBoxStyle}>
                       <SectionTitle
-                        title="Complementação interna"
-                        subtitle="Complete aqui o que veio faltando da conversão sem alterar o fluxo de disparo."
+                        title="ComplementaÃ§Ã£o interna"
+                        subtitle="Complete aqui o que veio faltando da conversÃ£o sem alterar o fluxo de disparo."
                       />
 
                       <div
@@ -620,13 +620,13 @@ export default function ServicosPage() {
                             onChange={(e) =>
                               updateDraft(service.id || "", "motorista", e.target.value)
                             }
-                            placeholder="Ex.: João Carlos"
+                            placeholder="Ex.: JoÃ£o Carlos"
                             style={inputStyle}
                           />
                         </label>
 
                         <label style={labelStyle}>
-                          <span style={labelTextStyle}>Placa do veículo</span>
+                          <span style={labelTextStyle}>Placa do veÃ­culo</span>
                           <input
                             value={draft.placa_veiculo}
                             onChange={(e) =>
@@ -721,7 +721,7 @@ export default function ServicosPage() {
                         }}
                       >
                         <MiniInfo
-                          label="Cobrança ao contratante"
+                          label="CobranÃ§a ao contratante"
                           value={moneyDisplay(service.valor_cobranca)}
                         />
                         <MiniInfo
@@ -737,7 +737,7 @@ export default function ServicosPage() {
                           value={moneyDisplay(despesas)}
                         />
                         <MiniInfo
-                          label="Fechamento líquido"
+                          label="Fechamento lÃ­quido"
                           value={moneyDisplay(fechamento)}
                         />
                       </div>
@@ -746,7 +746,7 @@ export default function ServicosPage() {
                     <section style={sectionBoxStyle}>
                       <SectionTitle
                         title="Checklist interno"
-                        subtitle="Esse bloco continua interno e não aparece para o cliente contratante."
+                        subtitle="Esse bloco continua interno e nÃ£o aparece para o cliente contratante."
                       />
 
                       <label
@@ -768,11 +768,11 @@ export default function ServicosPage() {
                             )
                           }
                         />
-                        Checklist obrigatório neste serviço
+                        Checklist obrigatÃ³rio neste serviÃ§o
                       </label>
 
                       <label style={labelStyle}>
-                        <span style={labelTextStyle}>Instruções do checklist</span>
+                        <span style={labelTextStyle}>InstruÃ§Ãµes do checklist</span>
                         <textarea
                           value={draft.checklist_instrucoes}
                           onChange={(e) =>
@@ -783,7 +783,7 @@ export default function ServicosPage() {
                             )
                           }
                           rows={4}
-                          placeholder="Ex.: fotos, avarias, documentos, combustível, quilometragem..."
+                          placeholder="Ex.: fotos, avarias, documentos, combustÃ­vel, quilometragem..."
                           style={{
                             ...inputStyle,
                             resize: "vertical",
@@ -811,7 +811,7 @@ export default function ServicosPage() {
                             )
                           }
                         />
-                        Checklist já enviado / concluído
+                        Checklist jÃ¡ enviado / concluÃ­do
                       </label>
                     </section>
 
@@ -828,14 +828,14 @@ export default function ServicosPage() {
                         onClick={() => saveServiceCompletion(service)}
                         style={actionPrimaryButtonStyle}
                       >
-                        Salvar complementação
+                        Salvar complementaÃ§Ã£o
                       </button>
                     </div>
 
                     <div style={noticeBoxStyle}>
                       <strong>Blindagem mantida:</strong> esta tela apenas completa
-                      o serviço interno convertido. O disparo para motoristas e a
-                      lógica do primeiro aceite continuam no fluxo já existente.
+                      o serviÃ§o interno convertido. O disparo para motoristas e a
+                      lÃ³gica do primeiro aceite continuam no fluxo jÃ¡ existente.
                     </div>
                   </article>
                 );

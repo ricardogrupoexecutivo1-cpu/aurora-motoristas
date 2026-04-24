@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -28,26 +28,26 @@ const cardsResumo: MotoristaResumo[] = [
   {
     titulo: "Base protegida",
     descricao:
-      "A base interna de motoristas permanece sob controle administrativo, com separação clara entre operação, triagem e uso da plataforma.",
+      "A base interna de motoristas permanece sob controle administrativo, com separaÃ§Ã£o clara entre operaÃ§Ã£o, triagem e uso da plataforma.",
   },
   {
-    titulo: "Leitura rápida",
+    titulo: "Leitura rÃ¡pida",
     descricao:
-      "Esta página foi criada como camada segura de navegação para evitar quebrar fluxos já em produção enquanto evoluímos o restante do sistema.",
+      "Esta pÃ¡gina foi criada como camada segura de navegaÃ§Ã£o para evitar quebrar fluxos jÃ¡ em produÃ§Ã£o enquanto evoluÃ­mos o restante do sistema.",
   },
   {
-    titulo: "Expansão controlada",
+    titulo: "ExpansÃ£o controlada",
     descricao:
-      "A partir daqui podemos ligar novas funções, relatórios, filtros e ações administrativas sem mexer nas páginas antigas.",
+      "A partir daqui podemos ligar novas funÃ§Ãµes, relatÃ³rios, filtros e aÃ§Ãµes administrativas sem mexer nas pÃ¡ginas antigas.",
   },
 ];
 
 const motoristasMockBase: MotoristaPainel[] = [
   {
     id: "mock-1",
-    nome: "João da Silva",
+    nome: "JoÃ£o da Silva",
     telefone: "(31) 99999-1111",
-    cidade: "Belo Horizonte • MG",
+    cidade: "Belo Horizonte â€¢ MG",
     status: "pendente",
     origem: "mock",
   },
@@ -55,7 +55,7 @@ const motoristasMockBase: MotoristaPainel[] = [
     id: "mock-2",
     nome: "Carlos Mendes",
     telefone: "(31) 98888-2222",
-    cidade: "Parauapebas • PA",
+    cidade: "Parauapebas â€¢ PA",
     status: "ativo",
     origem: "mock",
   },
@@ -63,7 +63,7 @@ const motoristasMockBase: MotoristaPainel[] = [
     id: "mock-3",
     nome: "Marcos Pereira",
     telefone: "(31) 97777-3333",
-    cidade: "Contagem • MG",
+    cidade: "Contagem â€¢ MG",
     status: "bloqueado",
     origem: "mock",
   },
@@ -269,8 +269,8 @@ function mapMotoristaApiItem(
 
   const cidadeFinal =
     cidade && estado
-      ? `${cidade} • ${estado}`
-      : cidade || estado || "Cidade não informada";
+      ? `${cidade} â€¢ ${estado}`
+      : cidade || estado || "Cidade nÃ£o informada";
 
   const status = normalizeStatus(
     item.status ?? item.situacao ?? item.aprovacao ?? item.state,
@@ -284,7 +284,7 @@ function mapMotoristaApiItem(
   return {
     id: idValue,
     nome: nome || `Motorista ${index + 1}`,
-    telefone: telefone || "Telefone não informado",
+    telefone: telefone || "Telefone nÃ£o informado",
     cidade: cidadeFinal,
     status,
     origem: "api",
@@ -412,7 +412,7 @@ export default function PlataformaMotoristasPainelPage() {
             setMotoristas(motoristasMockBase);
             setOrigemLista("mock");
             setMensagemBase(
-              "A API respondeu, mas sem motoristas utilizáveis. Mantido fallback mock com segurança.",
+              "A API respondeu, mas sem motoristas utilizÃ¡veis. Mantido fallback mock com seguranÃ§a.",
             );
           }
         }
@@ -421,7 +421,7 @@ export default function PlataformaMotoristasPainelPage() {
           setMotoristas(motoristasMockBase);
           setOrigemLista("mock");
           setMensagemBase(
-            "Não foi possível ler a base real agora. Mantido fallback mock sem quebrar a operação.",
+            "NÃ£o foi possÃ­vel ler a base real agora. Mantido fallback mock sem quebrar a operaÃ§Ã£o.",
           );
         }
       } finally {
@@ -447,7 +447,7 @@ export default function PlataformaMotoristasPainelPage() {
       return "Acesso administrativo validado.";
     }
 
-    return "Acesso não autorizado.";
+    return "Acesso nÃ£o autorizado.";
   }, [authorized, checkingAccess]);
 
   const totais = useMemo(() => {
@@ -473,7 +473,7 @@ export default function PlataformaMotoristasPainelPage() {
   ) {
     if (motorista.origem !== "api") {
       setMensagemAcao(
-        `O motorista "${motorista.nome}" está em fallback mock. A gravação real só acontece com itens vindos da API.`,
+        `O motorista "${motorista.nome}" estÃ¡ em fallback mock. A gravaÃ§Ã£o real sÃ³ acontece com itens vindos da API.`,
       );
       return;
     }
@@ -520,7 +520,7 @@ export default function PlataformaMotoristasPainelPage() {
       );
 
       setMensagemAcao(
-        `Não foi possível salvar o status de ${motorista.nome} na API ainda. A interface voltou ao estado anterior com segurança.`,
+        `NÃ£o foi possÃ­vel salvar o status de ${motorista.nome} na API ainda. A interface voltou ao estado anterior com seguranÃ§a.`,
       );
     } finally {
       setSalvandoId(null);
@@ -533,15 +533,15 @@ export default function PlataformaMotoristasPainelPage() {
         <section className="mx-auto flex min-h-screen w-full max-w-3xl items-center justify-center px-4 py-10">
           <div className="w-full rounded-3xl border border-slate-200 bg-white p-6 text-center shadow-sm sm:p-8">
             <div className="inline-flex rounded-full border border-cyan-200 bg-cyan-50 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">
-              Aurora Motoristas • Área administrativa
+              Aurora Motoristas â€¢ Ãrea administrativa
             </div>
 
             <h1 className="mt-4 text-2xl font-bold text-slate-900 sm:text-3xl">
-              Verificando permissão
+              Verificando permissÃ£o
             </h1>
 
             <p className="mt-3 text-sm leading-6 text-slate-600 sm:text-base">
-              Esta área é restrita ao administrador. Estamos validando a sessão
+              Esta Ã¡rea Ã© restrita ao administrador. Estamos validando a sessÃ£o
               local antes de liberar o painel.
             </p>
 
@@ -554,7 +554,7 @@ export default function PlataformaMotoristasPainelPage() {
                 href="/plataforma"
                 className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
               >
-                Voltar à plataforma
+                Voltar Ã  plataforma
               </Link>
 
               <Link
@@ -580,7 +580,7 @@ export default function PlataformaMotoristasPainelPage() {
                 href="/plataforma"
                 className="inline-flex items-center rounded-full border border-slate-200 px-3 py-1.5 font-medium text-slate-700 transition hover:bg-slate-100"
               >
-                Voltar à plataforma
+                Voltar Ã  plataforma
               </Link>
 
               <Link
@@ -594,7 +594,7 @@ export default function PlataformaMotoristasPainelPage() {
                 href="/quero-ser-motorista"
                 className="inline-flex items-center rounded-full border border-slate-200 px-3 py-1.5 font-medium text-slate-700 transition hover:bg-slate-100"
               >
-                Cadastro público
+                Cadastro pÃºblico
               </Link>
             </div>
           </div>
@@ -602,7 +602,7 @@ export default function PlataformaMotoristasPainelPage() {
           <div className="px-5 py-6 sm:px-6 sm:py-8">
             <div className="flex flex-col gap-4">
               <div className="inline-flex w-fit items-center rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700">
-                Aurora Motoristas • Painel isolado
+                Aurora Motoristas â€¢ Painel isolado
               </div>
 
               <div>
@@ -610,15 +610,15 @@ export default function PlataformaMotoristasPainelPage() {
                   Painel de motoristas
                 </h1>
                 <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600 sm:text-base">
-                  Camada nova, isolada e segura para organizar a evolução da área
-                  de motoristas sem mexer no que já está em produção. Aqui fica
-                  uma base estável para ligar próximas funções com cautela.
+                  Camada nova, isolada e segura para organizar a evoluÃ§Ã£o da Ã¡rea
+                  de motoristas sem mexer no que jÃ¡ estÃ¡ em produÃ§Ã£o. Aqui fica
+                  uma base estÃ¡vel para ligar prÃ³ximas funÃ§Ãµes com cautela.
                 </p>
               </div>
 
               <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
                 Acesso administrativo validado. Motoristas, clientes e perfis
-                sem administração não devem visualizar esta área.
+                sem administraÃ§Ã£o nÃ£o devem visualizar esta Ã¡rea.
               </div>
             </div>
           </div>
@@ -643,10 +643,10 @@ export default function PlataformaMotoristasPainelPage() {
         <section className="grid gap-4 lg:grid-cols-2">
           <article className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
             <h2 className="text-lg font-semibold text-slate-900">
-              Navegação segura
+              NavegaÃ§Ã£o segura
             </h2>
             <p className="mt-2 text-sm leading-6 text-slate-600">
-              Esta página pode servir como ponto de apoio para a gestão da base
+              Esta pÃ¡gina pode servir como ponto de apoio para a gestÃ£o da base
               de motoristas, sem depender de alterar estruturas antigas.
             </p>
 
@@ -655,21 +655,21 @@ export default function PlataformaMotoristasPainelPage() {
                 href="/plataforma/motoristas"
                 className="rounded-2xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
               >
-                Abrir área de motoristas
+                Abrir Ã¡rea de motoristas
               </Link>
 
               <Link
                 href="/admin/servicos"
                 className="rounded-2xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
               >
-                Ir para Admin • Serviços
+                Ir para Admin â€¢ ServiÃ§os
               </Link>
 
               <Link
                 href="/relatorios"
                 className="rounded-2xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
               >
-                Ver relatórios
+                Ver relatÃ³rios
               </Link>
 
               <Link
@@ -683,20 +683,20 @@ export default function PlataformaMotoristasPainelPage() {
 
           <article className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
             <h2 className="text-lg font-semibold text-slate-900">
-              Próxima expansão controlada
+              PrÃ³xima expansÃ£o controlada
             </h2>
             <ul className="mt-3 space-y-3 text-sm leading-6 text-slate-600">
-              <li>• filtros de motoristas por status, cidade e empresa</li>
-              <li>• leitura da base interna protegida</li>
-              <li>• vínculo do motorista ao serviço fechado</li>
-              <li>• histórico administrativo protegido</li>
+              <li>â€¢ filtros de motoristas por status, cidade e empresa</li>
+              <li>â€¢ leitura da base interna protegida</li>
+              <li>â€¢ vÃ­nculo do motorista ao serviÃ§o fechado</li>
+              <li>â€¢ histÃ³rico administrativo protegido</li>
               <li>
-                • separação rígida entre operação interna e operadoras externas
+                â€¢ separaÃ§Ã£o rÃ­gida entre operaÃ§Ã£o interna e operadoras externas
               </li>
             </ul>
 
             <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
-              Regra mantida: motorista sem admin, cliente sem admin, empresa vê
+              Regra mantida: motorista sem admin, cliente sem admin, empresa vÃª
               apenas o que for dela e a base interna permanece blindada.
             </div>
           </article>
@@ -709,7 +709,7 @@ export default function PlataformaMotoristasPainelPage() {
               {totais.total}
             </p>
             <p className="mt-2 text-sm text-slate-600">
-              Total de motoristas visíveis neste painel.
+              Total de motoristas visÃ­veis neste painel.
             </p>
           </article>
 
@@ -719,7 +719,7 @@ export default function PlataformaMotoristasPainelPage() {
               {totais.pendentes}
             </p>
             <p className="mt-2 text-sm text-slate-600">
-              Aguardando autorização administrativa.
+              Aguardando autorizaÃ§Ã£o administrativa.
             </p>
           </article>
 
@@ -739,7 +739,7 @@ export default function PlataformaMotoristasPainelPage() {
               {totais.bloqueados}
             </p>
             <p className="mt-2 text-sm text-slate-600">
-              Fora da operação até nova decisão administrativa.
+              Fora da operaÃ§Ã£o atÃ© nova decisÃ£o administrativa.
             </p>
           </article>
         </section>
@@ -748,7 +748,7 @@ export default function PlataformaMotoristasPainelPage() {
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <div className="inline-flex w-fit items-center rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700">
-                Gestão de motoristas
+                GestÃ£o de motoristas
               </div>
 
               <h2 className="mt-3 text-xl font-bold text-slate-900 sm:text-2xl">
@@ -756,8 +756,8 @@ export default function PlataformaMotoristasPainelPage() {
               </h2>
 
               <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
-                Esta área agora tenta carregar a base real pela API. Se a leitura
-                falhar, o painel mantém fallback mock para não quebrar a camada
+                Esta Ã¡rea agora tenta carregar a base real pela API. Se a leitura
+                falhar, o painel mantÃ©m fallback mock para nÃ£o quebrar a camada
                 administrativa.
               </p>
             </div>
@@ -803,7 +803,7 @@ export default function PlataformaMotoristasPainelPage() {
                       </div>
 
                       <p className="mt-1 text-sm text-slate-500">
-                        {motorista.telefone} • {motorista.cidade}
+                        {motorista.telefone} â€¢ {motorista.cidade}
                       </p>
 
                       <div
@@ -858,8 +858,8 @@ export default function PlataformaMotoristasPainelPage() {
           </div>
 
           <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-700">
-            Próximo nível seguro: refletir a decisão administrativa na operação e
-            impedir vínculo de serviço com motorista fora da base autorizada.
+            PrÃ³ximo nÃ­vel Ambiente seguro: refletir a decisÃ£o administrativa na operaÃ§Ã£o e
+            impedir vÃ­nculo de serviÃ§o com motorista fora da base autorizada.
           </div>
         </section>
       </section>

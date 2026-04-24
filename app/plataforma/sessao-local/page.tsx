@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 
@@ -23,19 +23,19 @@ const PERFIS: Array<{
     value: "motorista",
     label: "Motorista interno",
     descricao:
-      "Acesso individual e restrito. O motorista vê apenas os próprios serviços autorizados.",
+      "Acesso individual e restrito. O motorista vÃª apenas os prÃ³prios serviÃ§os autorizados.",
   },
   {
     value: "operadora",
     label: "Operadora externa",
     descricao:
-      "Acesso segregado por empresa, sem qualquer visão da base interna master.",
+      "Acesso segregado por empresa, sem qualquer visÃ£o da base interna master.",
   },
   {
     value: "admin",
     label: "Admin master",
     descricao:
-      "Visão protegida de governança, liberação, auditoria e blindagem da operação.",
+      "VisÃ£o protegida de governanÃ§a, liberaÃ§Ã£o, auditoria e blindagem da operaÃ§Ã£o.",
   },
 ];
 
@@ -79,12 +79,12 @@ function corPorPerfil(perfil: PerfilTipo) {
 }
 
 function formatarData(valor: string) {
-  if (!valor) return "Ainda não salvo";
+  if (!valor) return "Ainda nÃ£o salvo";
 
   const data = new Date(valor);
 
   if (Number.isNaN(data.getTime())) {
-    return "Data inválida";
+    return "Data invÃ¡lida";
   }
 
   return new Intl.DateTimeFormat("pt-BR", {
@@ -114,7 +114,7 @@ function lerSessaoLocal(): SessaoLocal | null {
       empresa:
         typeof parsed.empresa === "string" && parsed.empresa.trim()
           ? parsed.empresa.trim()
-          : "Empresa não informada",
+          : "Empresa nÃ£o informada",
       atualizadoEm:
         typeof parsed.atualizadoEm === "string" ? parsed.atualizadoEm : "",
     };
@@ -129,7 +129,7 @@ export default function PlataformaSessaoLocalPage() {
   const [empresa, setEmpresa] = useState("Base Interna");
   const [sessaoSalva, setSessaoSalva] = useState<SessaoLocal | null>(null);
   const [status, setStatus] = useState(
-    "Sessão local ainda não salva nesta etapa."
+    "SessÃ£o local ainda nÃ£o salva nesta etapa."
   );
   const [feedback, setFeedback] = useState<FeedbackTipo>("idle");
 
@@ -139,14 +139,14 @@ export default function PlataformaSessaoLocalPage() {
     const sessao = lerSessaoLocal();
 
     if (!sessao) {
-      setStatus("Sessão local ainda não salva nesta etapa.");
+      setStatus("SessÃ£o local ainda nÃ£o salva nesta etapa.");
       return;
     }
 
     setPerfil(sessao.perfil);
     setEmpresa(sessao.empresa);
     setSessaoSalva(sessao);
-    setStatus("Sessão local carregada com sucesso.");
+    setStatus("SessÃ£o local carregada com sucesso.");
   }, []);
 
   useEffect(() => {
@@ -170,9 +170,9 @@ export default function PlataformaSessaoLocalPage() {
 
   function labelBotaoSalvar() {
     if (feedback === "saving") return "Salvando...";
-    if (feedback === "success") return "Salvo ✓";
+    if (feedback === "success") return "Salvo âœ“";
     if (feedback === "error") return "Tentar salvar novamente";
-    return "Salvar sessão local";
+    return "Salvar sessÃ£o local";
   }
 
   function classeBotaoSalvar() {
@@ -185,17 +185,17 @@ export default function PlataformaSessaoLocalPage() {
   function salvarSessaoLocal() {
     if (typeof window === "undefined") {
       setFeedback("error");
-      setStatus("Salvar não disponível fora do navegador.");
+      setStatus("Salvar nÃ£o disponÃ­vel fora do navegador.");
       return;
     }
 
     setFeedback("saving");
-    setStatus("Salvando sessão local nesta camada isolada...");
+    setStatus("Salvando sessÃ£o local nesta camada isolada...");
 
     try {
       const payload: SessaoLocal = {
         perfil,
-        empresa: empresa.trim() || "Empresa não informada",
+        empresa: empresa.trim() || "Empresa nÃ£o informada",
         atualizadoEm: new Date().toISOString(),
       };
 
@@ -208,7 +208,7 @@ export default function PlataformaSessaoLocalPage() {
       if (!confirmacao) {
         setFeedback("error");
         setStatus(
-          "A tentativa de salvar ocorreu, mas a leitura de confirmação falhou."
+          "A tentativa de salvar ocorreu, mas a leitura de confirmaÃ§Ã£o falhou."
         );
         setSessaoSalva(null);
         return;
@@ -218,18 +218,18 @@ export default function PlataformaSessaoLocalPage() {
       setPerfil(confirmacao.perfil);
       setEmpresa(confirmacao.empresa);
       setFeedback("success");
-      setStatus("Sessão local salva com sucesso nesta camada isolada.");
+      setStatus("SessÃ£o local salva com sucesso nesta camada isolada.");
     } catch (error) {
-      console.error("Erro ao salvar sessão local:", error);
+      console.error("Erro ao salvar sessÃ£o local:", error);
       setFeedback("error");
-      setStatus("Não foi possível salvar a sessão local neste navegador.");
+      setStatus("NÃ£o foi possÃ­vel salvar a sessÃ£o local neste navegador.");
     }
   }
 
   function limparSessaoLocal() {
     if (typeof window === "undefined") {
       setFeedback("error");
-      setStatus("Limpeza não disponível fora do navegador.");
+      setStatus("Limpeza nÃ£o disponÃ­vel fora do navegador.");
       return;
     }
 
@@ -237,11 +237,11 @@ export default function PlataformaSessaoLocalPage() {
       window.localStorage.removeItem(STORAGE_KEY);
       setSessaoSalva(null);
       setFeedback("idle");
-      setStatus("Sessão local removida com sucesso.");
+      setStatus("SessÃ£o local removida com sucesso.");
     } catch (error) {
-      console.error("Erro ao limpar sessão local:", error);
+      console.error("Erro ao limpar sessÃ£o local:", error);
       setFeedback("error");
-      setStatus("Não foi possível remover a sessão local.");
+      setStatus("NÃ£o foi possÃ­vel remover a sessÃ£o local.");
     }
   }
 
@@ -275,17 +275,17 @@ export default function PlataformaSessaoLocalPage() {
           <div className="mt-8 grid gap-8 lg:grid-cols-[1.1fr,0.9fr]">
             <div>
               <span className="inline-flex rounded-full border border-cyan-200 bg-cyan-50 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">
-                Aurora Motoristas • Sessão local isolada
+                Aurora Motoristas â€¢ SessÃ£o local isolada
               </span>
 
               <h1 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 md:text-5xl">
-                Sessão local controlada por perfil
+                SessÃ£o local controlada por perfil
               </h1>
 
               <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600 md:text-lg">
-                Esta página salva localmente no navegador o perfil e a empresa
-                usados na nova camada da plataforma. É um passo seguro para
-                preparar a futura ligação com sessão real, ainda sem tocar no
+                Esta pÃ¡gina salva localmente no navegador o perfil e a empresa
+                usados na nova camada da plataforma. Ã‰ um passo Ambiente seguro para
+                preparar a futura ligaÃ§Ã£o com sessÃ£o real, ainda sem tocar no
                 login oficial, na API ou no banco.
               </p>
             </div>
@@ -296,12 +296,12 @@ export default function PlataformaSessaoLocalPage() {
               </p>
 
               <h2 className="mt-3 text-2xl font-bold">
-                Persistir o perfil sem encostar na produção
+                Persistir o perfil sem encostar na produÃ§Ã£o
               </h2>
 
               <p className="mt-4 text-sm leading-7 text-slate-200">
                 Primeiro persistimos o contexto localmente. Depois, em outra
-                etapa controlada, trocamos essa leitura local por uma sessão
+                etapa controlada, trocamos essa leitura local por uma sessÃ£o
                 real da plataforma.
               </p>
             </div>
@@ -313,7 +313,7 @@ export default function PlataformaSessaoLocalPage() {
         <div className="grid gap-6 lg:grid-cols-[0.95fr,1.05fr]">
           <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm md:p-8">
             <span className="inline-flex rounded-full border border-slate-200 bg-slate-100 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-700">
-              Configuração da sessão
+              ConfiguraÃ§Ã£o da sessÃ£o
             </span>
 
             <h2 className="mt-3 text-2xl font-bold text-slate-900">
@@ -367,7 +367,7 @@ export default function PlataformaSessaoLocalPage() {
                   id="empresa"
                   value={empresa}
                   onChange={(event) => setEmpresa(event.target.value)}
-                  placeholder="Ex.: Base Interna, Operadora Parceira, Operação Principal"
+                  placeholder="Ex.: Base Interna, Operadora Parceira, OperaÃ§Ã£o Principal"
                   className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-cyan-500"
                 />
               </div>
@@ -387,7 +387,7 @@ export default function PlataformaSessaoLocalPage() {
                   onClick={limparSessaoLocal}
                   className="inline-flex items-center rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-800 transition hover:bg-slate-100"
                 >
-                  Limpar sessão local
+                  Limpar sessÃ£o local
                 </button>
 
                 <a
@@ -399,9 +399,9 @@ export default function PlataformaSessaoLocalPage() {
               </div>
 
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-7 text-slate-700">
-                <strong>Leitura do botão:</strong>{" "}
+                <strong>Leitura do botÃ£o:</strong>{" "}
                 ao clicar em salvar, ele muda para <strong>Salvando...</strong>,
-                depois mostra <strong>Salvo ✓</strong> quando a sessão for
+                depois mostra <strong>Salvo âœ“</strong> quando a sessÃ£o for
                 gravada corretamente.
               </div>
             </div>
@@ -427,7 +427,7 @@ export default function PlataformaSessaoLocalPage() {
                 className={`mt-5 rounded-2xl border p-4 text-sm leading-7 ${cores.destaque}`}
               >
                 Empresa atual:{" "}
-                <strong>{empresa.trim() || "Empresa não informada"}</strong>
+                <strong>{empresa.trim() || "Empresa nÃ£o informada"}</strong>
               </div>
 
               <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-7 text-slate-700">
@@ -437,7 +437,7 @@ export default function PlataformaSessaoLocalPage() {
 
             <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm md:p-8">
               <span className="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">
-                Sessão salva no navegador
+                SessÃ£o salva no navegador
               </span>
 
               <h2 className="mt-3 text-2xl font-bold text-slate-900">
@@ -464,7 +464,7 @@ export default function PlataformaSessaoLocalPage() {
                 </div>
               ) : (
                 <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-5 text-sm leading-7 text-slate-700">
-                  Nenhuma sessão local salva até agora nesta camada.
+                  Nenhuma sessÃ£o local salva atÃ© agora nesta camada.
                 </div>
               )}
             </div>
@@ -475,7 +475,7 @@ export default function PlataformaSessaoLocalPage() {
               </span>
 
               <h2 className="mt-3 text-2xl font-bold text-slate-900">
-                O que esta sessão local faz e o que ainda não faz
+                O que esta sessÃ£o local faz e o que ainda nÃ£o faz
               </h2>
 
               <ul className="mt-6 space-y-4">
@@ -485,15 +485,15 @@ export default function PlataformaSessaoLocalPage() {
                 </li>
                 <li className="flex gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-7 text-slate-700">
                   <span className="mt-2 inline-block h-2.5 w-2.5 rounded-full bg-cyan-500" />
-                  <span>Não altera autenticação oficial, banco, API ou sessão real.</span>
+                  <span>NÃ£o altera autenticaÃ§Ã£o oficial, banco, API ou sessÃ£o real.</span>
                 </li>
                 <li className="flex gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-7 text-slate-700">
                   <span className="mt-2 inline-block h-2.5 w-2.5 rounded-full bg-cyan-500" />
-                  <span>Prepara a transição futura para uma leitura real de perfil com segurança.</span>
+                  <span>Prepara a transiÃ§Ã£o futura para uma leitura real de perfil com seguranÃ§a.</span>
                 </li>
                 <li className="flex gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-7 text-slate-700">
                   <span className="mt-2 inline-block h-2.5 w-2.5 rounded-full bg-cyan-500" />
-                  <span>Respeita a regra de não tocar na produção já publicada.</span>
+                  <span>Respeita a regra de nÃ£o tocar na produÃ§Ã£o jÃ¡ publicada.</span>
                 </li>
               </ul>
             </div>
@@ -504,10 +504,10 @@ export default function PlataformaSessaoLocalPage() {
       <section className="border-t border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-6 py-6 md:px-8">
           <p className="text-sm leading-7 text-slate-500">
-            Sistema em constante atualização e podem ocorrer instabilidades
-            momentâneas durante melhorias. Esta página foi criada como camada
-            nova e isolada para validar persistência local de perfil sem tocar
-            na base já publicada.
+            Sistema em constante atualizaÃ§Ã£o e podem ocorrer instabilidades
+            momentÃ¢neas durante melhorias. Esta pÃ¡gina foi criada como camada
+            nova e isolada para validar persistÃªncia local de perfil sem tocar
+            na base jÃ¡ publicada.
           </p>
         </div>
       </section>

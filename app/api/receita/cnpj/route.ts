@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
@@ -53,7 +53,7 @@ export async function GET(request: Request) {
 
     if (!cnpj || cnpj.length !== 14) {
       return NextResponse.json(
-        { error: "Informe um CNPJ válido com 14 dígitos." },
+        { error: "Informe um CNPJ vÃ¡lido com 14 dÃ­gitos." },
         { status: 400 }
       );
     }
@@ -88,7 +88,7 @@ export async function GET(request: Request) {
             cidade: data.municipio || "",
             estado: data.uf || "",
             observacoes: data.descricao_situacao_cadastral
-              ? `Situação cadastral: ${data.descricao_situacao_cadastral}`
+              ? `SituaÃ§Ã£o cadastral: ${data.descricao_situacao_cadastral}`
               : "",
           },
         });
@@ -128,25 +128,25 @@ export async function GET(request: Request) {
               cidade: data.municipio || "",
               estado: data.uf || "",
               observacoes: data.situacao
-                ? `Situação cadastral: ${data.situacao}`
+                ? `SituaÃ§Ã£o cadastral: ${data.situacao}`
                 : "",
             },
           });
         }
 
         return NextResponse.json(
-          { error: data.message || "CNPJ não encontrado na ReceitaWS." },
+          { error: data.message || "CNPJ nÃ£o encontrado na ReceitaWS." },
           { status: 404 }
         );
       }
     } catch {
-      // falhou também
+      // falhou tambÃ©m
     }
 
     return NextResponse.json(
       {
         error:
-          "Não foi possível consultar o CNPJ agora. Tente novamente em instantes.",
+          "NÃ£o foi possÃ­vel consultar o CNPJ agora. Tente novamente em instantes.",
       },
       { status: 502 }
     );

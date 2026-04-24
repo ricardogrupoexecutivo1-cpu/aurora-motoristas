@@ -1,24 +1,24 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 type FlowStage =
-  | "Cotação"
+  | "CotaÃ§Ã£o"
   | "Em andamento"
   | "Aguardando pagamento"
   | "Pago"
-  | "Histórico"
+  | "HistÃ³rico"
   | "Agendado"
   | "Em deslocamento"
   | "Aguardando passageiro"
-  | "Concluído"
+  | "ConcluÃ­do"
   | "Reagendado";
 
 type FlowOrigin =
-  | "Serviço padrão"
-  | "Serviço local"
-  | "Translado padrão"
+  | "ServiÃ§o padrÃ£o"
+  | "ServiÃ§o local"
+  | "Translado padrÃ£o"
   | "Translado local";
 
 type FlowItem = {
@@ -50,7 +50,7 @@ type LocalService = {
   valorTotal: number;
   valorMotorista: number;
   despesas: number;
-  etapa: "Cotação" | "Em andamento" | "Aguardando pagamento" | "Pago";
+  etapa: "CotaÃ§Ã£o" | "Em andamento" | "Aguardando pagamento" | "Pago";
   observacao: string;
 };
 
@@ -69,7 +69,7 @@ type LocalTransfer = {
   horarioAtualizado: string;
   tempoEstimadoMin: number;
   acrescimoTransitoMin: number;
-  risco: "Baixo" | "Médio" | "Alto";
+  risco: "Baixo" | "MÃ©dio" | "Alto";
   valorTransfer: number;
   valorMotorista: number;
   despesas: number;
@@ -78,7 +78,7 @@ type LocalTransfer = {
     | "Agendado"
     | "Em deslocamento"
     | "Aguardando passageiro"
-    | "Concluído"
+    | "ConcluÃ­do"
     | "Reagendado";
   observacao: string;
   createdAt: string;
@@ -97,44 +97,44 @@ const baseFlow: FlowItem[] = [
   {
     id: "OP-0001",
     empresa: "Aurora Locadoras Premium",
-    cliente: "Operação Aeroporto Premium",
+    cliente: "OperaÃ§Ã£o Aeroporto Premium",
     motorista: "Ricardo Moreira",
     servico: "Lagoa Santa x Savassi",
     data: "10/04/2026",
     valorTotal: 540,
     valorMotorista: 220,
     despesas: 60,
-    etapa: "Cotação",
-    observacao: "Cotação em análise com possibilidade de ajuste.",
-    origemBase: "Serviço padrão",
+    etapa: "CotaÃ§Ã£o",
+    observacao: "CotaÃ§Ã£o em anÃ¡lise com possibilidade de ajuste.",
+    origemBase: "ServiÃ§o padrÃ£o",
   },
   {
     id: "OP-0002",
     empresa: "Aurora Locadoras Premium",
     cliente: "Cliente Executivo BH",
     motorista: "Carlos Henrique",
-    servico: "BH x São Paulo",
+    servico: "BH x SÃ£o Paulo",
     data: "10/04/2026",
     valorTotal: 1700,
     valorMotorista: 500,
     despesas: 200,
     etapa: "Em andamento",
-    observacao: "Operação ativa com pedágios e apoio no percurso.",
-    origemBase: "Serviço padrão",
+    observacao: "OperaÃ§Ã£o ativa com pedÃ¡gios e apoio no percurso.",
+    origemBase: "ServiÃ§o padrÃ£o",
   },
   {
     id: "OP-0003",
     empresa: "Aurora Locadoras Premium",
     cliente: "Evento Nacional",
-    motorista: "João Pedro",
+    motorista: "JoÃ£o Pedro",
     servico: "BH x Confins",
     data: "10/04/2026",
     valorTotal: 400,
     valorMotorista: 150,
     despesas: 50,
     etapa: "Aguardando pagamento",
-    observacao: "Serviço concluído, aguardando baixa financeira.",
-    origemBase: "Serviço padrão",
+    observacao: "ServiÃ§o concluÃ­do, aguardando baixa financeira.",
+    origemBase: "ServiÃ§o padrÃ£o",
   },
   {
     id: "OP-0004",
@@ -147,8 +147,8 @@ const baseFlow: FlowItem[] = [
     valorMotorista: 180,
     despesas: 40,
     etapa: "Pago",
-    observacao: "Pagamento realizado. Deve sair da visão operacional do motorista.",
-    origemBase: "Serviço padrão",
+    observacao: "Pagamento realizado. Deve sair da visÃ£o operacional do motorista.",
+    origemBase: "ServiÃ§o padrÃ£o",
   },
   {
     id: "OP-0005",
@@ -160,9 +160,9 @@ const baseFlow: FlowItem[] = [
     valorTotal: 680,
     valorMotorista: 260,
     despesas: 50,
-    etapa: "Histórico",
-    observacao: "Registro encerrado e preservado em histórico administrativo.",
-    origemBase: "Serviço padrão",
+    etapa: "HistÃ³rico",
+    observacao: "Registro encerrado e preservado em histÃ³rico administrativo.",
+    origemBase: "ServiÃ§o padrÃ£o",
   },
   {
     id: "OP-TRA-0001",
@@ -176,12 +176,12 @@ const baseFlow: FlowItem[] = [
     despesas: 24,
     etapa: "Reagendado",
     observacao: "Translado reagendado por atraso de voo.",
-    origemBase: "Translado padrão",
+    origemBase: "Translado padrÃ£o",
   },
   {
     id: "OP-TRA-0002",
     empresa: "Grupo Executivo Mobilidade",
-    cliente: "Delegação Internacional",
+    cliente: "DelegaÃ§Ã£o Internacional",
     motorista: "Maria Fernanda",
     servico: "Hotel Ouro Minas x Aeroporto de Confins",
     data: "10/04/2026 11:00",
@@ -189,14 +189,14 @@ const baseFlow: FlowItem[] = [
     valorMotorista: 150,
     despesas: 18,
     etapa: "Agendado",
-    observacao: "Transfer confirmado com operação estável.",
-    origemBase: "Translado padrão",
+    observacao: "Transfer confirmado com operaÃ§Ã£o estÃ¡vel.",
+    origemBase: "Translado padrÃ£o",
   },
   {
     id: "OP-TRA-0003",
     empresa: "Aurora Locadoras Premium",
-    cliente: "Operação Aeroporto VIP",
-    motorista: "João Pedro",
+    cliente: "OperaÃ§Ã£o Aeroporto VIP",
+    motorista: "JoÃ£o Pedro",
     servico: "Aeroporto de Confins x Lourdes",
     data: "10/04/2026 14:20",
     valorTotal: 260,
@@ -204,7 +204,7 @@ const baseFlow: FlowItem[] = [
     despesas: 20,
     etapa: "Aguardando passageiro",
     observacao: "Motorista no aeroporto aguardando desembarque.",
-    origemBase: "Translado padrão",
+    origemBase: "Translado padrÃ£o",
   },
 ];
 
@@ -290,7 +290,7 @@ function getDriverPhoneByName(name: string) {
   const map: Record<string, string> = {
     "ricardo moreira": "5531990001001",
     "carlos henrique": "5531990001002",
-    "joão pedro": "5531990001003",
+    "joÃ£o pedro": "5531990001003",
     "joao pedro": "5531990001003",
     "maria fernanda": "5531990001004",
     "pedro paulo": "5531990001005",
@@ -303,16 +303,16 @@ function getClientPhoneByName(name: string) {
   const normalized = name.trim().toLowerCase();
 
   const map: Record<string, string> = {
-    "operação aeroporto premium": "5531880002001",
+    "operaÃ§Ã£o aeroporto premium": "5531880002001",
     "operacao aeroporto premium": "5531880002001",
     "cliente executivo bh": "5531880002002",
     "evento nacional": "5531880002003",
     "cliente premium sul": "5531880002004",
     "contrato corporativo nacional": "5531880002005",
     "executivo nacional": "5531880002006",
-    "delegação internacional": "5531880002007",
+    "delegaÃ§Ã£o internacional": "5531880002007",
     "delegacao internacional": "5531880002007",
-    "operação aeroporto vip": "5531880002008",
+    "operaÃ§Ã£o aeroporto vip": "5531880002008",
     "operacao aeroporto vip": "5531880002008",
     "joao bosco": "5531880002009",
     "joao silva": "5531880002010",
@@ -322,13 +322,13 @@ function getClientPhoneByName(name: string) {
 }
 
 function buildOperationMessage(item: FlowItem) {
-  return `🚗 Aurora Motoristas
+  return `ðŸš— Aurora Motoristas
 
-OS/Operação: ${item.id}
+OS/OperaÃ§Ã£o: ${item.id}
 Empresa: ${item.empresa}
 Cliente: ${item.cliente}
 Motorista: ${item.motorista}
-Serviço: ${item.servico}
+ServiÃ§o: ${item.servico}
 Data: ${item.data}
 Valor: ${item.valorTotal.toLocaleString("pt-BR", {
     style: "currency",
@@ -336,19 +336,19 @@ Valor: ${item.valorTotal.toLocaleString("pt-BR", {
   })}
 Status atual: ${item.etapa}
 
-Mensagem enviada pela operação da Aurora para acompanhamento do atendimento.`;
+Mensagem enviada pela operaÃ§Ã£o da Aurora para acompanhamento do atendimento.`;
 }
 
 function buildLocationRequestMessage(item: FlowItem) {
-  return `📍 Aurora Motoristas
+  return `ðŸ“ Aurora Motoristas
 
-Operação: ${item.id}
-Serviço: ${item.servico}
+OperaÃ§Ã£o: ${item.id}
+ServiÃ§o: ${item.servico}
 Data: ${item.data}
 
-Se você concordar, compartilhe sua localização atual para acompanhamento desta operação durante o atendimento.
+Se vocÃª concordar, compartilhe sua localizaÃ§Ã£o atual para acompanhamento desta operaÃ§Ã£o durante o atendimento.
 
-Esse envio deve ser feito somente durante a execução do serviço.`;
+Esse envio deve ser feito somente durante a execuÃ§Ã£o do serviÃ§o.`;
 }
 
 function mapLocalService(item: LocalService): FlowItem {
@@ -364,8 +364,8 @@ function mapLocalService(item: LocalService): FlowItem {
     despesas: item.despesas,
     etapa: item.etapa,
     observacao:
-      item.observacao?.trim() || "Serviço local integrado à operação mãe.",
-    origemBase: "Serviço local",
+      item.observacao?.trim() || "ServiÃ§o local integrado Ã  operaÃ§Ã£o mÃ£e.",
+    origemBase: "ServiÃ§o local",
   };
 }
 
@@ -382,13 +382,13 @@ function mapLocalTransfer(item: LocalTransfer): FlowItem {
     despesas: item.despesas,
     etapa: item.status,
     observacao:
-      item.observacao?.trim() || "Translado local integrado à operação mãe.",
+      item.observacao?.trim() || "Translado local integrado Ã  operaÃ§Ã£o mÃ£e.",
     origemBase: "Translado local",
   };
 }
 
 function getStageStyle(stage: FlowStage): React.CSSProperties {
-  if (stage === "Cotação") {
+  if (stage === "CotaÃ§Ã£o") {
     return {
       background: "rgba(148, 163, 184, 0.12)",
       color: "#475569",
@@ -415,7 +415,7 @@ function getStageStyle(stage: FlowStage): React.CSSProperties {
     };
   }
 
-  if (stage === "Pago" || stage === "Concluído") {
+  if (stage === "Pago" || stage === "ConcluÃ­do") {
     return {
       background: "rgba(16, 185, 129, 0.12)",
       color: "#047857",
@@ -439,21 +439,21 @@ function getStageStyle(stage: FlowStage): React.CSSProperties {
 }
 
 function getOriginStyle(origin: FlowOrigin): React.CSSProperties {
-  if (origin === "Serviço padrão") {
+  if (origin === "ServiÃ§o padrÃ£o") {
     return {
       background: "rgba(148, 163, 184, 0.12)",
       color: "#475569",
       border: "1px solid rgba(148, 163, 184, 0.22)",
     };
   }
-  if (origin === "Serviço local") {
+  if (origin === "ServiÃ§o local") {
     return {
       background: "rgba(37, 99, 235, 0.10)",
       color: "#1d4ed8",
       border: "1px solid rgba(37, 99, 235, 0.18)",
     };
   }
-  if (origin === "Translado padrão") {
+  if (origin === "Translado padrÃ£o") {
     return {
       background: "rgba(6, 182, 212, 0.10)",
       color: "#0e7490",
@@ -505,7 +505,7 @@ export default function OperacaoPage() {
       const historyItem: PaidHistoryItem = {
         ...item,
         etapa: "Pago",
-        observacao: `${item.observacao} • Baixa registrada em ${formatDateTimeNow()}.`,
+        observacao: `${item.observacao} â€¢ Baixa registrada em ${formatDateTimeNow()}.`,
         pagoEm: formatDateTimeNow(),
       };
 
@@ -513,7 +513,7 @@ export default function OperacaoPage() {
     }
 
     setRecentMessage(
-      `${item.id} marcado como pago e removido da visão operacional do motorista.`
+      `${item.id} marcado como pago e removido da visÃ£o operacional do motorista.`
     );
   }
 
@@ -523,8 +523,8 @@ export default function OperacaoPage() {
     return fullFlow.filter((item) => {
       const hiddenByStage =
         item.etapa === "Pago" ||
-        item.etapa === "Histórico" ||
-        item.etapa === "Concluído";
+        item.etapa === "HistÃ³rico" ||
+        item.etapa === "ConcluÃ­do";
 
       const hiddenByManualPaid = paidIds.includes(item.id);
 
@@ -543,7 +543,7 @@ export default function OperacaoPage() {
   const stats = useMemo(() => {
     return {
       total: filteredFlow.length,
-      cotacao: filteredFlow.filter((item) => item.etapa === "Cotação").length,
+      cotacao: filteredFlow.filter((item) => item.etapa === "CotaÃ§Ã£o").length,
       andamento: filteredFlow.filter(
         (item) =>
           item.etapa === "Em andamento" ||
@@ -557,12 +557,12 @@ export default function OperacaoPage() {
       ).length,
       locais: filteredFlow.filter(
         (item) =>
-          item.origemBase === "Serviço local" ||
+          item.origemBase === "ServiÃ§o local" ||
           item.origemBase === "Translado local"
       ).length,
       translados: filteredFlow.filter(
         (item) =>
-          item.origemBase === "Translado padrão" ||
+          item.origemBase === "Translado padrÃ£o" ||
           item.origemBase === "Translado local"
       ).length,
     };
@@ -577,46 +577,46 @@ export default function OperacaoPage() {
         <div style={styles.heroCard}>
           <div style={styles.heroGrid}>
             <div style={styles.heroLeft}>
-              <div style={styles.eyebrow}>AURORA MOTORISTAS • OPERAÇÃO</div>
+              <div style={styles.eyebrow}>AURORA MOTORISTAS â€¢ OPERAÃ‡ÃƒO</div>
               <h1 style={styles.heroTitle}>
-                Fluxo completo da operação com serviços e translados em uma visão única
+                Fluxo completo da operaÃ§Ã£o com serviÃ§os e translados em uma visÃ£o Ãºnica
               </h1>
               <p style={styles.heroText}>
-                Esta página conecta a trilha do serviço e do translado desde a
-                cotação ou agendamento até pagamento e histórico, inclusive para
+                Esta pÃ¡gina conecta a trilha do serviÃ§o e do translado desde a
+                cotaÃ§Ã£o ou agendamento atÃ© pagamento e histÃ³rico, inclusive para
                 itens criados localmente.
               </p>
 
               <div style={styles.heroActions}>
                 <Link href="/servicos" style={styles.secondaryButton}>
-                  Voltar para serviços
+                  Voltar para serviÃ§os
                 </Link>
 
                 <Link href="/historico" style={styles.primaryButton}>
-                  Ir para histórico
+                  Ir para histÃ³rico
                 </Link>
               </div>
             </div>
 
             <div style={styles.heroRightCard}>
-              <span style={styles.sideKicker}>VISÃO MÃE</span>
+              <span style={styles.sideKicker}>VISÃƒO MÃƒE</span>
               <h2 style={styles.sideTitle}>Tudo ligado no mesmo fluxo</h2>
               <p style={styles.sideText}>
-                Cotação, execução, translados, pagamento e histórico passam a
-                ficar visíveis na mesma trilha operacional.
+                CotaÃ§Ã£o, execuÃ§Ã£o, translados, pagamento e histÃ³rico passam a
+                ficar visÃ­veis na mesma trilha operacional.
               </p>
 
               <div style={styles.sidePills}>
-                <div style={styles.sidePill}>Cotação</div>
+                <div style={styles.sidePill}>CotaÃ§Ã£o</div>
                 <div style={styles.sidePill}>Pagamento</div>
-                <div style={styles.sidePill}>Histórico</div>
+                <div style={styles.sidePill}>HistÃ³rico</div>
               </div>
             </div>
           </div>
 
           <div style={styles.noticeBox}>
-            Sistema em constante atualização. Esta camada já integra base padrão,
-            base local, serviços e translados na visão mãe da operação.
+            Sistema em constante atualizaÃ§Ã£o. Esta camada jÃ¡ integra base padrÃ£o,
+            base local, serviÃ§os e translados na visÃ£o mÃ£e da operaÃ§Ã£o.
           </div>
 
           {recentMessage ? <div style={styles.successBanner}>{recentMessage}</div> : null}
@@ -626,21 +626,21 @@ export default function OperacaoPage() {
       <section style={styles.statsSection}>
         <div style={styles.statsGrid}>
           <article style={styles.statCard}>
-            <span style={styles.statLabel}>Operações visíveis</span>
+            <span style={styles.statLabel}>OperaÃ§Ãµes visÃ­veis</span>
             <strong style={styles.statValue}>{stats.total}</strong>
             <span style={styles.statDetail}>Fluxo consolidado</span>
           </article>
 
           <article style={styles.statCard}>
-            <span style={styles.statLabel}>Em cotação</span>
+            <span style={styles.statLabel}>Em cotaÃ§Ã£o</span>
             <strong style={styles.statValue}>{stats.cotacao}</strong>
-            <span style={styles.statDetail}>Pré-operação comercial</span>
+            <span style={styles.statDetail}>PrÃ©-operaÃ§Ã£o comercial</span>
           </article>
 
           <article style={styles.statCard}>
             <span style={styles.statLabel}>Em andamento</span>
             <strong style={styles.statValue}>{stats.andamento}</strong>
-            <span style={styles.statDetail}>Operação ativa</span>
+            <span style={styles.statDetail}>OperaÃ§Ã£o ativa</span>
           </article>
 
           <article style={styles.statCard}>
@@ -660,7 +660,7 @@ export default function OperacaoPage() {
           </article>
 
           <article style={styles.statCard}>
-            <span style={styles.statLabel}>Translados na operação</span>
+            <span style={styles.statLabel}>Translados na operaÃ§Ã£o</span>
             <strong style={styles.statValue}>{stats.translados}</strong>
             <span style={styles.statDetail}>Fluxo de aeroporto</span>
           </article>
@@ -674,11 +674,11 @@ export default function OperacaoPage() {
               <div style={styles.sectionHeader}>
                 <div>
                   <span style={styles.sectionEyebrow}>TRILHA OPERACIONAL</span>
-                  <h2 style={styles.sectionTitle}>Da cotação ao histórico</h2>
+                  <h2 style={styles.sectionTitle}>Da cotaÃ§Ã£o ao histÃ³rico</h2>
                 </div>
 
                 <input
-                  placeholder="Buscar por empresa, cliente, motorista, serviço, translado ou etapa"
+                  placeholder="Buscar por empresa, cliente, motorista, serviÃ§o, translado ou etapa"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   style={styles.searchInput}
@@ -688,7 +688,7 @@ export default function OperacaoPage() {
               <div style={styles.flowList}>
                 {filteredFlow.length === 0 ? (
                   <div style={styles.emptyState}>
-                    Nenhuma operação encontrada para este filtro.
+                    Nenhuma operaÃ§Ã£o encontrada para este filtro.
                   </div>
                 ) : (
                   filteredFlow.map((item) => (
@@ -703,7 +703,7 @@ export default function OperacaoPage() {
 
                           <h3 style={styles.flowTitle}>{item.servico}</h3>
                           <p style={styles.flowSubline}>
-                            {item.id} • {item.data} • {item.empresa}
+                            {item.id} â€¢ {item.data} â€¢ {item.empresa}
                           </p>
                         </div>
 
@@ -762,7 +762,7 @@ export default function OperacaoPage() {
                         </div>
 
                         <div style={styles.dataItemWide}>
-                          <span style={styles.dataLabel}>Observação do fluxo</span>
+                          <span style={styles.dataLabel}>ObservaÃ§Ã£o do fluxo</span>
                           <strong style={styles.dataValue}>{item.observacao}</strong>
                         </div>
                       </div>
@@ -805,7 +805,7 @@ export default function OperacaoPage() {
                               )
                             }
                           >
-                            Solicitar localização
+                            Solicitar localizaÃ§Ã£o
                           </button>
                         </div>
 
@@ -839,82 +839,82 @@ export default function OperacaoPage() {
 
               <div style={styles.ruleList}>
                 <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Cotação</strong>
+                  <strong style={styles.ruleItemTitle}>CotaÃ§Ã£o</strong>
                   <span style={styles.ruleItemText}>
-                    Entrada comercial e precificação do serviço.
+                    Entrada comercial e precificaÃ§Ã£o do serviÃ§o.
                   </span>
                 </div>
 
                 <div style={styles.ruleItem}>
                   <strong style={styles.ruleItemTitle}>Em andamento</strong>
                   <span style={styles.ruleItemText}>
-                    Serviço ativo e translado em execução ou escala.
+                    ServiÃ§o ativo e translado em execuÃ§Ã£o ou escala.
                   </span>
                 </div>
 
                 <div style={styles.ruleItem}>
                   <strong style={styles.ruleItemTitle}>Aguardando pagamento</strong>
                   <span style={styles.ruleItemText}>
-                    Concluído operacionalmente, mas ainda sem baixa.
+                    ConcluÃ­do operacionalmente, mas ainda sem baixa.
                   </span>
                 </div>
 
                 <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Pago / Histórico</strong>
+                  <strong style={styles.ruleItemTitle}>Pago / HistÃ³rico</strong>
                   <span style={styles.ruleItemText}>
-                    Sai da visão do motorista e permanece só em histórico interno.
+                    Sai da visÃ£o do motorista e permanece sÃ³ em histÃ³rico interno.
                   </span>
                 </div>
               </div>
             </div>
 
             <div style={styles.infoCard}>
-              <span style={styles.sectionEyebrow}>COMUNICAÇÃO SEGURA</span>
-              <h2 style={styles.sidebarTitle}>Contato dentro da operação</h2>
+              <span style={styles.sectionEyebrow}>COMUNICAÃ‡ÃƒO SEGURA</span>
+              <h2 style={styles.sidebarTitle}>Contato dentro da operaÃ§Ã£o</h2>
 
               <div style={styles.ruleList}>
                 <div style={styles.ruleItem}>
                   <strong style={styles.ruleItemTitle}>WhatsApp com contexto</strong>
                   <span style={styles.ruleItemText}>
-                    As mensagens saem já com OS, rota, cliente e status da operação.
+                    As mensagens saem jÃ¡ com OS, rota, cliente e status da operaÃ§Ã£o.
                   </span>
                 </div>
 
                 <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Pedido de localização</strong>
+                  <strong style={styles.ruleItemTitle}>Pedido de localizaÃ§Ã£o</strong>
                   <span style={styles.ruleItemText}>
-                    A solicitação é feita com consentimento, somente durante o atendimento.
+                    A solicitaÃ§Ã£o Ã© feita com consentimento, somente durante o atendimento.
                   </span>
                 </div>
 
                 <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Menos evasão</strong>
+                  <strong style={styles.ruleItemTitle}>Menos evasÃ£o</strong>
                   <span style={styles.ruleItemText}>
-                    Quanto mais o contato parte da operação, maior o controle do fluxo.
+                    Quanto mais o contato parte da operaÃ§Ã£o, maior o controle do fluxo.
                   </span>
                 </div>
               </div>
             </div>
 
             <div style={styles.darkCard}>
-              <div style={styles.robotTag}>ROBÔ AURORA</div>
+              <div style={styles.robotTag}>ROBÃ” AURORA</div>
               <h2 style={styles.sidebarTitleDark}>Apoio ao fluxo inteiro</h2>
               <p style={styles.sidebarTextDark}>
-                O Robô Aurora poderá apontar gargalos, operações paradas em uma
-                etapa, pendências de baixa e trilhas com risco operacional.
+                O RobÃ´ Aurora poderÃ¡ apontar gargalos, operaÃ§Ãµes paradas em uma
+                etapa, pendÃªncias de baixa e trilhas com risco operacional.
               </p>
 
               <div style={styles.robotList}>
                 <div style={styles.robotItem}>Ler gargalo do fluxo</div>
                 <div style={styles.robotItem}>Alertar etapa parada</div>
                 <div style={styles.robotItem}>Sugerir prioridade</div>
-                <div style={styles.robotItem}>Ajudar na transição</div>
+                <div style={styles.robotItem}>Ajudar na transiÃ§Ã£o</div>
               </div>
             </div>
 
             <div style={styles.navCard}>
-              <span style={styles.sectionEyebrow}>NAVEGAÇÃO</span>
-              <h2 style={styles.sidebarTitle}>Próximos blocos</h2>
+              <span style={styles.sectionEyebrow}>NAVEGAÃ‡ÃƒO</span>
+              <h2 style={styles.sidebarTitle}>PrÃ³ximos blocos</h2>
 
               <div style={styles.navList}>
                 <Link href="/translados/novo" style={styles.navItem}>
@@ -927,7 +927,7 @@ export default function OperacaoPage() {
                   Abrir pagamentos
                 </Link>
                 <Link href="/historico" style={styles.navItem}>
-                  Abrir histórico
+                  Abrir histÃ³rico
                 </Link>
               </div>
             </div>

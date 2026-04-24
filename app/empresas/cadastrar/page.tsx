@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 
@@ -94,7 +94,7 @@ export default function CadastrarEmpresaPage() {
 
     if (cnpj.length !== 14) {
       setFeedbackType("error");
-      setFeedback("Informe um CNPJ válido com 14 dígitos para consultar.");
+      setFeedback("Informe um CNPJ vÃ¡lido com 14 dÃ­gitos para consultar.");
       return;
     }
 
@@ -109,7 +109,7 @@ export default function CadastrarEmpresaPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data?.error || "Não foi possível consultar o CNPJ.");
+        throw new Error(data?.error || "NÃ£o foi possÃ­vel consultar o CNPJ.");
       }
 
       const company = data?.company || {};
@@ -150,7 +150,7 @@ export default function CadastrarEmpresaPage() {
 
     if (!form.razaoSocial.trim() && !form.nomeFantasia.trim()) {
       setFeedbackType("error");
-      setFeedback("Informe pelo menos a razão social ou o nome fantasia.");
+      setFeedback("Informe pelo menos a razÃ£o social ou o nome fantasia.");
       return;
     }
 
@@ -190,7 +190,7 @@ export default function CadastrarEmpresaPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data?.error || "Não foi possível salvar a empresa.");
+        throw new Error(data?.error || "NÃ£o foi possÃ­vel salvar a empresa.");
       }
 
       setFeedbackType("success");
@@ -235,7 +235,7 @@ export default function CadastrarEmpresaPage() {
           </a>
 
           <a href="/" style={pillButton(true)}>
-            Início
+            InÃ­cio
           </a>
 
           <a href="/guia" style={pillButton(false)}>
@@ -270,7 +270,7 @@ export default function CadastrarEmpresaPage() {
               textTransform: "uppercase",
             }}
           >
-            Aurora Motoristas • Empresas
+            Aurora Motoristas â€¢ Empresas
           </div>
 
           <h1
@@ -293,10 +293,10 @@ export default function CadastrarEmpresaPage() {
               fontSize: 16,
             }}
           >
-            Cadastre empresas, locadoras e operações com visual claro premium,
-            preenchimento mais simples e consulta automática por CNPJ.
-            Sistema em constante atualização e podem ocorrer instabilidades
-            momentâneas durante melhorias.
+            Cadastre empresas, locadoras e operaÃ§Ãµes com visual claro premium,
+            preenchimento mais simples e consulta automÃ¡tica por CNPJ.
+            Sistema em constante atualizaÃ§Ã£o e podem ocorrer instabilidades
+            momentÃ¢neas durante melhorias.
           </p>
         </section>
 
@@ -344,7 +344,7 @@ export default function CadastrarEmpresaPage() {
                     lineHeight: 1.6,
                   }}
                 >
-                  Estruture a base empresarial antes de ligar clientes, motoristas e serviços.
+                  Estruture a base empresarial antes de ligar clientes, motoristas e serviÃ§os.
                 </p>
               </div>
 
@@ -450,7 +450,7 @@ export default function CadastrarEmpresaPage() {
               </div>
 
               <Field
-                label="Razão social"
+                label="RazÃ£o social"
                 value={form.razaoSocial}
                 onChange={(value) => updateField("razaoSocial", value)}
                 placeholder="Ex.: LET'S RENT A CAR S/A"
@@ -465,7 +465,7 @@ export default function CadastrarEmpresaPage() {
               />
 
               <Field
-                label="Responsável"
+                label="ResponsÃ¡vel"
                 value={form.responsavel}
                 onChange={(value) => updateField("responsavel", value)}
                 placeholder="Nome do contato principal"
@@ -494,14 +494,14 @@ export default function CadastrarEmpresaPage() {
               />
 
               <Field
-                label="Endereço"
+                label="EndereÃ§o"
                 value={form.endereco}
                 onChange={(value) => updateField("endereco", value)}
                 placeholder="Rua, avenida ou rodovia"
               />
 
               <Field
-                label="Número"
+                label="NÃºmero"
                 value={form.numero}
                 onChange={(value) => updateField("numero", value)}
                 placeholder="Ex.: 120"
@@ -539,13 +539,13 @@ export default function CadastrarEmpresaPage() {
                   fontSize: 14,
                 }}
               >
-                Observações
+                ObservaÃ§Ãµes
               </label>
 
               <textarea
                 value={form.observacoes}
                 onChange={(e) => updateField("observacoes", e.target.value)}
-                placeholder="Observações comerciais, status da operação, segmento, detalhes internos..."
+                placeholder="ObservaÃ§Ãµes comerciais, status da operaÃ§Ã£o, segmento, detalhes internos..."
                 rows={5}
                 style={{
                   width: "100%",
@@ -640,7 +640,7 @@ export default function CadastrarEmpresaPage() {
                   fontSize: 15,
                 }}
               >
-                Limpar formulário
+                Limpar formulÃ¡rio
               </button>
             </div>
           </div>
@@ -654,17 +654,17 @@ export default function CadastrarEmpresaPage() {
           >
             <InfoCard
               title="Uso recomendado"
-              text="Cadastre primeiro a empresa para estruturar a base que vai receber clientes, motoristas e serviços."
+              text="Cadastre primeiro a empresa para estruturar a base que vai receber clientes, motoristas e serviÃ§os."
             />
 
             <InfoCard
               title="Consulta por CNPJ"
-              text="A busca automática ajuda a preencher razão social, nome fantasia, contato e endereço sem perder agilidade."
+              text="A busca automÃ¡tica ajuda a preencher razÃ£o social, nome fantasia, contato e endereÃ§o sem perder agilidade."
             />
 
             <InfoCard
-              title="Padrão Aurora"
-              text="Visual claro premium, leitura forte no celular e navegação mais limpa para uso diário."
+              title="PadrÃ£o Aurora"
+              text="Visual claro premium, leitura forte no celular e navegaÃ§Ã£o mais limpa para uso diÃ¡rio."
             />
           </aside>
         </section>

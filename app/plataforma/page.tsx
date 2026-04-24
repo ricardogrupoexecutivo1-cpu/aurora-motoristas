@@ -1,16 +1,16 @@
-"use client";
+﻿"use client";
 
 /*
   Regra de ouro do projeto Aurora Motoristas:
-  Não alterar arquivos já em produção.
-  Toda evolução deve ser feita por novas páginas, camadas isoladas
+  NÃ£o alterar arquivos jÃ¡ em produÃ§Ã£o.
+  Toda evoluÃ§Ã£o deve ser feita por novas pÃ¡ginas, camadas isoladas
   ou melhorias controladas.
-  Alterações diretas só são permitidas para correção de erros críticos.
+  AlteraÃ§Ãµes diretas sÃ³ sÃ£o permitidas para correÃ§Ã£o de erros crÃ­ticos.
 
   Regra estrutural desta camada:
-  - Cliente não paga para usar a operação.
+  - Cliente nÃ£o paga para usar a operaÃ§Ã£o.
   - As duas empresas internas operam o sistema.
-  - Operadoras externas só entram com plano e liberação.
+  - Operadoras externas sÃ³ entram com plano e liberaÃ§Ã£o.
   - Operadoras externas nunca podem acessar a base interna de motoristas.
 */
 
@@ -21,14 +21,14 @@ export default function PlataformaPage() {
     <main style={page}>
       <div style={container}>
         <section style={hero}>
-          <span style={chip}>Aurora Motoristas • Plataforma</span>
+          <span style={chip}>Aurora Motoristas â€¢ Plataforma</span>
 
           <h1 style={title}>Estrutura segura de uso da plataforma</h1>
 
           <p style={subtitle}>
-            Esta área foi criada para organizar a lógica da plataforma sem mexer
-            no que já está no ar. Aqui ficam as regras de separação entre
-            clientes, operação interna, operadoras externas e base protegida de
+            Esta Ã¡rea foi criada para organizar a lÃ³gica da plataforma sem mexer
+            no que jÃ¡ estÃ¡ no ar. Aqui ficam as regras de separaÃ§Ã£o entre
+            clientes, operaÃ§Ã£o interna, operadoras externas e base protegida de
             motoristas.
           </p>
 
@@ -46,7 +46,7 @@ export default function PlataformaPage() {
             </Link>
 
             <Link href="/plataforma/tutorial" style={secondaryButton}>
-              📘 Tutorial / Ajuda
+              ðŸ“˜ Tutorial / Ajuda
             </Link>
           </div>
         </section>
@@ -54,15 +54,15 @@ export default function PlataformaPage() {
         <section style={grid}>
           <Card
             title="Clientes"
-            text="Empresas clientes contratam o serviço e não pagam para usar a plataforma como operadoras."
+            text="Empresas clientes contratam o serviÃ§o e nÃ£o pagam para usar a plataforma como operadoras."
           />
           <Card
-            title="Operação interna"
-            text="As empresas internas usam a plataforma como base principal de atendimento, gestão e controle."
+            title="OperaÃ§Ã£o interna"
+            text="As empresas internas usam a plataforma como base principal de atendimento, gestÃ£o e controle."
           />
           <Card
             title="Operadoras externas"
-            text="Empresas do mesmo ramo só podem usar a plataforma com autorização, plano ativo e regras próprias."
+            text="Empresas do mesmo ramo sÃ³ podem usar a plataforma com autorizaÃ§Ã£o, plano ativo e regras prÃ³prias."
           />
           <Card
             title="Base blindada"
@@ -75,48 +75,48 @@ export default function PlataformaPage() {
 
           <div style={rulesGrid}>
             <RuleItem
-              title="1. Cliente não paga"
-              text="Cliente entra no fluxo comercial e operacional, mas não paga para usar a plataforma como ferramenta de operação."
+              title="1. Cliente nÃ£o paga"
+              text="Cliente entra no fluxo comercial e operacional, mas nÃ£o paga para usar a plataforma como ferramenta de operaÃ§Ã£o."
             />
 
             <RuleItem
               title="2. Operadoras internas usam normalmente"
-              text="As empresas internas usam a plataforma com acesso controlado por papel, empresa e nível administrativo."
+              text="As empresas internas usam a plataforma com acesso controlado por papel, empresa e nÃ­vel administrativo."
             />
 
             <RuleItem
-              title="3. Operadora externa só entra com plano"
-              text="Empresas externas do mesmo segmento só podem usar a plataforma mediante aprovação, plano ativo e regras de segregação."
+              title="3. Operadora externa sÃ³ entra com plano"
+              text="Empresas externas do mesmo segmento sÃ³ podem usar a plataforma mediante aprovaÃ§Ã£o, plano ativo e regras de segregaÃ§Ã£o."
             />
 
             <RuleItem
-              title="4. Base interna de motoristas é intocável"
-              text="Nenhuma operadora externa pode visualizar, pesquisar, exportar ou acessar a base de motoristas internos da operação master."
+              title="4. Base interna de motoristas Ã© intocÃ¡vel"
+              text="Nenhuma operadora externa pode visualizar, pesquisar, exportar ou acessar a base de motoristas internos da operaÃ§Ã£o master."
             />
 
             <RuleItem
-              title="5. Cada operadora externa usa a própria base"
-              text="Se uma operadora externa entrar, ela deve trabalhar apenas com motoristas vinculados à própria base dela."
+              title="5. Cada operadora externa usa a prÃ³pria base"
+              text="Se uma operadora externa entrar, ela deve trabalhar apenas com motoristas vinculados Ã  prÃ³pria base dela."
             />
 
             <RuleItem
-              title="6. Admin master vê tudo"
-              text="A administração master da plataforma pode enxergar a estrutura completa para controle e auditoria."
+              title="6. Admin master vÃª tudo"
+              text="A administraÃ§Ã£o master da plataforma pode enxergar a estrutura completa para controle e auditoria."
             />
           </div>
         </section>
 
         <section style={compareBox}>
-          <h2 style={sectionTitle}>Separação da plataforma</h2>
+          <h2 style={sectionTitle}>SeparaÃ§Ã£o da plataforma</h2>
 
           <div style={compareGrid}>
             <div style={compareCard}>
               <div style={compareTitle}>Empresa cliente</div>
               <ul style={list}>
                 <li>Contrata atendimento</li>
-                <li>Não paga uso da plataforma como operadora</li>
-                <li>Não vê admin interno</li>
-                <li>Não vê base de motoristas</li>
+                <li>NÃ£o paga uso da plataforma como operadora</li>
+                <li>NÃ£o vÃª admin interno</li>
+                <li>NÃ£o vÃª base de motoristas</li>
               </ul>
             </div>
 
@@ -124,19 +124,19 @@ export default function PlataformaPage() {
               <div style={compareTitle}>Operadora interna</div>
               <ul style={list}>
                 <li>Opera o sistema</li>
-                <li>Usa serviços, admin, relatórios e controle</li>
-                <li>Vê a própria base interna de motoristas</li>
-                <li>Pode atuar com lógica completa da operação</li>
+                <li>Usa serviÃ§os, admin, relatÃ³rios e controle</li>
+                <li>VÃª a prÃ³pria base interna de motoristas</li>
+                <li>Pode atuar com lÃ³gica completa da operaÃ§Ã£o</li>
               </ul>
             </div>
 
             <div style={compareCard}>
               <div style={compareTitle}>Operadora externa</div>
               <ul style={list}>
-                <li>Só entra com aprovação e plano</li>
-                <li>Usa apenas a própria base</li>
-                <li>Não vê motoristas internos da operação master</li>
-                <li>Não vê dados estratégicos da operação principal</li>
+                <li>SÃ³ entra com aprovaÃ§Ã£o e plano</li>
+                <li>Usa apenas a prÃ³pria base</li>
+                <li>NÃ£o vÃª motoristas internos da operaÃ§Ã£o master</li>
+                <li>NÃ£o vÃª dados estratÃ©gicos da operaÃ§Ã£o principal</li>
               </ul>
             </div>
           </div>
@@ -148,28 +148,28 @@ export default function PlataformaPage() {
           </strong>
 
           <p style={warningText}>
-            O uso da plataforma por operadoras externas não concede acesso à
-            rede interna de motoristas, contatos, documentos, avaliações
-            estratégicas ou qualquer base que permita aproveitamento da rede de
-            freelancers da operação principal.
+            O uso da plataforma por operadoras externas nÃ£o concede acesso Ã 
+            rede interna de motoristas, contatos, documentos, avaliaÃ§Ãµes
+            estratÃ©gicas ou qualquer base que permita aproveitamento da rede de
+            freelancers da operaÃ§Ã£o principal.
           </p>
         </section>
 
         <section style={nextBox}>
-          <h2 style={sectionTitle}>Próximos arquivos desta camada</h2>
+          <h2 style={sectionTitle}>PrÃ³ximos arquivos desta camada</h2>
 
           <div style={nextGrid}>
             <Link href="/plataforma/operadoras" style={accessCard}>
               <span style={accessTitle}>Operadoras</span>
               <span style={accessText}>
-                Regras de acesso, cobrança e segregação para empresas externas.
+                Regras de acesso, cobranÃ§a e segregaÃ§Ã£o para empresas externas.
               </span>
             </Link>
 
             <Link href="/plataforma/motoristas" style={accessCard}>
               <span style={accessTitle}>Blindagem de motoristas</span>
               <span style={accessText}>
-                Regras para impedir acesso de terceiros à base interna.
+                Regras para impedir acesso de terceiros Ã  base interna.
               </span>
             </Link>
 
@@ -177,16 +177,16 @@ export default function PlataformaPage() {
               <span style={accessTitle}>Tutorial / Ajuda</span>
               <span style={accessText}>
                 Guia oficial para entender o sistema, consultar o fluxo e evitar
-                dúvidas operacionais.
+                dÃºvidas operacionais.
               </span>
             </Link>
           </div>
         </section>
 
         <section style={footerNote}>
-          Sistema em constante atualização e podem ocorrer instabilidades
-          momentâneas durante melhorias. Esta camada foi criada separadamente
-          para evoluir a plataforma sem risco de quebrar a base já publicada.
+          Sistema em constante atualizaÃ§Ã£o e podem ocorrer instabilidades
+          momentÃ¢neas durante melhorias. Esta camada foi criada separadamente
+          para evoluir a plataforma sem risco de quebrar a base jÃ¡ publicada.
         </section>
       </div>
     </main>

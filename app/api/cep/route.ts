@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
@@ -31,7 +31,7 @@ export async function GET(request: Request) {
 
     if (!cep || cep.length !== 8) {
       return NextResponse.json(
-        { error: "Informe um CEP válido com 8 dígitos." },
+        { error: "Informe um CEP vÃ¡lido com 8 dÃ­gitos." },
         { status: 400 }
       );
     }
@@ -89,11 +89,11 @@ export async function GET(request: Request) {
         });
       }
     } catch {
-      // fallback falhou também
+      // fallback falhou tambÃ©m
     }
 
     return NextResponse.json(
-      { error: "Não foi possível consultar o CEP agora. Tente novamente em instantes." },
+      { error: "NÃ£o foi possÃ­vel consultar o CEP agora. Tente novamente em instantes." },
       { status: 502 }
     );
   } catch (error) {

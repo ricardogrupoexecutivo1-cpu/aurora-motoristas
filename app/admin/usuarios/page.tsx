@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -41,7 +41,7 @@ function roleLabel(role: UserRole) {
     case "motorista":
       return "Motorista";
     case "visualizacao":
-      return "Visualização";
+      return "VisualizaÃ§Ã£o";
     default:
       return role;
   }
@@ -83,7 +83,7 @@ export default function AdminUsuariosPage() {
     setRole("operacional");
     setEmpresa("");
     setStatus("ativo");
-    setStatusText("Formulário limpo para novo acesso.");
+    setStatusText("FormulÃ¡rio limpo para novo acesso.");
   }
 
   async function salvarUsuario() {
@@ -93,14 +93,14 @@ export default function AdminUsuariosPage() {
     const empresaFinal = empresa.trim();
 
     if (!nomeFinal) {
-      alert("Informe o nome do usuário.");
-      setStatusText("Informe o nome do usuário.");
+      alert("Informe o nome do usuÃ¡rio.");
+      setStatusText("Informe o nome do usuÃ¡rio.");
       return;
     }
 
     if (!emailFinal) {
-      alert("Informe o e-mail do usuário.");
-      setStatusText("Informe o e-mail do usuário.");
+      alert("Informe o e-mail do usuÃ¡rio.");
+      setStatusText("Informe o e-mail do usuÃ¡rio.");
       return;
     }
 
@@ -111,14 +111,14 @@ export default function AdminUsuariosPage() {
     }
 
     if (!empresaFinal) {
-      alert("Informe a empresa do usuário.");
-      setStatusText("Informe a empresa do usuário.");
+      alert("Informe a empresa do usuÃ¡rio.");
+      setStatusText("Informe a empresa do usuÃ¡rio.");
       return;
     }
 
     try {
       setSaving(true);
-      setStatusText("Criando usuário real no Auth...");
+      setStatusText("Criando usuÃ¡rio real no Auth...");
 
       const response = await fetch("/api/admin/users", {
         method: "POST",
@@ -138,7 +138,7 @@ export default function AdminUsuariosPage() {
       const data = await response.json().catch(() => ({}));
 
       if (!response.ok || data?.success === false) {
-        throw new Error(data?.message || "Falha ao criar usuário.");
+        throw new Error(data?.message || "Falha ao criar usuÃ¡rio.");
       }
 
       const novoUsuario: CreatedUser = {
@@ -153,19 +153,19 @@ export default function AdminUsuariosPage() {
       setUsuariosCriados((prev) => [novoUsuario, ...prev]);
 
       if (data?.profile_created) {
-        setStatusText("Usuário criado no Auth e profile atualizado com sucesso.");
+        setStatusText("UsuÃ¡rio criado no Auth e profile atualizado com sucesso.");
         alert(
-          `Usuário criado com sucesso.\n\nNome: ${nomeFinal}\nE-mail: ${emailFinal}\nPerfil: ${roleLabel(
+          `UsuÃ¡rio criado com sucesso.\n\nNome: ${nomeFinal}\nE-mail: ${emailFinal}\nPerfil: ${roleLabel(
             role
           )}\nEmpresa: ${empresaFinal}`
         );
       } else {
         setStatusText(
-          "Usuário criado no Auth. O profile pode precisar de ajuste fino."
+          "UsuÃ¡rio criado no Auth. O profile pode precisar de ajuste fino."
         );
         alert(
-          `Usuário criado no Auth.\n\nNome: ${nomeFinal}\nE-mail: ${emailFinal}\n\nAviso profile: ${
-            data?.profile_warning || "Profile não confirmou criação automática."
+          `UsuÃ¡rio criado no Auth.\n\nNome: ${nomeFinal}\nE-mail: ${emailFinal}\n\nAviso profile: ${
+            data?.profile_warning || "Profile nÃ£o confirmou criaÃ§Ã£o automÃ¡tica."
           }`
         );
       }
@@ -173,7 +173,7 @@ export default function AdminUsuariosPage() {
       limparFormulario();
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : "Erro ao criar usuário.";
+        error instanceof Error ? error.message : "Erro ao criar usuÃ¡rio.";
 
       setStatusText(message);
       alert(message);
@@ -213,11 +213,11 @@ export default function AdminUsuariosPage() {
         >
           <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
             <Link href="/" style={topSecondary}>
-              Início
+              InÃ­cio
             </Link>
 
             <Link href="/servicos" style={topSecondary}>
-              Operação
+              OperaÃ§Ã£o
             </Link>
 
             <Link href="/motoristas" style={topSecondary}>
@@ -242,7 +242,7 @@ export default function AdminUsuariosPage() {
           }}
         >
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            <span style={blueChip}>Painel ADM de Usuários</span>
+            <span style={blueChip}>Painel ADM de UsuÃ¡rios</span>
 
             <h1
               style={{
@@ -264,8 +264,8 @@ export default function AdminUsuariosPage() {
                 maxWidth: 760,
               }}
             >
-              Esta área permite ao administrador criar o acesso do funcionário
-              com login e senha prontos, evitando travas no cadastro público e
+              Esta Ã¡rea permite ao administrador criar o acesso do funcionÃ¡rio
+              com login e senha prontos, evitando travas no cadastro pÃºblico e
               melhorando o controle operacional do sistema.
             </p>
 
@@ -277,8 +277,8 @@ export default function AdminUsuariosPage() {
               }}
             >
               <span style={miniChip}>Admin controla o acesso</span>
-              <span style={miniChip}>Usuário criado no Auth</span>
-              <span style={miniChip}>Perfil pronto para operação</span>
+              <span style={miniChip}>UsuÃ¡rio criado no Auth</span>
+              <span style={miniChip}>Perfil pronto para operaÃ§Ã£o</span>
             </div>
           </div>
 
@@ -310,8 +310,8 @@ export default function AdminUsuariosPage() {
                 lineHeight: 1.7,
               }}
             >
-              Em vez de cada funcionário tentar se cadastrar sozinho, o admin
-              cria o acesso real e já entrega login e senha iniciais.
+              Em vez de cada funcionÃ¡rio tentar se cadastrar sozinho, o admin
+              cria o acesso real e jÃ¡ entrega login e senha iniciais.
             </div>
 
             <div
@@ -325,8 +325,8 @@ export default function AdminUsuariosPage() {
                 lineHeight: 1.7,
               }}
             >
-              Se o Auth criar e o profile não encaixar 100% no schema atual, o
-              sistema avisa sem perder o usuário criado.
+              Se o Auth criar e o profile nÃ£o encaixar 100% no schema atual, o
+              sistema avisa sem perder o usuÃ¡rio criado.
             </div>
           </div>
         </section>
@@ -363,7 +363,7 @@ export default function AdminUsuariosPage() {
             </h2>
 
             <Field
-              label="Nome do usuário"
+              label="Nome do usuÃ¡rio"
               value={nome}
               onChange={setNome}
               placeholder="Ex.: Paulo Santos"
@@ -394,7 +394,7 @@ export default function AdminUsuariosPage() {
                 { value: "operacional", label: "Operacional" },
                 { value: "financeiro", label: "Financeiro" },
                 { value: "motorista", label: "Motorista" },
-                { value: "visualizacao", label: "Visualização" },
+                { value: "visualizacao", label: "VisualizaÃ§Ã£o" },
               ]}
             />
 
@@ -452,7 +452,7 @@ export default function AdminUsuariosPage() {
                 lineHeight: 1.7,
               }}
             >
-              Esta etapa já tenta criar no Supabase Auth e no profile real do
+              Esta etapa jÃ¡ tenta criar no Supabase Auth e no profile real do
               sistema.
             </div>
           </section>
@@ -486,7 +486,7 @@ export default function AdminUsuariosPage() {
                   color: "#0f172a",
                 }}
               >
-                Acessos criados nesta sessão
+                Acessos criados nesta sessÃ£o
               </h2>
 
               <div style={counterBadge}>{usuariosCriados.length} total</div>
@@ -510,7 +510,7 @@ export default function AdminUsuariosPage() {
                   background: "#f8fafc",
                 }}
               >
-                Nenhum acesso criado nesta sessão ainda.
+                Nenhum acesso criado nesta sessÃ£o ainda.
               </div>
             ) : (
               <div
@@ -612,8 +612,8 @@ export default function AdminUsuariosPage() {
             fontWeight: 700,
           }}
         >
-          Sistema em constante atualização • cadastro ADM controlado para acesso
-          empresarial mais seguro.
+          Sistema em constante atualizaÃ§Ã£o â€¢ cadastro ADM controlado para acesso
+          empresarial mais Ambiente seguro.
         </footer>
       </div>
     </main>

@@ -1,4 +1,4 @@
-export default function ComecarPage() {
+﻿export default function ComecarPage() {
   const cards = [
     {
       titulo: "Guia completo",
@@ -10,21 +10,21 @@ export default function ComecarPage() {
     {
       titulo: "Cadastrar empresa",
       descricao:
-        "Primeiro passo para locadoras, empresas e operações que vão usar a plataforma com organização profissional.",
+        "Primeiro passo para locadoras, empresas e operaÃ§Ãµes que vÃ£o usar a plataforma com organizaÃ§Ã£o profissional.",
       link: "/empresas/cadastrar",
       cta: "Cadastrar empresa",
     },
     {
       titulo: "Cadastrar motorista",
       descricao:
-        "Monte sua base operacional com cadastro claro, pronto para evoluir com foto, documentação e regras internas.",
+        "Monte sua base operacional com cadastro claro, pronto para evoluir com foto, documentaÃ§Ã£o e regras internas.",
       link: "/motoristas/cadastrar",
       cta: "Cadastrar motorista",
     },
     {
       titulo: "Cadastrar cliente",
       descricao:
-        "Organize clientes pessoa física e jurídica com contatos, histórico e base comercial pronta para crescer.",
+        "Organize clientes pessoa fÃ­sica e jurÃ­dica com contatos, histÃ³rico e base comercial pronta para crescer.",
       link: "/cadastros/clientes",
       cta: "Cadastrar cliente",
     },
@@ -59,7 +59,7 @@ export default function ComecarPage() {
           </a>
 
           <a href="/" style={pillButton(true)}>
-            Início
+            InÃ­cio
           </a>
         </div>
 
@@ -90,7 +90,7 @@ export default function ComecarPage() {
               textTransform: "uppercase",
             }}
           >
-            Aurora Motoristas • Começar
+            Aurora Motoristas â€¢ ComeÃ§ar
           </div>
 
           <h1
@@ -101,7 +101,7 @@ export default function ComecarPage() {
               letterSpacing: "-0.03em",
             }}
           >
-            Entrada prática para começar do jeito certo
+            Entrada prÃ¡tica para comeÃ§ar do jeito certo
           </h1>
 
           <p
@@ -113,10 +113,10 @@ export default function ComecarPage() {
               fontSize: 16,
             }}
           >
-            Esta página foi criada para facilitar a entrada no Aurora Motoristas
-            com clareza real. Aqui a empresa já entende por onde começar, como
-            navegar e qual é a ordem ideal para formar a operação. Sistema em
-            constante atualização e podem ocorrer instabilidades momentâneas
+            Esta pÃ¡gina foi criada para facilitar a entrada no Aurora Motoristas
+            com clareza real. Aqui a empresa jÃ¡ entende por onde comeÃ§ar, como
+            navegar e qual Ã© a ordem ideal para formar a operaÃ§Ã£o. Sistema em
+            constante atualizaÃ§Ã£o e podem ocorrer instabilidades momentÃ¢neas
             durante melhorias.
           </p>
         </section>
@@ -139,7 +139,7 @@ export default function ComecarPage() {
           />
           <InfoMiniCard
             titulo="Passo 3"
-            texto="Depois evoluímos para serviços, pagamentos e histórico."
+            texto="Depois evoluÃ­mos para serviÃ§os, pagamentos e histÃ³rico."
           />
         </section>
 
@@ -172,7 +172,7 @@ export default function ComecarPage() {
                   color: "#1d4ed8",
                 }}
               >
-                Acesso rápido
+                Acesso rÃ¡pido
               </div>
 
               <h2

@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
 export const runtime = "nodejs";
@@ -41,7 +41,7 @@ function getSupabaseAdmin() {
 
   if (!supabaseUrl || !supabaseServiceRoleKey) {
     throw new Error(
-      "Variáveis do Supabase ausentes. Verifique NEXT_PUBLIC_SUPABASE_URL/SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY.",
+      "VariÃ¡veis do Supabase ausentes. Verifique NEXT_PUBLIC_SUPABASE_URL/SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY.",
     );
   }
 
@@ -123,7 +123,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: "Razão social é obrigatória.",
+          message: "RazÃ£o social Ã© obrigatÃ³ria.",
         },
         { status: 400 },
       );
@@ -133,7 +133,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: "CNPJ inválido. Informe 14 números.",
+          message: "CNPJ invÃ¡lido. Informe 14 nÃºmeros.",
         },
         { status: 400 },
       );
@@ -162,7 +162,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: "Já existe empresa cadastrada com este CNPJ.",
+          message: "JÃ¡ existe empresa cadastrada com este CNPJ.",
         },
         { status: 409 },
       );

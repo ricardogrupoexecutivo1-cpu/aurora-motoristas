@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
@@ -136,14 +136,14 @@ function toMoney(value: number) {
 }
 
 function toDateTime(value?: string) {
-  if (!value) return '—'
+  if (!value) return 'â€”'
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return value
   return date.toLocaleString('pt-BR')
 }
 
 function toDate(value?: string) {
-  if (!value) return '—'
+  if (!value) return 'â€”'
   const [year, month, day] = value.split('-')
   if (!year || !month || !day) return value
   return `${day}/${month}/${year}`
@@ -211,7 +211,7 @@ export default function PlataformaCotacoesPage() {
       setCotacoes(Array.isArray(data) ? data : [])
     } catch {
       setCotacoes([])
-      setMensagem('Não foi possível ler as cotações salvas no navegador.')
+      setMensagem('NÃ£o foi possÃ­vel ler as cotaÃ§Ãµes salvas no navegador.')
     }
   }
 
@@ -223,7 +223,7 @@ export default function PlataformaCotacoesPage() {
         setMensagem(textoSucesso)
       }
     } catch {
-      setMensagem('Não foi possível salvar a atualização agora no navegador.')
+      setMensagem('NÃ£o foi possÃ­vel salvar a atualizaÃ§Ã£o agora no navegador.')
     }
   }
 
@@ -249,7 +249,7 @@ export default function PlataformaCotacoesPage() {
         ...item,
         status,
       }),
-      `Cotação ${id} atualizada para ${status}.`
+      `CotaÃ§Ã£o ${id} atualizada para ${status}.`
     )
   }
 
@@ -266,8 +266,8 @@ export default function PlataformaCotacoesPage() {
         prontoParaVincularServico: novoValor,
       }),
       novoValor
-        ? `Cotação ${id} marcada como pronta para virar serviço.`
-        : `Cotação ${id} desmarcada da fila de virada para serviço.`
+        ? `CotaÃ§Ã£o ${id} marcada como pronta para virar serviÃ§o.`
+        : `CotaÃ§Ã£o ${id} desmarcada da fila de virada para serviÃ§o.`
     )
   }
 
@@ -284,8 +284,8 @@ export default function PlataformaCotacoesPage() {
         visivelParaMotorista: novoValor,
       }),
       novoValor
-        ? `Cotação ${id} marcada como visível para motorista.`
-        : `Cotação ${id} retirada da visibilidade do motorista.`
+        ? `CotaÃ§Ã£o ${id} marcada como visÃ­vel para motorista.`
+        : `CotaÃ§Ã£o ${id} retirada da visibilidade do motorista.`
     )
   }
 
@@ -294,12 +294,12 @@ export default function PlataformaCotacoesPage() {
     if (!item) return
 
     if (item.status !== 'aceita') {
-      setMensagem(`A cotação ${id} ainda não pode virar serviço porque não está aceita.`)
+      setMensagem(`A cotaÃ§Ã£o ${id} ainda nÃ£o pode virar serviÃ§o porque nÃ£o estÃ¡ aceita.`)
       return
     }
 
     if (!item.motoristaNome.trim()) {
-      setMensagem(`A cotação ${id} ainda não pode virar serviço porque não tem motorista vinculado.`)
+      setMensagem(`A cotaÃ§Ã£o ${id} ainda nÃ£o pode virar serviÃ§o porque nÃ£o tem motorista vinculado.`)
       return
     }
 
@@ -310,13 +310,13 @@ export default function PlataformaCotacoesPage() {
         prontoParaVincularServico: true,
         visivelParaMotorista: true,
       }),
-      `Cotação ${id} preparada para virar serviço com motorista vinculado.`
+      `CotaÃ§Ã£o ${id} preparada para virar serviÃ§o com motorista vinculado.`
     )
   }
 
   function removerCotacao(id: string) {
     const restantes = cotacoes.filter((item) => item.id !== id)
-    persistirCotacoes(restantes, `Cotação ${id} removida da camada isolada.`)
+    persistirCotacoes(restantes, `CotaÃ§Ã£o ${id} removida da camada isolada.`)
 
     if (cotacaoExpandidaId === id) {
       setCotacaoExpandidaId(null)
@@ -463,26 +463,26 @@ export default function PlataformaCotacoesPage() {
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="space-y-3">
               <span className="inline-flex rounded-full bg-cyan-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">
-                Aurora Motoristas • Cotações
+                Aurora Motoristas â€¢ CotaÃ§Ãµes
               </span>
 
               <div>
                 <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
-                  Painel isolado de cotações
+                  Painel isolado de cotaÃ§Ãµes
                 </h1>
                 <p className="mt-2 max-w-3xl text-sm text-slate-600 md:text-base">
                   Leitura administrativa da nova camada, agora com modalidade, quantidade,
-                  hora de apresentação, diária extra, faturamento por serviço ou mensal
-                  e base para nota de débito.
+                  hora de apresentaÃ§Ã£o, diÃ¡ria extra, faturamento por serviÃ§o ou mensal
+                  e base para nota de dÃ©bito.
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-3 text-sm">
                 <span className="rounded-2xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-emerald-700">
-                  Cobrança por cliente protegida
+                  CobranÃ§a por cliente protegida
                 </span>
                 <span className="rounded-2xl border border-sky-200 bg-sky-50 px-3 py-2 text-sky-700">
-                  Mensal ou por serviço
+                  Mensal ou por serviÃ§o
                 </span>
                 <span className="rounded-2xl border border-amber-200 bg-amber-50 px-3 py-2 text-amber-700">
                   Camada isolada e segura
@@ -495,20 +495,20 @@ export default function PlataformaCotacoesPage() {
                 href="/plataforma"
                 className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
               >
-                Voltar à plataforma
+                Voltar Ã  plataforma
               </Link>
               <Link
                 href="/plataforma/cotacoes/novo"
                 className="rounded-2xl border border-slate-900 bg-slate-900 px-4 py-3 text-center text-sm font-semibold text-white transition hover:opacity-90"
               >
-                Nova cotação
+                Nova cotaÃ§Ã£o
               </Link>
             </div>
           </div>
 
           <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-            Sistema em constante atualização. Esta leitura foi separada da operação atual
-            para evoluir sem risco de quebrar o que já está pronto.
+            Sistema em constante atualizaÃ§Ã£o. Esta leitura foi separada da operaÃ§Ã£o atual
+            para evoluir sem risco de quebrar o que jÃ¡ estÃ¡ pronto.
           </div>
         </section>
 
@@ -516,17 +516,17 @@ export default function PlataformaCotacoesPage() {
           <ResumoCard
             titulo="Base total"
             valor={String(resumo.total)}
-            detalhe="Todas as cotações salvas na nova camada."
+            detalhe="Todas as cotaÃ§Ãµes salvas na nova camada."
           />
           <ResumoCard
-            titulo="Pendentes de decisão"
+            titulo="Pendentes de decisÃ£o"
             valor={String(resumo.pendentesDecisao)}
-            detalhe="Ainda não voltaram como aceita ou recusada."
+            detalhe="Ainda nÃ£o voltaram como aceita ou recusada."
           />
           <ResumoCard
-            titulo="Prontas para serviço"
+            titulo="Prontas para serviÃ§o"
             valor={String(resumo.prontasParaServico)}
-            detalhe="Aceitas, com motorista e prontas para avançar."
+            detalhe="Aceitas, com motorista e prontas para avanÃ§ar."
           />
           <ResumoCard
             titulo="Total cotado"
@@ -541,22 +541,22 @@ export default function PlataformaCotacoesPage() {
           <MiniCard label="Aceitas" value={resumo.aceitas} />
           <MiniCard label="Recusadas" value={resumo.recusadas} />
           <MiniCard label="Mensal" value={resumo.faturamentoMensal} />
-          <MiniCard label="Por serviço" value={resumo.faturamentoPorServico} />
+          <MiniCard label="Por serviÃ§o" value={resumo.faturamentoPorServico} />
         </section>
 
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           <MiniCard label="Expiradas" value={resumo.expiradas} />
-          <MiniCard label="Diárias extras" value={resumo.totalDiariasExtras} money />
+          <MiniCard label="DiÃ¡rias extras" value={resumo.totalDiariasExtras} money />
           <MiniCard label="Margem total" value={resumo.margemTotal} money />
         </section>
 
         <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="flex flex-col gap-4">
             <div>
-              <h2 className="text-lg font-semibold">Filtros e leitura estratégica</h2>
+              <h2 className="text-lg font-semibold">Filtros e leitura estratÃ©gica</h2>
               <p className="mt-1 text-sm text-slate-500">
-                Use esta área para enxergar pendências, mensalistas, faturamento por serviço
-                e possíveis especulações.
+                Use esta Ã¡rea para enxergar pendÃªncias, mensalistas, faturamento por serviÃ§o
+                e possÃ­veis especulaÃ§Ãµes.
               </p>
             </div>
 
@@ -604,7 +604,7 @@ export default function PlataformaCotacoesPage() {
                   className="h-12 w-full rounded-2xl border border-slate-300 bg-white px-4 text-sm outline-none transition focus:border-cyan-500"
                 >
                   <option value="todos">Todos</option>
-                  <option value="por_servico">Por serviço</option>
+                  <option value="por_servico">Por serviÃ§o</option>
                   <option value="mensal">Mensal</option>
                 </select>
               </label>
@@ -624,7 +624,7 @@ export default function PlataformaCotacoesPage() {
                 >
                   <option value="todas">Todas</option>
                   <option value="transfer">Transfer</option>
-                  <option value="diaria">Diária</option>
+                  <option value="diaria">DiÃ¡ria</option>
                   <option value="semanal">Semanal</option>
                   <option value="mensal">Mensal</option>
                   <option value="pacote_personalizado">Pacote personalizado</option>
@@ -640,7 +640,7 @@ export default function PlataformaCotacoesPage() {
                     className="h-4 w-4"
                   />
                   <span className="text-sm text-slate-700">
-                    Só pendentes de decisão
+                    SÃ³ pendentes de decisÃ£o
                   </span>
                 </label>
 
@@ -652,7 +652,7 @@ export default function PlataformaCotacoesPage() {
                     className="h-4 w-4"
                   />
                   <span className="text-sm text-slate-700">
-                    Só prontas para serviço
+                    SÃ³ prontas para serviÃ§o
                   </span>
                 </label>
               </div>
@@ -670,17 +670,17 @@ export default function PlataformaCotacoesPage() {
           {cotacoesFiltradas.length === 0 ? (
             <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-8 text-center shadow-sm">
               <h3 className="text-lg font-semibold text-slate-900">
-                Nenhuma cotação encontrada
+                Nenhuma cotaÃ§Ã£o encontrada
               </h3>
               <p className="mt-2 text-sm text-slate-600">
-                Ajuste os filtros ou crie uma nova cotação na camada isolada.
+                Ajuste os filtros ou crie uma nova cotaÃ§Ã£o na camada isolada.
               </p>
               <div className="mt-5">
                 <Link
                   href="/plataforma/cotacoes/novo"
                   className="inline-flex rounded-2xl border border-slate-900 bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:opacity-90"
                 >
-                  Criar nova cotação
+                  Criar nova cotaÃ§Ã£o
                 </Link>
               </div>
             </div>
@@ -727,39 +727,39 @@ export default function PlataformaCotacoesPage() {
 
                         {pendenteDecisao ? (
                           <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-amber-800">
-                            decisão pendente
+                            decisÃ£o pendente
                           </span>
                         ) : null}
 
                         {prontaParaServico ? (
                           <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-800">
-                            pronta para serviço
+                            pronta para serviÃ§o
                           </span>
                         ) : null}
                       </div>
 
                       <div>
                         <h2 className="text-xl font-bold tracking-tight text-slate-900">
-                          {item.contratante || 'Contratante não informado'}
+                          {item.contratante || 'Contratante nÃ£o informado'}
                         </h2>
                         <p className="mt-1 text-sm text-slate-600">
-                          {item.tipoServico || 'Tipo não informado'} • {item.quantidade}{' '}
+                          {item.tipoServico || 'Tipo nÃ£o informado'} â€¢ {item.quantidade}{' '}
                           {item.unidadeQuantidade || 'unidade'}
                         </p>
                       </div>
 
                       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
-                        <InfoChip label="Cliente final" value={item.clienteFinal || '—'} />
+                        <InfoChip label="Cliente final" value={item.clienteFinal || 'â€”'} />
                         <InfoChip
                           label="Motorista"
-                          value={item.motoristaNome || 'Não vinculado'}
+                          value={item.motoristaNome || 'NÃ£o vinculado'}
                         />
                         <InfoChip
-                          label="Apresentação"
-                          value={item.horarioApresentacao || '—'}
+                          label="ApresentaÃ§Ã£o"
+                          value={item.horarioApresentacao || 'â€”'}
                         />
                         <InfoChip
-                          label="Total cotação"
+                          label="Total cotaÃ§Ã£o"
                           value={toMoney(item.resumoFinanceiro?.totalCotacao || 0)}
                         />
                         <InfoChip
@@ -785,7 +785,7 @@ export default function PlataformaCotacoesPage() {
                         onClick={() => prepararViradaParaServico(item.id)}
                         className="rounded-2xl border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800 transition hover:bg-emerald-100"
                       >
-                        Preparar para serviço
+                        Preparar para serviÃ§o
                       </button>
                     </div>
                   </div>
@@ -829,8 +829,8 @@ export default function PlataformaCotacoesPage() {
                       className="rounded-2xl border border-violet-200 bg-violet-50 px-4 py-3 text-sm font-semibold text-violet-800 transition hover:bg-violet-100"
                     >
                       {item.prontoParaVincularServico
-                        ? 'Retirar da fila de serviço'
-                        : 'Marcar pronta para serviço'}
+                        ? 'Retirar da fila de serviÃ§o'
+                        : 'Marcar pronta para serviÃ§o'}
                     </button>
 
                     <button
@@ -855,49 +855,49 @@ export default function PlataformaCotacoesPage() {
                               value={toDateTime(item.atualizadoEm)}
                             />
                             <InfoLinha
-                              label="Tipo de serviço"
-                              value={item.tipoServico || '—'}
+                              label="Tipo de serviÃ§o"
+                              value={item.tipoServico || 'â€”'}
                             />
                             <InfoLinha
                               label="Forma de pagamento"
-                              value={item.formaPagamento || '—'}
+                              value={item.formaPagamento || 'â€”'}
                             />
                             <InfoLinha
                               label="Empresa operadora"
-                              value={item.empresaOperadora || '—'}
+                              value={item.empresaOperadora || 'â€”'}
                             />
                             <InfoLinha
                               label="Telefone"
-                              value={item.telefoneContratante || '—'}
+                              value={item.telefoneContratante || 'â€”'}
                             />
                             <InfoLinha
                               label="E-mail"
-                              value={item.emailContratante || '—'}
+                              value={item.emailContratante || 'â€”'}
                             />
                             <InfoLinha
-                              label="Horário do serviço"
-                              value={item.horarioServico || '—'}
+                              label="HorÃ¡rio do serviÃ§o"
+                              value={item.horarioServico || 'â€”'}
                             />
                             <InfoLinha
-                              label="Horário apresentação"
-                              value={item.horarioApresentacao || '—'}
+                              label="HorÃ¡rio apresentaÃ§Ã£o"
+                              value={item.horarioApresentacao || 'â€”'}
                             />
                             <InfoLinha
-                              label="Local apresentação"
-                              value={item.localApresentacao || '—'}
+                              label="Local apresentaÃ§Ã£o"
+                              value={item.localApresentacao || 'â€”'}
                             />
                             <InfoLinha
                               label="Origem"
-                              value={item.origem || '—'}
+                              value={item.origem || 'â€”'}
                             />
                             <InfoLinha
                               label="Destino"
-                              value={item.destino || '—'}
+                              value={item.destino || 'â€”'}
                             />
                           </div>
                         </Bloco>
 
-                        <Bloco titulo="Quantidade, cobrança e espera">
+                        <Bloco titulo="Quantidade, cobranÃ§a e espera">
                           <div className="grid gap-3 md:grid-cols-2">
                             <InfoLinha
                               label="Modalidade"
@@ -908,11 +908,11 @@ export default function PlataformaCotacoesPage() {
                               value={`${item.quantidade} ${item.unidadeQuantidade || 'unidade'}`}
                             />
                             <InfoLinha
-                              label="Valor unitário cliente"
+                              label="Valor unitÃ¡rio cliente"
                               value={toMoney(item.valorUnitarioCliente || 0)}
                             />
                             <InfoLinha
-                              label="Valor unitário motorista"
+                              label="Valor unitÃ¡rio motorista"
                               value={toMoney(item.valorUnitarioMotorista || 0)}
                             />
                             <InfoLinha
@@ -928,16 +928,16 @@ export default function PlataformaCotacoesPage() {
                               value={`${item.horasPrevistasEspera || 0}h`}
                             />
                             <InfoLinha
-                              label="Diárias extras"
+                              label="DiÃ¡rias extras"
                               value={toMoney(item.resumoFinanceiro?.diariasExtras || 0)}
                             />
                             <InfoLinha
-                              label="Qtd. diárias extras"
+                              label="Qtd. diÃ¡rias extras"
                               value={String(item.quantidadeDiariasExtras || 0)}
                             />
                             <InfoLinha
-                              label="Motivo diária extra"
-                              value={item.motivoDiariaExtra || '—'}
+                              label="Motivo diÃ¡ria extra"
+                              value={item.motivoDiariaExtra || 'â€”'}
                             />
                           </div>
                         </Bloco>
@@ -946,46 +946,46 @@ export default function PlataformaCotacoesPage() {
                           <div className="grid gap-3 md:grid-cols-2">
                             <InfoLinha
                               label="Tipo de pessoa"
-                              value={item.tipoPessoaCliente || '—'}
+                              value={item.tipoPessoaCliente || 'â€”'}
                             />
                             <InfoLinha
                               label="Documento cliente"
-                              value={item.documentoCliente || '—'}
+                              value={item.documentoCliente || 'â€”'}
                             />
                             <InfoLinha
-                              label="Inscrição estadual"
-                              value={item.inscricaoEstadualCliente || '—'}
+                              label="InscriÃ§Ã£o estadual"
+                              value={item.inscricaoEstadualCliente || 'â€”'}
                             />
                             <InfoLinha
-                              label="Inscrição municipal"
-                              value={item.inscricaoMunicipalCliente || '—'}
+                              label="InscriÃ§Ã£o municipal"
+                              value={item.inscricaoMunicipalCliente || 'â€”'}
                             />
                             <InfoLinha
                               label="E-mail financeiro"
-                              value={item.emailFinanceiroCliente || '—'}
+                              value={item.emailFinanceiroCliente || 'â€”'}
                             />
                             <InfoLinha
-                              label="Responsável financeiro"
-                              value={item.responsavelFinanceiroCliente || '—'}
+                              label="ResponsÃ¡vel financeiro"
+                              value={item.responsavelFinanceiroCliente || 'â€”'}
                             />
                             <InfoLinha
                               label="Tipo faturamento"
                               value={faturamentoLabel(item.tipoFaturamentoCliente)}
                             />
                             <InfoLinha
-                              label="Competência"
-                              value={item.competenciaFaturamento || '—'}
+                              label="CompetÃªncia"
+                              value={item.competenciaFaturamento || 'â€”'}
                             />
                             <InfoLinha
-                              label="Período referência"
-                              value={item.periodoReferencia || '—'}
+                              label="PerÃ­odo referÃªncia"
+                              value={item.periodoReferencia || 'â€”'}
                             />
                             <InfoLinha
-                              label="Documento cobrança"
+                              label="Documento cobranÃ§a"
                               value={documentoLabel(item.tipoDocumentoCobranca)}
                             />
                             <InfoLinha
-                              label="Emissão"
+                              label="EmissÃ£o"
                               value={toDate(item.dataEmissaoDocumento)}
                             />
                             <InfoLinha
@@ -995,14 +995,14 @@ export default function PlataformaCotacoesPage() {
                           </div>
                         </Bloco>
 
-                        <Bloco titulo="Observações">
+                        <Bloco titulo="ObservaÃ§Ãµes">
                           <div className="grid gap-4">
                             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                                Apresentação
+                                ApresentaÃ§Ã£o
                               </p>
                               <p className="mt-2 text-sm text-slate-700">
-                                {item.observacaoApresentacao || 'Sem observações de apresentação.'}
+                                {item.observacaoApresentacao || 'Sem observaÃ§Ãµes de apresentaÃ§Ã£o.'}
                               </p>
                             </div>
 
@@ -1011,7 +1011,7 @@ export default function PlataformaCotacoesPage() {
                                 Cliente
                               </p>
                               <p className="mt-2 text-sm text-slate-700">
-                                {item.observacoesCliente || 'Sem observações para o cliente.'}
+                                {item.observacoesCliente || 'Sem observaÃ§Ãµes para o cliente.'}
                               </p>
                             </div>
 
@@ -1020,7 +1020,7 @@ export default function PlataformaCotacoesPage() {
                                 Internas
                               </p>
                               <p className="mt-2 text-sm text-slate-700">
-                                {item.observacoesInternas || 'Sem observações internas.'}
+                                {item.observacoesInternas || 'Sem observaÃ§Ãµes internas.'}
                               </p>
                             </div>
 
@@ -1029,7 +1029,7 @@ export default function PlataformaCotacoesPage() {
                                 Financeiras
                               </p>
                               <p className="mt-2 text-sm text-slate-700">
-                                {item.observacoesFinanceiras || 'Sem observações financeiras.'}
+                                {item.observacoesFinanceiras || 'Sem observaÃ§Ãµes financeiras.'}
                               </p>
                             </div>
                           </div>
@@ -1044,7 +1044,7 @@ export default function PlataformaCotacoesPage() {
                               value={toMoney(item.resumoFinanceiro?.reembolsoDeslocamento || 0)}
                             />
                             <InfoLinha
-                              label="Diárias extras"
+                              label="DiÃ¡rias extras"
                               value={toMoney(item.resumoFinanceiro?.diariasExtras || 0)}
                             />
                             <InfoLinha
@@ -1052,15 +1052,15 @@ export default function PlataformaCotacoesPage() {
                               value={toMoney(item.resumoFinanceiro?.subtotalCustos || 0)}
                             />
                             <InfoLinha
-                              label="Acréscimo urgente"
+                              label="AcrÃ©scimo urgente"
                               value={toMoney(item.resumoFinanceiro?.acrescimoUrgente || 0)}
                             />
                             <InfoLinha
-                              label="Acréscimo emergencial"
+                              label="AcrÃ©scimo emergencial"
                               value={toMoney(item.resumoFinanceiro?.acrescimoEmergencial || 0)}
                             />
                             <InfoLinha
-                              label="Total cotação"
+                              label="Total cotaÃ§Ã£o"
                               value={toMoney(item.resumoFinanceiro?.totalCotacao || 0)}
                               destaque
                             />
@@ -1076,40 +1076,40 @@ export default function PlataformaCotacoesPage() {
                           <div className="space-y-3">
                             <InfoLinha
                               label="Motorista"
-                              value={item.motoristaNome || 'Não vinculado'}
+                              value={item.motoristaNome || 'NÃ£o vinculado'}
                             />
                             <InfoLinha
                               label="ID motorista"
-                              value={item.motoristaId || '—'}
+                              value={item.motoristaId || 'â€”'}
                             />
                             <InfoLinha
                               label="Base"
-                              value={item.baseMotorista || '—'}
+                              value={item.baseMotorista || 'â€”'}
                             />
                             <InfoLinha
                               label="Cidade atual"
-                              value={item.motoristaCidadeAtual || '—'}
+                              value={item.motoristaCidadeAtual || 'â€”'}
                             />
                             <InfoLinha
-                              label="Distância fora da base"
+                              label="DistÃ¢ncia fora da base"
                               value={`${item.distanciaForaBaseKm || 0} km`}
                             />
                           </div>
                         </Bloco>
 
-                        <Bloco titulo="Emitente e cobrança">
+                        <Bloco titulo="Emitente e cobranÃ§a">
                           <div className="space-y-3">
                             <InfoLinha
                               label="Emitente"
-                              value={item.emitenteNome || '—'}
+                              value={item.emitenteNome || 'â€”'}
                             />
                             <InfoLinha
                               label="Documento emitente"
-                              value={item.emitenteDocumento || '—'}
+                              value={item.emitenteDocumento || 'â€”'}
                             />
                             <InfoLinha
-                              label="Inscrição emitente"
-                              value={item.emitenteInscricao || '—'}
+                              label="InscriÃ§Ã£o emitente"
+                              value={item.emitenteInscricao || 'â€”'}
                             />
                             <InfoLinha
                               label="Prazo pagamento"
@@ -1118,38 +1118,38 @@ export default function PlataformaCotacoesPage() {
                           </div>
                         </Bloco>
 
-                        <Bloco titulo="Leitura estratégica">
+                        <Bloco titulo="Leitura estratÃ©gica">
                           <div className="space-y-3 text-sm text-slate-700">
                             <p>
-                              <strong>Decisão final obrigatória:</strong>{' '}
-                              {item.clienteDecisaoFinalObrigatoria ? 'sim' : 'não'}
+                              <strong>DecisÃ£o final obrigatÃ³ria:</strong>{' '}
+                              {item.clienteDecisaoFinalObrigatoria ? 'sim' : 'nÃ£o'}
                             </p>
                             <p>
                               <strong>Cliente aceitou termos:</strong>{' '}
-                              {item.clienteAceitouTermos ? 'sim' : 'não'}
+                              {item.clienteAceitouTermos ? 'sim' : 'nÃ£o'}
                             </p>
                             <p>
-                              <strong>Visível para motorista:</strong>{' '}
-                              {item.visivelParaMotorista ? 'sim' : 'não'}
+                              <strong>VisÃ­vel para motorista:</strong>{' '}
+                              {item.visivelParaMotorista ? 'sim' : 'nÃ£o'}
                             </p>
                             <p>
-                              <strong>Pronta para virar serviço:</strong>{' '}
-                              {item.prontoParaVincularServico ? 'sim' : 'não'}
+                              <strong>Pronta para virar serviÃ§o:</strong>{' '}
+                              {item.prontoParaVincularServico ? 'sim' : 'nÃ£o'}
                             </p>
                             <p>
                               <strong>Agrupar no fechamento mensal:</strong>{' '}
-                              {item.agruparNoFechamentoMensal ? 'sim' : 'não'}
+                              {item.agruparNoFechamentoMensal ? 'sim' : 'nÃ£o'}
                             </p>
                           </div>
                         </Bloco>
 
-                        <Bloco titulo="Ação irreversível com cuidado">
+                        <Bloco titulo="AÃ§Ã£o irreversÃ­vel com cuidado">
                           <button
                             type="button"
                             onClick={() => removerCotacao(item.id)}
                             className="w-full rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-800 transition hover:bg-rose-100"
                           >
-                            Remover cotação isolada
+                            Remover cotaÃ§Ã£o isolada
                           </button>
                         </Bloco>
                       </aside>

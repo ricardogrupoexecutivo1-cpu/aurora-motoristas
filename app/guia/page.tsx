@@ -1,4 +1,4 @@
-export default function GuiaPage() {
+﻿export default function GuiaPage() {
   return (
     <main
       style={{
@@ -49,12 +49,12 @@ export default function GuiaPage() {
               color: "#0f172a",
             }}
           >
-            Guia completo • Aurora Motoristas
+            Guia completo â€¢ Aurora Motoristas
           </h1>
 
           <p style={{ color: "#4b6478", lineHeight: 1.7 }}>
-            Sistema profissional para gestão de motoristas, empresas, clientes,
-            serviços e operação completa. Este guia mostra o fluxo correto de uso.
+            Sistema profissional para gestÃ£o de motoristas, empresas, clientes,
+            serviÃ§os e operaÃ§Ã£o completa. Este guia mostra o fluxo correto de uso.
           </p>
         </section>
 
@@ -67,9 +67,9 @@ export default function GuiaPage() {
               "Cadastrar empresa",
               "Cadastrar cliente",
               "Cadastrar motorista",
-              "Criar serviço",
+              "Criar serviÃ§o",
               "Realizar pagamento",
-              "Consultar histórico",
+              "Consultar histÃ³rico",
             ].map((item, i) => (
               <div key={i} style={step}>
                 {i + 1}. {item}
@@ -80,13 +80,13 @@ export default function GuiaPage() {
 
         {/* MODULOS */}
         <section style={card}>
-          <h2 style={title}>Módulos do sistema</h2>
+          <h2 style={title}>MÃ³dulos do sistema</h2>
 
           <div style={grid}>
-            <Box title="Empresas" text="Base empresarial da operação." />
+            <Box title="Empresas" text="Base empresarial da operaÃ§Ã£o." />
             <Box title="Clientes" text="Controle dos clientes atendidos." />
             <Box title="Motoristas" text="Base operacional dos motoristas." />
-            <Box title="Serviços" text="Coração da operação." />
+            <Box title="ServiÃ§os" text="CoraÃ§Ã£o da operaÃ§Ã£o." />
             <Box title="Financeiro" text="Controle de valores e resultados." />
           </div>
         </section>
@@ -96,18 +96,18 @@ export default function GuiaPage() {
           <h2 style={title}>Regras importantes</h2>
 
           <ul style={{ lineHeight: 2 }}>
-            <li>Serviços pagos saem da visão ativa</li>
-            <li>Motoristas não veem financeiro completo</li>
-            <li>Histórico é preservado para controle interno</li>
+            <li>ServiÃ§os pagos saem da visÃ£o ativa</li>
+            <li>Motoristas nÃ£o veem financeiro completo</li>
+            <li>HistÃ³rico Ã© preservado para controle interno</li>
           </ul>
         </section>
 
         {/* AVISO */}
         <section style={card}>
-          <h2 style={title}>Observação</h2>
+          <h2 style={title}>ObservaÃ§Ã£o</h2>
 
           <p style={{ color: "#4b6478", lineHeight: 1.7 }}>
-            Sistema em constante atualização e podem ocorrer melhorias contínuas
+            Sistema em constante atualizaÃ§Ã£o e podem ocorrer melhorias contÃ­nuas
             durante o uso.
           </p>
         </section>

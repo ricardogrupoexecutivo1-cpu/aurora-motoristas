@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -7,10 +7,10 @@ type TransferStatus =
   | "Agendado"
   | "Em deslocamento"
   | "Aguardando passageiro"
-  | "Concluído"
+  | "ConcluÃ­do"
   | "Reagendado";
 
-type RiskLevel = "Baixo" | "Médio" | "Alto";
+type RiskLevel = "Baixo" | "MÃ©dio" | "Alto";
 
 type TransferItem = {
   id: string;
@@ -34,7 +34,7 @@ type TransferItem = {
   status: TransferStatus;
   risco: RiskLevel;
   observacao: string;
-  origemBase?: "Base padrão" | "Base local";
+  origemBase?: "Base padrÃ£o" | "Base local";
 };
 
 const STORAGE_KEY = "aurora_motoristas_translados";
@@ -49,7 +49,7 @@ const initialTransfers: TransferItem[] = [
     destino: "Savassi",
     cliente: "Executivo Nacional",
     motorista: "Carlos Henrique",
-    motoristaReserva: "João Pedro",
+    motoristaReserva: "JoÃ£o Pedro",
     veiculoReserva: "Corolla Executivo - RES-01",
     horarioPrevisto: "10/04/2026 08:30",
     horarioAtualizado: "10/04/2026 08:45",
@@ -60,10 +60,10 @@ const initialTransfers: TransferItem[] = [
     despesas: 24,
     adiantamento: 40,
     status: "Reagendado",
-    risco: "Médio",
+    risco: "MÃ©dio",
     observacao:
-      "Horário ajustado por atraso do voo. Manter contato ativo com a locadora.",
-    origemBase: "Base padrão",
+      "HorÃ¡rio ajustado por atraso do voo. Manter contato ativo com a locadora.",
+    origemBase: "Base padrÃ£o",
   },
   {
     id: "TRA-0002",
@@ -72,7 +72,7 @@ const initialTransfers: TransferItem[] = [
     aeroporto: "Confins",
     origem: "Hotel Ouro Minas",
     destino: "Aeroporto de Confins",
-    cliente: "Delegação Internacional",
+    cliente: "DelegaÃ§Ã£o Internacional",
     motorista: "Maria Fernanda",
     motoristaReserva: "Carlos Henrique",
     veiculoReserva: "Spin Executiva - RES-02",
@@ -88,7 +88,7 @@ const initialTransfers: TransferItem[] = [
     risco: "Baixo",
     observacao:
       "Transfer confirmado. Passageiros com bagagem extra. Verificar porta de embarque.",
-    origemBase: "Base padrão",
+    origemBase: "Base padrÃ£o",
   },
   {
     id: "TRA-0003",
@@ -97,8 +97,8 @@ const initialTransfers: TransferItem[] = [
     aeroporto: "Confins",
     origem: "Aeroporto de Confins",
     destino: "Lourdes",
-    cliente: "Operação Aeroporto VIP",
-    motorista: "João Pedro",
+    cliente: "OperaÃ§Ã£o Aeroporto VIP",
+    motorista: "JoÃ£o Pedro",
     motoristaReserva: "Maria Fernanda",
     veiculoReserva: "Onix Sedan - RES-03",
     horarioPrevisto: "10/04/2026 14:20",
@@ -110,10 +110,10 @@ const initialTransfers: TransferItem[] = [
     despesas: 20,
     adiantamento: 20,
     status: "Aguardando passageiro",
-    risco: "Médio",
+    risco: "MÃ©dio",
     observacao:
-      "Motorista já no aeroporto aguardando desembarque no portão combinado.",
-    origemBase: "Base padrão",
+      "Motorista jÃ¡ no aeroporto aguardando desembarque no portÃ£o combinado.",
+    origemBase: "Base padrÃ£o",
   },
 ];
 
@@ -149,7 +149,7 @@ function getStatusStyle(status: TransferStatus): React.CSSProperties {
     };
   }
 
-  if (status === "Concluído") {
+  if (status === "ConcluÃ­do") {
     return {
       background: "rgba(16, 185, 129, 0.12)",
       color: "#047857",
@@ -173,7 +173,7 @@ function getRiskStyle(risk: RiskLevel): React.CSSProperties {
     };
   }
 
-  if (risk === "Médio") {
+  if (risk === "MÃ©dio") {
     return {
       background: "rgba(245, 158, 11, 0.12)",
       color: "#b45309",
@@ -231,10 +231,10 @@ function buildClientTracking(item: TransferItem) {
   const eta = buildEta(item);
   const atraso =
     item.acrescimoTransitoMin > 0
-      ? ` com acréscimo estimado de ${item.acrescimoTransitoMin} min por trânsito`
+      ? ` com acrÃ©scimo estimado de ${item.acrescimoTransitoMin} min por trÃ¢nsito`
       : "";
 
-  return `Seu motorista ${item.motorista} está vinculado ao trajeto ${item.origem} até ${item.destino}. Horário operacional atualizado: ${item.horarioAtualizado}. Previsão estimada de chegada: ${eta}${atraso}.`;
+  return `Seu motorista ${item.motorista} estÃ¡ vinculado ao trajeto ${item.origem} atÃ© ${item.destino}. HorÃ¡rio operacional atualizado: ${item.horarioAtualizado}. PrevisÃ£o estimada de chegada: ${eta}${atraso}.`;
 }
 
 function safeReadStorage(): TransferItem[] {
@@ -275,8 +275,8 @@ export default function TransladosPage() {
                 ...item,
                 status,
                 observacao:
-                  status === "Concluído"
-                    ? "Transfer concluído. Operação pronta para conferência financeira."
+                  status === "ConcluÃ­do"
+                    ? "Transfer concluÃ­do. OperaÃ§Ã£o pronta para conferÃªncia financeira."
                     : item.observacao,
               }
             : item
@@ -292,8 +292,8 @@ export default function TransladosPage() {
               ...item,
               status,
               observacao:
-                status === "Concluído"
-                  ? "Transfer concluído. Operação pronta para conferência financeira."
+                status === "ConcluÃ­do"
+                  ? "Transfer concluÃ­do. OperaÃ§Ã£o pronta para conferÃªncia financeira."
                   : item.observacao,
             }
           : item
@@ -394,7 +394,7 @@ export default function TransladosPage() {
           item.status === "Em deslocamento" ||
           item.status === "Aguardando passageiro"
       ).length,
-      concluidos: filteredTransfers.filter((item) => item.status === "Concluído").length,
+      concluidos: filteredTransfers.filter((item) => item.status === "ConcluÃ­do").length,
       altoRisco: filteredTransfers.filter((item) => item.risco === "Alto").length,
       locais: filteredTransfers.filter((item) => item.origemBase === "Base local").length,
       totalTransfer: filteredTransfers.reduce((acc, item) => acc + item.valorTransfer, 0),
@@ -413,13 +413,13 @@ export default function TransladosPage() {
         <div style={styles.heroCard}>
           <div style={styles.heroGrid}>
             <div style={styles.heroLeft}>
-              <div style={styles.eyebrow}>AURORA MOTORISTAS • TRANSLADOS</div>
+              <div style={styles.eyebrow}>AURORA MOTORISTAS â€¢ TRANSLADOS</div>
               <h1 style={styles.heroTitle}>
-                Escala premium de translados com ETA, trânsito, reserva e base integrada
+                Escala premium de translados com ETA, trÃ¢nsito, reserva e base integrada
               </h1>
               <p style={styles.heroText}>
-                Esta área agora junta a base padrão com os translados criados no
-                novo cadastro, mantendo risco, contingência, horários e leitura
+                Esta Ã¡rea agora junta a base padrÃ£o com os translados criados no
+                novo cadastro, mantendo risco, contingÃªncia, horÃ¡rios e leitura
                 financeira em um mesmo painel operacional.
               </p>
 
@@ -435,24 +435,24 @@ export default function TransladosPage() {
             </div>
 
             <div style={styles.heroRightCard}>
-              <span style={styles.sideKicker}>MÓDULO DE TRANSLADOS</span>
+              <span style={styles.sideKicker}>MÃ“DULO DE TRANSLADOS</span>
               <h2 style={styles.sideTitle}>Escala viva para aeroporto</h2>
               <p style={styles.sideText}>
-                Pensado para mudanças frequentes de horário, contato rápido com a
-                operação e leitura clara do custo por transfer, agora com base local integrada.
+                Pensado para mudanÃ§as frequentes de horÃ¡rio, contato rÃ¡pido com a
+                operaÃ§Ã£o e leitura clara do custo por transfer, agora com base local integrada.
               </p>
 
               <div style={styles.sidePills}>
                 <div style={styles.sidePill}>Escala do dia</div>
-                <div style={styles.sidePill}>Atualização rápida</div>
+                <div style={styles.sidePill}>AtualizaÃ§Ã£o rÃ¡pida</div>
                 <div style={styles.sidePill}>Financeiro por transfer</div>
               </div>
             </div>
           </div>
 
           <div style={styles.noticeBox}>
-            Sistema em constante atualização. Esta área já lê a base local e
-            integra os novos translados ao fluxo do módulo.
+            Sistema em constante atualizaÃ§Ã£o. Esta Ã¡rea jÃ¡ lÃª a base local e
+            integra os novos translados ao fluxo do mÃ³dulo.
           </div>
         </div>
       </section>
@@ -460,7 +460,7 @@ export default function TransladosPage() {
       <section style={styles.statsSection}>
         <div style={styles.statsGrid}>
           <article style={styles.statCard}>
-            <span style={styles.statLabel}>Translados visíveis</span>
+            <span style={styles.statLabel}>Translados visÃ­veis</span>
             <strong style={styles.statValue}>{stats.total}</strong>
             <span style={styles.statDetail}>Escala filtrada</span>
           </article>
@@ -472,7 +472,7 @@ export default function TransladosPage() {
           </article>
 
           <article style={styles.statCard}>
-            <span style={styles.statLabel}>Em operação</span>
+            <span style={styles.statLabel}>Em operaÃ§Ã£o</span>
             <strong style={styles.statValue}>{stats.andamento}</strong>
             <span style={styles.statDetail}>Deslocamento e espera</span>
           </article>
@@ -480,7 +480,7 @@ export default function TransladosPage() {
           <article style={styles.statCard}>
             <span style={styles.statLabel}>Risco alto</span>
             <strong style={styles.statValue}>{stats.altoRisco}</strong>
-            <span style={styles.statDetail}>Atenção da operação</span>
+            <span style={styles.statDetail}>AtenÃ§Ã£o da operaÃ§Ã£o</span>
           </article>
         </div>
       </section>
@@ -508,7 +508,7 @@ export default function TransladosPage() {
           <article style={styles.statCard}>
             <span style={styles.statLabel}>Adiantamentos</span>
             <strong style={styles.statValue}>{formatCurrency(stats.totalAdiantamento)}</strong>
-            <span style={styles.statDetail}>Operação antecipada</span>
+            <span style={styles.statDetail}>OperaÃ§Ã£o antecipada</span>
           </article>
         </div>
       </section>
@@ -560,7 +560,7 @@ export default function TransladosPage() {
                               <span
                                 style={isLocal ? styles.localTag : styles.defaultTag}
                               >
-                                {item.origemBase ?? "Base padrão"}
+                                {item.origemBase ?? "Base padrÃ£o"}
                               </span>
                             </div>
 
@@ -568,7 +568,7 @@ export default function TransladosPage() {
                               {item.origem} x {item.destino}
                             </h3>
                             <p style={styles.transferSubline}>
-                              {item.id} • {item.aeroporto} • {item.locadora}
+                              {item.id} â€¢ {item.aeroporto} â€¢ {item.locadora}
                             </p>
                           </div>
 
@@ -614,17 +614,17 @@ export default function TransladosPage() {
                           </div>
 
                           <div style={styles.dataItem}>
-                            <span style={styles.dataLabel}>Veículo reserva</span>
+                            <span style={styles.dataLabel}>VeÃ­culo reserva</span>
                             <strong style={styles.dataValue}>{item.veiculoReserva}</strong>
                           </div>
 
                           <div style={styles.dataItem}>
-                            <span style={styles.dataLabel}>Horário previsto</span>
+                            <span style={styles.dataLabel}>HorÃ¡rio previsto</span>
                             <strong style={styles.dataValue}>{item.horarioPrevisto}</strong>
                           </div>
 
                           <div style={styles.dataItem}>
-                            <span style={styles.dataLabel}>Horário atualizado</span>
+                            <span style={styles.dataLabel}>HorÃ¡rio atualizado</span>
                             <input
                               value={item.horarioAtualizado}
                               onChange={(e) => updateTime(item.id, e.target.value, isLocal)}
@@ -638,7 +638,7 @@ export default function TransladosPage() {
                           </div>
 
                           <div style={styles.dataItem}>
-                            <span style={styles.dataLabel}>Acréscimo trânsito</span>
+                            <span style={styles.dataLabel}>AcrÃ©scimo trÃ¢nsito</span>
                             <input
                               value={String(item.acrescimoTransitoMin)}
                               onChange={(e) => updateTransit(item.id, e.target.value, isLocal)}
@@ -647,7 +647,7 @@ export default function TransladosPage() {
                           </div>
 
                           <div style={styles.dataItem}>
-                            <span style={styles.dataLabel}>Previsão de chegada</span>
+                            <span style={styles.dataLabel}>PrevisÃ£o de chegada</span>
                             <strong style={styles.dataValue}>{buildEta(item)}</strong>
                           </div>
 
@@ -693,7 +693,7 @@ export default function TransladosPage() {
                               <option>Agendado</option>
                               <option>Em deslocamento</option>
                               <option>Aguardando passageiro</option>
-                              <option>Concluído</option>
+                              <option>ConcluÃ­do</option>
                               <option>Reagendado</option>
                             </select>
                           </div>
@@ -708,7 +708,7 @@ export default function TransladosPage() {
                               style={styles.select}
                             >
                               <option>Baixo</option>
-                              <option>Médio</option>
+                              <option>MÃ©dio</option>
                               <option>Alto</option>
                             </select>
                           </div>
@@ -719,7 +719,7 @@ export default function TransladosPage() {
                           </div>
 
                           <div style={styles.dataItemWide}>
-                            <span style={styles.dataLabel}>Observação operacional</span>
+                            <span style={styles.dataLabel}>ObservaÃ§Ã£o operacional</span>
                             <strong style={styles.dataValue}>{item.observacao}</strong>
                           </div>
                         </div>
@@ -734,45 +734,45 @@ export default function TransladosPage() {
           <aside style={styles.rightColumn}>
             <div style={styles.infoCard}>
               <span style={styles.sectionEyebrow}>O QUE ESTE BLOCO FECHA</span>
-              <h2 style={styles.sidebarTitle}>Operação mais segura</h2>
+              <h2 style={styles.sidebarTitle}>OperaÃ§Ã£o mais segura</h2>
 
               <div style={styles.ruleList}>
                 <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Previsão para o cliente</strong>
+                  <strong style={styles.ruleItemTitle}>PrevisÃ£o para o cliente</strong>
                   <span style={styles.ruleItemText}>
-                    Agora você consegue mostrar horário operacional e ETA estimado.
+                    Agora vocÃª consegue mostrar horÃ¡rio operacional e ETA estimado.
                   </span>
                 </div>
 
                 <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Leitura de trânsito</strong>
+                  <strong style={styles.ruleItemTitle}>Leitura de trÃ¢nsito</strong>
                   <span style={styles.ruleItemText}>
-                    O acréscimo por congestionamento ajuda a evitar promessas furadas.
+                    O acrÃ©scimo por congestionamento ajuda a evitar promessas furadas.
                   </span>
                 </div>
 
                 <div style={styles.ruleItem}>
                   <strong style={styles.ruleItemTitle}>Plano B operacional</strong>
                   <span style={styles.ruleItemText}>
-                    Motorista e veículo reserva já ficam visíveis para ação rápida.
+                    Motorista e veÃ­culo reserva jÃ¡ ficam visÃ­veis para aÃ§Ã£o rÃ¡pida.
                   </span>
                 </div>
 
                 <div style={styles.ruleItem}>
                   <strong style={styles.ruleItemTitle}>Base local integrada</strong>
                   <span style={styles.ruleItemText}>
-                    O translado salvo no cadastro já aparece nesta tela.
+                    O translado salvo no cadastro jÃ¡ aparece nesta tela.
                   </span>
                 </div>
               </div>
             </div>
 
             <div style={styles.darkCard}>
-              <div style={styles.robotTag}>ROBÔ AURORA</div>
+              <div style={styles.robotTag}>ROBÃ” AURORA</div>
               <h2 style={styles.sidebarTitleDark}>Apoio aos translados</h2>
               <p style={styles.sidebarTextDark}>
-                O Robô Aurora poderá alertar atrasos, horários conflitantes,
-                repasses apertados, risco alto e necessidade de trocar motorista ou veículo.
+                O RobÃ´ Aurora poderÃ¡ alertar atrasos, horÃ¡rios conflitantes,
+                repasses apertados, risco alto e necessidade de trocar motorista ou veÃ­culo.
               </p>
 
               <div style={styles.robotList}>
@@ -784,8 +784,8 @@ export default function TransladosPage() {
             </div>
 
             <div style={styles.navCard}>
-              <span style={styles.sectionEyebrow}>NAVEGAÇÃO</span>
-              <h2 style={styles.sidebarTitle}>Próximos blocos</h2>
+              <span style={styles.sectionEyebrow}>NAVEGAÃ‡ÃƒO</span>
+              <h2 style={styles.sidebarTitle}>PrÃ³ximos blocos</h2>
 
               <div style={styles.navList}>
                 <Link href="/translados/novo" style={styles.navItem}>
@@ -795,7 +795,7 @@ export default function TransladosPage() {
                   Abrir escala
                 </Link>
                 <Link href="/operacao" style={styles.navItem}>
-                  Abrir operação
+                  Abrir operaÃ§Ã£o
                 </Link>
                 <Link href="/pagamentos" style={styles.navItem}>
                   Abrir pagamentos

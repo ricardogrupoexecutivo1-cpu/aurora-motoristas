@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
@@ -61,7 +61,7 @@ const baseCadastros: CadastroItem[] = [
     cidade: "Belo Horizonte",
     estado: "MG",
     endereco: "Rua Exemplo, 100",
-    observacao: "Motorista ativo em operação de translados.",
+    observacao: "Motorista ativo em operaÃ§Ã£o de translados.",
     fotoMotorista: "",
   },
   {
@@ -77,7 +77,7 @@ const baseCadastros: CadastroItem[] = [
     cidade: "Lagoa Santa",
     estado: "MG",
     endereco: "Av. Principal, 500",
-    observacao: "Cliente com operação recorrente de aeroporto.",
+    observacao: "Cliente com operaÃ§Ã£o recorrente de aeroporto.",
     fotoMotorista: "",
   },
 ];
@@ -103,8 +103,8 @@ const mockReceitaData: Record<string, Partial<CadastroItem>> = {
   },
   "99888777000166": {
     nome: "FORNECEDORA MASTER AUTOPECAS",
-    nomeFantasia: "Master Autopeças",
-    razaoSocial: "Fornecedora Master Autopeças LTDA",
+    nomeFantasia: "Master AutopeÃ§as",
+    razaoSocial: "Fornecedora Master AutopeÃ§as LTDA",
     email: "comercial@masterautopecas.com",
     telefone: "(31) 97777-4444",
     cidade: "Contagem",
@@ -185,7 +185,7 @@ export default function CadastrosInteligentesPage() {
       setAccessGranted(false);
       setAccessChecked(true);
       setPermissionName("");
-      setAccessMessage("Informe o e-mail de sessão local para validar acesso aos cadastros.");
+      setAccessMessage("Informe o e-mail de sessÃ£o local para validar acesso aos cadastros.");
       return;
     }
 
@@ -197,7 +197,7 @@ export default function CadastrosInteligentesPage() {
       setAccessGranted(false);
       setAccessChecked(true);
       setPermissionName("");
-      setAccessMessage("Este e-mail não está na base de autorizados.");
+      setAccessMessage("Este e-mail nÃ£o estÃ¡ na base de autorizados.");
       return;
     }
 
@@ -205,7 +205,7 @@ export default function CadastrosInteligentesPage() {
       setAccessGranted(false);
       setAccessChecked(true);
       setPermissionName(found.nome);
-      setAccessMessage("Este usuário existe, mas não possui liberação para o módulo de cadastros.");
+      setAccessMessage("Este usuÃ¡rio existe, mas nÃ£o possui liberaÃ§Ã£o para o mÃ³dulo de cadastros.");
       return;
     }
 
@@ -257,7 +257,7 @@ export default function CadastrosInteligentesPage() {
 
     if (!found) {
       setFeedback(
-        "Nenhum dado automático encontrado nesta simulação. Você pode preencher manualmente e editar tudo normalmente."
+        "Nenhum dado automÃ¡tico encontrado nesta simulaÃ§Ã£o. VocÃª pode preencher manualmente e editar tudo normalmente."
       );
       return;
     }
@@ -275,7 +275,7 @@ export default function CadastrosInteligentesPage() {
     }));
 
     setFeedback(
-      "Dados automáticos carregados. Confira e edite tudo que estiver diferente do real."
+      "Dados automÃ¡ticos carregados. Confira e edite tudo que estiver diferente do real."
     );
   }
 
@@ -345,18 +345,18 @@ export default function CadastrosInteligentesPage() {
         <div style={styles.heroCard}>
           <div style={styles.heroGrid}>
             <div style={styles.heroLeft}>
-              <div style={styles.eyebrow}>AURORA MOTORISTAS • CADASTROS</div>
+              <div style={styles.eyebrow}>AURORA MOTORISTAS â€¢ CADASTROS</div>
               <h1 style={styles.heroTitle}>
-                Cadastro inteligente com CPF/CNPJ, dados editáveis e foto do motorista
+                Cadastro inteligente com CPF/CNPJ, dados editÃ¡veis e foto do motorista
               </h1>
               <p style={styles.heroText}>
-                Esta área agora também valida se o e-mail de sessão local possui
-                liberação para acessar os cadastros inteligentes.
+                Esta Ã¡rea agora tambÃ©m valida se o e-mail de sessÃ£o local possui
+                liberaÃ§Ã£o para acessar os cadastros inteligentes.
               </p>
 
               <div style={styles.heroActions}>
                 <Link href="/seguranca" style={styles.secondaryButton}>
-                  Voltar para segurança
+                  Voltar para seguranÃ§a
                 </Link>
                 <Link href="/financeiro" style={styles.primaryButton}>
                   Ir para financeiro
@@ -366,23 +366,23 @@ export default function CadastrosInteligentesPage() {
 
             <div style={styles.heroRightCard}>
               <span style={styles.sideKicker}>CADASTRO PROTEGIDO</span>
-              <h2 style={styles.sideTitle}>Acesso só para autorizados</h2>
+              <h2 style={styles.sideTitle}>Acesso sÃ³ para autorizados</h2>
               <p style={styles.sideText}>
-                Esta camada já bloqueia o módulo para quem não tiver permissão
-                específica de cadastros na central de segurança.
+                Esta camada jÃ¡ bloqueia o mÃ³dulo para quem nÃ£o tiver permissÃ£o
+                especÃ­fica de cadastros na central de seguranÃ§a.
               </p>
 
               <div style={styles.sidePills}>
                 <div style={styles.sidePill}>CPF / CNPJ</div>
-                <div style={styles.sidePill}>Dados editáveis</div>
+                <div style={styles.sidePill}>Dados editÃ¡veis</div>
                 <div style={styles.sidePill}>Acesso controlado</div>
               </div>
             </div>
           </div>
 
           <div style={styles.noticeBox}>
-            Sistema em constante atualização. Esta tela já faz a trava real por
-            permissão local e será conectada depois à sessão completa do app.
+            Sistema em constante atualizaÃ§Ã£o. Esta tela jÃ¡ faz a trava real por
+            permissÃ£o local e serÃ¡ conectada depois Ã  sessÃ£o completa do app.
           </div>
         </div>
       </section>
@@ -391,19 +391,19 @@ export default function CadastrosInteligentesPage() {
         <div style={styles.accessCard}>
           <div style={styles.sectionHeader}>
             <div>
-              <span style={styles.sectionEyebrow}>VALIDAÇÃO DE ACESSO</span>
-              <h2 style={styles.sectionTitle}>Sessão local dos cadastros</h2>
+              <span style={styles.sectionEyebrow}>VALIDAÃ‡ÃƒO DE ACESSO</span>
+              <h2 style={styles.sectionTitle}>SessÃ£o local dos cadastros</h2>
             </div>
           </div>
 
           <div style={styles.accessGrid}>
             <div style={styles.field}>
-              <label style={styles.label}>E-mail da sessão local</label>
+              <label style={styles.label}>E-mail da sessÃ£o local</label>
               <input
                 value={sessionEmail}
                 onChange={(e) => setSessionEmail(e.target.value)}
                 style={styles.input}
-                placeholder="Digite o e-mail liberado no módulo segurança"
+                placeholder="Digite o e-mail liberado no mÃ³dulo seguranÃ§a"
               />
             </div>
 
@@ -421,7 +421,7 @@ export default function CadastrosInteligentesPage() {
               }
             >
               {accessMessage}
-              {permissionName ? ` Usuário reconhecido: ${permissionName}.` : ""}
+              {permissionName ? ` UsuÃ¡rio reconhecido: ${permissionName}.` : ""}
             </div>
           ) : null}
         </div>
@@ -433,16 +433,16 @@ export default function CadastrosInteligentesPage() {
             <span style={styles.sectionEyebrow}>ACESSO BLOQUEADO</span>
             <h2 style={styles.sidebarTitle}>Cadastros protegidos</h2>
             <p style={styles.blockedText}>
-              Esta área é sensível e só pode ser vista por administrador ou por quem
-              tiver liberação específica no módulo de segurança.
+              Esta Ã¡rea Ã© sensÃ­vel e sÃ³ pode ser vista por administrador ou por quem
+              tiver liberaÃ§Ã£o especÃ­fica no mÃ³dulo de seguranÃ§a.
             </p>
 
             <div style={styles.navList}>
               <Link href="/seguranca" style={styles.navItem}>
-                Abrir segurança
+                Abrir seguranÃ§a
               </Link>
               <Link href="/operacao" style={styles.navItem}>
-                Voltar para operação
+                Voltar para operaÃ§Ã£o
               </Link>
             </div>
           </div>
@@ -521,7 +521,7 @@ export default function CadastrosInteligentesPage() {
                   </div>
 
                   <div style={styles.field}>
-                    <label style={styles.label}>Razão social</label>
+                    <label style={styles.label}>RazÃ£o social</label>
                     <input
                       value={form.razaoSocial}
                       onChange={(e) => updateForm("razaoSocial", e.target.value)}
@@ -571,22 +571,22 @@ export default function CadastrosInteligentesPage() {
                   </div>
 
                   <div style={styles.fieldWide}>
-                    <label style={styles.label}>Endereço</label>
+                    <label style={styles.label}>EndereÃ§o</label>
                     <input
                       value={form.endereco}
                       onChange={(e) => updateForm("endereco", e.target.value)}
                       style={styles.input}
-                      placeholder="Rua, número, bairro"
+                      placeholder="Rua, nÃºmero, bairro"
                     />
                   </div>
 
                   <div style={styles.fieldWide}>
-                    <label style={styles.label}>Observação</label>
+                    <label style={styles.label}>ObservaÃ§Ã£o</label>
                     <textarea
                       value={form.observacao}
                       onChange={(e) => updateForm("observacao", e.target.value)}
                       style={styles.textarea}
-                      placeholder="Observações operacionais e administrativas"
+                      placeholder="ObservaÃ§Ãµes operacionais e administrativas"
                     />
                   </div>
 
@@ -605,7 +605,7 @@ export default function CadastrosInteligentesPage() {
                       <div style={styles.photoCard}>
                         <img
                           src={form.fotoMotorista}
-                          alt="Prévia da foto do motorista"
+                          alt="PrÃ©via da foto do motorista"
                           style={styles.photoPreview}
                         />
                       </div>
@@ -652,7 +652,7 @@ export default function CadastrosInteligentesPage() {
 
                             <h3 style={styles.itemTitle}>{item.nome}</h3>
                             <p style={styles.itemSubline}>
-                              {item.documento} • {item.id}
+                              {item.documento} â€¢ {item.id}
                             </p>
                           </div>
                         </div>
@@ -661,56 +661,56 @@ export default function CadastrosInteligentesPage() {
                           <div style={styles.dataItem}>
                             <span style={styles.dataLabel}>Nome fantasia</span>
                             <strong style={styles.dataValue}>
-                              {item.nomeFantasia || "Não informado"}
+                              {item.nomeFantasia || "NÃ£o informado"}
                             </strong>
                           </div>
 
                           <div style={styles.dataItem}>
-                            <span style={styles.dataLabel}>Razão social</span>
+                            <span style={styles.dataLabel}>RazÃ£o social</span>
                             <strong style={styles.dataValue}>
-                              {item.razaoSocial || "Não informado"}
+                              {item.razaoSocial || "NÃ£o informado"}
                             </strong>
                           </div>
 
                           <div style={styles.dataItem}>
                             <span style={styles.dataLabel}>E-mail</span>
                             <strong style={styles.dataValue}>
-                              {item.email || "Não informado"}
+                              {item.email || "NÃ£o informado"}
                             </strong>
                           </div>
 
                           <div style={styles.dataItem}>
                             <span style={styles.dataLabel}>Telefone</span>
                             <strong style={styles.dataValue}>
-                              {item.telefone || "Não informado"}
+                              {item.telefone || "NÃ£o informado"}
                             </strong>
                           </div>
 
                           <div style={styles.dataItem}>
                             <span style={styles.dataLabel}>Cidade</span>
                             <strong style={styles.dataValue}>
-                              {item.cidade || "Não informado"}
+                              {item.cidade || "NÃ£o informado"}
                             </strong>
                           </div>
 
                           <div style={styles.dataItem}>
                             <span style={styles.dataLabel}>Estado</span>
                             <strong style={styles.dataValue}>
-                              {item.estado || "Não informado"}
+                              {item.estado || "NÃ£o informado"}
                             </strong>
                           </div>
 
                           <div style={styles.dataItemWide}>
-                            <span style={styles.dataLabel}>Endereço</span>
+                            <span style={styles.dataLabel}>EndereÃ§o</span>
                             <strong style={styles.dataValue}>
-                              {item.endereco || "Não informado"}
+                              {item.endereco || "NÃ£o informado"}
                             </strong>
                           </div>
 
                           <div style={styles.dataItemWide}>
-                            <span style={styles.dataLabel}>Observação</span>
+                            <span style={styles.dataLabel}>ObservaÃ§Ã£o</span>
                             <strong style={styles.dataValue}>
-                              {item.observacao || "Sem observação."}
+                              {item.observacao || "Sem observaÃ§Ã£o."}
                             </strong>
                           </div>
 
@@ -741,40 +741,40 @@ export default function CadastrosInteligentesPage() {
                   <div style={styles.ruleItem}>
                     <strong style={styles.ruleItemTitle}>Busca por documento</strong>
                     <span style={styles.ruleItemText}>
-                      Ajuda a preencher mais rápido e reduz erro manual.
+                      Ajuda a preencher mais rÃ¡pido e reduz erro manual.
                     </span>
                   </div>
 
                   <div style={styles.ruleItem}>
-                    <strong style={styles.ruleItemTitle}>Tudo editável</strong>
+                    <strong style={styles.ruleItemTitle}>Tudo editÃ¡vel</strong>
                     <span style={styles.ruleItemText}>
-                      Você corrige qualquer dado se a base consultada vier desatualizada.
+                      VocÃª corrige qualquer dado se a base consultada vier desatualizada.
                     </span>
                   </div>
 
                   <div style={styles.ruleItem}>
                     <strong style={styles.ruleItemTitle}>Motorista com foto</strong>
                     <span style={styles.ruleItemText}>
-                      A foto já fica preparada como parte importante da confiança operacional.
+                      A foto jÃ¡ fica preparada como parte importante da confianÃ§a operacional.
                     </span>
                   </div>
 
                   <div style={styles.ruleItem}>
                     <strong style={styles.ruleItemTitle}>Acesso controlado</strong>
                     <span style={styles.ruleItemText}>
-                      Só entra quem tiver liberação de cadastro na central de segurança.
+                      SÃ³ entra quem tiver liberaÃ§Ã£o de cadastro na central de seguranÃ§a.
                     </span>
                   </div>
                 </div>
               </div>
 
               <div style={styles.darkCard}>
-                <div style={styles.robotTag}>ROBÔ AURORA</div>
+                <div style={styles.robotTag}>ROBÃ” AURORA</div>
                 <h2 style={styles.sidebarTitleDark}>Apoio ao cadastro</h2>
                 <p style={styles.sidebarTextDark}>
-                  O Robô Aurora poderá sugerir conferência de documento, alertar
-                  ausência de foto de motorista, apontar cadastro incompleto e ajudar
-                  na padronização operacional.
+                  O RobÃ´ Aurora poderÃ¡ sugerir conferÃªncia de documento, alertar
+                  ausÃªncia de foto de motorista, apontar cadastro incompleto e ajudar
+                  na padronizaÃ§Ã£o operacional.
                 </p>
 
                 <div style={styles.robotList}>
@@ -786,21 +786,21 @@ export default function CadastrosInteligentesPage() {
               </div>
 
               <div style={styles.navCard}>
-                <span style={styles.sectionEyebrow}>NAVEGAÇÃO</span>
-                <h2 style={styles.sidebarTitle}>Próximos blocos</h2>
+                <span style={styles.sectionEyebrow}>NAVEGAÃ‡ÃƒO</span>
+                <h2 style={styles.sidebarTitle}>PrÃ³ximos blocos</h2>
 
                 <div style={styles.navList}>
                   <Link href="/seguranca" style={styles.navItem}>
-                    Abrir segurança
+                    Abrir seguranÃ§a
                   </Link>
                   <Link href="/financeiro" style={styles.navItem}>
                     Abrir financeiro
                   </Link>
                   <Link href="/diarias" style={styles.navItem}>
-                    Abrir diárias
+                    Abrir diÃ¡rias
                   </Link>
                   <Link href="/relatorios" style={styles.navItem}>
-                    Abrir relatórios
+                    Abrir relatÃ³rios
                   </Link>
                 </div>
               </div>

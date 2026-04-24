@@ -1,16 +1,16 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
-type ScaleRisk = "Baixo" | "Médio" | "Alto";
+type ScaleRisk = "Baixo" | "MÃ©dio" | "Alto";
 type ScaleStatus =
   | "Agendado"
   | "Em deslocamento"
   | "Aguardando passageiro"
   | "Reagendado";
 
-type ScaleOrigin = "Base padrão" | "Base local";
+type ScaleOrigin = "Base padrÃ£o" | "Base local";
 
 type ScaleItem = {
   id: string;
@@ -43,7 +43,7 @@ function openWhatsApp(phone: string, message: string) {
 }
 
 function buildScaleMessage(item: ScaleItem) {
-  return `🚗 Aurora Motoristas
+  return `ðŸš— Aurora Motoristas
 
 Atendimento: ${item.id}
 Motorista: ${item.motorista}
@@ -53,19 +53,19 @@ Data/Hora: ${item.dataHora}
 Status: ${item.status}
 Risco: ${item.risco}
 
-Mensagem operacional enviada pela Aurora para acompanhamento seguro do atendimento.`;
+Mensagem operacional enviada pela Aurora para acompanhamento Ambiente seguro do atendimento.`;
 }
 
 function buildLocationRequest(item: ScaleItem) {
-  return `📍 Aurora Motoristas
+  return `ðŸ“ Aurora Motoristas
 
 Atendimento: ${item.id}
 Rota: ${item.rota}
 Data/Hora: ${item.dataHora}
 
-Se você concordar e estiver em atendimento, compartilhe sua localização atual para acompanhamento operacional desta corrida.
+Se vocÃª concordar e estiver em atendimento, compartilhe sua localizaÃ§Ã£o atual para acompanhamento operacional desta corrida.
 
-Esse compartilhamento deve ocorrer apenas durante a execução do serviço.`;
+Esse compartilhamento deve ocorrer apenas durante a execuÃ§Ã£o do serviÃ§o.`;
 }
 
 function getStatusStyle(status: ScaleStatus): React.CSSProperties {
@@ -109,7 +109,7 @@ function getRiskStyle(risk: ScaleRisk): React.CSSProperties {
     };
   }
 
-  if (risk === "Médio") {
+  if (risk === "MÃ©dio") {
     return {
       background: "rgba(245, 158, 11, 0.12)",
       color: "#b45309",
@@ -144,30 +144,30 @@ const scaleItems: ScaleItem[] = [
   {
     id: "ESC-LOCAL-0002",
     motorista: "Pedro Paulo",
-    cliente: "João Bosco",
+    cliente: "JoÃ£o Bosco",
     empresa: "Aurora Locadoras Premium",
     locadora: "Aurora Frotas Executivas",
     dataHora: "10/04/2026 08:30",
     status: "Em deslocamento",
     risco: "Alto",
-    rota: "Confins → Belvedere",
+    rota: "Confins â†’ Belvedere",
     origemBase: "Base local",
-    motoristaReserva: "Não informado",
+    motoristaReserva: "NÃ£o informado",
     veiculoReserva: "Corolla",
-    observacao: "Voo no horário. Janela curta entre atendimentos. Avaliar apoio ou redistribuição.",
+    observacao: "Voo no horÃ¡rio. Janela curta entre atendimentos. Avaliar apoio ou redistribuiÃ§Ã£o.",
     telefoneMotorista: "5531990001005",
     telefoneCliente: "5531880002009",
   },
   {
     id: "ESC-LOCAL-0001",
     motorista: "Pedro Paulo",
-    cliente: "João Silva",
+    cliente: "JoÃ£o Silva",
     empresa: "Aurora Locadoras Premium",
     locadora: "Aurora Frotas Executivas",
     dataHora: "10/04/2026 08:30",
     status: "Agendado",
-    risco: "Médio",
-    rota: "Aeroporto → Belvedere",
+    risco: "MÃ©dio",
+    rota: "Aeroporto â†’ Belvedere",
     origemBase: "Base local",
     motoristaReserva: "Kenedy Silva",
     veiculoReserva: "Corolla",
@@ -183,12 +183,12 @@ const scaleItems: ScaleItem[] = [
     locadora: "Aurora Frotas Executivas",
     dataHora: "10/04/2026 08:45",
     status: "Reagendado",
-    risco: "Médio",
-    rota: "Confins → Savassi",
-    origemBase: "Base padrão",
-    motoristaReserva: "João Pedro",
+    risco: "MÃ©dio",
+    rota: "Confins â†’ Savassi",
+    origemBase: "Base padrÃ£o",
+    motoristaReserva: "JoÃ£o Pedro",
     veiculoReserva: "Corolla Executivo - RES-01",
-    observacao: "Atraso de voo. Manter operação atenta ao desembarque.",
+    observacao: "Atraso de voo. Manter operaÃ§Ã£o atenta ao desembarque.",
     telefoneMotorista: "5531990001002",
     telefoneCliente: "5531880002006",
   },
@@ -201,25 +201,25 @@ const scaleItems: ScaleItem[] = [
     dataHora: "10/04/2026 10:10",
     status: "Agendado",
     risco: "Baixo",
-    rota: "Savassi → Confins",
-    origemBase: "Base padrão",
+    rota: "Savassi â†’ Confins",
+    origemBase: "Base padrÃ£o",
     motoristaReserva: "Maria Fernanda",
     veiculoReserva: "Spin Executiva - RES-02",
-    observacao: "Saída confirmada sem intercorrências até o momento.",
+    observacao: "SaÃ­da confirmada sem intercorrÃªncias atÃ© o momento.",
     telefoneMotorista: "5531990001002",
     telefoneCliente: "5531880002020",
   },
   {
     id: "ESC-0003",
-    motorista: "João Pedro",
-    cliente: "Operação VIP",
+    motorista: "JoÃ£o Pedro",
+    cliente: "OperaÃ§Ã£o VIP",
     empresa: "Aurora Locadoras Premium",
     locadora: "Aurora Frotas Executivas",
     dataHora: "10/04/2026 14:20",
     status: "Aguardando passageiro",
-    risco: "Médio",
-    rota: "Confins → Lourdes",
-    origemBase: "Base padrão",
+    risco: "MÃ©dio",
+    rota: "Confins â†’ Lourdes",
+    origemBase: "Base padrÃ£o",
     motoristaReserva: "Carlos Henrique",
     veiculoReserva: "Onix Sedan - RES-03",
     observacao: "Motorista no ponto aguardando desembarque.",
@@ -229,17 +229,17 @@ const scaleItems: ScaleItem[] = [
   {
     id: "ESC-0004",
     motorista: "Maria Fernanda",
-    cliente: "Delegação Internacional",
+    cliente: "DelegaÃ§Ã£o Internacional",
     empresa: "Grupo Executivo Mobilidade",
     locadora: "Locadora Premium BH",
     dataHora: "10/04/2026 11:00",
     status: "Agendado",
     risco: "Baixo",
-    rota: "Hotel Ouro Minas → Confins",
-    origemBase: "Base padrão",
-    motoristaReserva: "João Pedro",
+    rota: "Hotel Ouro Minas â†’ Confins",
+    origemBase: "Base padrÃ£o",
+    motoristaReserva: "JoÃ£o Pedro",
     veiculoReserva: "Tracker Executiva - RES-04",
-    observacao: "Bagagem extra confirmada. Operação estável.",
+    observacao: "Bagagem extra confirmada. OperaÃ§Ã£o estÃ¡vel.",
     telefoneMotorista: "5531990001004",
     telefoneCliente: "5531880002007",
   },
@@ -252,8 +252,8 @@ const scaleItems: ScaleItem[] = [
     dataHora: "10/04/2026 11:15",
     status: "Agendado",
     risco: "Alto",
-    rota: "Confins → Belvedere",
-    origemBase: "Base padrão",
+    rota: "Confins â†’ Belvedere",
+    origemBase: "Base padrÃ£o",
     motoristaReserva: "Carlos Henrique",
     veiculoReserva: "Corolla Cross - RES-05",
     observacao: "Janela curta entre atendimentos. Avaliar reserva preventiva.",
@@ -309,14 +309,14 @@ export default function EscalaPage() {
         <div style={styles.heroCard}>
           <div style={styles.heroGrid}>
             <div style={styles.heroLeft}>
-              <div style={styles.eyebrow}>AURORA MOTORISTAS • ESCALA</div>
+              <div style={styles.eyebrow}>AURORA MOTORISTAS â€¢ ESCALA</div>
               <h1 style={styles.heroTitle}>
                 Escala operacional por motorista com risco, reserva e base integrada
               </h1>
               <p style={styles.heroText}>
-                Esta tela junta a escala padrão com os translados criados no
-                cadastro novo, permitindo enxergar a operação do dia por motorista
-                sem perder risco, contingência e origem do item.
+                Esta tela junta a escala padrÃ£o com os translados criados no
+                cadastro novo, permitindo enxergar a operaÃ§Ã£o do dia por motorista
+                sem perder risco, contingÃªncia e origem do item.
               </p>
 
               <div style={styles.heroActions}>
@@ -325,30 +325,30 @@ export default function EscalaPage() {
                 </Link>
 
                 <Link href="/operacao" style={styles.primaryButton}>
-                  Ir para operação
+                  Ir para operaÃ§Ã£o
                 </Link>
               </div>
             </div>
 
             <div style={styles.heroRightCard}>
               <span style={styles.sideKicker}>ESCALA DO DIA</span>
-              <h2 style={styles.sideTitle}>Leitura rápida para segunda pesada</h2>
+              <h2 style={styles.sideTitle}>Leitura rÃ¡pida para segunda pesada</h2>
               <p style={styles.sideText}>
-                Aqui você vê quem está com carga alta, onde há risco maior e qual
-                reserva pode ser acionada antes de estourar a operação, agora
-                também com base local integrada.
+                Aqui vocÃª vÃª quem estÃ¡ com carga alta, onde hÃ¡ risco maior e qual
+                reserva pode ser acionada antes de estourar a operaÃ§Ã£o, agora
+                tambÃ©m com base local integrada.
               </p>
 
               <div style={styles.sidePills}>
                 <div style={styles.sidePill}>Por motorista</div>
-                <div style={styles.sidePill}>Por horário</div>
-                <div style={styles.sidePill}>Com contingência</div>
+                <div style={styles.sidePill}>Por horÃ¡rio</div>
+                <div style={styles.sidePill}>Com contingÃªncia</div>
               </div>
             </div>
           </div>
 
           <div style={styles.noticeBox}>
-            Sistema em constante atualização. Esta escala já lê a base local e
+            Sistema em constante atualizaÃ§Ã£o. Esta escala jÃ¡ lÃª a base local e
             integra os novos translados automaticamente.
           </div>
         </div>
@@ -357,7 +357,7 @@ export default function EscalaPage() {
       <section style={styles.statsSection}>
         <div style={styles.statsGrid}>
           <article style={styles.statCard}>
-            <span style={styles.statLabel}>Motoristas visíveis</span>
+            <span style={styles.statLabel}>Motoristas visÃ­veis</span>
             <strong style={styles.statValue}>{stats.motoristas}</strong>
             <span style={styles.statDetail}>Escala agrupada</span>
           </article>
@@ -371,7 +371,7 @@ export default function EscalaPage() {
           <article style={styles.statCard}>
             <span style={styles.statLabel}>Risco alto</span>
             <strong style={styles.statValue}>{stats.riscoAlto}</strong>
-            <span style={styles.statDetail}>Atenção imediata</span>
+            <span style={styles.statDetail}>AtenÃ§Ã£o imediata</span>
           </article>
 
           <article style={styles.statCard}>
@@ -398,7 +398,7 @@ export default function EscalaPage() {
             <div style={styles.scaleCard}>
               <div style={styles.sectionHeader}>
                 <div>
-                  <span style={styles.sectionEyebrow}>VISÃO OPERACIONAL</span>
+                  <span style={styles.sectionEyebrow}>VISÃƒO OPERACIONAL</span>
                   <h2 style={styles.sectionTitle}>Escala de translados</h2>
                 </div>
 
@@ -422,7 +422,7 @@ export default function EscalaPage() {
                         <div>
                           <h3 style={styles.driverTitle}>{group.motorista}</h3>
                           <p style={styles.driverSubline}>
-                            {group.total} atendimento(s) • {group.riscoAlto} em risco alto
+                            {group.total} atendimento(s) â€¢ {group.riscoAlto} em risco alto
                           </p>
                         </div>
 
@@ -432,7 +432,7 @@ export default function EscalaPage() {
                             ...(group.riscoAlto > 0 ? styles.driverAttention : styles.driverStable),
                           }}
                         >
-                          {group.riscoAlto > 0 ? "Atenção" : "Estável"}
+                          {group.riscoAlto > 0 ? "AtenÃ§Ã£o" : "EstÃ¡vel"}
                         </span>
                       </div>
 
@@ -454,10 +454,10 @@ export default function EscalaPage() {
 
                               <h4 style={styles.routeTitle}>{item.rota}</h4>
                               <p style={styles.routeSubline}>
-                                {item.dataHora} • {item.cliente}
+                                {item.dataHora} â€¢ {item.cliente}
                               </p>
                               <p style={styles.routeSubline}>
-                                {item.empresa} • {item.locadora}
+                                {item.empresa} â€¢ {item.locadora}
                               </p>
                             </div>
 
@@ -468,19 +468,19 @@ export default function EscalaPage() {
                               </div>
 
                               <div style={styles.dataItem}>
-                                <span style={styles.dataLabel}>Veículo reserva</span>
+                                <span style={styles.dataLabel}>VeÃ­culo reserva</span>
                                 <strong style={styles.dataValue}>{item.veiculoReserva}</strong>
                               </div>
 
                               <div style={styles.dataItemWide}>
-                                <span style={styles.dataLabel}>Observação</span>
+                                <span style={styles.dataLabel}>ObservaÃ§Ã£o</span>
                                 <strong style={styles.dataValue}>{item.observacao}</strong>
                               </div>
                             </div>
 
                             {item.risco === "Alto" ? (
                               <div style={styles.alertBox}>
-                                🚨 Risco alto. Deixar reserva pronta antes da execução.
+                                ðŸš¨ Risco alto. Deixar reserva pronta antes da execuÃ§Ã£o.
                               </div>
                             ) : null}
 
@@ -521,7 +521,7 @@ export default function EscalaPage() {
                                   )
                                 }
                               >
-                                Localização
+                                LocalizaÃ§Ã£o
                               </button>
                             </div>
                           </div>
@@ -536,7 +536,7 @@ export default function EscalaPage() {
 
           <aside style={styles.rightColumn}>
             <div style={styles.infoCard}>
-              <span style={styles.sectionEyebrow}>COMUNICAÇÃO SEGURA</span>
+              <span style={styles.sectionEyebrow}>COMUNICAÃ‡ÃƒO SEGURA</span>
               <h2 style={styles.sidebarTitle}>Contato pela escala</h2>
 
               <div style={styles.ruleList}>
@@ -548,14 +548,14 @@ export default function EscalaPage() {
                 </div>
 
                 <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Localização com consentimento</strong>
+                  <strong style={styles.ruleItemTitle}>LocalizaÃ§Ã£o com consentimento</strong>
                   <span style={styles.ruleItemText}>
-                    A solicitação é operacional e só deve ser usada durante o atendimento.
+                    A solicitaÃ§Ã£o Ã© operacional e sÃ³ deve ser usada durante o atendimento.
                   </span>
                 </div>
 
                 <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Menos evasão</strong>
+                  <strong style={styles.ruleItemTitle}>Menos evasÃ£o</strong>
                   <span style={styles.ruleItemText}>
                     A conversa parte da escala e continua vinculada ao atendimento.
                   </span>
@@ -564,24 +564,24 @@ export default function EscalaPage() {
             </div>
 
             <div style={styles.darkCard}>
-              <div style={styles.robotTag}>ROBÔ AURORA</div>
-              <h2 style={styles.sidebarTitleDark}>Apoio à escala</h2>
+              <div style={styles.robotTag}>ROBÃ” AURORA</div>
+              <h2 style={styles.sidebarTitleDark}>Apoio Ã  escala</h2>
               <p style={styles.sidebarTextDark}>
-                O Robô Aurora poderá comparar risco, janela entre atendimentos,
-                reservas disponíveis e pontos onde a operação precisa de reforço.
+                O RobÃ´ Aurora poderÃ¡ comparar risco, janela entre atendimentos,
+                reservas disponÃ­veis e pontos onde a operaÃ§Ã£o precisa de reforÃ§o.
               </p>
 
               <div style={styles.robotList}>
                 <div style={styles.robotItem}>Ler risco alto</div>
                 <div style={styles.robotItem}>Sugerir reserva</div>
                 <div style={styles.robotItem}>Apontar conflito</div>
-                <div style={styles.robotItem}>Ajudar na redistribuição</div>
+                <div style={styles.robotItem}>Ajudar na redistribuiÃ§Ã£o</div>
               </div>
             </div>
 
             <div style={styles.navCard}>
-              <span style={styles.sectionEyebrow}>NAVEGAÇÃO</span>
-              <h2 style={styles.sidebarTitle}>Próximos blocos</h2>
+              <span style={styles.sectionEyebrow}>NAVEGAÃ‡ÃƒO</span>
+              <h2 style={styles.sidebarTitle}>PrÃ³ximos blocos</h2>
 
               <div style={styles.navList}>
                 <Link href="/translados/novo" style={styles.navItem}>
@@ -591,10 +591,10 @@ export default function EscalaPage() {
                   Abrir translados
                 </Link>
                 <Link href="/operacao" style={styles.navItem}>
-                  Abrir operação
+                  Abrir operaÃ§Ã£o
                 </Link>
                 <Link href="/historico" style={styles.navItem}>
-                  Abrir histórico
+                  Abrir histÃ³rico
                 </Link>
               </div>
             </div>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { WifiOff, RefreshCw, Navigation, Home } from "lucide-react";
 import Link from "next/link";
@@ -16,7 +16,7 @@ export default function OfflinePage() {
           <div className="w-14 h-14 rounded-2xl gradient-premium flex items-center justify-center shadow-lg">
             <Navigation className="w-7 h-7 text-white" />
           </div>
-          <span className="text-3xl font-black gradient-text">MOVO</span>
+          <span className="text-3xl font-black gradient-text">Aurora Motoristas</span>
         </div>
 
         {/* Icone Offline */}
@@ -52,10 +52,11 @@ export default function OfflinePage() {
         {/* Dica */}
         <div className="mt-10 p-4 bg-card rounded-xl border border-border">
           <p className="text-sm text-muted-foreground">
-            <span className="font-semibold text-foreground">Dica:</span> O MOVO funciona melhor com uma conexao estavel. Algumas funcoes podem estar disponiveis offline.
+            <span className="font-semibold text-foreground">Dica:</span> O Aurora Motoristas funciona melhor com uma conexao estavel. Algumas funcoes podem estar disponiveis offline.
           </p>
         </div>
       </div>
     </main>
   );
 }
+

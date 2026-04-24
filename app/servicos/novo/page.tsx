@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -57,9 +57,9 @@ type ServicePayload = {
 
 const LOCAL_STORAGE_KEY = "aurora_motoristas_servicos_rascunho";
 const DEFAULT_OBSERVACOES =
-  "Serviço lançado pelo novo fluxo operacional.";
+  "ServiÃ§o lanÃ§ado pelo novo fluxo operacional.";
 const DEFAULT_CHECKLIST =
-  "Motorista deve realizar checklist e enviar conforme combinado antes da liberação/finalização do serviço.";
+  "Motorista deve realizar checklist e enviar conforme combinado antes da liberaÃ§Ã£o/finalizaÃ§Ã£o do serviÃ§o.";
 const DEFAULT_INFORMADO_POR = "Contratante / cliente";
 
 function normalizeNumberInput(value: string) {
@@ -96,41 +96,41 @@ function createOS() {
 function getTipoServicoDescricao(tipo: string) {
   switch (tipo) {
     case "busca_veiculo":
-      return "Retirada de veículo para locadora, loja ou base operacional.";
+      return "Retirada de veÃ­culo para locadora, loja ou base operacional.";
     case "entrega_veiculo":
-      return "Entrega de veículo ao cliente, empresa ou ponto combinado.";
+      return "Entrega de veÃ­culo ao cliente, empresa ou ponto combinado.";
     case "transporte_executivo":
-      return "Serviço executivo urbano, corporativo ou intermunicipal.";
+      return "ServiÃ§o executivo urbano, corporativo ou intermunicipal.";
     case "transfer":
       return "Transfer de aeroporto, hotel, evento ou deslocamento especial.";
     default:
-      return "Escolha o tipo principal para acelerar o cadastro da operação.";
+      return "Escolha o tipo principal para acelerar o cadastro da operaÃ§Ã£o.";
   }
 }
 
 function getModoCobrancaDescricao(modo: string) {
   switch (modo) {
     case "fechado_total":
-      return "Cobrança fechada da operação inteira, independentemente do KM final.";
+      return "CobranÃ§a fechada da operaÃ§Ã£o inteira, independentemente do KM final.";
     case "por_km":
-      return "Cálculo baseado em distância e valor unitário por KM.";
+      return "CÃ¡lculo baseado em distÃ¢ncia e valor unitÃ¡rio por KM.";
     default:
-      return "Defina como a operação será cobrada ao contratante.";
+      return "Defina como a operaÃ§Ã£o serÃ¡ cobrada ao contratante.";
   }
 }
 
 function getTipoServicoNome(tipo: string) {
   switch (tipo) {
     case "busca_veiculo":
-      return "Busca de veículo";
+      return "Busca de veÃ­culo";
     case "entrega_veiculo":
-      return "Entrega de veículo";
+      return "Entrega de veÃ­culo";
     case "transporte_executivo":
       return "Transporte executivo";
     case "transfer":
       return "Transfer";
     default:
-      return "Serviço";
+      return "ServiÃ§o";
   }
 }
 
@@ -522,7 +522,7 @@ export default function NovoServicoPage() {
     try {
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(draft));
     } catch {
-      // mantém silencioso
+      // mantÃ©m silencioso
     }
   }, [
     osSistema,
@@ -606,7 +606,7 @@ export default function NovoServicoPage() {
     }
 
     setSaveDestination("aguardando");
-    setStatusText("Formulário limpo para novo cadastro.");
+    setStatusText("FormulÃ¡rio limpo para novo cadastro.");
   }
 
   async function salvar() {
@@ -686,7 +686,7 @@ export default function NovoServicoPage() {
       margem_bruta: margemOperacao,
       margem_operacao: margemOperacao,
       etapa: "Operacional",
-      origem_base: "Novo serviço",
+      origem_base: "Novo serviÃ§o",
       observacao: observacoes.trim() || DEFAULT_OBSERVACOES,
       observacoes: observacoes.trim() || DEFAULT_OBSERVACOES,
       checklist_obrigatorio: checklistObrigatorio,
@@ -697,11 +697,11 @@ export default function NovoServicoPage() {
       visivel_motorista: visivelMotorista,
     };
 
-    console.log("PAYLOAD DO SERVIÇO", payload);
+    console.log("PAYLOAD DO SERVIÃ‡O", payload);
 
     try {
       setSaving(true);
-      setStatusText("Enviando serviço para o Supabase...");
+      setStatusText("Enviando serviÃ§o para o Supabase...");
       setSaveDestination("aguardando");
 
       const response = await fetch("/api/services", {
@@ -742,14 +742,14 @@ export default function NovoServicoPage() {
       }
 
       setSaveDestination("supabase");
-      setStatusText("Serviço salvo com sucesso no Supabase.");
+      setStatusText("ServiÃ§o salvo com sucesso no Supabase.");
       alert(
-        `Serviço salvo com sucesso no Supabase.\n\nNome gerado: ${payload.servico}`
+        `ServiÃ§o salvo com sucesso no Supabase.\n\nNome gerado: ${payload.servico}`
       );
       limparFormulario();
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : "Erro ao salvar o serviço.";
+        error instanceof Error ? error.message : "Erro ao salvar o serviÃ§o.";
 
       console.error("ERRO AO SALVAR", error);
 
@@ -810,11 +810,11 @@ export default function NovoServicoPage() {
         >
           <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
             <Link href="/servicos" style={topSecondaryLink}>
-              Voltar para serviços
+              Voltar para serviÃ§os
             </Link>
 
             <Link href="/" style={topSecondaryLink}>
-              Início
+              InÃ­cio
             </Link>
           </div>
 
@@ -843,7 +843,7 @@ export default function NovoServicoPage() {
                 wordBreak: "break-word",
               }}
             >
-              Novo serviço
+              Novo serviÃ§o
             </h1>
 
             <p
@@ -854,10 +854,10 @@ export default function NovoServicoPage() {
                 lineHeight: 1.6,
               }}
             >
-              Cadastro operacional com salvamento prioritário no Supabase e
-              fallback temporário em localStorage. Esta tela mantém a blindagem
-              da operação e não altera a regra do motorista: após pagamento, o
-              serviço sai da visão ativa e fica preservado no histórico interno.
+              Cadastro operacional com salvamento prioritÃ¡rio no Supabase e
+              fallback temporÃ¡rio em localStorage. Esta tela mantÃ©m a blindagem
+              da operaÃ§Ã£o e nÃ£o altera a regra do motorista: apÃ³s pagamento, o
+              serviÃ§o sai da visÃ£o ativa e fica preservado no histÃ³rico interno.
             </p>
 
             <div
@@ -878,8 +878,8 @@ export default function NovoServicoPage() {
               </span>
 
               <span style={chipWarning}>
-                Sistema em constante atualização e podem ocorrer instabilidades
-                momentâneas.
+                Sistema em constante atualizaÃ§Ã£o e podem ocorrer instabilidades
+                momentÃ¢neas.
               </span>
             </div>
           </div>
@@ -897,21 +897,21 @@ export default function NovoServicoPage() {
             label="Tipo selecionado"
             value={
               tipoServico === "busca_veiculo"
-                ? "Busca de veículo"
+                ? "Busca de veÃ­culo"
                 : tipoServico === "entrega_veiculo"
-                ? "Entrega de veículo"
+                ? "Entrega de veÃ­culo"
                 : tipoServico === "transporte_executivo"
                 ? "Transporte executivo"
                 : "Transfer"
             }
           />
           <SummaryCard
-            label="Modo de cobrança"
+            label="Modo de cobranÃ§a"
             value={modoCobranca === "por_km" ? "Por KM" : "Fechado total"}
           />
           <SummaryCard label="Nome previsto" value={nomeServicoAutomatico} />
           <SummaryCard
-            label="Margem da operação"
+            label="Margem da operaÃ§Ã£o"
             value={formatCurrency(margemOperacao)}
           />
         </section>
@@ -961,7 +961,7 @@ export default function NovoServicoPage() {
                 placeholder="Ex.: OS-2026-000145"
               />
               <Field
-                label="Data do serviço"
+                label="Data do serviÃ§o"
                 value={dataServico}
                 onChange={setDataServico}
                 type="date"
@@ -992,12 +992,12 @@ export default function NovoServicoPage() {
                 ]}
               />
               <SelectField
-                label="Tipo de serviço"
+                label="Tipo de serviÃ§o"
                 value={tipoServico}
                 onChange={setTipoServico}
                 options={[
-                  { value: "busca_veiculo", label: "Busca de veículo" },
-                  { value: "entrega_veiculo", label: "Entrega de veículo" },
+                  { value: "busca_veiculo", label: "Busca de veÃ­culo" },
+                  { value: "entrega_veiculo", label: "Entrega de veÃ­culo" },
                   {
                     value: "transporte_executivo",
                     label: "Transporte executivo",
@@ -1008,7 +1008,7 @@ export default function NovoServicoPage() {
             </div>
 
             <InfoBox
-              title="Tipo de serviço"
+              title="Tipo de serviÃ§o"
               text={getTipoServicoDescricao(tipoServico)}
             />
 
@@ -1062,7 +1062,7 @@ export default function NovoServicoPage() {
                 placeholder="Ex.: Paulo Santos"
               />
               <Field
-                label="Nome do serviço"
+                label="Nome do serviÃ§o"
                 value={servico}
                 onChange={setServico}
                 placeholder="Se deixar em branco, o sistema gera automaticamente"
@@ -1071,7 +1071,7 @@ export default function NovoServicoPage() {
                 label="Origem"
                 value={origem}
                 onChange={setOrigem}
-                placeholder="Ex.: Pátio BH"
+                placeholder="Ex.: PÃ¡tio BH"
               />
               <Field
                 label="Destino"
@@ -1094,29 +1094,29 @@ export default function NovoServicoPage() {
             </div>
 
             <InfoBox
-              title="Nome automático"
-              text={`Se o campo "Nome do serviço" ficar vazio, o sistema usará: ${nomeServicoAutomatico}`}
+              title="Nome automÃ¡tico"
+              text={`Se o campo "Nome do serviÃ§o" ficar vazio, o sistema usarÃ¡: ${nomeServicoAutomatico}`}
             />
 
             <Field
-              label="Endereço de retirada"
+              label="EndereÃ§o de retirada"
               value={enderecoRetirada}
               onChange={setEnderecoRetirada}
-              placeholder="Ex.: Estrada Tarcísio Schettino Ribeiro, 760"
+              placeholder="Ex.: Estrada TarcÃ­sio Schettino Ribeiro, 760"
             />
 
             <Field
-              label="Endereço de entrega"
+              label="EndereÃ§o de entrega"
               value={enderecoEntrega}
               onChange={setEnderecoEntrega}
               placeholder="Ex.: Rua do Sumidouro, 555"
             />
 
             <TextAreaField
-              label="Observações"
+              label="ObservaÃ§Ãµes"
               value={observacoes}
               onChange={setObservacoes}
-              placeholder="Observações operacionais..."
+              placeholder="ObservaÃ§Ãµes operacionais..."
             />
           </div>
 
@@ -1145,7 +1145,7 @@ export default function NovoServicoPage() {
             </h2>
 
             <SelectField
-              label="Modo de cobrança ao contratante"
+              label="Modo de cobranÃ§a ao contratante"
               value={modoCobranca}
               onChange={setModoCobranca}
               options={[
@@ -1155,7 +1155,7 @@ export default function NovoServicoPage() {
             />
 
             <InfoBox
-              title="Modo de cobrança"
+              title="Modo de cobranÃ§a"
               text={getModoCobrancaDescricao(modoCobranca)}
             />
 
@@ -1175,7 +1175,7 @@ export default function NovoServicoPage() {
               />
             ) : (
               <Field
-                label="Valor da cobrança"
+                label="Valor da cobranÃ§a"
                 value={valorCobrancaInput}
                 onChange={setValorCobrancaInput}
                 placeholder="0,00"
@@ -1197,7 +1197,7 @@ export default function NovoServicoPage() {
             />
 
             <Field
-              label="Pedágio"
+              label="PedÃ¡gio"
               value={pedagioInput}
               onChange={setPedagioInput}
               placeholder="0,00"
@@ -1211,7 +1211,7 @@ export default function NovoServicoPage() {
             />
 
             <Field
-              label="Alimentação"
+              label="AlimentaÃ§Ã£o"
               value={alimentacaoInput}
               onChange={setAlimentacaoInput}
               placeholder="0,00"
@@ -1232,7 +1232,7 @@ export default function NovoServicoPage() {
               }}
             >
               <ResultCard
-                label="Cobrança final"
+                label="CobranÃ§a final"
                 value={formatCurrency(valorCobrancaCalculado)}
               />
               <ResultCard
@@ -1244,7 +1244,7 @@ export default function NovoServicoPage() {
                 value={formatCurrency(fechamentoMotorista)}
               />
               <ResultCard
-                label="Margem da operação"
+                label="Margem da operaÃ§Ã£o"
                 value={formatCurrency(margemOperacao)}
               />
             </div>
@@ -1262,7 +1262,7 @@ export default function NovoServicoPage() {
             >
               <strong style={{ color: "#123047" }}>Regra aplicada:</strong>{" "}
               fechamento do motorista = valor do motorista + despesas -
-              adiantamento. Margem da operação = cobrança - valor do motorista +
+              adiantamento. Margem da operaÃ§Ã£o = cobranÃ§a - valor do motorista +
               adiantamento - despesas.
             </div>
 
@@ -1290,15 +1290,15 @@ export default function NovoServicoPage() {
                   lineHeight: 1.7,
                 }}
               >
-                Checklist obrigatório nesta operação
+                Checklist obrigatÃ³rio nesta operaÃ§Ã£o
               </span>
             </label>
 
             <TextAreaField
-              label="Instruções do checklist"
+              label="InstruÃ§Ãµes do checklist"
               value={checklistInstrucoes}
               onChange={setChecklistInstrucoes}
-              placeholder="Orientações para o motorista..."
+              placeholder="OrientaÃ§Ãµes para o motorista..."
             />
           </div>
         </section>
@@ -1325,10 +1325,10 @@ export default function NovoServicoPage() {
               maxWidth: 780,
             }}
           >
-            Blindagem mantida: esta tela cadastra o serviço, mas não expõe visão
+            Blindagem mantida: esta tela cadastra o serviÃ§o, mas nÃ£o expÃµe visÃ£o
             financeira ao motorista. Quando o status for <strong>pago</strong>,
-            o sistema já envia <strong>visível para motorista = não</strong> e
-            preserva o item apenas no histórico interno protegido.
+            o sistema jÃ¡ envia <strong>visÃ­vel para motorista = nÃ£o</strong> e
+            preserva o item apenas no histÃ³rico interno protegido.
           </div>
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
@@ -1344,7 +1344,7 @@ export default function NovoServicoPage() {
             <button
               type="button"
               onClick={() => {
-                console.log("BOTÃO SALVAR PRESSIONADO");
+                console.log("BOTÃƒO SALVAR PRESSIONADO");
                 salvar();
               }}
               disabled={saving}
@@ -1354,7 +1354,7 @@ export default function NovoServicoPage() {
                 cursor: saving ? "not-allowed" : "pointer",
               }}
             >
-              {saving ? "Salvando..." : "Salvar serviço"}
+              {saving ? "Salvando..." : "Salvar serviÃ§o"}
             </button>
           </div>
         </section>
@@ -1367,8 +1367,8 @@ export default function NovoServicoPage() {
             fontWeight: 700,
           }}
         >
-          Sistema em constante atualização • podem ocorrer instabilidades
-          momentâneas
+          Sistema em constante atualizaÃ§Ã£o â€¢ podem ocorrer instabilidades
+          momentÃ¢neas
         </div>
       </div>
     </main>

@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
 type ServicePayload = {
@@ -106,7 +106,7 @@ function getSupabaseAdmin() {
 
   if (!supabaseUrl || !supabaseServiceRoleKey) {
     throw new Error(
-      "Variáveis do Supabase ausentes. Verifique SUPABASE_URL/NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY."
+      "VariÃ¡veis do Supabase ausentes. Verifique SUPABASE_URL/NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY."
     );
   }
 
@@ -253,7 +253,7 @@ async function listServicesSafely(
     data: null,
     error:
       lastError || {
-        message: "Não foi possível listar os serviços.",
+        message: "NÃ£o foi possÃ­vel listar os serviÃ§os.",
         code: "LIST_UNKNOWN_ERROR",
       },
   };
@@ -269,7 +269,7 @@ async function updateGenericStatus(
     return NextResponse.json(
       {
         success: false,
-        error: "Informe o id do serviço para atualizar.",
+        error: "Informe o id do serviÃ§o para atualizar.",
       },
       { status: 400 }
     );
@@ -314,18 +314,18 @@ async function updateGenericStatus(
     return NextResponse.json(
       {
         success: false,
-        error: error.message || "Erro ao atualizar serviço.",
+        error: error.message || "Erro ao atualizar serviÃ§o.",
         details: error,
       },
       { status: 500 }
     );
   }
 
-  console.log("[am_services][UPDATE][status] serviço atualizado:", data);
+  console.log("[am_services][UPDATE][status] serviÃ§o atualizado:", data);
 
   return NextResponse.json({
     success: true,
-    message: "Serviço atualizado com sucesso.",
+    message: "ServiÃ§o atualizado com sucesso.",
     service: data,
   });
 }
@@ -340,7 +340,7 @@ async function updateMarkPaid(
     return NextResponse.json(
       {
         success: false,
-        error: "Informe o id do serviço para atualizar.",
+        error: "Informe o id do serviÃ§o para atualizar.",
       },
       { status: 400 }
     );
@@ -369,19 +369,19 @@ async function updateMarkPaid(
     return NextResponse.json(
       {
         success: false,
-        error: error.message || "Erro ao marcar serviço como pago.",
+        error: error.message || "Erro ao marcar serviÃ§o como pago.",
         details: error,
       },
       { status: 500 }
     );
   }
 
-  console.log("[am_services][UPDATE][mark_paid] serviço atualizado:", data);
+  console.log("[am_services][UPDATE][mark_paid] serviÃ§o atualizado:", data);
 
   return NextResponse.json({
     success: true,
     message:
-      "Serviço marcado como pago com sucesso. Motorista não deve mais visualizar esta operação nas telas permitidas.",
+      "ServiÃ§o marcado como pago com sucesso. Motorista nÃ£o deve mais visualizar esta operaÃ§Ã£o nas telas permitidas.",
     service: data,
   });
 }
@@ -396,7 +396,7 @@ async function updateEditableFields(
     return NextResponse.json(
       {
         success: false,
-        error: "Informe o id do serviço para atualizar.",
+        error: "Informe o id do serviÃ§o para atualizar.",
       },
       { status: 400 }
     );
@@ -440,7 +440,7 @@ async function updateEditableFields(
       {
         success: false,
         error:
-          "Para salvar a edição, informe contratante, cliente final, contato do cliente final, motorista, origem e destino.",
+          "Para salvar a ediÃ§Ã£o, informe contratante, cliente final, contato do cliente final, motorista, origem e destino.",
       },
       { status: 400 }
     );
@@ -468,7 +468,7 @@ async function updateEditableFields(
 
     observacoes,
     observacao:
-      observacoes || "Serviço atualizado pelo fluxo seguro de edição.",
+      observacoes || "ServiÃ§o atualizado pelo fluxo Ambiente seguro de ediÃ§Ã£o.",
 
     km_total: kmTotal,
     km: kmTotal,
@@ -504,18 +504,18 @@ async function updateEditableFields(
     return NextResponse.json(
       {
         success: false,
-        error: error.message || "Erro ao salvar edição do serviço.",
+        error: error.message || "Erro ao salvar ediÃ§Ã£o do serviÃ§o.",
         details: error,
       },
       { status: 500 }
     );
   }
 
-  console.log("[am_services][UPDATE][edit] serviço atualizado:", data);
+  console.log("[am_services][UPDATE][edit] serviÃ§o atualizado:", data);
 
   return NextResponse.json({
     success: true,
-    message: "Serviço editado com sucesso no Supabase.",
+    message: "ServiÃ§o editado com sucesso no Supabase.",
     service: data,
   });
 }
@@ -531,7 +531,7 @@ export async function GET() {
       return NextResponse.json(
         {
           success: false,
-          error: result.error.message || "Erro ao listar serviços.",
+          error: result.error.message || "Erro ao listar serviÃ§os.",
           details: result.error,
         },
         { status: 500 }
@@ -539,7 +539,7 @@ export async function GET() {
     }
 
     console.log(
-      `[am_services][GET] total de serviços encontrados: ${result.data?.length || 0}`
+      `[am_services][GET] total de serviÃ§os encontrados: ${result.data?.length || 0}`
     );
 
     return NextResponse.json({
@@ -551,7 +551,7 @@ export async function GET() {
     const message =
       error instanceof Error
         ? error.message
-        : "Erro inesperado ao listar serviços.";
+        : "Erro inesperado ao listar serviÃ§os.";
 
     console.error("[am_services][GET] erro geral:", error);
 
@@ -579,7 +579,7 @@ export async function POST(request: Request) {
         toRequiredString(body.destino)
     );
 
-    // Atualização rápida vinda da tela /servicos
+    // AtualizaÃ§Ã£o rÃ¡pida vinda da tela /servicos
     if (hasId && !hasCreateFields) {
       return await updateGenericStatus(supabase, body);
     }
@@ -656,12 +656,12 @@ export async function POST(request: Request) {
     const observacaoFinal =
       toNullableString(body.observacoes) ||
       toNullableString(body.observacao) ||
-      "Serviço lançado pelo novo fluxo operacional.";
+      "ServiÃ§o lanÃ§ado pelo novo fluxo operacional.";
 
     const servicoFinal =
       toRequiredString(body.origem) && toRequiredString(body.destino)
         ? `${origem} x ${destino}`
-        : toRequiredString(body.os_sistema) || "Serviço";
+        : toRequiredString(body.os_sistema) || "ServiÃ§o";
 
     const payload: Record<string, unknown> = {
       tipo_servico: tipoServico,
@@ -714,7 +714,7 @@ export async function POST(request: Request) {
           ? toBoolean(body.visivel_motorista)
           : status !== "pago",
 
-      origem_base: "Novo serviço",
+      origem_base: "Novo serviÃ§o",
       etapa: "Operacional",
 
       os_sistema: os,
@@ -746,7 +746,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          error: result.error?.message || "Erro ao salvar serviço.",
+          error: result.error?.message || "Erro ao salvar serviÃ§o.",
           details: result.error,
           removed_columns: result.removedColumns,
           payload_keys_sent: Object.keys(result.finalPayload),
@@ -755,7 +755,7 @@ export async function POST(request: Request) {
       );
     }
 
-    console.log("[am_services][POST] serviço salvo com sucesso:", result.data);
+    console.log("[am_services][POST] serviÃ§o salvo com sucesso:", result.data);
     console.log(
       "[am_services][POST] colunas removidas automaticamente:",
       result.removedColumns
@@ -765,10 +765,10 @@ export async function POST(request: Request) {
       success: true,
       message:
         result.removedColumns.length > 0
-          ? `Serviço salvo com sucesso no Supabase. Colunas ausentes ignoradas automaticamente: ${result.removedColumns.join(
+          ? `ServiÃ§o salvo com sucesso no Supabase. Colunas ausentes ignoradas automaticamente: ${result.removedColumns.join(
               ", "
             )}.`
-          : "Serviço salvo com sucesso no Supabase.",
+          : "ServiÃ§o salvo com sucesso no Supabase.",
       service: result.data,
       removed_columns: result.removedColumns,
       payload_keys_sent: Object.keys(result.finalPayload),
@@ -777,7 +777,7 @@ export async function POST(request: Request) {
     const message =
       error instanceof Error
         ? error.message
-        : "Erro inesperado ao salvar serviço.";
+        : "Erro inesperado ao salvar serviÃ§o.";
 
     console.error("[am_services][POST] erro geral:", error);
 
@@ -838,7 +838,7 @@ export async function PATCH(request: Request) {
     const message =
       error instanceof Error
         ? error.message
-        : "Erro inesperado ao atualizar serviço.";
+        : "Erro inesperado ao atualizar serviÃ§o.";
 
     console.error("[am_services][PATCH] erro geral:", error);
 

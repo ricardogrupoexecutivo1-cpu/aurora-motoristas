@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -75,8 +75,8 @@ function getDisplayRole(role: string) {
   if (role === "financeiro") return "Financeiro";
   if (role === "operacional") return "Operacional";
   if (role === "motorista") return "Motorista";
-  if (role === "visualizacao") return "Visualização";
-  return role || "Não identificado";
+  if (role === "visualizacao") return "VisualizaÃ§Ã£o";
+  return role || "NÃ£o identificado";
 }
 
 export default function FinanceiroPage() {
@@ -117,7 +117,7 @@ export default function FinanceiroPage() {
   const subtitulo = useMemo(() => {
     if (session.role) {
       return `${getDisplayRole(session.role)}${
-        session.empresa ? ` • ${session.empresa}` : ""
+        session.empresa ? ` â€¢ ${session.empresa}` : ""
       }`;
     }
 
@@ -125,7 +125,7 @@ export default function FinanceiroPage() {
       return session.email;
     }
 
-    return "Sessão protegida";
+    return "SessÃ£o protegida";
   }, [session]);
 
   if (!mounted || accessState === "checking") {
@@ -133,15 +133,15 @@ export default function FinanceiroPage() {
       <main style={styles.page}>
         <section style={styles.wrapper}>
           <div style={styles.card}>
-            <span style={styles.kicker}>AURORA MOTORISTAS • FINANCEIRO</span>
+            <span style={styles.kicker}>AURORA MOTORISTAS â€¢ FINANCEIRO</span>
             <h1 style={styles.title}>Validando acesso...</h1>
             <p style={styles.text}>
-              Aguarde enquanto o sistema confirma a sessão, o perfil e a
-              blindagem desta área financeira.
+              Aguarde enquanto o sistema confirma a sessÃ£o, o perfil e a
+              blindagem desta Ã¡rea financeira.
             </p>
 
             <div style={styles.loadingBox}>
-              Carregando proteção do financeiro...
+              Carregando proteÃ§Ã£o do financeiro...
             </div>
           </div>
         </section>
@@ -154,11 +154,11 @@ export default function FinanceiroPage() {
       <main style={styles.page}>
         <section style={styles.wrapper}>
           <div style={styles.card}>
-            <span style={styles.kicker}>AURORA MOTORISTAS • FINANCEIRO</span>
-            <h1 style={styles.title}>Sessão não encontrada</h1>
+            <span style={styles.kicker}>AURORA MOTORISTAS â€¢ FINANCEIRO</span>
+            <h1 style={styles.title}>SessÃ£o nÃ£o encontrada</h1>
             <p style={styles.text}>
-              O sistema não encontrou uma sessão válida para esta área. Você
-              está sendo redirecionado para o login.
+              O sistema nÃ£o encontrou uma sessÃ£o vÃ¡lida para esta Ã¡rea. VocÃª
+              estÃ¡ sendo redirecionado para o login.
             </p>
 
             <div style={styles.loadingBox}>Redirecionando para o login...</div>
@@ -173,12 +173,12 @@ export default function FinanceiroPage() {
       <main style={styles.page}>
         <section style={styles.wrapper}>
           <div style={styles.card}>
-            <span style={styles.kicker}>AURORA MOTORISTAS • FINANCEIRO</span>
+            <span style={styles.kicker}>AURORA MOTORISTAS â€¢ FINANCEIRO</span>
             <h1 style={styles.title}>Acesso restrito</h1>
             <p style={styles.text}>
-              Sua sessão foi identificada, mas o perfil atual não possui
-              permissão para visualizar o financeiro. Você está sendo
-              redirecionado para a área de acesso negado.
+              Sua sessÃ£o foi identificada, mas o perfil atual nÃ£o possui
+              permissÃ£o para visualizar o financeiro. VocÃª estÃ¡ sendo
+              redirecionado para a Ã¡rea de acesso negado.
             </p>
 
             <div style={styles.loadingBox}>
@@ -194,32 +194,32 @@ export default function FinanceiroPage() {
     <main style={styles.page}>
       <section style={styles.wrapper}>
         <div style={styles.card}>
-          <span style={styles.kicker}>AURORA MOTORISTAS • FINANCEIRO</span>
+          <span style={styles.kicker}>AURORA MOTORISTAS â€¢ FINANCEIRO</span>
 
           <h1 style={styles.title}>Financeiro protegido</h1>
 
           <p style={styles.text}>
-            Acesso liberado para <strong>{session.email || "usuário"}</strong>.
-            Esta área está protegida por perfil e disponível apenas para usuários
+            Acesso liberado para <strong>{session.email || "usuÃ¡rio"}</strong>.
+            Esta Ã¡rea estÃ¡ protegida por perfil e disponÃ­vel apenas para usuÃ¡rios
             autorizados.
           </p>
 
           <div style={styles.successBox}>
-            Acesso autorizado. Conteúdo financeiro visível.
+            Acesso autorizado. ConteÃºdo financeiro visÃ­vel.
           </div>
 
           <div style={styles.sessionGrid}>
             <SessionInfo
-              label="Perfil da sessão"
+              label="Perfil da sessÃ£o"
               value={getDisplayRole(session.role)}
             />
             <SessionInfo
               label="Empresa"
-              value={session.empresa || "Não informada"}
+              value={session.empresa || "NÃ£o informada"}
             />
             <SessionInfo
-              label="Status da sessão"
-              value={session.status || "Não informado"}
+              label="Status da sessÃ£o"
+              value={session.status || "NÃ£o informado"}
             />
             <SessionInfo
               label="Leitura principal"
@@ -229,7 +229,7 @@ export default function FinanceiroPage() {
 
           <div style={styles.grid}>
             <article style={styles.metricCard}>
-              <span style={styles.metricLabel}>Receitas do período</span>
+              <span style={styles.metricLabel}>Receitas do perÃ­odo</span>
               <strong style={styles.metricValue}>R$ 12.480,00</strong>
               <span style={styles.metricDetail}>Leitura protegida</span>
             </article>
@@ -255,11 +255,11 @@ export default function FinanceiroPage() {
 
           <div style={styles.actions}>
             <Link href="/" style={styles.secondaryButton}>
-              Início
+              InÃ­cio
             </Link>
 
             <Link href="/servicos" style={styles.secondaryButton}>
-              Operação
+              OperaÃ§Ã£o
             </Link>
 
             <Link href="/guia" style={styles.secondaryButton}>

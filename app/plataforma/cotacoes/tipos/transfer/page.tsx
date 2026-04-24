@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
@@ -77,7 +77,7 @@ function PageContent() {
     const lista = raw ? JSON.parse(raw) : []
     localStorage.setItem(STORAGE_KEY, JSON.stringify([payload, ...lista]))
 
-    setMensagem(`Cotação ${payload.id} salva com sucesso`)
+    setMensagem(`CotaÃ§Ã£o ${payload.id} salva com sucesso`)
     setTimeout(() => msgRef.current?.scrollIntoView({ behavior: 'smooth' }), 100)
   }
 
@@ -86,9 +86,9 @@ function PageContent() {
       <div className="max-w-5xl mx-auto space-y-6">
 
         <div className="bg-white p-6 rounded-2xl border">
-          <h1 className="text-2xl font-bold">Transfer (cotação enxuta)</h1>
+          <h1 className="text-2xl font-bold">Transfer (cotaÃ§Ã£o enxuta)</h1>
           <p className="text-sm text-gray-600 mt-2">
-            Fluxo rápido para origem → destino com cálculo direto.
+            Fluxo rÃ¡pido para origem â†’ destino com cÃ¡lculo direto.
           </p>
         </div>
 

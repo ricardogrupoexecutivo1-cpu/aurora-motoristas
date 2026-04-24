@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 
@@ -24,7 +24,7 @@ export default function TopBar() {
           </Link>
 
           <p className="truncate text-[11px] text-slate-500 sm:text-xs">
-            Sistema em constante atualização
+            Sistema em constante atualizaÃ§Ã£o
           </p>
         </div>
 
@@ -41,7 +41,7 @@ export default function TopBar() {
             href="/"
             className="rounded-lg bg-slate-900 px-3 py-2 text-xs font-medium text-white shadow-sm transition hover:bg-slate-800 active:scale-[0.98] sm:text-sm"
           >
-            Início
+            InÃ­cio
           </Link>
         </nav>
       </div>

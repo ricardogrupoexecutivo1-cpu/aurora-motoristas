@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
 export const runtime = "nodejs";
@@ -38,7 +38,7 @@ function normalizarBoolean(valor: unknown, padrao = true) {
     const texto = valor.trim().toLowerCase();
 
     if (["true", "1", "sim", "yes"].includes(texto)) return true;
-    if (["false", "0", "nao", "não", "no"].includes(texto)) return false;
+    if (["false", "0", "nao", "nÃ£o", "no"].includes(texto)) return false;
   }
 
   return padrao;
@@ -52,7 +52,7 @@ function getSupabaseAdmin() {
 
   if (!supabaseUrl || !supabaseServiceRoleKey) {
     throw new Error(
-      "Variáveis do Supabase ausentes. Verifique NEXT_PUBLIC_SUPABASE_URL/SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY.",
+      "VariÃ¡veis do Supabase ausentes. Verifique NEXT_PUBLIC_SUPABASE_URL/SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY.",
     );
   }
 
@@ -148,7 +148,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: "Nome é obrigatório.",
+          message: "Nome Ã© obrigatÃ³rio.",
         },
         { status: 400 },
       );
@@ -158,7 +158,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: "Telefone é obrigatório.",
+          message: "Telefone Ã© obrigatÃ³rio.",
         },
         { status: 400 },
       );
@@ -168,7 +168,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: "CPF inválido. Informe 11 números ou deixe em branco.",
+          message: "CPF invÃ¡lido. Informe 11 nÃºmeros ou deixe em branco.",
         },
         { status: 400 },
       );
@@ -178,7 +178,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: "CEP inválido. Informe 8 números ou deixe em branco.",
+          message: "CEP invÃ¡lido. Informe 8 nÃºmeros ou deixe em branco.",
         },
         { status: 400 },
       );
@@ -211,7 +211,7 @@ export async function POST(request: Request) {
         return NextResponse.json(
           {
             success: false,
-            message: "Já existe motorista cadastrado com este CPF.",
+            message: "JÃ¡ existe motorista cadastrado com este CPF.",
           },
           { status: 409 },
         );

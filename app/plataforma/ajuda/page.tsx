@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 
@@ -10,7 +10,7 @@ export default function PlataformaAjudaPage() {
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="space-y-3">
               <span className="inline-flex rounded-full bg-cyan-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">
-                Aurora Motoristas • Central de ajuda
+                Aurora Motoristas â€¢ Central de ajuda
               </span>
 
               <div>
@@ -18,8 +18,8 @@ export default function PlataformaAjudaPage() {
                   Ajuda, tutorial e materiais oficiais
                 </h1>
                 <p className="mt-2 max-w-3xl text-sm text-slate-600 md:text-base">
-                  Esta página foi criada em camada isolada para concentrar os materiais de apoio
-                  do sistema sem mexer no que já está no ar. Aqui o usuário encontra o tutorial
+                  Esta pÃ¡gina foi criada em camada isolada para concentrar os materiais de apoio
+                  do sistema sem mexer no que jÃ¡ estÃ¡ no ar. Aqui o usuÃ¡rio encontra o tutorial
                   interno e os arquivos para baixar, ler, imprimir ou compartilhar.
                 </p>
               </div>
@@ -42,7 +42,7 @@ export default function PlataformaAjudaPage() {
                 href="/plataforma"
                 className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
               >
-                Voltar à plataforma
+                Voltar Ã  plataforma
               </Link>
 
               <Link
@@ -55,8 +55,8 @@ export default function PlataformaAjudaPage() {
           </div>
 
           <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-            Sistema em constante atualização. Esta central foi criada para orientar o usuário com
-            clareza e reduzir dúvidas sem depender do chat para cada passo.
+            Sistema em constante atualizaÃ§Ã£o. Esta central foi criada para orientar o usuÃ¡rio com
+            clareza e reduzir dÃºvidas sem depender do chat para cada passo.
           </div>
         </section>
 
@@ -64,8 +64,8 @@ export default function PlataformaAjudaPage() {
           <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="text-lg font-semibold text-slate-900">Tutorial dentro da plataforma</h2>
             <p className="mt-2 text-sm leading-6 text-slate-600">
-              Página de consulta rápida para entender o fluxo do sistema, o caminho correto para
-              abrir cotações e o uso da camada nova.
+              PÃ¡gina de consulta rÃ¡pida para entender o fluxo do sistema, o caminho correto para
+              abrir cotaÃ§Ãµes e o uso da camada nova.
             </p>
 
             <div className="mt-5 grid gap-3">
@@ -81,7 +81,7 @@ export default function PlataformaAjudaPage() {
           <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="text-lg font-semibold text-slate-900">PDF completo</h2>
             <p className="mt-2 text-sm leading-6 text-slate-600">
-              Versão em PDF para leitura detalhada, envio, armazenamento no computador e impressão.
+              VersÃ£o em PDF para leitura detalhada, envio, armazenamento no computador e impressÃ£o.
             </p>
 
             <div className="mt-5 grid gap-3">
@@ -99,7 +99,7 @@ export default function PlataformaAjudaPage() {
           <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="text-lg font-semibold text-slate-900">PDF com imagens</h2>
             <p className="mt-2 text-sm leading-6 text-slate-600">
-              Versão ilustrada para facilitar o entendimento visual do fluxo e apoiar treinamento.
+              VersÃ£o ilustrada para facilitar o entendimento visual do fluxo e apoiar treinamento.
             </p>
 
             <div className="mt-5 grid gap-3">
@@ -116,13 +116,13 @@ export default function PlataformaAjudaPage() {
         </section>
 
         <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-slate-900">Caminho recomendado para novos usuários</h2>
+          <h2 className="text-lg font-semibold text-slate-900">Caminho recomendado para novos usuÃ¡rios</h2>
 
           <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <StepCard
               numero="1"
               titulo="Entender a plataforma"
-              texto="Começar pela leitura da lógica geral e da segregação de perfis."
+              texto="ComeÃ§ar pela leitura da lÃ³gica geral e da segregaÃ§Ã£o de perfis."
               href="/plataforma"
               botao="Abrir /plataforma"
             />
@@ -137,16 +137,16 @@ export default function PlataformaAjudaPage() {
 
             <StepCard
               numero="3"
-              titulo="Entrar pela cotação"
-              texto="Usar a entrada rápida para escolher o tipo certo de cotação."
+              titulo="Entrar pela cotaÃ§Ã£o"
+              texto="Usar a entrada rÃ¡pida para escolher o tipo certo de cotaÃ§Ã£o."
               href="/plataforma/cotacoes/novo"
-              botao="Abrir entrada rápida"
+              botao="Abrir entrada rÃ¡pida"
             />
 
             <StepCard
               numero="4"
               titulo="Conferir no painel"
-              texto="Depois de salvar, revisar tudo no painel isolado de cotações."
+              texto="Depois de salvar, revisar tudo no painel isolado de cotaÃ§Ãµes."
               href="/plataforma/cotacoes"
               botao="Abrir painel"
             />
@@ -154,12 +154,12 @@ export default function PlataformaAjudaPage() {
         </section>
 
         <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-slate-900">Materiais ideais para cada situação</h2>
+          <h2 className="text-lg font-semibold text-slate-900">Materiais ideais para cada situaÃ§Ã£o</h2>
 
           <div className="mt-5 grid gap-4 md:grid-cols-3">
             <InfoCard
-              titulo="Consulta rápida"
-              texto="Use a página do tutorial interno para revisar o fluxo sem sair do sistema."
+              titulo="Consulta rÃ¡pida"
+              texto="Use a pÃ¡gina do tutorial interno para revisar o fluxo sem sair do sistema."
             />
 
             <InfoCard
@@ -168,7 +168,7 @@ export default function PlataformaAjudaPage() {
             />
 
             <InfoCard
-              titulo="Impressão ou cópia local"
+              titulo="ImpressÃ£o ou cÃ³pia local"
               texto="Use os PDFs para guardar no computador, imprimir ou compartilhar no WhatsApp."
             />
           </div>

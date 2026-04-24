@@ -1,19 +1,19 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 type HistoryStatus = "Pago" | "Baixado" | "Encerrado";
-type PaymentMethod = "PIX" | "Transferência" | "Faturado" | "Dinheiro";
+type PaymentMethod = "PIX" | "TransferÃªncia" | "Faturado" | "Dinheiro";
 type ClosingOrigin =
   | "Baixa confirmada"
-  | "Repasse concluído"
+  | "Repasse concluÃ­do"
   | "Encerramento administrativo";
 
 type HistoryOrigin =
-  | "Serviço padrão"
-  | "Serviço local"
-  | "Translado padrão"
+  | "ServiÃ§o padrÃ£o"
+  | "ServiÃ§o local"
+  | "Translado padrÃ£o"
   | "Translado local";
 
 type HistoryItem = {
@@ -73,11 +73,11 @@ const baseHistoryItems: HistoryItem[] = [
     despesas: 40,
     adiantamento: 50,
     dataBaixa: "09/04/2026",
-    metodoPagamento: "Transferência",
-    origemFechamento: "Repasse concluído",
+    metodoPagamento: "TransferÃªncia",
+    origemFechamento: "Repasse concluÃ­do",
     observacao:
-      "Baixa finalizada, adiantamento conferido e repasse do motorista confirmado. Registro mantido apenas para conferência administrativa.",
-    origemBase: "Serviço padrão",
+      "Baixa finalizada, adiantamento conferido e repasse do motorista confirmado. Registro mantido apenas para conferÃªncia administrativa.",
+    origemBase: "ServiÃ§o padrÃ£o",
   },
   {
     id: "HIS-0002",
@@ -98,8 +98,8 @@ const baseHistoryItems: HistoryItem[] = [
     metodoPagamento: "Faturado",
     origemFechamento: "Encerramento administrativo",
     observacao:
-      "Serviço finalizado, repasse concluído e retenção administrativa aplicada no histórico interno protegido.",
-    origemBase: "Serviço padrão",
+      "ServiÃ§o finalizado, repasse concluÃ­do e retenÃ§Ã£o administrativa aplicada no histÃ³rico interno protegido.",
+    origemBase: "ServiÃ§o padrÃ£o",
   },
   {
     id: "HIS-0003",
@@ -107,8 +107,8 @@ const baseHistoryItems: HistoryItem[] = [
     osCliente: "OS-CLI-4516",
     ocSistema: "OC-2026-000095",
     empresa: "Aurora Locadoras Premium",
-    cliente: "Operação Aeroporto VIP",
-    motorista: "João Pedro",
+    cliente: "OperaÃ§Ã£o Aeroporto VIP",
+    motorista: "JoÃ£o Pedro",
     servico: "Confins x Savassi",
     status: "Baixado",
     valorTotal: 520,
@@ -120,8 +120,8 @@ const baseHistoryItems: HistoryItem[] = [
     metodoPagamento: "PIX",
     origemFechamento: "Baixa confirmada",
     observacao:
-      "Baixa concluída e operação preservada em histórico para conferência financeira e administrativa.",
-    origemBase: "Serviço padrão",
+      "Baixa concluÃ­da e operaÃ§Ã£o preservada em histÃ³rico para conferÃªncia financeira e administrativa.",
+    origemBase: "ServiÃ§o padrÃ£o",
   },
   {
     id: "HIS-TRA-0001",
@@ -142,8 +142,8 @@ const baseHistoryItems: HistoryItem[] = [
     metodoPagamento: "PIX",
     origemFechamento: "Baixa confirmada",
     observacao:
-      "Translado preservado em histórico com leitura de despesas e adiantamento.",
-    origemBase: "Translado padrão",
+      "Translado preservado em histÃ³rico com leitura de despesas e adiantamento.",
+    origemBase: "Translado padrÃ£o",
   },
 ];
 
@@ -179,7 +179,7 @@ function getStatusStyle(status: HistoryItem["status"]): React.CSSProperties {
 }
 
 function getOriginStyle(origin: HistoryOrigin): React.CSSProperties {
-  if (origin === "Serviço padrão") {
+  if (origin === "ServiÃ§o padrÃ£o") {
     return {
       background: "rgba(148, 163, 184, 0.12)",
       color: "#475569",
@@ -187,7 +187,7 @@ function getOriginStyle(origin: HistoryOrigin): React.CSSProperties {
     };
   }
 
-  if (origin === "Serviço local") {
+  if (origin === "ServiÃ§o local") {
     return {
       background: "rgba(37, 99, 235, 0.10)",
       color: "#1d4ed8",
@@ -195,7 +195,7 @@ function getOriginStyle(origin: HistoryOrigin): React.CSSProperties {
     };
   }
 
-  if (origin === "Translado padrão") {
+  if (origin === "Translado padrÃ£o") {
     return {
       background: "rgba(6, 182, 212, 0.10)",
       color: "#0e7490",
@@ -247,7 +247,7 @@ function mapStoredHistoryItem(item: StoredHistoryItem, index: number): HistoryIt
     origemFechamento: "Baixa confirmada",
     observacao:
       item.observacao?.trim() ||
-      "Registro vindo da baixa da operação e preservado em histórico interno.",
+      "Registro vindo da baixa da operaÃ§Ã£o e preservado em histÃ³rico interno.",
     origemBase: item.origemBase,
   };
 }
@@ -294,12 +294,12 @@ export default function HistoricoPage() {
       totalAdiantamento: filteredItems.reduce((acc, item) => acc + item.adiantamento, 0),
       locais: filteredItems.filter(
         (item) =>
-          item.origemBase === "Serviço local" ||
+          item.origemBase === "ServiÃ§o local" ||
           item.origemBase === "Translado local"
       ).length,
       translados: filteredItems.filter(
         (item) =>
-          item.origemBase === "Translado padrão" ||
+          item.origemBase === "Translado padrÃ£o" ||
           item.origemBase === "Translado local"
       ).length,
     };
@@ -314,14 +314,14 @@ export default function HistoricoPage() {
         <div style={styles.heroCard}>
           <div style={styles.heroGrid}>
             <div style={styles.heroLeft}>
-              <div style={styles.eyebrow}>AURORA MOTORISTAS • HISTÓRICO</div>
+              <div style={styles.eyebrow}>AURORA MOTORISTAS â€¢ HISTÃ“RICO</div>
               <h1 style={styles.heroTitle}>
-                Histórico interno protegido com serviços e translados no fechamento final
+                HistÃ³rico interno protegido com serviÃ§os e translados no fechamento final
               </h1>
               <p style={styles.heroText}>
-                Esta área agora lê o histórico salvo pela baixa da operação,
-                mantendo repasse, despesas, fechamento e retenção administrativa
-                fora da visão operacional do motorista.
+                Esta Ã¡rea agora lÃª o histÃ³rico salvo pela baixa da operaÃ§Ã£o,
+                mantendo repasse, despesas, fechamento e retenÃ§Ã£o administrativa
+                fora da visÃ£o operacional do motorista.
               </p>
 
               <div style={styles.heroActions}>
@@ -330,30 +330,30 @@ export default function HistoricoPage() {
                 </Link>
 
                 <Link href="/relatorios" style={styles.primaryButton}>
-                  Ir para relatórios
+                  Ir para relatÃ³rios
                 </Link>
               </div>
             </div>
 
             <div style={styles.heroRightCard}>
               <span style={styles.sideKicker}>TRILHA FINAL</span>
-              <h2 style={styles.sideTitle}>Serviços e translados encerrados</h2>
+              <h2 style={styles.sideTitle}>ServiÃ§os e translados encerrados</h2>
               <p style={styles.sideText}>
-                O histórico mostra a camada final da operação com origem do item,
-                método usado, valor total, repasse e fechamento consolidado.
+                O histÃ³rico mostra a camada final da operaÃ§Ã£o com origem do item,
+                mÃ©todo usado, valor total, repasse e fechamento consolidado.
               </p>
 
               <div style={styles.sidePills}>
                 <div style={styles.sidePill}>Baixa confirmada</div>
-                <div style={styles.sidePill}>Repasse concluído</div>
+                <div style={styles.sidePill}>Repasse concluÃ­do</div>
                 <div style={styles.sidePill}>Encerramento administrativo</div>
               </div>
             </div>
           </div>
 
           <div style={styles.noticeBox}>
-            Sistema em constante atualização. Esta área foi preparada para manter
-            auditoria, retenção protegida e leitura final de serviços e translados.
+            Sistema em constante atualizaÃ§Ã£o. Esta Ã¡rea foi preparada para manter
+            auditoria, retenÃ§Ã£o protegida e leitura final de serviÃ§os e translados.
           </div>
         </div>
       </section>
@@ -361,13 +361,13 @@ export default function HistoricoPage() {
       <section style={styles.statsSection}>
         <div style={styles.statsGrid}>
           <article style={styles.statCard}>
-            <span style={styles.statLabel}>Registros no histórico</span>
+            <span style={styles.statLabel}>Registros no histÃ³rico</span>
             <strong style={styles.statValue}>{stats.total}</strong>
             <span style={styles.statDetail}>Itens protegidos</span>
           </article>
 
           <article style={styles.statCard}>
-            <span style={styles.statLabel}>Receita histórica</span>
+            <span style={styles.statLabel}>Receita histÃ³rica</span>
             <strong style={styles.statValue}>{formatCurrency(stats.totalReceita)}</strong>
             <span style={styles.statDetail}>Base encerrada</span>
           </article>
@@ -375,11 +375,11 @@ export default function HistoricoPage() {
           <article style={styles.statCard}>
             <span style={styles.statLabel}>Valor transfer</span>
             <strong style={styles.statValue}>{formatCurrency(stats.totalTransfer)}</strong>
-            <span style={styles.statDetail}>Composição financeira final</span>
+            <span style={styles.statDetail}>ComposiÃ§Ã£o financeira final</span>
           </article>
 
           <article style={styles.statCard}>
-            <span style={styles.statLabel}>Repasse histórico</span>
+            <span style={styles.statLabel}>Repasse histÃ³rico</span>
             <strong style={styles.statValue}>{formatCurrency(stats.totalRepasse)}</strong>
             <span style={styles.statDetail}>Motoristas processados</span>
           </article>
@@ -389,19 +389,19 @@ export default function HistoricoPage() {
       <section style={styles.statsSection}>
         <div style={styles.statsGrid}>
           <article style={styles.statCard}>
-            <span style={styles.statLabel}>Despesas históricas</span>
+            <span style={styles.statLabel}>Despesas histÃ³ricas</span>
             <strong style={styles.statValue}>{formatCurrency(stats.totalDespesas)}</strong>
             <span style={styles.statDetail}>Custos registrados</span>
           </article>
 
           <article style={styles.statCard}>
-            <span style={styles.statLabel}>Adiantamento histórico</span>
+            <span style={styles.statLabel}>Adiantamento histÃ³rico</span>
             <strong style={styles.statValue}>{formatCurrency(stats.totalAdiantamento)}</strong>
             <span style={styles.statDetail}>Base consolidada</span>
           </article>
 
           <article style={styles.statCard}>
-            <span style={styles.statLabel}>Translados no histórico</span>
+            <span style={styles.statLabel}>Translados no histÃ³rico</span>
             <strong style={styles.statValue}>{stats.translados}</strong>
             <span style={styles.statDetail}>Fluxo de aeroporto</span>
           </article>
@@ -409,7 +409,7 @@ export default function HistoricoPage() {
           <article style={styles.statCard}>
             <span style={styles.statLabel}>Base local integrada</span>
             <strong style={styles.statValue}>{stats.locais}</strong>
-            <span style={styles.statDetail}>Vindos da operação</span>
+            <span style={styles.statDetail}>Vindos da operaÃ§Ã£o</span>
           </article>
         </div>
       </section>
@@ -420,13 +420,13 @@ export default function HistoricoPage() {
             <div style={styles.historyCard}>
               <div style={styles.sectionHeader}>
                 <div>
-                  <span style={styles.sectionEyebrow}>HISTÓRICO CONSOLIDADO</span>
+                  <span style={styles.sectionEyebrow}>HISTÃ“RICO CONSOLIDADO</span>
                   <h2 style={styles.sectionTitle}>Registros internos protegidos</h2>
                 </div>
 
                 <div style={styles.searchBox}>
                   <input
-                    placeholder="Buscar por OS, empresa, cliente, motorista, método, origem ou base"
+                    placeholder="Buscar por OS, empresa, cliente, motorista, mÃ©todo, origem ou base"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     style={styles.searchInput}
@@ -452,7 +452,7 @@ export default function HistoricoPage() {
 
                           <h3 style={styles.historyTitle}>{item.servico}</h3>
                           <p style={styles.historySubline}>
-                            {item.id} • {item.osSistema} • {item.dataBaixa}
+                            {item.id} â€¢ {item.osSistema} â€¢ {item.dataBaixa}
                           </p>
                         </div>
 
@@ -493,7 +493,7 @@ export default function HistoricoPage() {
                         </div>
 
                         <div style={styles.dataItem}>
-                          <span style={styles.dataLabel}>Método</span>
+                          <span style={styles.dataLabel}>MÃ©todo</span>
                           <strong style={styles.dataValue}>{item.metodoPagamento}</strong>
                         </div>
 
@@ -543,7 +543,7 @@ export default function HistoricoPage() {
                         </div>
 
                         <div style={styles.dataItemWide}>
-                          <span style={styles.dataLabel}>Observação administrativa final</span>
+                          <span style={styles.dataLabel}>ObservaÃ§Ã£o administrativa final</span>
                           <strong style={styles.dataValue}>{item.observacao}</strong>
                         </div>
                       </div>
@@ -557,7 +557,7 @@ export default function HistoricoPage() {
           <aside style={styles.rightColumn}>
             <div style={styles.infoCard}>
               <span style={styles.sectionEyebrow}>FINALIDADE</span>
-              <h2 style={styles.sidebarTitle}>O que este módulo agora mostra</h2>
+              <h2 style={styles.sidebarTitle}>O que este mÃ³dulo agora mostra</h2>
 
               <div style={styles.ruleList}>
                 <div style={styles.ruleItem}>
@@ -570,45 +570,45 @@ export default function HistoricoPage() {
                 <div style={styles.ruleItem}>
                   <strong style={styles.ruleItemTitle}>Repasse consolidado</strong>
                   <span style={styles.ruleItemText}>
-                    Mostra quando o motorista já foi processado.
+                    Mostra quando o motorista jÃ¡ foi processado.
                   </span>
                 </div>
 
                 <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Serviços e translados</strong>
+                  <strong style={styles.ruleItemTitle}>ServiÃ§os e translados</strong>
                   <span style={styles.ruleItemText}>
-                    O histórico agora lê os dois fluxos no mesmo painel.
+                    O histÃ³rico agora lÃª os dois fluxos no mesmo painel.
                   </span>
                 </div>
 
                 <div style={styles.ruleItem}>
                   <strong style={styles.ruleItemTitle}>Blindagem administrativa</strong>
                   <span style={styles.ruleItemText}>
-                    Mantém tudo protegido fora da visão operacional do motorista.
+                    MantÃ©m tudo protegido fora da visÃ£o operacional do motorista.
                   </span>
                 </div>
               </div>
             </div>
 
             <div style={styles.darkCard}>
-              <div style={styles.robotTag}>ROBÔ AURORA</div>
-              <h2 style={styles.sidebarTitleDark}>Apoio ao histórico</h2>
+              <div style={styles.robotTag}>ROBÃ” AURORA</div>
+              <h2 style={styles.sidebarTitleDark}>Apoio ao histÃ³rico</h2>
               <p style={styles.sidebarTextDark}>
-                O Robô Aurora poderá localizar baixas antigas, comparar método de
-                pagamento, identificar fechamento incompleto e reforçar a trilha de auditoria.
+                O RobÃ´ Aurora poderÃ¡ localizar baixas antigas, comparar mÃ©todo de
+                pagamento, identificar fechamento incompleto e reforÃ§ar a trilha de auditoria.
               </p>
 
               <div style={styles.robotList}>
                 <div style={styles.robotItem}>Conferir baixa</div>
                 <div style={styles.robotItem}>Ler repasse</div>
-                <div style={styles.robotItem}>Comparar método</div>
+                <div style={styles.robotItem}>Comparar mÃ©todo</div>
                 <div style={styles.robotItem}>Apoiar auditoria</div>
               </div>
             </div>
 
             <div style={styles.navCard}>
-              <span style={styles.sectionEyebrow}>NAVEGAÇÃO</span>
-              <h2 style={styles.sidebarTitle}>Próximos blocos</h2>
+              <span style={styles.sectionEyebrow}>NAVEGAÃ‡ÃƒO</span>
+              <h2 style={styles.sidebarTitle}>PrÃ³ximos blocos</h2>
 
               <div style={styles.navList}>
                 <Link href="/pagamentos" style={styles.navItem}>
@@ -618,10 +618,10 @@ export default function HistoricoPage() {
                   Abrir translados
                 </Link>
                 <Link href="/operacao" style={styles.navItem}>
-                  Abrir operação
+                  Abrir operaÃ§Ã£o
                 </Link>
                 <Link href="/relatorios" style={styles.navItem}>
-                  Abrir relatórios
+                  Abrir relatÃ³rios
                 </Link>
               </div>
             </div>

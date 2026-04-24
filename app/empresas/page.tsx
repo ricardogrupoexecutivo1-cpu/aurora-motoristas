@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 
@@ -23,7 +23,7 @@ type Empresa = {
 };
 
 function formatDate(value: string | null) {
-  if (!value) return "—";
+  if (!value) return "â€”";
 
   try {
     return new Intl.DateTimeFormat("pt-BR", {
@@ -55,7 +55,7 @@ export default function EmpresasListPage() {
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data?.error || "Não foi possível carregar as empresas.");
+          throw new Error(data?.error || "NÃ£o foi possÃ­vel carregar as empresas.");
         }
 
         const lista = Array.isArray(data?.companies)
@@ -132,7 +132,7 @@ export default function EmpresasListPage() {
           </a>
 
           <a href="/" style={pillButton(true)}>
-            Início
+            InÃ­cio
           </a>
 
           <a href="/empresas/cadastrar" style={pillButton(false)}>
@@ -167,7 +167,7 @@ export default function EmpresasListPage() {
               textTransform: "uppercase",
             }}
           >
-            Aurora Motoristas • Empresas
+            Aurora Motoristas â€¢ Empresas
           </div>
 
           <h1
@@ -178,7 +178,7 @@ export default function EmpresasListPage() {
               letterSpacing: "-0.03em",
             }}
           >
-            Base empresarial da operação
+            Base empresarial da operaÃ§Ã£o
           </h1>
 
           <p
@@ -190,8 +190,8 @@ export default function EmpresasListPage() {
               fontSize: 16,
             }}
           >
-            Visualize a base real de empresas, locadoras e operações já cadastradas
-            no Aurora Motoristas. Esta área ajuda a estruturar o lado comercial e
+            Visualize a base real de empresas, locadoras e operaÃ§Ãµes jÃ¡ cadastradas
+            no Aurora Motoristas. Esta Ã¡rea ajuda a estruturar o lado comercial e
             operacional do sistema.
           </p>
 
@@ -204,8 +204,8 @@ export default function EmpresasListPage() {
             }}
           >
             <MiniInfo title="Base real" text="Leitura direta das empresas salvas." />
-            <MiniInfo title="Operação" text="Empresas prontas para fluxo comercial real." />
-            <MiniInfo title="Expansão" text="Estrutura pronta para vínculos futuros." />
+            <MiniInfo title="OperaÃ§Ã£o" text="Empresas prontas para fluxo comercial real." />
+            <MiniInfo title="ExpansÃ£o" text="Estrutura pronta para vÃ­nculos futuros." />
           </div>
         </section>
 
@@ -271,7 +271,7 @@ export default function EmpresasListPage() {
               type="text"
               value={busca}
               onChange={(e) => setBusca(e.target.value)}
-              placeholder="Buscar por razão social, nome fantasia, CNPJ, contato, cidade..."
+              placeholder="Buscar por razÃ£o social, nome fantasia, CNPJ, contato, cidade..."
               style={{
                 width: "100%",
                 height: 50,
@@ -400,16 +400,16 @@ export default function EmpresasListPage() {
                     </div>
                   </div>
 
-                  <InfoLine label="Razão social" value={empresa.razao_social} />
+                  <InfoLine label="RazÃ£o social" value={empresa.razao_social} />
                   <InfoLine label="CNPJ" value={empresa.cnpj} />
-                  <InfoLine label="Responsável" value={empresa.responsavel} />
+                  <InfoLine label="ResponsÃ¡vel" value={empresa.responsavel} />
                   <InfoLine label="Telefone" value={empresa.telefone} />
                   <InfoLine label="E-mail" value={empresa.email} />
                   <InfoLine
                     label="Cidade"
                     value={
                       empresa.cidade || empresa.estado
-                        ? `${empresa.cidade || "—"}${empresa.estado ? ` • ${empresa.estado}` : ""}`
+                        ? `${empresa.cidade || "â€”"}${empresa.estado ? ` â€¢ ${empresa.estado}` : ""}`
                         : null
                     }
                   />
@@ -434,7 +434,7 @@ export default function EmpresasListPage() {
                           marginBottom: 6,
                         }}
                       >
-                        Observações
+                        ObservaÃ§Ãµes
                       </div>
                       <div
                         style={{
@@ -538,7 +538,7 @@ function InfoLine({
           wordBreak: "break-word",
         }}
       >
-        {value || "—"}
+        {value || "â€”"}
       </div>
     </div>
   );

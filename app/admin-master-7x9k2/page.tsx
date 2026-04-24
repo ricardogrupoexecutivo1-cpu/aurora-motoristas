@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -148,7 +148,7 @@ export default function AdminMasterPage() {
         }));
       }
 
-      // Carregar serviços
+      // Carregar serviÃ§os
       const { data: servicosData } = await supabase
         .from("am_services")
         .select("*, am_motoristas(nome), am_clients(nome)")
@@ -163,7 +163,7 @@ export default function AdminMasterPage() {
           totalServicos: servicosData.length,
           servicosPendentes: servicosData.filter((s) => s.status === "pendente").length,
           receitaTotal,
-          receitaMes: receitaTotal * 0.3, // Simulação
+          receitaMes: receitaTotal * 0.3, // SimulaÃ§Ã£o
           taxaPlataforma: receitaTotal * 0.05,
         }));
       }
@@ -242,7 +242,7 @@ export default function AdminMasterPage() {
                 href="/"
                 className="block text-center text-sm text-muted-foreground hover:text-primary transition-colors"
               >
-                Voltar para o início
+                Voltar para o inÃ­cio
               </Link>
             </div>
           </div>
@@ -287,9 +287,9 @@ export default function AdminMasterPage() {
             { id: "motoristas", label: "Motoristas", icon: Car },
             { id: "clientes", label: "Clientes", icon: Users },
             { id: "corridas", label: "Corridas", icon: MapPin },
-            { id: "servicos", label: "Serviços", icon: FileText },
+            { id: "servicos", label: "ServiÃ§os", icon: FileText },
             { id: "financeiro", label: "Financeiro", icon: DollarSign },
-            { id: "configuracoes", label: "Configurações", icon: Settings },
+            { id: "configuracoes", label: "ConfiguraÃ§Ãµes", icon: Settings },
           ].map((item) => (
             <button
               key={item.id}
@@ -393,7 +393,7 @@ export default function AdminMasterPage() {
                   color="success"
                 />
                 <StatCard
-                  title="Total Serviços"
+                  title="Total ServiÃ§os"
                   value={stats.totalServicos}
                   subtitle={`${stats.servicosPendentes} pendentes`}
                   icon={FileText}
@@ -413,7 +413,7 @@ export default function AdminMasterPage() {
               {/* Charts Row */}
               <div className="grid lg:grid-cols-2 gap-6">
                 <div className="bg-card rounded-2xl border border-border p-6">
-                  <h3 className="font-semibold text-foreground mb-4">Visão geral</h3>
+                  <h3 className="font-semibold text-foreground mb-4">VisÃ£o geral</h3>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between p-4 bg-secondary rounded-xl">
                       <div className="flex items-center gap-3">
@@ -421,7 +421,7 @@ export default function AdminMasterPage() {
                           <TrendingUp className="w-5 h-5 text-success" />
                         </div>
                         <div>
-                          <p className="font-medium">Receita do mês</p>
+                          <p className="font-medium">Receita do mÃªs</p>
                           <p className="text-sm text-muted-foreground">Abril 2024</p>
                         </div>
                       </div>
@@ -447,7 +447,7 @@ export default function AdminMasterPage() {
                           <Star className="w-5 h-5 text-warning" />
                         </div>
                         <div>
-                          <p className="font-medium">Nota média</p>
+                          <p className="font-medium">Nota mÃ©dia</p>
                           <p className="text-sm text-muted-foreground">Plataforma</p>
                         </div>
                       </div>
@@ -527,7 +527,7 @@ export default function AdminMasterPage() {
                       <FileText className="w-5 h-5 text-warning" />
                     </div>
                     <div>
-                      <p className="font-medium">Novo serviço</p>
+                      <p className="font-medium">Novo serviÃ§o</p>
                       <p className="text-xs text-muted-foreground">Cadastrar</p>
                     </div>
                   </div>
@@ -543,7 +543,7 @@ export default function AdminMasterPage() {
                     </div>
                     <div>
                       <p className="font-medium">Exportar dados</p>
-                      <p className="text-xs text-muted-foreground">Relatório</p>
+                      <p className="text-xs text-muted-foreground">RelatÃ³rio</p>
                     </div>
                   </div>
                 </button>
@@ -574,7 +574,7 @@ export default function AdminMasterPage() {
                         <th className="text-left p-4 font-medium text-muted-foreground">Cidade</th>
                         <th className="text-left p-4 font-medium text-muted-foreground">Status</th>
                         <th className="text-left p-4 font-medium text-muted-foreground">Cadastro</th>
-                        <th className="text-right p-4 font-medium text-muted-foreground">Ações</th>
+                        <th className="text-right p-4 font-medium text-muted-foreground">AÃ§Ãµes</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border">
@@ -684,7 +684,7 @@ export default function AdminMasterPage() {
                         <th className="text-left p-4 font-medium text-muted-foreground">Cidade</th>
                         <th className="text-left p-4 font-medium text-muted-foreground">Status</th>
                         <th className="text-left p-4 font-medium text-muted-foreground">Cadastro</th>
-                        <th className="text-right p-4 font-medium text-muted-foreground">Ações</th>
+                        <th className="text-right p-4 font-medium text-muted-foreground">AÃ§Ãµes</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border">
@@ -763,16 +763,16 @@ export default function AdminMasterPage() {
             </div>
           )}
 
-          {/* Serviços Tab */}
+          {/* ServiÃ§os Tab */}
           {activeTab === "servicos" && (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold">{servicos.length} serviços</h3>
+                <h3 className="text-lg font-semibold">{servicos.length} serviÃ§os</h3>
                 <Link
                   href="/servicos/novo"
                   className="px-4 py-2 bg-primary text-primary-foreground rounded-xl font-medium hover:bg-primary/90 transition-colors"
                 >
-                  Novo serviço
+                  Novo serviÃ§o
                 </Link>
               </div>
 
@@ -781,12 +781,12 @@ export default function AdminMasterPage() {
                   <table className="w-full">
                     <thead className="bg-secondary">
                       <tr>
-                        <th className="text-left p-4 font-medium text-muted-foreground">Serviço</th>
+                        <th className="text-left p-4 font-medium text-muted-foreground">ServiÃ§o</th>
                         <th className="text-left p-4 font-medium text-muted-foreground">Cliente</th>
                         <th className="text-left p-4 font-medium text-muted-foreground">Motorista</th>
                         <th className="text-left p-4 font-medium text-muted-foreground">Valor</th>
                         <th className="text-left p-4 font-medium text-muted-foreground">Status</th>
-                        <th className="text-right p-4 font-medium text-muted-foreground">Ações</th>
+                        <th className="text-right p-4 font-medium text-muted-foreground">AÃ§Ãµes</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border">
@@ -835,7 +835,7 @@ export default function AdminMasterPage() {
 
                 {servicos.length === 0 && (
                   <div className="p-12 text-center text-muted-foreground">
-                    Nenhum serviço encontrado
+                    Nenhum serviÃ§o encontrado
                   </div>
                 )}
               </div>
@@ -885,7 +885,7 @@ export default function AdminMasterPage() {
                       <Calendar className="w-6 h-6 text-warning" />
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Este mês</p>
+                      <p className="text-sm text-muted-foreground">Este mÃªs</p>
                       <p className="text-2xl font-bold">{formatCurrency(stats.receitaMes)}</p>
                     </div>
                   </div>
@@ -907,37 +907,37 @@ export default function AdminMasterPage() {
               <div className="bg-card rounded-2xl border border-border p-6">
                 <h3 className="font-semibold text-foreground mb-4">Resumo financeiro</h3>
                 <p className="text-muted-foreground">
-                  Dashboard financeiro completo com gráficos e relatórios detalhados.
+                  Dashboard financeiro completo com grÃ¡ficos e relatÃ³rios detalhados.
                 </p>
               </div>
             </div>
           )}
 
-          {/* Configurações Tab */}
+          {/* ConfiguraÃ§Ãµes Tab */}
           {activeTab === "configuracoes" && (
             <div className="space-y-6">
               <div className="bg-card rounded-2xl border border-border p-6">
-                <h3 className="font-semibold text-foreground mb-4">Configurações do sistema</h3>
+                <h3 className="font-semibold text-foreground mb-4">ConfiguraÃ§Ãµes do sistema</h3>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-4 bg-secondary rounded-xl">
                     <div>
                       <p className="font-medium">Taxa da plataforma</p>
-                      <p className="text-sm text-muted-foreground">Percentual cobrado por corrida/serviço</p>
+                      <p className="text-sm text-muted-foreground">Percentual cobrado por corrida/serviÃ§o</p>
                     </div>
                     <span className="text-xl font-bold text-primary">5%</span>
                   </div>
 
                   <div className="flex items-center justify-between p-4 bg-secondary rounded-xl">
                     <div>
-                      <p className="font-medium">Valor mínimo de saque</p>
-                      <p className="text-sm text-muted-foreground">Mínimo para motoristas sacarem</p>
+                      <p className="font-medium">Valor mÃ­nimo de saque</p>
+                      <p className="text-sm text-muted-foreground">MÃ­nimo para motoristas sacarem</p>
                     </div>
                     <span className="text-xl font-bold">R$ 50,00</span>
                   </div>
 
                   <div className="flex items-center justify-between p-4 bg-secondary rounded-xl">
                     <div>
-                      <p className="font-medium">Nota mínima motorista</p>
+                      <p className="font-medium">Nota mÃ­nima motorista</p>
                       <p className="text-sm text-muted-foreground">Para continuar ativo</p>
                     </div>
                     <span className="text-xl font-bold">4.0</span>
@@ -1003,3 +1003,4 @@ function StatCard({
     </div>
   );
 }
+

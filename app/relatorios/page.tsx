@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -97,12 +97,12 @@ function getDisplayEmpresa(service: ServiceRow) {
     service.empresa ||
     service.contratante ||
     service.empresa_operadora ||
-    "Não informado"
+    "NÃ£o informado"
   );
 }
 
 function getDisplayCliente(service: ServiceRow) {
-  return service.cliente || service.cliente_final || "Não informado";
+  return service.cliente || service.cliente_final || "NÃ£o informado";
 }
 
 function getDisplayStatus(service: ServiceRow) {
@@ -239,7 +239,7 @@ function downloadCsv(filename: string, rows: string[][]) {
 export default function RelatoriosPage() {
   const [services, setServices] = useState<ServiceRow[]>([]);
   const [loading, setLoading] = useState(true);
-  const [statusText, setStatusText] = useState("Carregando relatórios...");
+  const [statusText, setStatusText] = useState("Carregando relatÃ³rios...");
   const [empresaLogada, setEmpresaLogada] = useState("");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("todos");
@@ -248,7 +248,7 @@ export default function RelatoriosPage() {
   async function carregar() {
     try {
       setLoading(true);
-      setStatusText("Atualizando relatório...");
+      setStatusText("Atualizando relatÃ³rio...");
 
       const response = await fetch("/api/services", {
         method: "GET",
@@ -271,12 +271,12 @@ export default function RelatoriosPage() {
       setServices(rows);
       setStatusText(
         rows.length
-          ? `${rows.length} serviço(s) lidos para relatório.`
-          : "Nenhum serviço encontrado."
+          ? `${rows.length} serviÃ§o(s) lidos para relatÃ³rio.`
+          : "Nenhum serviÃ§o encontrado."
       );
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : "Erro ao carregar relatório.";
+        error instanceof Error ? error.message : "Erro ao carregar relatÃ³rio.";
       setServices([]);
       setStatusText(message);
     } finally {
@@ -384,7 +384,7 @@ export default function RelatoriosPage() {
         "Empresa",
         "Cliente",
         "Motorista",
-        "Serviço",
+        "ServiÃ§o",
         "Origem",
         "Destino",
         "Placa",
@@ -393,7 +393,7 @@ export default function RelatoriosPage() {
         "Valor Gasto Total",
         "Lucro Valor",
         "Lucro Percentual",
-        "Número Nota",
+        "NÃºmero Nota",
         "Valor Nota",
         "Vencimento Nota",
         "Status Fiscal",
@@ -403,8 +403,8 @@ export default function RelatoriosPage() {
         getDisplayOS(item),
         getDisplayEmpresa(item),
         getDisplayCliente(item),
-        item.motorista || "Não informado",
-        item.servico || "Sem título",
+        item.motorista || "NÃ£o informado",
+        item.servico || "Sem tÃ­tulo",
         item.origem || "",
         item.destino || "",
         item.placa_veiculo || "",
@@ -465,7 +465,7 @@ export default function RelatoriosPage() {
               justifyContent: "space-between",
             }}
           >
-            <span style={chipBlue}>Aurora Motoristas • Relatórios</span>
+            <span style={chipBlue}>Aurora Motoristas â€¢ RelatÃ³rios</span>
 
             <div
               style={{
@@ -478,7 +478,7 @@ export default function RelatoriosPage() {
                 Home
               </Link>
               <Link href="/admin/servicos" style={secondaryButton}>
-                Admin • Serviços
+                Admin â€¢ ServiÃ§os
               </Link>
               <button type="button" onClick={carregar} style={secondaryButtonAsButton}>
                 Atualizar leitura
@@ -497,7 +497,7 @@ export default function RelatoriosPage() {
               color: "#0f172a",
             }}
           >
-            Relatório operacional e financeiro estilo Excel
+            RelatÃ³rio operacional e financeiro estilo Excel
           </h1>
 
           <p
@@ -509,10 +509,10 @@ export default function RelatoriosPage() {
               maxWidth: 1000,
             }}
           >
-            Base pensada para seguir o espírito das planilhas de acerto de
-            motoristas, cobrança e contas, já reforçada com leitura de valor
+            Base pensada para seguir o espÃ­rito das planilhas de acerto de
+            motoristas, cobranÃ§a e contas, jÃ¡ reforÃ§ada com leitura de valor
             cobrado, gasto total, lucro em valor e lucro em percentual para
-            facilitar decisões e conferência diária.
+            facilitar decisÃµes e conferÃªncia diÃ¡ria.
           </p>
 
           <div
@@ -527,14 +527,14 @@ export default function RelatoriosPage() {
             </span>
 
             {empresaLogada ? (
-              <span style={miniChipEmpresa}>Empresa da sessão: {empresaLogada}</span>
+              <span style={miniChipEmpresa}>Empresa da sessÃ£o: {empresaLogada}</span>
             ) : (
-              <span style={miniChipInfo}>Sem filtro de empresa na sessão</span>
+              <span style={miniChipInfo}>Sem filtro de empresa na sessÃ£o</span>
             )}
 
             <span style={miniChipWarning}>
-              Sistema em constante atualização e podem ocorrer instabilidades
-              momentâneas.
+              Sistema em constante atualizaÃ§Ã£o e podem ocorrer instabilidades
+              momentÃ¢neas.
             </span>
           </div>
         </section>
@@ -549,12 +549,12 @@ export default function RelatoriosPage() {
           <ResumoCard
             titulo="Quantidade"
             valor={String(resumo.quantidade)}
-            ajuda="Itens do relatório atual"
+            ajuda="Itens do relatÃ³rio atual"
           />
           <ResumoCard
             titulo="Valor cobrado"
             valor={formatCurrency(resumo.valorCobrado)}
-            ajuda="Total previsto/lançado"
+            ajuda="Total previsto/lanÃ§ado"
           />
           <ResumoCard
             titulo="Valor gasto total"
@@ -564,17 +564,17 @@ export default function RelatoriosPage() {
           <ResumoCard
             titulo="Lucro em valor"
             valor={formatCurrency(resumo.lucroValor)}
-            ajuda="Resultado da operação"
+            ajuda="Resultado da operaÃ§Ã£o"
           />
           <ResumoCard
             titulo="Lucro percentual"
             valor={formatPercent(resumo.lucroPercentual)}
-            ajuda="Margem percentual da visão atual"
+            ajuda="Margem percentual da visÃ£o atual"
           />
           <ResumoCard
             titulo="Notas recebidas"
             valor={String(resumo.totalNotasRecebidas)}
-            ajuda="Fiscal já baixado"
+            ajuda="Fiscal jÃ¡ baixado"
           />
           <ResumoCard
             titulo="Sem nota"
@@ -601,7 +601,7 @@ export default function RelatoriosPage() {
               color: "#0f172a",
             }}
           >
-            Filtros do relatório
+            Filtros do relatÃ³rio
           </div>
 
           <div
@@ -614,7 +614,7 @@ export default function RelatoriosPage() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Buscar OS, empresa, cliente, motorista, placa, serviço..."
+              placeholder="Buscar OS, empresa, cliente, motorista, placa, serviÃ§o..."
               style={fieldStyle}
             />
 
@@ -665,21 +665,21 @@ export default function RelatoriosPage() {
               <CellHeader>Empresa</CellHeader>
               <CellHeader>Cliente</CellHeader>
               <CellHeader>Motorista</CellHeader>
-              <CellHeader>Serviço</CellHeader>
+              <CellHeader>ServiÃ§o</CellHeader>
               <CellHeader>Status</CellHeader>
               <CellHeader>Valor cobrado</CellHeader>
               <CellHeader>Valor gasto total</CellHeader>
               <CellHeader>Lucro valor</CellHeader>
               <CellHeader>Lucro %</CellHeader>
-              <CellHeader>Nº nota</CellHeader>
+              <CellHeader>NÂº nota</CellHeader>
               <CellHeader>Valor nota</CellHeader>
               <CellHeader>Vencimento nota</CellHeader>
               <CellHeader>Status fiscal</CellHeader>
-              <CellHeader>Ações</CellHeader>
+              <CellHeader>AÃ§Ãµes</CellHeader>
             </div>
 
             {loading ? (
-              <EmptyState text="Carregando relatório..." />
+              <EmptyState text="Carregando relatÃ³rio..." />
             ) : filtrados.length === 0 ? (
               <EmptyState text="Nenhum item encontrado com os filtros atuais." />
             ) : (
@@ -689,14 +689,14 @@ export default function RelatoriosPage() {
                   <CellValue>{getDisplayOS(item)}</CellValue>
                   <CellValue>{getDisplayEmpresa(item)}</CellValue>
                   <CellValue>{getDisplayCliente(item)}</CellValue>
-                  <CellValue>{item.motorista || "Não informado"}</CellValue>
-                  <CellValue>{item.servico || "Sem título"}</CellValue>
+                  <CellValue>{item.motorista || "NÃ£o informado"}</CellValue>
+                  <CellValue>{item.servico || "Sem tÃ­tulo"}</CellValue>
                   <CellValue>{getDisplayStatus(item)}</CellValue>
                   <CellValue>{formatCurrency(getValorCobrado(item))}</CellValue>
                   <CellValue>{formatCurrency(getValorGastoTotal(item))}</CellValue>
                   <CellValue>{formatCurrency(getLucroValor(item))}</CellValue>
                   <CellValue>{formatPercent(getLucroPercentual(item))}</CellValue>
-                  <CellValue>{getNotaNumero(item) || "—"}</CellValue>
+                  <CellValue>{getNotaNumero(item) || "â€”"}</CellValue>
                   <CellValue>{formatCurrency(getNotaValor(item))}</CellValue>
                   <CellValue>{formatDate(getNotaVencimento(item))}</CellValue>
                   <CellValue>{getStatusFiscal(item)}</CellValue>
@@ -722,10 +722,10 @@ export default function RelatoriosPage() {
             lineHeight: 1.75,
           }}
         >
-          Esta primeira versão do relatório já nasce pronta para o uso real:
-          cobrança, gasto, lucro em valor, lucro percentual e fiscal. No próximo
-          passo podemos acrescentar visão mensal, agrupamento por motorista,
-          contas a pagar integradas e exportação em formato ainda mais próximo de
+          Esta primeira versÃ£o do relatÃ³rio jÃ¡ nasce pronta para o uso real:
+          cobranÃ§a, gasto, lucro em valor, lucro percentual e fiscal. No prÃ³ximo
+          passo podemos acrescentar visÃ£o mensal, agrupamento por motorista,
+          contas a pagar integradas e exportaÃ§Ã£o em formato ainda mais prÃ³ximo de
           planilha financeira.
         </section>
       </div>

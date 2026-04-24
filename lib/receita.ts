@@ -1,4 +1,4 @@
-export type TipoDocumento = "cpf" | "cnpj";
+﻿export type TipoDocumento = "cpf" | "cnpj";
 
 export type ReceitaResultado = {
   tipo: TipoDocumento;
@@ -66,7 +66,7 @@ async function tentarBrasilApiCnpj(doc: string): Promise<ReceitaResultado | Rece
 
     if (!response.ok) {
       const texto = await response.text().catch(() => "");
-      return { erro: texto || "BrasilAPI indisponível para este CNPJ." };
+      return { erro: texto || "BrasilAPI indisponÃ­vel para este CNPJ." };
     }
 
     const data = await response.json();
@@ -101,7 +101,7 @@ async function tentarReceitaWsCnpj(doc: string): Promise<ReceitaResultado | Rece
 
     if (!response.ok) {
       const texto = await response.text().catch(() => "");
-      return { erro: texto || "ReceitaWS indisponível para este CNPJ." };
+      return { erro: texto || "ReceitaWS indisponÃ­vel para este CNPJ." };
     }
 
     const data = await response.json();
@@ -149,7 +149,7 @@ export async function buscarReceita(documento: string): Promise<ReceitaResultado
   const tipo = detectarTipo(doc);
 
   if (!tipo) {
-    return { erro: "Documento inválido." };
+    return { erro: "Documento invÃ¡lido." };
   }
 
   if (tipo === "cpf") {

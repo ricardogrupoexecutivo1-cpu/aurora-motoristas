@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 
@@ -10,7 +10,7 @@ export default function TutorialPlataformaPage() {
         {/* HEADER */}
         <div className="bg-white border rounded-2xl p-6">
           <h1 className="text-2xl font-bold">
-            📘 Como usar a plataforma Aurora Motoristas
+            ðŸ“˜ Como usar a plataforma Aurora Motoristas
           </h1>
           <p className="text-sm text-gray-600 mt-2">
             Guia completo para operar sem erro e sem depender de suporte.
@@ -23,7 +23,7 @@ export default function TutorialPlataformaPage() {
 
           <ul className="list-disc pl-5 text-sm space-y-1">
             <li>1. Identificar cliente</li>
-            <li>2. Escolher tipo de cotação</li>
+            <li>2. Escolher tipo de cotaÃ§Ã£o</li>
             <li>3. Preencher dados principais</li>
             <li>4. Salvar</li>
             <li>5. Conferir no painel</li>
@@ -32,17 +32,17 @@ export default function TutorialPlataformaPage() {
 
         {/* ENTRADA RAPIDA */}
         <div className="bg-white border rounded-2xl p-6 space-y-3">
-          <h2 className="font-semibold text-lg">Entrada rápida</h2>
+          <h2 className="font-semibold text-lg">Entrada rÃ¡pida</h2>
 
           <p className="text-sm">
-            Sempre começar por aqui:
+            Sempre comeÃ§ar por aqui:
           </p>
 
           <Link
             href="/plataforma/cotacoes/novo"
             className="inline-block bg-black text-white px-4 py-2 rounded"
           >
-            Ir para entrada rápida
+            Ir para entrada rÃ¡pida
           </Link>
 
           <ul className="list-disc pl-5 text-sm space-y-1">
@@ -54,20 +54,20 @@ export default function TutorialPlataformaPage() {
 
         {/* TIPOS */}
         <div className="bg-white border rounded-2xl p-6 space-y-3">
-          <h2 className="font-semibold text-lg">Tipos de cotação</h2>
+          <h2 className="font-semibold text-lg">Tipos de cotaÃ§Ã£o</h2>
 
           <ul className="list-disc pl-5 text-sm space-y-1">
-            <li>Transfer → rota simples</li>
-            <li>Mobilização → ida</li>
-            <li>Desmobilização → retorno</li>
-            <li>Mobilização + desmobilização → ida + volta</li>
-            <li>Diária / Semanal / Mensal</li>
+            <li>Transfer â†’ rota simples</li>
+            <li>MobilizaÃ§Ã£o â†’ ida</li>
+            <li>DesmobilizaÃ§Ã£o â†’ retorno</li>
+            <li>MobilizaÃ§Ã£o + desmobilizaÃ§Ã£o â†’ ida + volta</li>
+            <li>DiÃ¡ria / Semanal / Mensal</li>
           </ul>
         </div>
 
         {/* PAGINAS ENXUTAS */}
         <div className="bg-white border rounded-2xl p-6 space-y-3">
-          <h2 className="font-semibold text-lg">Páginas rápidas (recomendado)</h2>
+          <h2 className="font-semibold text-lg">PÃ¡ginas rÃ¡pidas (recomendado)</h2>
 
           <div className="flex flex-wrap gap-3">
 
@@ -76,19 +76,19 @@ export default function TutorialPlataformaPage() {
             </Link>
 
             <Link href="/plataforma/cotacoes/tipos/mobilizacao-desmobilizacao" className="border px-4 py-2 rounded">
-              Mobilização + Desmobilização
+              MobilizaÃ§Ã£o + DesmobilizaÃ§Ã£o
             </Link>
 
           </div>
 
           <p className="text-sm text-gray-600">
-            Use essas páginas para ganhar velocidade e evitar erro.
+            Use essas pÃ¡ginas para ganhar velocidade e evitar erro.
           </p>
         </div>
 
         {/* PAINEL */}
         <div className="bg-white border rounded-2xl p-6 space-y-3">
-          <h2 className="font-semibold text-lg">Painel de cotações</h2>
+          <h2 className="font-semibold text-lg">Painel de cotaÃ§Ãµes</h2>
 
           <Link
             href="/plataforma/cotacoes"
@@ -98,10 +98,10 @@ export default function TutorialPlataformaPage() {
           </Link>
 
           <ul className="list-disc pl-5 text-sm space-y-1">
-            <li>Ver todas as cotações</li>
+            <li>Ver todas as cotaÃ§Ãµes</li>
             <li>Controlar status</li>
             <li>Identificar pendentes</li>
-            <li>Preparar para serviço</li>
+            <li>Preparar para serviÃ§o</li>
           </ul>
         </div>
 
@@ -114,19 +114,19 @@ export default function TutorialPlataformaPage() {
             <li>Documento correto</li>
             <li>Origem e destino corretos</li>
             <li>Valores conferidos</li>
-            <li>Margem válida</li>
+            <li>Margem vÃ¡lida</li>
           </ul>
         </div>
 
         {/* ALERTAS */}
         <div className="bg-yellow-50 border rounded-2xl p-6 text-sm">
-          ⚠ Sistema em constante atualização. Use sempre as páginas corretas para evitar erro.
+          âš  Sistema em constante atualizaÃ§Ã£o. Use sempre as pÃ¡ginas corretas para evitar erro.
         </div>
 
         {/* VOLTAR */}
         <div className="flex gap-3">
           <Link href="/plataforma" className="border px-4 py-2 rounded">
-            Voltar à plataforma
+            Voltar Ã  plataforma
           </Link>
         </div>
 
