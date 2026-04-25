@@ -2,8 +2,9 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
+import AuroraNav from "./components/AuroraNav";
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
@@ -15,80 +16,9 @@ export const metadata: Metadata = {
     template: "%s | Aurora Motoristas",
   },
   description:
-    "Plataforma completa de mobilidade urbana, transporte de passageiros e entregas em todo Brasil com a menor taxa do mercado (apenas 5%). Solicite corridas, entregas, seja motorista parceiro ou gerencie sua frota empresarial com seguranca e tecnologia de ponta.",
-  keywords: [
-    "Aurora Motoristas",
-    "app motoristas",
-    "corrida",
-    "motorista",
-    "transporte",
-    "mobilidade",
-    "taxi",
-    "viagem",
-    "transfer",
-    "menor taxa",
-    "5%",
-    "delivery",
-    "entrega",
-    "busca e entrega",
-    "logistica",
-    "frete",
-    "corporativo",
-    "frota",
-    "erp",
-    "gestao",
-    "brasil",
-  ],
-  authors: [{ name: "Aurora Motoristas" }],
-  creator: "Aurora Motoristas",
-  publisher: "Aurora Motoristas",
+    "Plataforma completa de mobilidade urbana, transporte de passageiros e entregas em todo Brasil com a menor taxa do mercado (apenas 5%).",
   metadataBase: new URL("https://www.appmotoristas.com.br"),
-  alternates: {
-    canonical: "/",
-  },
-  openGraph: {
-    type: "website",
-    locale: "pt_BR",
-    url: "https://www.appmotoristas.com.br",
-    siteName: "Aurora Motoristas - Mobilidade do Futuro",
-    title: "Aurora Motoristas - A menor taxa do mercado | Apenas 5%",
-    description:
-      "Plataforma de mobilidade e entregas com a menor taxa do mercado. Solicite corridas, entregas em todo Brasil, seja motorista ou gerencie sua frota.",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Aurora Motoristas - Mobilidade do Futuro",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Aurora Motoristas - Mobilidade do Futuro | Taxa de apenas 5%",
-    description: "Plataforma de mobilidade com a menor taxa do mercado",
-    images: ["/og-image.png"],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
   manifest: "/manifest.webmanifest",
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
-    ],
-    apple: [{ url: "/icon-192.png", sizes: "192x192", type: "image/png" }],
-  },
 };
 
 export const viewport: Viewport = {
@@ -121,10 +51,9 @@ export default function RootLayout({
 
       <body className="font-sans antialiased">
         {children}
+        <AuroraNav />
         <Analytics />
       </body>
     </html>
   );
 }
-
-
