@@ -230,14 +230,14 @@ export default function HomePage() {
 
             <div className="flex items-center gap-3">
               <Link
-                href="/login"
+                href="/plataforma/entrar"
                 className="hidden sm:flex px-5 py-2.5 text-sm font-semibold text-foreground hover:text-primary transition-colors"
               >
                 Entrar
               </Link>
 
               <Link
-                href="/cadastro"
+                href="/cadastros/clientes"
                 className="px-5 lg:px-7 py-2.5 lg:py-3 text-sm font-bold text-white gradient-premium rounded-xl btn-premium shadow-xl"
               >
                 Começar agora
@@ -282,7 +282,7 @@ export default function HomePage() {
                 { href: "/solicitar", label: "Pedir corrida", icon: Car, desc: "Transporte de passageiros" },
                 { href: "/entregas", label: "Enviar entrega", icon: Package, desc: "Busca e entrega Brasil" },
                 { href: "/cadastro", label: "Cadastro nacional", icon: Globe, desc: "Todas as atividades da plataforma" },
-                { href: "/motoristas/cadastrar", label: "Ser parceiro", icon: TrendingUp, desc: "Cadastro de motorista" },
+                { href: "/motoristas/novo", label: "Ser parceiro", icon: TrendingUp, desc: "Cadastro de motorista" },
                 { href: "/login", label: "Área segura", icon: Lock, desc: "Empresas, motoristas e admin" },
               ].map((item) => (
                 <Link
@@ -304,7 +304,7 @@ export default function HomePage() {
             </div>
 
             <div className="pt-6 border-t border-border mt-6">
-              <Link href="/login" className="w-full py-4 bg-secondary rounded-xl font-semibold text-center block">
+              <Link href="/plataforma/entrar" className="w-full py-4 bg-secondary rounded-xl font-semibold text-center block">
                 Entrar na minha conta
               </Link>
             </div>
@@ -361,6 +361,50 @@ export default function HomePage() {
             </div>
           </div>
 
+          
+          <div className="grid md:grid-cols-3 gap-6 max-w-7xl mx-auto mb-10">
+            {[
+              {
+                href: "/motoristas/novo",
+                titulo: "Quero ser motorista",
+                texto: "Cadastre-se como motorista profissional para atender locadoras, operações, mobilização, desmobilização e serviços Aurora em todo o Brasil.",
+                icon: Car,
+                cor: "from-emerald-500 via-green-500 to-lime-500",
+              },
+              {
+                href: "/cadastros/clientes",
+                titulo: "Sou cliente / empresa / locadora",
+                texto: "Cadastre sua operação, solicite serviços e acompanhe tudo pela plataforma.",
+                icon: Building2,
+                cor: "from-blue-600 via-cyan-500 to-sky-500",
+              },
+              {
+                href: "/plataforma/entrar",
+                titulo: "Entrar na plataforma",
+                texto: "Acesse seu painel seguro para serviços, financeiro, motoristas e gestão.",
+                icon: Lock,
+                cor: "from-purple-600 via-pink-500 to-rose-500",
+              },
+            ].map((item) => (
+              <Link key={item.titulo} href={item.href} className="group relative">
+                <div className={`absolute inset-0 bg-gradient-to-br ${item.cor} rounded-[2rem] transform group-hover:scale-[1.02] transition-transform duration-500`} />
+                <div className="relative p-7 min-h-[250px] rounded-[2rem] text-white overflow-hidden">
+                  <div className="absolute -right-8 -bottom-8 w-36 h-36 bg-white/10 rounded-full" />
+                  <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center mb-6 shadow-xl">
+                    <item.icon className="w-8 h-8 text-black" />
+                  </div>
+
+                  <h2 className="text-2xl font-black mb-3">{item.titulo}</h2>
+                  <p className="text-white/85 text-sm leading-6 mb-6">{item.texto}</p>
+
+                  <div className="flex items-center justify-between p-4 bg-white/15 backdrop-blur rounded-xl group-hover:bg-white/25 transition-colors">
+                    <span className="font-bold">Abrir agora</span>
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
           <div id="plataformas" className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
             {plataformas.map((item) => (
               <Link key={item.titulo} href={item.href} className="group relative">
@@ -661,7 +705,7 @@ export default function HomePage() {
 
           <div className="text-center mt-10">
             <Link
-              href="/cadastro"
+              href="/cadastros/clientes"
               className="inline-flex items-center gap-3 px-8 py-4 gradient-premium text-white font-bold rounded-xl btn-premium shadow-xl"
             >
               <Globe className="w-5 h-5" />
@@ -818,7 +862,7 @@ export default function HomePage() {
                   { label: "Aurora Ride", href: "/solicitar" },
                   { label: "Aurora Express", href: "/entregas" },
                   { label: "Cadastro nacional", href: "/cadastro" },
-                  { label: "Seja parceiro", href: "/motoristas/cadastrar" },
+                  { label: "Seja parceiro", href: "/motoristas/novo" },
                   { label: "Área segura", href: "/login" },
                 ].map((link) => (
                   <Link key={link.href} href={link.href} className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
@@ -875,3 +919,6 @@ export default function HomePage() {
     </main>
   );
 }
+
+
+
