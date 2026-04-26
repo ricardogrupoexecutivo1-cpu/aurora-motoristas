@@ -1,27 +1,8 @@
 ﻿import { NextResponse } from "next/server";
 import { supabaseAdmin } from "../../lib/supabase-admin";
 
-async function enviarTelegram(mensagem: string) {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-
-  if (!token || !chatId) return;
-
-  try {
-    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text: mensagem,
-        parse_mode: "HTML",
-      }),
-    });
-  } catch {
-    // Não quebra o sistema se o Telegram falhar
-  }
+function limparIp(valor: string) {
+  return valor.split(",")[0]?.trim() || "unknown";
 }
 
 export async function POST(req: Request) {
@@ -30,18 +11,43 @@ export async function POST(req: Request) {
 
     const { path, referrer, userAgent } = body;
 
+    const ip = limparIp(
+      req.headers.get("x-forwarded-for") ||
+        req.headers.get("x-real-ip") ||
+        "unknown"
+    );
+
+    let city = "";
+    let region = "";
+    let country = "";
+
+    if (ip !== "unknown" && ip !== "::1" && ip !== "127.0.0.1") {
+      try {
+        const geo = await fetch(`https://ipapi.co/${ip}/json/`, {
+          cache: "no-store",
+        });
+
+        const geoData = await geo.json();
+
+        city = geoData.city || "";
+        region = geoData.region || "";
+        country = geoData.country_name || "";
+      } catch {
+        city = "";
+        region = "";
+        country = "";
+      }
+    }
+
     await supabaseAdmin.from("am_access_logs").insert({
       path: path || "/",
       referrer: referrer || "",
       user_agent: userAgent || "",
+      ip,
+      city,
+      region,
+      country,
     });
-
-    await enviarTelegram(
-      `🚨 <b>Novo acesso Aurora Motoristas</b>\n\n` +
-      `📍 Página: ${path || "/"}\n` +
-      `🔗 Origem: ${referrer || "direto"}\n` +
-      `📱 Dispositivo: ${(userAgent || "").slice(0, 120)}`
-    );
 
     return NextResponse.json({ ok: true });
   } catch {
