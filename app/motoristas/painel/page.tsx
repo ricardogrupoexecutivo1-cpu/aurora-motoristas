@@ -1,191 +1,155 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import AuroraProtected from "../../components/AuroraProtected";
-import AuroraLogoutButton from "../../components/AuroraLogoutButton";
-import AuroraPrintButton from "../../components/AuroraPrintButton";
-import { getAuroraSession } from "../../lib/aurora-session";
+import { useEffect, useState } from "react";
 
-export default function MotoristaPainelPage() {
-  const [services, setServices] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+type Convite = {
+  id: string;
+  motorista_id: string;
+  status: string;
+  created_at: string;
+  service_id: string | null;
+};
 
-  async function carregar() {
-    setLoading(true);
+export default function PainelMotoristaPage() {
+  const [cpf, setCpf] = useState("");
+  const [motoristaId, setMotoristaId] = useState<string | null>(null);
+  const [statusMotorista, setStatusMotorista] = useState("");
+  const [ativo, setAtivo] = useState(false);
+  const [convites, setConvites] = useState<Convite[]>([]);
+  const [msg, setMsg] = useState("");
 
-    const session = getAuroraSession();
-    const driverId = session?.driver_id;
+  async function buscarMotorista() {
+    setMsg("");
 
-    const response = await fetch("/api/services");
-    const result = await response.json();
+    try {
+      const res = await fetch(`/api/motoristas?scope=admin`);
+      const data = await res.json();
 
-    if (result.ok) {
-      const lista = result.services || [];
-      setServices(lista.filter((item: any) => item.driver_id === driverId));
+      const encontrado = (data.motoristas || []).find(
+        (m: any) => m.cpf === cpf
+      );
+
+      if (!encontrado) {
+        setMsg("Motorista não encontrado.");
+        return;
+      }
+
+      setMotoristaId(encontrado.id);
+      setStatusMotorista(encontrado.status);
+      setAtivo(encontrado.ativo);
+
+      if (!encontrado.ativo) {
+        setMsg("Seu cadastro ainda não foi aprovado.");
+        return;
+      }
+
+      carregarConvites(encontrado.id);
+    } catch (error: any) {
+      setMsg("Erro ao buscar motorista.");
     }
-
-    setLoading(false);
   }
 
-  useEffect(() => {
-    carregar();
-  }, []);
+  async function carregarConvites(id: string) {
+    try {
+      const res = await fetch(`/api/convites?motorista_id=${id}`);
+      const data = await res.json();
 
-  const resumo = useMemo(() => {
-    return {
-      total: services.length,
-      pendentes: services.filter((item) => item.driver_status !== "aceito").length,
-      aceitos: services.filter((item) => item.driver_status === "aceito").length,
-      valorMotorista: services.reduce((acc, item) => acc + Number(item.driver_amount || 0), 0),
-    };
-  }, [services]);
+      setConvites(data.convites || []);
+    } catch {
+      setConvites([]);
+    }
+  }
 
-  function moeda(valor: number) {
-    return valor.toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
+  async function responder(id: string, acao: "aceitar" | "recusar") {
+    await fetch("/api/convites/responder", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id, acao }),
     });
-  }
 
-  if (loading) {
-    return (
-      <AuroraProtected allowedRoles={["motorista"]}>
-        <main style={{ padding: 30 }}>Carregando painel do motorista...</main>
-      </AuroraProtected>
-    );
+    if (motoristaId) carregarConvites(motoristaId);
   }
 
   return (
-    <AuroraProtected allowedRoles={["motorista"]}>
-      <main style={{ minHeight: "100vh", background: "#eef4ff", padding: 24 }}>
-        <section style={{ maxWidth: 1180, margin: "0 auto" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-            <div>
-              <p style={{ color: "#2563eb", fontWeight: 800 }}>Aurora Motoristas</p>
-              <h1 style={{ fontSize: 36, marginTop: 8 }}>Painel do Motorista</h1>
-              <p style={{ color: "#475569", marginTop: 8 }}>
-                Aqui o motorista visualiza somente os serviços vinculados ao seu driver_id.
-              </p>
+    <main style={{ padding: 24, background: "#020617", minHeight: "100vh", color: "white" }}>
+      <h1 style={{ fontSize: 28, fontWeight: 900 }}>Painel do Motorista</h1>
+
+      {!motoristaId && (
+        <div style={{ marginTop: 20 }}>
+          <input
+            placeholder="Digite seu CPF"
+            value={cpf}
+            onChange={(e) => setCpf(e.target.value)}
+            style={{
+              padding: 12,
+              borderRadius: 10,
+              width: 300,
+              marginRight: 10,
+            }}
+          />
+
+          <button onClick={buscarMotorista} style={btn("#38bdf8")}>
+            Entrar
+          </button>
+        </div>
+      )}
+
+      {msg && <p style={{ marginTop: 10, color: "#fca5a5" }}>{msg}</p>}
+
+      {motoristaId && ativo && (
+        <div style={{ marginTop: 30 }}>
+          <h2>Convites disponíveis</h2>
+
+          {convites.length === 0 && (
+            <p style={{ color: "#94a3b8" }}>
+              Nenhum convite no momento.
+            </p>
+          )}
+
+          {convites.map((c) => (
+            <div
+              key={c.id}
+              style={{
+                marginTop: 12,
+                padding: 14,
+                borderRadius: 14,
+                background: "#0f172a",
+                border: "1px solid #1e293b",
+              }}
+            >
+              <p>Serviço: {c.service_id || "Não informado"}</p>
+              <p>Status: {c.status}</p>
+
+              {c.status === "enviado" && (
+                <div style={{ marginTop: 10 }}>
+                  <button onClick={() => responder(c.id, "aceitar")} style={btn("#22c55e")}>
+                    Aceitar
+                  </button>
+
+                  <button onClick={() => responder(c.id, "recusar")} style={btn("#ef4444")}>
+                    Recusar
+                  </button>
+                </div>
+              )}
             </div>
-
-            <div style={{ display: "flex", gap: 10, alignItems: "flex-start", flexWrap: "wrap" }}>
-              <AuroraPrintButton />
-              <AuroraLogoutButton />
-            </div>
-          </div>
-
-          <div style={{ display: "grid", gap: 14, gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", marginTop: 24 }}>
-            <Card titulo="Meus serviços" valor={String(resumo.total)} />
-            <Card titulo="Pendentes" valor={String(resumo.pendentes)} />
-            <Card titulo="Aceitos" valor={String(resumo.aceitos)} />
-            <Card titulo="Valor motorista" valor={moeda(resumo.valorMotorista)} destaque />
-          </div>
-
-          <div style={{ marginTop: 28, background: "white", borderRadius: 24, padding: 20, overflowX: "auto" }}>
-            <h2 style={{ fontSize: 24, marginBottom: 14 }}>Meus serviços</h2>
-
-            <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 950 }}>
-              <thead>
-                <tr style={{ textAlign: "left", color: "#475569" }}>
-                  <th style={th}>Código</th>
-                  <th style={th}>Status</th>
-                  <th style={th}>Cliente</th>
-                  <th style={th}>Rota</th>
-                  <th style={th}>Data</th>
-                  <th style={th}>Valor motorista</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {services.map((item) => (
-                  <tr key={item.id} style={{ borderTop: "1px solid #e2e8f0" }}>
-                    <td style={td}>
-                      <strong>{item.service_code}</strong>
-                    </td>
-
-                    <td style={td}>
-                      <Badge texto={item.driver_status || "pendente"} />
-                    </td>
-
-                    <td style={td}>{item.client_name || "-"}</td>
-
-                    <td style={td}>
-                      <strong>{item.origin || "-"}</strong>
-                      <br />
-                      <span style={{ color: "#64748b" }}>→ {item.destination || "-"}</span>
-                    </td>
-
-                    <td style={td}>
-                      {item.service_date || "-"} {item.service_time || ""}
-                    </td>
-
-                    <td style={td}>
-                      <strong>{moeda(Number(item.driver_amount || 0))}</strong>
-                    </td>
-                  </tr>
-                ))}
-
-                {services.length === 0 && (
-                  <tr>
-                    <td style={td} colSpan={6}>
-                      Nenhum serviço vinculado ao seu motorista ainda.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      </main>
-    </AuroraProtected>
+          ))}
+        </div>
+      )}
+    </main>
   );
 }
 
-function Card({ titulo, valor, destaque }: { titulo: string; valor: string; destaque?: boolean }) {
-  return (
-    <div
-      style={{
-        background: destaque ? "#dbeafe" : "white",
-        border: "1px solid #dbeafe",
-        borderRadius: 22,
-        padding: 18,
-        boxShadow: "0 10px 30px rgba(15, 23, 42, 0.06)",
-      }}
-    >
-      <p style={{ color: "#64748b", fontSize: 14 }}>{titulo}</p>
-      <h2 style={{ fontSize: 22, marginTop: 8 }}>{valor}</h2>
-    </div>
-  );
+function btn(cor: string): React.CSSProperties {
+  return {
+    padding: "8px 12px",
+    borderRadius: 10,
+    border: "none",
+    background: cor,
+    color: "#020617",
+    fontWeight: 800,
+    cursor: "pointer",
+    marginRight: 8,
+  };
 }
-
-function Badge({ texto }: { texto: string }) {
-  const ok = texto === "aceito";
-
-  return (
-    <span
-      style={{
-        display: "inline-block",
-        padding: "6px 10px",
-        borderRadius: 999,
-        fontSize: 12,
-        fontWeight: 800,
-        background: ok ? "#dcfce7" : "#fef9c3",
-        color: ok ? "#166534" : "#854d0e",
-      }}
-    >
-      {texto}
-    </span>
-  );
-}
-
-const th = {
-  padding: "12px",
-  fontSize: 13,
-  borderBottom: "1px solid #e2e8f0",
-};
-
-const td = {
-  padding: "12px",
-  fontSize: 14,
-  verticalAlign: "top" as const,
-};

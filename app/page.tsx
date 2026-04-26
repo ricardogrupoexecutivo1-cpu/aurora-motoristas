@@ -151,7 +151,7 @@ export default function HomePage() {
       ],
     },
     {
-      href: "/login",
+      href: "/entrar",
       titulo: "Aurora Business",
       subtitulo: "Gestão completa da operação",
       badge: "ÁREA SEGURA",
@@ -167,7 +167,7 @@ export default function HomePage() {
       ],
     },
     {
-      href: "/cadastro",
+      href: "/comecar",
       titulo: "Aurora Brasil",
       subtitulo: "Plataforma nacional para todas as atividades",
       badge: "NACIONAL",
@@ -219,7 +219,7 @@ export default function HomePage() {
                 { href: "#seguranca", label: "Segurança" },
               ].map((link) => (
                 <Link
-                  key={link.href}
+                  key={`${link.label}-${link.href}`}
                   href={link.href}
                   className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-xl hover:bg-secondary"
                 >
@@ -230,7 +230,7 @@ export default function HomePage() {
 
             <div className="flex items-center gap-3">
               <Link
-                href="/plataforma/entrar"
+                href="/entrar"
                 className="hidden sm:flex px-5 py-2.5 text-sm font-semibold text-foreground hover:text-primary transition-colors"
               >
                 Entrar
@@ -281,9 +281,9 @@ export default function HomePage() {
               {[
                 { href: "/solicitar", label: "Pedir corrida", icon: Car, desc: "Transporte de passageiros" },
                 { href: "/entregas", label: "Enviar entrega", icon: Package, desc: "Busca e entrega Brasil" },
-                { href: "/cadastro", label: "Cadastro nacional", icon: Globe, desc: "Todas as atividades da plataforma" },
-                { href: "/motoristas/novo", label: "Ser parceiro", icon: TrendingUp, desc: "Cadastro de motorista" },
-                { href: "/login", label: "Área segura", icon: Lock, desc: "Empresas, motoristas e admin" },
+                { href: "/comecar", label: "Cadastro nacional", icon: Globe, desc: "Todas as atividades da plataforma" },
+                { href: "/comecar", label: "Ser parceiro", icon: TrendingUp, desc: "Cadastro de motorista" },
+                { href: "/entrar", label: "Área segura", icon: Lock, desc: "Empresas, motoristas e admin" },
               ].map((item) => (
                 <Link
                   key={item.href}
@@ -304,7 +304,7 @@ export default function HomePage() {
             </div>
 
             <div className="pt-6 border-t border-border mt-6">
-              <Link href="/plataforma/entrar" className="w-full py-4 bg-secondary rounded-xl font-semibold text-center block">
+              <Link href="/entrar" className="w-full py-4 bg-secondary rounded-xl font-semibold text-center block">
                 Entrar na minha conta
               </Link>
             </div>
@@ -365,9 +365,9 @@ export default function HomePage() {
           <div className="grid md:grid-cols-3 gap-6 max-w-7xl mx-auto mb-10">
             {[
               {
-                href: "/motoristas/novo",
-                titulo: "Quero ser motorista",
-                texto: "Cadastre-se como motorista profissional para atender locadoras, operações, mobilização, desmobilização e serviços Aurora em todo o Brasil.",
+                href: "/comecar",
+                titulo: "Entrar / Cadastrar na Aurora",
+                texto: "Escolha seu perfil: locadora, cliente, empresa, motorista operacional ou acesso seguro da plataforma.",
                 icon: Car,
                 cor: "from-emerald-500 via-green-500 to-lime-500",
               },
@@ -379,7 +379,7 @@ export default function HomePage() {
                 cor: "from-blue-600 via-cyan-500 to-sky-500",
               },
               {
-                href: "/plataforma/entrar",
+                href: "/entrar",
                 titulo: "Entrar na plataforma",
                 texto: "Acesse seu painel seguro para serviços, financeiro, motoristas e gestão.",
                 icon: Lock,
@@ -861,11 +861,11 @@ export default function HomePage() {
                 {[
                   { label: "Aurora Ride", href: "/solicitar" },
                   { label: "Aurora Express", href: "/entregas" },
-                  { label: "Cadastro nacional", href: "/cadastro" },
-                  { label: "Seja parceiro", href: "/motoristas/novo" },
-                  { label: "Área segura", href: "/login" },
+                  { label: "Cadastro nacional", href: "/comecar" },
+                  { label: "Seja parceiro", href: "/comecar" },
+                  { label: "Área segura", href: "/entrar" },
                 ].map((link) => (
-                  <Link key={link.href} href={link.href} className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <Link key={`${link.label}-${link.href}`} href={link.href} className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
                     {link.label}
                   </Link>
                 ))}
@@ -919,6 +919,13 @@ export default function HomePage() {
     </main>
   );
 }
+
+
+
+
+
+
+
 
 
 
