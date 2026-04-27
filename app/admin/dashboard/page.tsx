@@ -52,7 +52,7 @@ export default function AdminDashboardPage() {
               <p style={eyebrow}>Aurora Motoristas • Admin</p>
               <h1 style={title}>Dashboard Executivo</h1>
               <p style={subtitle}>
-                Visão geral da operação, receita, comissões e regiões mais ativas da plataforma.
+                Visão geral da operação, receita, comissões e fluxo novo Supabase.
               </p>
             </div>
 
@@ -63,18 +63,18 @@ export default function AdminDashboardPage() {
           </div>
 
           <div style={grid}>
-            <Card titulo="Serviços" valor={String(dashboard?.totalServices || 0)} />
-            <Card titulo="Receita total" valor={moeda(dashboard?.totalRevenue)} destaque />
-            <Card titulo="Comissão Aurora" valor={moeda(dashboard?.totalCommission)} />
-            <Card titulo="A receber" valor={moeda(dashboard?.totalPending)} alerta />
-            <Card titulo="Recebido" valor={moeda(dashboard?.totalReceived)} />
+            <Card titulo="Serviços antigos" valor={String(dashboard?.totalServices || 0)} />
+            <Card titulo="Receita antiga" valor={moeda(dashboard?.totalRevenue)} destaque />
+            <Card titulo="Comissão antiga" valor={moeda(dashboard?.totalCommission)} />
+            <Card titulo="A receber antigo" valor={moeda(dashboard?.totalPending)} alerta />
+            <Card titulo="Recebido antigo" valor={moeda(dashboard?.totalReceived)} />
           </div>
 
           <div style={panel}>
             <h2 style={panelTitle}>Fluxo Supabase novo</h2>
 
             <p style={{ color: "#cbd5e1", marginBottom: 16 }}>
-              Acessos rápidos para serviços gerados por cotação, pagamento, histórico,
+              Acessos oficiais para serviços gerados por cotação, pagamento, histórico,
               nota de débito e recibo administrativo.
             </p>
 
@@ -110,6 +110,21 @@ export default function AdminDashboardPage() {
           </div>
 
           <div style={panel}>
+            <h2 style={panelTitle}>Rotas antigas preservadas como backup</h2>
+
+            <p style={{ color: "#cbd5e1", marginBottom: 16 }}>
+              Mantidas apenas para consulta enquanto o fluxo Supabase novo assume a operação.
+            </p>
+
+            <div style={actions}>
+              <a href="/admin/servicos" style={actionBtnBackup}>Serviços antigos</a>
+              <a href="/servicos/novo" style={actionBtnBackup}>Novo serviço antigo</a>
+              <a href="/financeiro/aurora" style={actionBtnBackup}>Financeiro antigo</a>
+              <a href="/central" style={actionBtnBackup}>Central antiga</a>
+            </div>
+          </div>
+
+          <div style={panel}>
             <h2 style={panelTitle}>Cidades com maior uso</h2>
 
             <div style={{ display: "grid", gap: 12 }}>
@@ -132,17 +147,6 @@ export default function AdminDashboardPage() {
                   </div>
                 </div>
               ))}
-            </div>
-          </div>
-
-          <div style={panel}>
-            <h2 style={panelTitle}>Atalhos executivos antigos</h2>
-
-            <div style={actions}>
-              <a href="/admin/servicos" style={actionBtn}>Serviços antigos</a>
-              <a href="/servicos/novo" style={actionBtn}>Novo serviço antigo</a>
-              <a href="/financeiro/aurora" style={actionBtn}>Financeiro Aurora antigo</a>
-              <a href="/central" style={actionBtn}>Central</a>
             </div>
           </div>
         </section>
@@ -273,16 +277,6 @@ const actions = {
   gap: 12,
 };
 
-const actionBtn = {
-  display: "inline-block",
-  background: "#22c55e",
-  color: "#020617",
-  borderRadius: 16,
-  padding: "12px 16px",
-  fontWeight: 900,
-  textDecoration: "none",
-};
-
 const actionBtnNovo = {
   display: "inline-block",
   background: "#06b6d4",
@@ -292,4 +286,14 @@ const actionBtnNovo = {
   fontWeight: 900,
   textDecoration: "none",
   boxShadow: "0 0 20px rgba(6, 182, 212, 0.24)",
+};
+
+const actionBtnBackup = {
+  display: "inline-block",
+  background: "#334155",
+  color: "#e2e8f0",
+  borderRadius: 16,
+  padding: "12px 16px",
+  fontWeight: 900,
+  textDecoration: "none",
 };
