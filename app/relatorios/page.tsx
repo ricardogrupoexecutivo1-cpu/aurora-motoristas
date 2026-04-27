@@ -477,7 +477,7 @@ export default function RelatoriosPage() {
               <Link href="/" style={secondaryButton}>
                 Home
               </Link>
-              <Link href="/admin/servicos" style={secondaryButton}>
+              <Link href="/admin/servicos-supabase" style={secondaryButton}>
                 Admin â€¢ Serviços
               </Link>
               <button type="button" onClick={carregar} style={secondaryButtonAsButton}>
@@ -968,4 +968,5 @@ const smallAction: React.CSSProperties = {
   fontWeight: 700,
   fontSize: 12,
 };
+
 

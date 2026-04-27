@@ -383,7 +383,7 @@ export default function LoginPage() {
             {/* Quick Access Links */}
             <div className="grid grid-cols-2 gap-3 mt-6">
               <Link
-                href="/servicos/novo"
+                href="/plataforma/cotacoes"
                 className="flex items-center gap-2 p-3 bg-card border border-border rounded-xl hover:border-primary/50 transition-colors"
               >
                 <Briefcase className="w-5 h-5 text-primary" />
@@ -470,5 +470,6 @@ export default function LoginPage() {
     </main>
   );
 }
+
 
 

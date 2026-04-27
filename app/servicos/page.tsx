@@ -499,7 +499,7 @@ export default function ServicosPage() {
               Voltar
             </Link>
 
-            <Link href="/servicos/novo" style={topPrimaryStyle}>
+            <Link href="/plataforma/cotacoes" style={topPrimaryStyle}>
               Novo serviço
             </Link>
           </div>
@@ -1667,4 +1667,5 @@ const quickActionPrimaryStyle: React.CSSProperties = {
   cursor: "pointer",
   boxShadow: "0 12px 24px rgba(22, 163, 74, 0.18)",
 };
+
 

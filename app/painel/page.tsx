@@ -39,7 +39,7 @@ export default function PainelPage() {
           </Card>
 
           <Card title="Novo serviço" desc="Cadastro direto de serviço">
-            <Link href="/servicos/novo" style={btnPrimary}>Cadastrar</Link>
+            <Link href="/plataforma/cotacoes" style={btnPrimary}>Cadastrar</Link>
           </Card>
 
           <Card title="Operação" desc="Visão operacional ativa">
@@ -47,7 +47,7 @@ export default function PainelPage() {
           </Card>
 
           <Card title="Admin â€¢ Serviços" desc="Controle total da base">
-            <Link href="/admin/servicos" style={btn}>Abrir</Link>
+            <Link href="/admin/servicos-supabase" style={btn}>Abrir</Link>
           </Card>
 
           <Card title="Relatórios" desc="Visão financeira estilo Excel">
@@ -184,4 +184,5 @@ const future = {
   padding: 16,
   border: "1px solid #e5edf5",
 };
+
 

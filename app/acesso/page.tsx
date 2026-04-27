@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRouter } from "next/navigation";
 import { getAuroraSession } from "../lib/aurora-session";
@@ -14,7 +14,7 @@ export default function AcessoPage() {
       return;
     }
 
-    if (session.role === "admin") router.push("/admin/servicos");
+    if (session.role === "admin") router.push("/admin/servicos-supabase");
     if (session.role === "motorista") router.push("/motoristas/painel");
     if (session.role === "cliente") router.push("/clientes/painel");
   }
@@ -40,7 +40,7 @@ export default function AcessoPage() {
 
         <p style={{ color: "#475569", marginTop: 12, lineHeight: 1.6 }}>
           Entrada central inteligente. O sistema identifica automaticamente o perfil
-          do usuário e direciona para a área correta sem necessidade de escolha manual.
+          do usuÃ¡rio e direciona para a Ã¡rea correta sem necessidade de escolha manual.
         </p>
 
         <div style={{ marginTop: 28 }}>
@@ -57,7 +57,7 @@ export default function AcessoPage() {
               cursor: "pointer",
             }}
           >
-            Continuar para minha área
+            Continuar para minha Ã¡rea
           </button>
 
           <button
@@ -88,9 +88,9 @@ export default function AcessoPage() {
             color: "#475569",
           }}
         >
-          ✔ Sem limite artificial de usuários por empresa  
-          ✔ Controle real por perfil (admin / motorista / cliente)  
-          ✔ Estrutura preparada para escala operacional  
+          âœ” Sem limite artificial de usuÃ¡rios por empresa  
+          âœ” Controle real por perfil (admin / motorista / cliente)  
+          âœ” Estrutura preparada para escala operacional  
         </div>
       </section>
     </main>

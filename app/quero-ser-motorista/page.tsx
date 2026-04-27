@@ -701,7 +701,7 @@ export default function AdminServicosPage() {
                 </Link>
 
                 <Link
-                  href="/servicos/novo"
+                  href="/plataforma/cotacoes"
                   style={{
                     ...topPrimaryStyle,
                     width: isMobile ? "100%" : "auto",
@@ -1894,4 +1894,5 @@ const primaryLinkStyle: CSSProperties = {
   padding: "10px 14px",
   fontWeight: 800,
 };
+
 

@@ -400,7 +400,7 @@ export default function ServicosPage() {
                 Pedidos de cotação
               </Link>
 
-              <Link href="/servicos/novo" style={linkPrimaryStyle}>
+              <Link href="/plataforma/cotacoes" style={linkPrimaryStyle}>
                 Novo serviço interno
               </Link>
             </div>
@@ -1055,4 +1055,5 @@ const linkPrimaryStyle: React.CSSProperties = {
   fontWeight: 700,
   background: "#f0f9ff",
 };
+
 
