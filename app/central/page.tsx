@@ -19,13 +19,13 @@ const atalhos: Atalho[] = [
   {
     titulo: "Criar novo serviço",
     descricao: "Cadastrar serviço com cliente, motorista, valores e rota.",
-    rota: "/servicos/novo",
+    rota: "/plataforma/cotacoes/nova",
     roles: ["admin"],
   },
   {
     titulo: "Painel Admin",
     descricao: "Ver todos os serviços, faturamento, custos e lucro.",
-    rota: "/admin/servicos",
+    rota: "/admin/servicos-supabase",
     roles: ["admin"],
   },
   {

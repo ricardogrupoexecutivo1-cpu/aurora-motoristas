@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -659,7 +659,7 @@ export default function PlataformaMotoristasPainelPage() {
               </Link>
 
               <Link
-                href="/admin/servicos"
+                href="/admin/servicos-supabase"
                 className="rounded-2xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
               >
                 Ir para Admin â€¢ Serviços

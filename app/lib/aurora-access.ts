@@ -11,7 +11,7 @@ export function canAccess(
 export function getAccessRedirect(session: AuroraSession | null) {
   if (!session) return "/entrar";
 
-  if (session.role === "admin") return "/admin/servicos";
+  if (session.role === "admin") return "/admin/servicos-supabase";
   if (session.role === "motorista") return "/motoristas/painel";
   if (session.role === "cliente") return "/clientes/painel";
 

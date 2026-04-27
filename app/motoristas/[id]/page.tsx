@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
@@ -638,7 +638,7 @@ export default function AdminServicosPage() {
                 </Link>
 
                 <Link
-                  href="/servicos/novo"
+                  href="/plataforma/cotacoes/nova"
                   style={{
                     ...topPrimaryStyle,
                     width: isMobile ? "100%" : "auto",

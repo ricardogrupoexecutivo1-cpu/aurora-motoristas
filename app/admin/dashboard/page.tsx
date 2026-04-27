@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import AuroraProtected from "../../components/AuroraProtected";
@@ -63,7 +63,7 @@ export default function AdminDashboardPage() {
           </div>
 
           <div style={grid}>
-            <Card titulo="Serviços antigos" valor={String(dashboard?.totalServices || 0)} />
+            <Card titulo="Serviços Supabase" valor={String(dashboard?.totalServices || 0)} />
             <Card titulo="Receita antiga" valor={moeda(dashboard?.totalRevenue)} destaque />
             <Card titulo="Comissão antiga" valor={moeda(dashboard?.totalCommission)} />
             <Card titulo="A receber antigo" valor={moeda(dashboard?.totalPending)} alerta />
@@ -117,8 +117,8 @@ export default function AdminDashboardPage() {
             </p>
 
             <div style={actions}>
-              <a href="/admin/servicos" style={actionBtnBackup}>Serviços antigos</a>
-              <a href="/servicos/novo" style={actionBtnBackup}>Novo serviço antigo</a>
+              <a href="/admin/servicos-supabase" style={actionBtnBackup}>Serviços Supabase</a>
+              <a href="/plataforma/cotacoes/nova" style={actionBtnBackup}>Nova cotação Supabase</a>
               <a href="/financeiro/aurora" style={actionBtnBackup}>Financeiro antigo</a>
               <a href="/central" style={actionBtnBackup}>Central antiga</a>
             </div>

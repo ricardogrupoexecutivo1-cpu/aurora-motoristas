@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 
@@ -145,7 +145,7 @@ export default function NovoServicoPage() {
                 Copiar link cliente
               </button>
 
-              <a href="/admin/servicos" style={linkBtn}>
+              <a href="/admin/servicos-supabase" style={linkBtn}>
                 Ver painel admin
               </a>
 
