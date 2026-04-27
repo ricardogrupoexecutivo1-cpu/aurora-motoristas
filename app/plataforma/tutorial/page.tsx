@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 
@@ -10,7 +10,7 @@ export default function TutorialPlataformaPage() {
         {/* HEADER */}
         <div className="bg-white border rounded-2xl p-6">
           <h1 className="text-2xl font-bold">
-            📘 Como usar a plataforma Aurora Motoristas
+            ðŸ“˜ Como usar a plataforma Aurora Motoristas
           </h1>
           <p className="text-sm text-gray-600 mt-2">
             Guia completo para operar sem erro e sem depender de suporte.
@@ -57,10 +57,10 @@ export default function TutorialPlataformaPage() {
           <h2 className="font-semibold text-lg">Tipos de cotação</h2>
 
           <ul className="list-disc pl-5 text-sm space-y-1">
-            <li>Transfer → rota simples</li>
-            <li>Mobilização → ida</li>
-            <li>Desmobilização → retorno</li>
-            <li>Mobilização + desmobilização → ida + volta</li>
+            <li>Transfer â†’ rota simples</li>
+            <li>Mobilização â†’ ida</li>
+            <li>Desmobilização â†’ retorno</li>
+            <li>Mobilização + desmobilização â†’ ida + volta</li>
             <li>Diária / Semanal / Mensal</li>
           </ul>
         </div>
@@ -120,13 +120,13 @@ export default function TutorialPlataformaPage() {
 
         {/* ALERTAS */}
         <div className="bg-yellow-50 border rounded-2xl p-6 text-sm">
-          ⚠ Sistema em constante atualização. Use sempre as páginas corretas para evitar erro.
+          âš  Sistema em constante atualização. Use sempre as páginas corretas para evitar erro.
         </div>
 
         {/* VOLTAR */}
         <div className="flex gap-3">
           <Link href="/plataforma" className="border px-4 py-2 rounded">
-            Voltar à plataforma
+            Voltar Ã  plataforma
           </Link>
         </div>
 
@@ -134,3 +134,4 @@ export default function TutorialPlataformaPage() {
     </main>
   )
 }
+

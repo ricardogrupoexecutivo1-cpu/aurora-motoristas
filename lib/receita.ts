@@ -1,4 +1,4 @@
-export type TipoDocumento = "cpf" | "cnpj";
+﻿export type TipoDocumento = "cpf" | "cnpj";
 
 export type ReceitaResultado = {
   tipo: TipoDocumento;
@@ -173,3 +173,4 @@ export async function buscarReceita(documento: string): Promise<ReceitaResultado
         : "Erro ao consultar Receita.",
   };
 }
+

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
@@ -65,13 +65,13 @@ type DraftFields = {
 
 const STORAGE_KEY = "aurora_motoristas_services";
 
-function safeText(value?: string | null, fallback = "—") {
+function safeText(value?: string | null, fallback = "â€”") {
   if (!value || !String(value).trim()) return fallback;
   return String(value);
 }
 
 function formatDate(value?: string | null) {
-  if (!value) return "—";
+  if (!value) return "â€”";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
   return date.toLocaleString("pt-BR");
@@ -388,7 +388,7 @@ export default function ServicosPage() {
                   fontSize: 15,
                 }}
               >
-                Área interna para leitura e complementação dos serviços já
+                Ãrea interna para leitura e complementação dos serviços já
                 convertidos. Aqui a equipe completa motorista, placa,
                 checklist, status e fechamento básico, sem mexer no fluxo já
                 pronto de disparo dos motoristas.
@@ -400,7 +400,7 @@ export default function ServicosPage() {
                 Pedidos de cotação
               </Link>
 
-              <Link href="/servicos/novo" style={linkPrimaryStyle}>
+              <Link href="/plataforma/cotacoes" style={linkPrimaryStyle}>
                 Novo serviço interno
               </Link>
             </div>
@@ -510,7 +510,7 @@ export default function ServicosPage() {
                             marginBottom: 6,
                           }}
                         >
-                          {getTipoLabel(service.tipo_servico)} •{" "}
+                          {getTipoLabel(service.tipo_servico)} â€¢{" "}
                           {getModoLabel(service.modo_cobranca)}
                         </div>
                         <h2
@@ -520,7 +520,7 @@ export default function ServicosPage() {
                             lineHeight: 1.2,
                           }}
                         >
-                          {safeText(service.os)} • {safeText(service.contratante)} →{" "}
+                          {safeText(service.os)} â€¢ {safeText(service.contratante)} â†’{" "}
                           {safeText(service.cliente_final)}
                         </h2>
                         <p
@@ -530,7 +530,7 @@ export default function ServicosPage() {
                             fontSize: 14,
                           }}
                         >
-                          Criado em {formatDate(service.created_at)} • Origem:{" "}
+                          Criado em {formatDate(service.created_at)} â€¢ Origem:{" "}
                           {service.source === "pedido_cotacao_convertido"
                             ? "Pedido de cotação"
                             : safeText(service.source)}
@@ -1055,3 +1055,5 @@ const linkPrimaryStyle: React.CSSProperties = {
   fontWeight: 700,
   background: "#f0f9ff",
 };
+
+

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
@@ -82,13 +82,13 @@ type DraftFields = {
 
 const STORAGE_KEY = "aurora_motoristas_services";
 
-function safeText(value?: string | null, fallback = "—") {
+function safeText(value?: string | null, fallback = "â€”") {
   if (!value || !String(value).trim()) return fallback;
   return String(value);
 }
 
 function formatDate(value?: string | null) {
-  if (!value) return "—";
+  if (!value) return "â€”";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
   return date.toLocaleString("pt-BR");
@@ -637,11 +637,11 @@ export default function ServicosComplementacaoPage() {
                           marginBottom: 6,
                         }}
                       >
-                        {getTipoLabel(service.tipo_servico)} •{" "}
+                        {getTipoLabel(service.tipo_servico)} â€¢{" "}
                         {getModoLabel(service.modo_cobranca)}
                       </div>
                       <h2 style={{ margin: 0, fontSize: 20, lineHeight: 1.2 }}>
-                        {safeText(service.os)} • {safeText(service.contratante)} →{" "}
+                        {safeText(service.os)} â€¢ {safeText(service.contratante)} â†’{" "}
                         {safeText(service.cliente_final)}
                       </h2>
                       <p
@@ -651,7 +651,7 @@ export default function ServicosComplementacaoPage() {
                           fontSize: 14,
                         }}
                       >
-                        Pedido origem: {safeText(service.pedido_cotacao)} • Criado em{" "}
+                        Pedido origem: {safeText(service.pedido_cotacao)} â€¢ Criado em{" "}
                         {formatDate(service.created_at)}
                       </p>
                     </div>
@@ -787,7 +787,7 @@ export default function ServicosComplementacaoPage() {
                           >
                             <label style={labelStyle}>
                               <span style={labelTextStyle}>
-                                Despesa {index + 1} • descrição
+                                Despesa {index + 1} â€¢ descrição
                               </span>
                               <input
                                 value={expense.descricao}
@@ -1207,3 +1207,4 @@ const linkPrimaryStyle: React.CSSProperties = {
   fontWeight: 700,
   background: "#f0f9ff",
 };
+

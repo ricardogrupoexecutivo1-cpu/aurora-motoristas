@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -139,7 +139,7 @@ export default function LoginPage() {
           const statusFinal = normalizeText(statusAuth || fallback.status).toLowerCase();
 
           window.localStorage.setItem("aurora_session_email", emailFinal);
-          window.localStorage.setItem("movo_login_type", loginType);
+          window.localStorage.setItem("Aurora Motoristas_login_type", loginType);
 
           if (roleFinal) {
             window.localStorage.setItem("aurora_session_role", roleFinal);
@@ -189,7 +189,7 @@ export default function LoginPage() {
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-cyan-500 flex items-center justify-center">
               <Navigation className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-black">MOVO</span>
+            <span className="text-xl font-black">Aurora Motoristas</span>
           </Link>
         </header>
 
@@ -201,7 +201,7 @@ export default function LoginPage() {
                 Bem-vindo de volta
               </h1>
               <p className="text-muted-foreground">
-                Entre na sua conta MOVO para continuar
+                Entre na sua conta Aurora Motoristas para continuar
               </p>
             </div>
 
@@ -383,7 +383,7 @@ export default function LoginPage() {
             {/* Quick Access Links */}
             <div className="grid grid-cols-2 gap-3 mt-6">
               <Link
-                href="/servicos/novo"
+                href="/plataforma/cotacoes"
                 className="flex items-center gap-2 p-3 bg-card border border-border rounded-xl hover:border-primary/50 transition-colors"
               >
                 <Briefcase className="w-5 h-5 text-primary" />
@@ -430,7 +430,7 @@ export default function LoginPage() {
             A mobilidade inteligente que você merece
           </h2>
           <p className="text-lg xl:text-xl text-white/80 mb-10 leading-relaxed">
-            Com o MOVO, você viaja com segurança, economia e praticidade.
+            Com o Aurora Motoristas, você viaja com segurança, economia e praticidade.
             A menor taxa do mercado e tecnologia de ponta para você.
           </p>
 
@@ -463,10 +463,13 @@ export default function LoginPage() {
           </div>
           <div>
             <p className="font-bold text-lg">+800K usuários</p>
-            <p className="text-sm text-white/70">confiam no MOVO</p>
+            <p className="text-sm text-white/70">confiam no Aurora Motoristas</p>
           </div>
         </div>
       </div>
     </main>
   );
 }
+
+
+

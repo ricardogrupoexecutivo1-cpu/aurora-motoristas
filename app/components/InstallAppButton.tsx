@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 
@@ -58,7 +58,7 @@ export default function InstallAppButton() {
 
     if (!deferredPrompt) {
       setStatusText(
-        "Se o botão não abrir a instalação automaticamente, use o menu do navegador e escolha “Instalar app” ou “Adicionar à tela inicial”."
+        "Se o botão não abrir a instalação automaticamente, use o menu do navegador e escolha â€œInstalar appâ€ ou â€œAdicionar Ã  tela inicialâ€."
       );
       return;
     }
@@ -125,3 +125,4 @@ export default function InstallAppButton() {
     </div>
   );
 }
+

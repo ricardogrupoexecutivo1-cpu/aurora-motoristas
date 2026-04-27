@@ -1,4 +1,4 @@
-const CACHE_NAME = 'movo-v1';
+﻿const CACHE_NAME = 'Aurora-v1';
 const OFFLINE_URL = '/offline';
 
 // Arquivos para cache inicial
@@ -16,7 +16,7 @@ const PRECACHE_ASSETS = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[MOVO SW] Pre-caching assets');
+      console.log('[Aurora SW] Pre-caching assets');
       return cache.addAll(PRECACHE_ASSETS);
     })
   );
@@ -88,7 +88,7 @@ self.addEventListener('push', (event) => {
   const data = event.data?.json() || {};
   
   const options = {
-    body: data.body || 'Nova notificacao do MOVO',
+    body: data.body || 'Nova notificacao do Aurora',
     icon: '/icons/icon-192.png',
     badge: '/icons/badge-72.png',
     vibrate: [100, 50, 100],
@@ -103,7 +103,7 @@ self.addEventListener('push', (event) => {
   };
 
   event.waitUntil(
-    self.registration.showNotification(data.title || 'MOVO', options)
+    self.registration.showNotification(data.title || 'Aurora', options)
   );
 });
 

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -221,7 +221,7 @@ export default function CadastroMotoristaPage() {
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-cyan-500 flex items-center justify-center">
                     <Navigation className="w-5 h-5 text-white" />
                   </div>
-                  <span className="text-xl font-black">MOVO</span>
+                  <span className="text-xl font-black">Aurora Motoristas</span>
                 </Link>
               )}
             </div>
@@ -249,7 +249,7 @@ export default function CadastroMotoristaPage() {
               </div>
 
               <h1 className="text-3xl lg:text-4xl font-black text-foreground mb-4">
-                Dirija com o MOVO e ganhe mais
+                Dirija com o Aurora Motoristas e ganhe mais
               </h1>
               <p className="text-lg text-muted-foreground max-w-xl mx-auto">
                 A plataforma com a menor taxa do mercado. Você dirige, você decide seus horários, você ganha mais.
@@ -262,7 +262,7 @@ export default function CadastroMotoristaPage() {
                 { icon: DollarSign, title: "Taxa de apenas 5%", desc: "A menor taxa do Brasil. Mais dinheiro no seu bolso.", color: "text-success" },
                 { icon: Zap, title: "Receba em 24h", desc: "Seus ganhos via PIX em até 24 horas.", color: "text-primary" },
                 { icon: Clock, title: "Seus horários", desc: "Trabalhe quando quiser, sem metas obrigatórias.", color: "text-warning" },
-                { icon: Shield, title: "Seguro incluso", desc: "Proteção para você e seus passageiros.", color: "text-cyan-500" },
+                { icon: Shield, title: "Ambiente seguro incluso", desc: "Proteção para você e seus passageiros.", color: "text-cyan-500" },
               ].map((item, i) => (
                 <div key={i} className="p-5 bg-card rounded-2xl border border-border">
                   <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center mb-3">
@@ -545,7 +545,7 @@ export default function CadastroMotoristaPage() {
             <div className="bg-warning/10 rounded-xl p-4 flex items-start gap-3">
               <Info className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
               <p className="text-sm">
-                Sua CNH precisa ter a observação <strong>EAR</strong> (Exerce Atividade Remunerada) para dirigir pelo MOVO.
+                Sua CNH precisa ter a observação <strong>EAR</strong> (Exerce Atividade Remunerada) para dirigir pelo Aurora Motoristas.
               </p>
             </div>
 
@@ -853,7 +853,7 @@ export default function CadastroMotoristaPage() {
                   <Link href="/contrato-motorista" className="text-primary hover:underline">
                     Contrato de Parceria
                   </Link>{" "}
-                  do MOVO.
+                  do Aurora Motoristas.
                 </span>
               </label>
 
@@ -880,9 +880,9 @@ export default function CadastroMotoristaPage() {
                 Importante
               </h4>
               <ul className="text-sm text-muted-foreground space-y-1">
-                <li>• Seus documentos serão analisados em até 48 horas úteis</li>
-                <li>• Você receberá um e-mail com o resultado da verificação</li>
-                <li>• Após aprovação, você poderá começar a dirigir imediatamente</li>
+                <li>â€¢ Seus documentos serão analisados em até 48 horas úteis</li>
+                <li>â€¢ Você receberá um e-mail com o resultado da verificação</li>
+                <li>â€¢ Após aprovação, você poderá começar a dirigir imediatamente</li>
               </ul>
             </div>
 
@@ -959,3 +959,5 @@ export default function CadastroMotoristaPage() {
     </main>
   );
 }
+
+

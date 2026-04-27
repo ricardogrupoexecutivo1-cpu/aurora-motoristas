@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 
@@ -23,7 +23,7 @@ type Empresa = {
 };
 
 function formatDate(value: string | null) {
-  if (!value) return "—";
+  if (!value) return "â€”";
 
   try {
     return new Intl.DateTimeFormat("pt-BR", {
@@ -167,7 +167,7 @@ export default function EmpresasListPage() {
               textTransform: "uppercase",
             }}
           >
-            Aurora Motoristas • Empresas
+            Aurora Motoristas â€¢ Empresas
           </div>
 
           <h1
@@ -409,7 +409,7 @@ export default function EmpresasListPage() {
                     label="Cidade"
                     value={
                       empresa.cidade || empresa.estado
-                        ? `${empresa.cidade || "—"}${empresa.estado ? ` • ${empresa.estado}` : ""}`
+                        ? `${empresa.cidade || "â€”"}${empresa.estado ? ` â€¢ ${empresa.estado}` : ""}`
                         : null
                     }
                   />
@@ -538,8 +538,9 @@ function InfoLine({
           wordBreak: "break-word",
         }}
       >
-        {value || "—"}
+        {value || "â€”"}
       </div>
     </div>
   );
 }
+

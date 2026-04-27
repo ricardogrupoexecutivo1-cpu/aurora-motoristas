@@ -47,7 +47,7 @@ const motoristasMockBase: MotoristaPainel[] = [
     id: "mock-1",
     nome: "João da Silva",
     telefone: "(31) 99999-1111",
-    cidade: "Belo Horizonte • MG",
+    cidade: "Belo Horizonte â€¢ MG",
     status: "pendente",
     origem: "mock",
   },
@@ -55,7 +55,7 @@ const motoristasMockBase: MotoristaPainel[] = [
     id: "mock-2",
     nome: "Carlos Mendes",
     telefone: "(31) 98888-2222",
-    cidade: "Parauapebas • PA",
+    cidade: "Parauapebas â€¢ PA",
     status: "ativo",
     origem: "mock",
   },
@@ -63,7 +63,7 @@ const motoristasMockBase: MotoristaPainel[] = [
     id: "mock-3",
     nome: "Marcos Pereira",
     telefone: "(31) 97777-3333",
-    cidade: "Contagem • MG",
+    cidade: "Contagem â€¢ MG",
     status: "bloqueado",
     origem: "mock",
   },
@@ -269,7 +269,7 @@ function mapMotoristaApiItem(
 
   const cidadeFinal =
     cidade && estado
-      ? `${cidade} • ${estado}`
+      ? `${cidade} â€¢ ${estado}`
       : cidade || estado || "Cidade não informada";
 
   const status = normalizeStatus(
@@ -533,7 +533,7 @@ export default function PlataformaMotoristasPainelPage() {
         <section className="mx-auto flex min-h-screen w-full max-w-3xl items-center justify-center px-4 py-10">
           <div className="w-full rounded-3xl border border-slate-200 bg-white p-6 text-center shadow-sm sm:p-8">
             <div className="inline-flex rounded-full border border-cyan-200 bg-cyan-50 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">
-              Aurora Motoristas • Área administrativa
+              Aurora Motoristas â€¢ Ãrea administrativa
             </div>
 
             <h1 className="mt-4 text-2xl font-bold text-slate-900 sm:text-3xl">
@@ -554,7 +554,7 @@ export default function PlataformaMotoristasPainelPage() {
                 href="/plataforma"
                 className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
               >
-                Voltar à plataforma
+                Voltar Ã  plataforma
               </Link>
 
               <Link
@@ -580,7 +580,7 @@ export default function PlataformaMotoristasPainelPage() {
                 href="/plataforma"
                 className="inline-flex items-center rounded-full border border-slate-200 px-3 py-1.5 font-medium text-slate-700 transition hover:bg-slate-100"
               >
-                Voltar à plataforma
+                Voltar Ã  plataforma
               </Link>
 
               <Link
@@ -602,7 +602,7 @@ export default function PlataformaMotoristasPainelPage() {
           <div className="px-5 py-6 sm:px-6 sm:py-8">
             <div className="flex flex-col gap-4">
               <div className="inline-flex w-fit items-center rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700">
-                Aurora Motoristas • Painel isolado
+                Aurora Motoristas â€¢ Painel isolado
               </div>
 
               <div>
@@ -659,10 +659,10 @@ export default function PlataformaMotoristasPainelPage() {
               </Link>
 
               <Link
-                href="/admin/servicos"
+                href="/admin/servicos-supabase"
                 className="rounded-2xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
               >
-                Ir para Admin • Serviços
+                Ir para Admin â€¢ Serviços
               </Link>
 
               <Link
@@ -686,12 +686,12 @@ export default function PlataformaMotoristasPainelPage() {
               Próxima expansão controlada
             </h2>
             <ul className="mt-3 space-y-3 text-sm leading-6 text-slate-600">
-              <li>• filtros de motoristas por status, cidade e empresa</li>
-              <li>• leitura da base interna protegida</li>
-              <li>• vínculo do motorista ao serviço fechado</li>
-              <li>• histórico administrativo protegido</li>
+              <li>â€¢ filtros de motoristas por status, cidade e empresa</li>
+              <li>â€¢ leitura da base interna protegida</li>
+              <li>â€¢ vínculo do motorista ao serviço fechado</li>
+              <li>â€¢ histórico administrativo protegido</li>
               <li>
-                • separação rígida entre operação interna e operadoras externas
+                â€¢ separação rígida entre operação interna e operadoras externas
               </li>
             </ul>
 
@@ -803,7 +803,7 @@ export default function PlataformaMotoristasPainelPage() {
                       </div>
 
                       <p className="mt-1 text-sm text-slate-500">
-                        {motorista.telefone} • {motorista.cidade}
+                        {motorista.telefone} â€¢ {motorista.cidade}
                       </p>
 
                       <div
@@ -858,7 +858,7 @@ export default function PlataformaMotoristasPainelPage() {
           </div>
 
           <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-700">
-            Próximo nível seguro: refletir a decisão administrativa na operação e
+            Próximo nível Ambiente seguro: refletir a decisão administrativa na operação e
             impedir vínculo de serviço com motorista fora da base autorizada.
           </div>
         </section>
@@ -866,3 +866,4 @@ export default function PlataformaMotoristasPainelPage() {
     </main>
   );
 }
+

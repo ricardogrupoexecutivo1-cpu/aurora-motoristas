@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -106,7 +106,7 @@ const governanceRules = [
 ];
 
 const suggestions = [
-  "Definir administrador master por empresa ou grupo econômico.",
+  "Definir administrador master por empresa ou grupo econÃ´mico.",
   "Permitir múltiplos administradores autorizados por base.",
   "Criar centro de custo próprio por empresa.",
   "Separar políticas de contato e privacidade por empresa.",
@@ -203,7 +203,7 @@ export default function EmpresasCadastroPage() {
         <div style={styles.heroCard}>
           <div style={styles.heroGrid}>
             <div style={styles.heroLeft}>
-              <div style={styles.eyebrow}>AURORA MOTORISTAS • EMPRESAS</div>
+              <div style={styles.eyebrow}>AURORA MOTORISTAS â€¢ EMPRESAS</div>
               <h1 style={styles.heroTitle}>
                 Empresas e locadoras com base própria, escopo controlado e governança real
               </h1>
@@ -310,7 +310,7 @@ export default function EmpresasCadastroPage() {
                         <div>
                           <h3 style={styles.companyTitle}>{company.nome}</h3>
                           <p style={styles.companySubline}>
-                            {company.id} • {company.tipo} • {company.cidade} • {company.estado}
+                            {company.id} â€¢ {company.tipo} â€¢ {company.cidade} â€¢ {company.estado}
                           </p>
                         </div>
 
@@ -398,7 +398,7 @@ export default function EmpresasCadastroPage() {
             </div>
 
             <div style={styles.darkCard}>
-              <div style={styles.robotTag}>SUGESTÕES EXTRAS</div>
+              <div style={styles.robotTag}>SUGESTÃ•ES EXTRAS</div>
               <h2 style={styles.sidebarTitleDark}>Ajustes para fortalecer o módulo</h2>
 
               <div style={styles.robotList}>
@@ -411,7 +411,7 @@ export default function EmpresasCadastroPage() {
             </div>
 
             <div style={styles.navCard}>
-              <span style={styles.sectionEyebrow}>NAVEGAÇÃO</span>
+              <span style={styles.sectionEyebrow}>NAVEGAÇÃƒO</span>
               <h2 style={styles.sidebarTitle}>Próximos blocos</h2>
 
               <div style={styles.navList}>
@@ -968,3 +968,4 @@ const styles: Record<string, React.CSSProperties> = {
     border: "1px solid rgba(125, 211, 252, 0.18)",
   },
 };
+

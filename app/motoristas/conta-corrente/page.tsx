@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
@@ -100,7 +100,7 @@ type PaymentDraft = {
 const SERVICES_STORAGE_KEY = "aurora_motoristas_services";
 const PAYMENTS_STORAGE_KEY = "aurora_motoristas_driver_payments";
 
-function safeText(value?: string | null, fallback = "—") {
+function safeText(value?: string | null, fallback = "â€”") {
   if (!value || !String(value).trim()) return fallback;
   return String(value);
 }
@@ -114,7 +114,7 @@ function moneyDisplay(value?: number | null) {
 }
 
 function formatDate(value?: string | null) {
-  if (!value) return "—";
+  if (!value) return "â€”";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
   return date.toLocaleString("pt-BR");
@@ -821,7 +821,7 @@ export default function MotoristasContaCorrentePage() {
                                     marginBottom: 6,
                                   }}
                                 >
-                                  {getTipoLabel(service.tipo_servico)} •{" "}
+                                  {getTipoLabel(service.tipo_servico)} â€¢{" "}
                                   {getModoLabel(service.modo_cobranca)}
                                 </div>
                                 <h3
@@ -831,7 +831,7 @@ export default function MotoristasContaCorrentePage() {
                                     lineHeight: 1.2,
                                   }}
                                 >
-                                  {safeText(service.os)} • {safeText(service.contratante)} →{" "}
+                                  {safeText(service.os)} â€¢ {safeText(service.contratante)} â†’{" "}
                                   {safeText(service.cliente_final)}
                                 </h3>
                                 <p
@@ -841,7 +841,7 @@ export default function MotoristasContaCorrentePage() {
                                     fontSize: 14,
                                   }}
                                 >
-                                  Data: {formatDate(service.data_servico)} • Status:{" "}
+                                  Data: {formatDate(service.data_servico)} â€¢ Status:{" "}
                                   {safeText(service.status)}
                                 </p>
                               </div>
@@ -1183,3 +1183,4 @@ const linkPrimaryStyle: React.CSSProperties = {
   fontWeight: 700,
   background: "#f0f9ff",
 };
+

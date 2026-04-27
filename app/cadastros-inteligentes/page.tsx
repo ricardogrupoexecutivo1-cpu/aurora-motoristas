@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
@@ -345,7 +345,7 @@ export default function CadastrosInteligentesPage() {
         <div style={styles.heroCard}>
           <div style={styles.heroGrid}>
             <div style={styles.heroLeft}>
-              <div style={styles.eyebrow}>AURORA MOTORISTAS • CADASTROS</div>
+              <div style={styles.eyebrow}>AURORA MOTORISTAS â€¢ CADASTROS</div>
               <h1 style={styles.heroTitle}>
                 Cadastro inteligente com CPF/CNPJ, dados editáveis e foto do motorista
               </h1>
@@ -382,7 +382,7 @@ export default function CadastrosInteligentesPage() {
 
           <div style={styles.noticeBox}>
             Sistema em constante atualização. Esta tela já faz a trava real por
-            permissão local e será conectada depois à sessão completa do app.
+            permissão local e será conectada depois Ã  sessão completa do app.
           </div>
         </div>
       </section>
@@ -391,7 +391,7 @@ export default function CadastrosInteligentesPage() {
         <div style={styles.accessCard}>
           <div style={styles.sectionHeader}>
             <div>
-              <span style={styles.sectionEyebrow}>VALIDAÇÃO DE ACESSO</span>
+              <span style={styles.sectionEyebrow}>VALIDAÇÃƒO DE ACESSO</span>
               <h2 style={styles.sectionTitle}>Sessão local dos cadastros</h2>
             </div>
           </div>
@@ -652,7 +652,7 @@ export default function CadastrosInteligentesPage() {
 
                             <h3 style={styles.itemTitle}>{item.nome}</h3>
                             <p style={styles.itemSubline}>
-                              {item.documento} • {item.id}
+                              {item.documento} â€¢ {item.id}
                             </p>
                           </div>
                         </div>
@@ -769,10 +769,10 @@ export default function CadastrosInteligentesPage() {
               </div>
 
               <div style={styles.darkCard}>
-                <div style={styles.robotTag}>ROBÔ AURORA</div>
+                <div style={styles.robotTag}>ROBÃ” AURORA</div>
                 <h2 style={styles.sidebarTitleDark}>Apoio ao cadastro</h2>
                 <p style={styles.sidebarTextDark}>
-                  O Robô Aurora poderá sugerir conferência de documento, alertar
+                  O RobÃ´ Aurora poderá sugerir conferência de documento, alertar
                   ausência de foto de motorista, apontar cadastro incompleto e ajudar
                   na padronização operacional.
                 </p>
@@ -786,7 +786,7 @@ export default function CadastrosInteligentesPage() {
               </div>
 
               <div style={styles.navCard}>
-                <span style={styles.sectionEyebrow}>NAVEGAÇÃO</span>
+                <span style={styles.sectionEyebrow}>NAVEGAÇÃƒO</span>
                 <h2 style={styles.sidebarTitle}>Próximos blocos</h2>
 
                 <div style={styles.navList}>
@@ -1525,3 +1525,4 @@ const styles: Record<string, React.CSSProperties> = {
     border: "1px solid rgba(125, 211, 252, 0.22)",
   },
 };
+

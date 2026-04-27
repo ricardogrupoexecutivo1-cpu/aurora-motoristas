@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /*
   Regra de ouro do projeto Aurora Motoristas:
@@ -21,7 +21,7 @@ export default function PlataformaPage() {
     <main style={page}>
       <div style={container}>
         <section style={hero}>
-          <span style={chip}>Aurora Motoristas • Plataforma</span>
+          <span style={chip}>Aurora Motoristas â€¢ Plataforma</span>
 
           <h1 style={title}>Estrutura segura de uso da plataforma</h1>
 
@@ -46,7 +46,7 @@ export default function PlataformaPage() {
             </Link>
 
             <Link href="/plataforma/tutorial" style={secondaryButton}>
-              📘 Tutorial / Ajuda
+              ðŸ“˜ Tutorial / Ajuda
             </Link>
           </div>
         </section>
@@ -96,7 +96,7 @@ export default function PlataformaPage() {
 
             <RuleItem
               title="5. Cada operadora externa usa a própria base"
-              text="Se uma operadora externa entrar, ela deve trabalhar apenas com motoristas vinculados à própria base dela."
+              text="Se uma operadora externa entrar, ela deve trabalhar apenas com motoristas vinculados Ã  própria base dela."
             />
 
             <RuleItem
@@ -148,7 +148,7 @@ export default function PlataformaPage() {
           </strong>
 
           <p style={warningText}>
-            O uso da plataforma por operadoras externas não concede acesso à
+            O uso da plataforma por operadoras externas não concede acesso Ã 
             rede interna de motoristas, contatos, documentos, avaliações
             estratégicas ou qualquer base que permita aproveitamento da rede de
             freelancers da operação principal.
@@ -169,7 +169,7 @@ export default function PlataformaPage() {
             <Link href="/plataforma/motoristas" style={accessCard}>
               <span style={accessTitle}>Blindagem de motoristas</span>
               <span style={accessText}>
-                Regras para impedir acesso de terceiros à base interna.
+                Regras para impedir acesso de terceiros Ã  base interna.
               </span>
             </Link>
 
@@ -185,7 +185,7 @@ export default function PlataformaPage() {
 
         <section style={footerNote}>
           Sistema em constante atualização e podem ocorrer instabilidades
-          momentâneas durante melhorias. Esta camada foi criada separadamente
+          momentÃ¢neas durante melhorias. Esta camada foi criada separadamente
           para evoluir a plataforma sem risco de quebrar a base já publicada.
         </section>
       </div>
@@ -478,3 +478,4 @@ const footerNote: React.CSSProperties = {
   lineHeight: 1.8,
   boxShadow: "0 12px 30px rgba(15, 23, 42, 0.04)",
 };
+

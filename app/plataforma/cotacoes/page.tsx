@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
@@ -136,14 +136,14 @@ function toMoney(value: number) {
 }
 
 function toDateTime(value?: string) {
-  if (!value) return '—'
+  if (!value) return 'â€”'
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return value
   return date.toLocaleString('pt-BR')
 }
 
 function toDate(value?: string) {
-  if (!value) return '—'
+  if (!value) return 'â€”'
   const [year, month, day] = value.split('-')
   if (!year || !month || !day) return value
   return `${day}/${month}/${year}`
@@ -463,7 +463,7 @@ export default function PlataformaCotacoesPage() {
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="space-y-3">
               <span className="inline-flex rounded-full bg-cyan-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">
-                Aurora Motoristas • Cotações
+                Aurora Motoristas â€¢ Cotações
               </span>
 
               <div>
@@ -495,7 +495,7 @@ export default function PlataformaCotacoesPage() {
                 href="/plataforma"
                 className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
               >
-                Voltar à plataforma
+                Voltar Ã  plataforma
               </Link>
               <Link
                 href="/plataforma/cotacoes/novo"
@@ -743,20 +743,20 @@ export default function PlataformaCotacoesPage() {
                           {item.contratante || 'Contratante não informado'}
                         </h2>
                         <p className="mt-1 text-sm text-slate-600">
-                          {item.tipoServico || 'Tipo não informado'} • {item.quantidade}{' '}
+                          {item.tipoServico || 'Tipo não informado'} â€¢ {item.quantidade}{' '}
                           {item.unidadeQuantidade || 'unidade'}
                         </p>
                       </div>
 
                       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
-                        <InfoChip label="Cliente final" value={item.clienteFinal || '—'} />
+                        <InfoChip label="Cliente final" value={item.clienteFinal || 'â€”'} />
                         <InfoChip
                           label="Motorista"
                           value={item.motoristaNome || 'Não vinculado'}
                         />
                         <InfoChip
                           label="Apresentação"
-                          value={item.horarioApresentacao || '—'}
+                          value={item.horarioApresentacao || 'â€”'}
                         />
                         <InfoChip
                           label="Total cotação"
@@ -856,43 +856,43 @@ export default function PlataformaCotacoesPage() {
                             />
                             <InfoLinha
                               label="Tipo de serviço"
-                              value={item.tipoServico || '—'}
+                              value={item.tipoServico || 'â€”'}
                             />
                             <InfoLinha
                               label="Forma de pagamento"
-                              value={item.formaPagamento || '—'}
+                              value={item.formaPagamento || 'â€”'}
                             />
                             <InfoLinha
                               label="Empresa operadora"
-                              value={item.empresaOperadora || '—'}
+                              value={item.empresaOperadora || 'â€”'}
                             />
                             <InfoLinha
                               label="Telefone"
-                              value={item.telefoneContratante || '—'}
+                              value={item.telefoneContratante || 'â€”'}
                             />
                             <InfoLinha
                               label="E-mail"
-                              value={item.emailContratante || '—'}
+                              value={item.emailContratante || 'â€”'}
                             />
                             <InfoLinha
                               label="Horário do serviço"
-                              value={item.horarioServico || '—'}
+                              value={item.horarioServico || 'â€”'}
                             />
                             <InfoLinha
                               label="Horário apresentação"
-                              value={item.horarioApresentacao || '—'}
+                              value={item.horarioApresentacao || 'â€”'}
                             />
                             <InfoLinha
                               label="Local apresentação"
-                              value={item.localApresentacao || '—'}
+                              value={item.localApresentacao || 'â€”'}
                             />
                             <InfoLinha
                               label="Origem"
-                              value={item.origem || '—'}
+                              value={item.origem || 'â€”'}
                             />
                             <InfoLinha
                               label="Destino"
-                              value={item.destino || '—'}
+                              value={item.destino || 'â€”'}
                             />
                           </div>
                         </Bloco>
@@ -937,7 +937,7 @@ export default function PlataformaCotacoesPage() {
                             />
                             <InfoLinha
                               label="Motivo diária extra"
-                              value={item.motivoDiariaExtra || '—'}
+                              value={item.motivoDiariaExtra || 'â€”'}
                             />
                           </div>
                         </Bloco>
@@ -946,27 +946,27 @@ export default function PlataformaCotacoesPage() {
                           <div className="grid gap-3 md:grid-cols-2">
                             <InfoLinha
                               label="Tipo de pessoa"
-                              value={item.tipoPessoaCliente || '—'}
+                              value={item.tipoPessoaCliente || 'â€”'}
                             />
                             <InfoLinha
                               label="Documento cliente"
-                              value={item.documentoCliente || '—'}
+                              value={item.documentoCliente || 'â€”'}
                             />
                             <InfoLinha
                               label="Inscrição estadual"
-                              value={item.inscricaoEstadualCliente || '—'}
+                              value={item.inscricaoEstadualCliente || 'â€”'}
                             />
                             <InfoLinha
                               label="Inscrição municipal"
-                              value={item.inscricaoMunicipalCliente || '—'}
+                              value={item.inscricaoMunicipalCliente || 'â€”'}
                             />
                             <InfoLinha
                               label="E-mail financeiro"
-                              value={item.emailFinanceiroCliente || '—'}
+                              value={item.emailFinanceiroCliente || 'â€”'}
                             />
                             <InfoLinha
                               label="Responsável financeiro"
-                              value={item.responsavelFinanceiroCliente || '—'}
+                              value={item.responsavelFinanceiroCliente || 'â€”'}
                             />
                             <InfoLinha
                               label="Tipo faturamento"
@@ -974,11 +974,11 @@ export default function PlataformaCotacoesPage() {
                             />
                             <InfoLinha
                               label="Competência"
-                              value={item.competenciaFaturamento || '—'}
+                              value={item.competenciaFaturamento || 'â€”'}
                             />
                             <InfoLinha
                               label="Período referência"
-                              value={item.periodoReferencia || '—'}
+                              value={item.periodoReferencia || 'â€”'}
                             />
                             <InfoLinha
                               label="Documento cobrança"
@@ -1080,18 +1080,18 @@ export default function PlataformaCotacoesPage() {
                             />
                             <InfoLinha
                               label="ID motorista"
-                              value={item.motoristaId || '—'}
+                              value={item.motoristaId || 'â€”'}
                             />
                             <InfoLinha
                               label="Base"
-                              value={item.baseMotorista || '—'}
+                              value={item.baseMotorista || 'â€”'}
                             />
                             <InfoLinha
                               label="Cidade atual"
-                              value={item.motoristaCidadeAtual || '—'}
+                              value={item.motoristaCidadeAtual || 'â€”'}
                             />
                             <InfoLinha
-                              label="Distância fora da base"
+                              label="DistÃ¢ncia fora da base"
                               value={`${item.distanciaForaBaseKm || 0} km`}
                             />
                           </div>
@@ -1101,15 +1101,15 @@ export default function PlataformaCotacoesPage() {
                           <div className="space-y-3">
                             <InfoLinha
                               label="Emitente"
-                              value={item.emitenteNome || '—'}
+                              value={item.emitenteNome || 'â€”'}
                             />
                             <InfoLinha
                               label="Documento emitente"
-                              value={item.emitenteDocumento || '—'}
+                              value={item.emitenteDocumento || 'â€”'}
                             />
                             <InfoLinha
                               label="Inscrição emitente"
-                              value={item.emitenteInscricao || '—'}
+                              value={item.emitenteInscricao || 'â€”'}
                             />
                             <InfoLinha
                               label="Prazo pagamento"
@@ -1266,3 +1266,4 @@ function InfoLinha({
     </div>
   )
 }
+

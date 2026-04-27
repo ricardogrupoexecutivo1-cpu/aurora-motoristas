@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 
@@ -323,7 +323,7 @@ export default function ClientesPage() {
               textTransform: "uppercase",
             }}
           >
-            Aurora Motoristas • Clientes
+            Aurora Motoristas â€¢ Clientes
           </div>
 
           <h1
@@ -886,3 +886,4 @@ function InfoCard({ title, text }: { title: string; text: string }) {
     </div>
   );
 }
+

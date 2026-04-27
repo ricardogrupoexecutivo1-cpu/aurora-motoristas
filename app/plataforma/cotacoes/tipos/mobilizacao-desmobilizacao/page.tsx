@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
@@ -601,7 +601,7 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="space-y-3">
               <span className="inline-flex rounded-full bg-cyan-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">
-                Aurora Motoristas • Cotação enxuta
+                Aurora Motoristas â€¢ Cotação enxuta
               </span>
 
               <div>
@@ -639,7 +639,7 @@ function PlataformaCotacaoMobilizacaoDesmobilizacaoContent() {
                 href="/plataforma/cotacoes/novo"
                 className="rounded-2xl border border-slate-900 bg-slate-900 px-4 py-3 text-center text-sm font-semibold text-white transition hover:opacity-90"
               >
-                Voltar à entrada rápida
+                Voltar Ã  entrada rápida
               </Link>
             </div>
           </div>
@@ -1318,7 +1318,7 @@ export default function PlataformaCotacaoMobilizacaoDesmobilizacaoPage() {
           <div className="mx-auto flex min-h-screen w-full max-w-7xl items-center justify-center px-4 py-10 md:px-6 lg:px-8">
             <div className="w-full max-w-2xl rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm">
               <span className="inline-flex rounded-full bg-cyan-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">
-                Aurora Motoristas • Cotação enxuta
+                Aurora Motoristas â€¢ Cotação enxuta
               </span>
 
               <h1 className="mt-4 text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
@@ -1404,3 +1404,4 @@ function SummaryRow({
     </div>
   )
 }
+

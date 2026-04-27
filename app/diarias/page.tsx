@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -162,7 +162,7 @@ export default function DiariasPage() {
       setAccessGranted(false);
       setAccessChecked(true);
       setPermissionName("");
-      setAccessMessage("Informe o e-mail de sessão local para validar acesso às diárias.");
+      setAccessMessage("Informe o e-mail de sessão local para validar acesso Ã s diárias.");
       return;
     }
 
@@ -275,7 +275,7 @@ export default function DiariasPage() {
         <div style={styles.heroCard}>
           <div style={styles.heroGrid}>
             <div style={styles.heroLeft}>
-              <div style={styles.eyebrow}>AURORA MOTORISTAS • DIÁRIAS</div>
+              <div style={styles.eyebrow}>AURORA MOTORISTAS â€¢ DIÃRIAS</div>
               <h1 style={styles.heroTitle}>
                 Projeção de pagamento por diária com visão semanal, quinzenal e mensal
               </h1>
@@ -295,7 +295,7 @@ export default function DiariasPage() {
             </div>
 
             <div style={styles.heroRightCard}>
-              <span style={styles.sideKicker}>DIÁRIAS PROTEGIDAS</span>
+              <span style={styles.sideKicker}>DIÃRIAS PROTEGIDAS</span>
               <h2 style={styles.sideTitle}>Acesso só para autorizados</h2>
               <p style={styles.sideText}>
                 Esta camada já bloqueia o módulo para quem não tiver permissão
@@ -312,7 +312,7 @@ export default function DiariasPage() {
 
           <div style={styles.noticeBox}>
             Sistema em constante atualização. Esta tela já faz a trava real por
-            permissão local e será conectada depois à sessão completa do app.
+            permissão local e será conectada depois Ã  sessão completa do app.
           </div>
         </div>
       </section>
@@ -321,7 +321,7 @@ export default function DiariasPage() {
         <div style={styles.accessCard}>
           <div style={styles.sectionHeader}>
             <div>
-              <span style={styles.sectionEyebrow}>VALIDAÇÃO DE ACESSO</span>
+              <span style={styles.sectionEyebrow}>VALIDAÇÃƒO DE ACESSO</span>
               <h2 style={styles.sectionTitle}>Sessão local das diárias</h2>
             </div>
           </div>
@@ -553,7 +553,7 @@ export default function DiariasPage() {
                 <div style={styles.listCard}>
                   <div style={styles.sectionHeader}>
                     <div>
-                      <span style={styles.sectionEyebrow}>BASE DE PROJEÇÃO</span>
+                      <span style={styles.sectionEyebrow}>BASE DE PROJEÇÃƒO</span>
                       <h2 style={styles.sectionTitle}>Motoristas por diária</h2>
                     </div>
 
@@ -578,7 +578,7 @@ export default function DiariasPage() {
                               <div>
                                 <h3 style={styles.itemTitle}>{item.motorista}</h3>
                                 <p style={styles.itemSubline}>
-                                  {item.cliente} • {item.empresa} • {item.id}
+                                  {item.cliente} â€¢ {item.empresa} â€¢ {item.id}
                                 </p>
                               </div>
 
@@ -664,7 +664,7 @@ export default function DiariasPage() {
 
               <aside style={styles.rightColumn}>
                 <div style={styles.previewCard}>
-                  <span style={styles.sectionEyebrow}>PRÉVIA RÁPIDA</span>
+                  <span style={styles.sectionEyebrow}>PRÉVIA RÃPIDA</span>
                   <h2 style={styles.sidebarTitle}>Projeção do lançamento atual</h2>
 
                   <div style={styles.ruleList}>
@@ -706,10 +706,10 @@ export default function DiariasPage() {
                 </div>
 
                 <div style={styles.darkCard}>
-                  <div style={styles.robotTag}>ROBÔ AURORA</div>
-                  <h2 style={styles.sidebarTitleDark}>Apoio à projeção</h2>
+                  <div style={styles.robotTag}>ROBÃ” AURORA</div>
+                  <h2 style={styles.sidebarTitleDark}>Apoio Ã  projeção</h2>
                   <p style={styles.sidebarTextDark}>
-                    O Robô Aurora poderá apontar motorista caro para a margem atual,
+                    O RobÃ´ Aurora poderá apontar motorista caro para a margem atual,
                     excesso de adiantamento, cliente pesado na semana e pressão no caixa.
                   </p>
 
@@ -722,7 +722,7 @@ export default function DiariasPage() {
                 </div>
 
                 <div style={styles.navCard}>
-                  <span style={styles.sectionEyebrow}>NAVEGAÇÃO</span>
+                  <span style={styles.sectionEyebrow}>NAVEGAÇÃƒO</span>
                   <h2 style={styles.sidebarTitle}>Próximos blocos</h2>
 
                   <div style={styles.navList}>
@@ -1405,3 +1405,4 @@ const styles: Record<string, React.CSSProperties> = {
     border: "1px solid rgba(125, 211, 252, 0.18)",
   },
 };
+

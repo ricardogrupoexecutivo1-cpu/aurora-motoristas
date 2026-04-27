@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -125,7 +125,7 @@ const FORMAS_PAGAMENTO = [
   { id: "cartao_credito", nome: "Cartao Credito", icon: CreditCard, desc: "Ate 12x" },
   { id: "cartao_debito", nome: "Cartao Debito", icon: CreditCard, desc: "A vista" },
   { id: "dinheiro", nome: "Dinheiro", icon: Banknote, desc: "Na entrega" },
-  { id: "saldo", nome: "Saldo MOVO", icon: Wallet, desc: "R$ 0,00" },
+  { id: "saldo", nome: "Saldo Aurora Motoristas", icon: Wallet, desc: "R$ 0,00" },
 ];
 
 export default function EntregasPage() {
@@ -246,7 +246,7 @@ export default function EntregasPage() {
               <Package className="w-5 h-5 text-white" />
             </div>
             <div>
-              <span className="font-bold text-xl bg-gradient-to-r from-silicon-orange to-warning bg-clip-text text-transparent">MOVO</span>
+              <span className="font-bold text-xl bg-gradient-to-r from-silicon-orange to-warning bg-clip-text text-transparent">Aurora Motoristas</span>
               <p className="text-[9px] text-muted-foreground tracking-widest -mt-1">EXPRESS</p>
             </div>
           </Link>
@@ -496,7 +496,7 @@ export default function EntregasPage() {
       
       {/* Valor Declarado */}
       <div className="space-y-2">
-        <label className="text-sm font-semibold">Valor declarado (para seguro)</label>
+        <label className="text-sm font-semibold">Valor declarado (valor declarado)</label>
         <div className="relative">
           <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">R$</span>
           <input
@@ -951,3 +951,5 @@ export default function EntregasPage() {
     </main>
   );
 }
+
+

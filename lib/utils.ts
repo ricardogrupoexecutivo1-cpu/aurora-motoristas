@@ -1,4 +1,4 @@
-export function cn(...classes: (string | boolean | undefined | null)[]) {
+﻿export function cn(...classes: (string | boolean | undefined | null)[]) {
   return classes.filter(Boolean).join(" ");
 }
 
@@ -87,8 +87,8 @@ export function calculateDistance(
 }
 
 /**
- * Calcula o preco da corrida/entrega MOVO
- * MOVO cobra apenas 5% de taxa (menor que a concorrencia que cobra 20-25%)
+ * Calcula o preco da corrida/entrega Aurora Motoristas
+ * Aurora Motoristas cobra apenas 5% de taxa (menor que a concorrencia que cobra 20-25%)
  * Isso permite precos ate 20% mais baratos para o cliente
  * mantendo o mesmo ganho para o motorista/entregador!
  */
@@ -106,7 +106,7 @@ export function calculateRidePrice(
   economiaVsConcorrencia: number;
   percentualEconomia: number;
 } {
-  // Precos base MOVO (otimizados para ser mais barato que concorrencia)
+  // Precos base Aurora Motoristas (otimizados para ser mais barato que concorrencia)
   const pricing: Record<
     string,
     { base: number; perKm: number; perMin: number; min: number }
@@ -133,7 +133,7 @@ export function calculateRidePrice(
     valorTotal = price.min;
   }
 
-  // Taxa MOVO: apenas 5% (muito menor que concorrencia)
+  // Taxa Aurora Motoristas: apenas 5% (muito menor que concorrencia)
   const taxaPlataforma = valorTotal * 0.05;
   const valorMotorista = valorTotal - taxaPlataforma;
 
@@ -244,3 +244,5 @@ export function getInitials(name: string): string {
 export function randomId(): string {
   return Math.random().toString(36).substring(2, 9);
 }
+
+

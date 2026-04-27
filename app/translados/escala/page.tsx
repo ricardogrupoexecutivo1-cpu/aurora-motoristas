@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -306,7 +306,7 @@ export default function EscalaPage() {
         <div style={styles.heroCard}>
           <div style={styles.heroGrid}>
             <div style={styles.heroLeft}>
-              <div style={styles.eyebrow}>AURORA MOTORISTAS • ESCALA</div>
+              <div style={styles.eyebrow}>AURORA MOTORISTAS â€¢ ESCALA</div>
               <h1 style={styles.heroTitle}>
                 Escala operacional por motorista com risco, reserva e base integrada
               </h1>
@@ -391,7 +391,7 @@ export default function EscalaPage() {
       <section style={styles.contentSection}>
         <div style={styles.headerRow}>
           <div>
-            <span style={styles.sectionEyebrow}>VISÃO OPERACIONAL</span>
+            <span style={styles.sectionEyebrow}>VISÃƒO OPERACIONAL</span>
             <h2 style={styles.sectionTitle}>Escala de translados</h2>
           </div>
 
@@ -420,7 +420,7 @@ export default function EscalaPage() {
                   <div>
                     <h3 style={styles.driver}>{motorista}</h3>
                     <p style={styles.driverMeta}>
-                      {totalMotorista} atendimento(s) • {riscoAltoMotorista} em risco alto
+                      {totalMotorista} atendimento(s) â€¢ {riscoAltoMotorista} em risco alto
                     </p>
                   </div>
 
@@ -481,13 +481,13 @@ export default function EscalaPage() {
                       </div>
 
                       <div style={styles.route}>
-                        {item.origem} → {item.destino}
+                        {item.origem} â†’ {item.destino}
                       </div>
 
                       <div style={styles.client}>{item.cliente}</div>
 
                       <div style={styles.metaText}>
-                        {item.empresa} • {item.locadora}
+                        {item.empresa} â€¢ {item.locadora}
                       </div>
 
                       <div style={styles.reserveBox}>
@@ -506,13 +506,13 @@ export default function EscalaPage() {
 
                       {conflito ? (
                         <div style={styles.alert}>
-                          ⚠️ Janela curta entre atendimentos. Avaliar apoio ou redistribuição.
+                          âš ï¸ Janela curta entre atendimentos. Avaliar apoio ou redistribuição.
                         </div>
                       ) : null}
 
                       {item.risco === "Alto" ? (
                         <div style={styles.alertDanger}>
-                          🚨 Risco alto. Deixar reserva pronta antes da execução.
+                          ðŸš¨ Risco alto. Deixar reserva pronta antes da execução.
                         </div>
                       ) : null}
                     </div>
@@ -1021,3 +1021,4 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 700,
   },
 };
+

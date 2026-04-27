@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -165,7 +165,7 @@ export default function CadastroPage() {
                   <Navigation className="w-5 h-5 text-white" />
                 </div>
               )}
-              <span className="text-xl font-black">MOVO</span>
+              <span className="text-xl font-black">Aurora Motoristas</span>
             </Link>
 
             <Link
@@ -186,7 +186,7 @@ export default function CadastroPage() {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <h1 className="text-2xl lg:text-3xl font-black text-foreground mb-2">
-                Criar sua conta MOVO
+                Criar sua conta Aurora Motoristas
               </h1>
               <p className="text-muted-foreground">
                 Escolha como você quer usar a plataforma
@@ -576,14 +576,14 @@ export default function CadastroPage() {
                 Envio de documentos
               </h1>
               <p className="text-muted-foreground">
-                Envie os documentos para verificação. É rápido e seguro.
+                Envie os documentos para verificação. É rápido e Ambiente seguro.
               </p>
             </div>
 
             <div className="bg-primary/10 rounded-2xl p-4 flex items-start gap-3">
               <Shield className="w-6 h-6 text-primary flex-shrink-0" />
               <div>
-                <p className="font-semibold text-primary">Seus dados estão seguros</p>
+                <p className="font-semibold text-primary">Seus dados estão Ambiente seguros</p>
                 <p className="text-sm text-muted-foreground">
                   Todos os documentos são criptografados e armazenados de forma segura.
                 </p>
@@ -807,7 +807,7 @@ export default function CadastroPage() {
                   <Link href="/privacidade" className="text-primary hover:underline">
                     Política de Privacidade
                   </Link>{" "}
-                  do MOVO.
+                  do Aurora Motoristas.
                 </span>
               </label>
             </div>
@@ -844,7 +844,7 @@ export default function CadastroPage() {
             </h1>
 
             <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-              {userType === "passageiro" && "Sua conta foi criada. Agora você pode solicitar corridas e aproveitar todos os benefícios do MOVO."}
+              {userType === "passageiro" && "Sua conta foi criada. Agora você pode solicitar corridas e aproveitar todos os benefícios do Aurora Motoristas."}
               {userType === "motorista" && "Recebemos seus dados! Nossa equipe irá verificar seus documentos em até 48 horas. Você receberá um e-mail com a confirmação."}
               {userType === "empresa" && "Sua conta empresarial foi criada. Nossa equipe comercial entrará em contato em breve."}
             </p>
@@ -886,3 +886,5 @@ export default function CadastroPage() {
     </main>
   );
 }
+
+

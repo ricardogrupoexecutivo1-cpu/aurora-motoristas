@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -202,73 +202,13 @@ function formatCurrency(value: number) {
   });
 }
 
-function getStatusStyle(status: PaymentStatus): React.CSSProperties {
-  if (status === "Aguardando baixa") {
-    return {
-      background: "rgba(245, 158, 11, 0.12)",
-      color: "#b45309",
-      border: "1px solid rgba(245, 158, 11, 0.22)",
-    };
-  }
-
-  if (status === "Baixado") {
-    return {
-      background: "rgba(37, 99, 235, 0.10)",
-      color: "#1d4ed8",
-      border: "1px solid rgba(37, 99, 235, 0.18)",
-    };
-  }
-
-  return {
-    background: "rgba(16, 185, 129, 0.12)",
-    color: "#047857",
-    border: "1px solid rgba(16, 185, 129, 0.22)",
-  };
-}
-
-function getOriginStyle(origin: PaymentOrigin): React.CSSProperties {
-  if (origin === "Serviço padrão") {
-    return {
-      background: "rgba(148, 163, 184, 0.12)",
-      color: "#475569",
-      border: "1px solid rgba(148, 163, 184, 0.22)",
-    };
-  }
-
-  if (origin === "Serviço local") {
-    return {
-      background: "rgba(37, 99, 235, 0.10)",
-      color: "#1d4ed8",
-      border: "1px solid rgba(37, 99, 235, 0.18)",
-    };
-  }
-
-  if (origin === "Translado padrão") {
-    return {
-      background: "rgba(6, 182, 212, 0.10)",
-      color: "#0e7490",
-      border: "1px solid rgba(6, 182, 212, 0.18)",
-    };
-  }
-
-  return {
-    background: "rgba(168, 85, 247, 0.12)",
-    color: "#7e22ce",
-    border: "1px solid rgba(168, 85, 247, 0.22)",
-  };
-}
-
 function safeReadServices(): LocalService[] {
   if (typeof window === "undefined") return [];
-
   try {
     const raw = window.localStorage.getItem(SERVICES_STORAGE_KEY);
     if (!raw) return [];
-
     const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-
-    return parsed.filter(Boolean) as LocalService[];
+    return Array.isArray(parsed) ? (parsed.filter(Boolean) as LocalService[]) : [];
   } catch {
     return [];
   }
@@ -276,15 +216,11 @@ function safeReadServices(): LocalService[] {
 
 function safeReadTransfers(): LocalTransfer[] {
   if (typeof window === "undefined") return [];
-
   try {
     const raw = window.localStorage.getItem(TRANSFERS_STORAGE_KEY);
     if (!raw) return [];
-
     const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-
-    return parsed.filter(Boolean) as LocalTransfer[];
+    return Array.isArray(parsed) ? (parsed.filter(Boolean) as LocalTransfer[]) : [];
   } catch {
     return [];
   }
@@ -292,15 +228,11 @@ function safeReadTransfers(): LocalTransfer[] {
 
 function safeReadStoredHistory(): StoredHistoryItem[] {
   if (typeof window === "undefined") return [];
-
   try {
     const raw = window.localStorage.getItem(HISTORY_STORAGE_KEY);
     if (!raw) return [];
-
     const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-
-    return parsed.filter(Boolean) as StoredHistoryItem[];
+    return Array.isArray(parsed) ? (parsed.filter(Boolean) as StoredHistoryItem[]) : [];
   } catch {
     return [];
   }
@@ -342,10 +274,8 @@ function appendPaymentToHistory(item: PaymentItem) {
 
 function removePaymentFromHistory(osSistema: string) {
   if (typeof window === "undefined") return;
-
   const current = safeReadStoredHistory();
-  const updated = current.filter((item) => item.id !== osSistema);
-  safeWriteStoredHistory(updated);
+  safeWriteStoredHistory(current.filter((item) => item.id !== osSistema));
 }
 
 function inferPaymentStatusFromServiceStage(
@@ -395,10 +325,7 @@ function inferPaymentStatusFromTransferStatus(
     return "Aguardando baixa";
   }
 
-  if (status === "Concluído") {
-    return "Baixado";
-  }
-
+  if (status === "Concluído") return "Baixado";
   return null;
 }
 
@@ -429,6 +356,46 @@ function mapLocalTransferToPayment(item: LocalTransfer): PaymentItem | null {
   };
 }
 
+function getStatusStyle(status: PaymentStatus): React.CSSProperties {
+  if (status === "Aguardando baixa") {
+    return {
+      color: "#a16207",
+      background: "rgba(254, 243, 199, 0.95)",
+      borderColor: "rgba(245, 158, 11, 0.24)",
+    };
+  }
+
+  if (status === "Baixado") {
+    return {
+      color: "#1d4ed8",
+      background: "rgba(219, 234, 254, 0.95)",
+      borderColor: "rgba(37, 99, 235, 0.20)",
+    };
+  }
+
+  return {
+    color: "#047857",
+    background: "rgba(209, 250, 229, 0.95)",
+    borderColor: "rgba(16, 185, 129, 0.22)",
+  };
+}
+
+function getOriginStyle(origin: PaymentOrigin): React.CSSProperties {
+  if (origin.includes("Translado")) {
+    return {
+      color: "#0e7490",
+      background: "rgba(207, 250, 254, 0.95)",
+      borderColor: "rgba(34, 211, 238, 0.26)",
+    };
+  }
+
+  return {
+    color: "#6d28d9",
+    background: "rgba(237, 233, 254, 0.95)",
+    borderColor: "rgba(124, 58, 237, 0.22)",
+  };
+}
+
 export default function PagamentosPage() {
   const [payments, setPayments] = useState<PaymentItem[]>(initialPayments);
   const [localPayments, setLocalPayments] = useState<PaymentItem[]>([]);
@@ -453,52 +420,14 @@ export default function PagamentosPage() {
   }, [localPayments, payments]);
 
   function advancePayment(paymentId: string, isLocal: boolean) {
-    if (isLocal) {
-      setLocalPayments((current) =>
-        current.map((item) => {
-          if (item.id !== paymentId) {
-            return item;
-          }
-
-          if (item.status === "Aguardando baixa") {
-            return {
-              ...item,
-              status: "Baixado",
-              observacaoFinanceira:
-                "Baixa confirmada. Item local pronto para fechamento e repasse.",
-            };
-          }
-
-          if (item.status === "Baixado") {
-            const updatedItem: PaymentItem = {
-              ...item,
-              status: "Pago ao motorista",
-              observacaoFinanceira:
-                "Repasse ao motorista confirmado. Item local pronto para histórico protegido.",
-            };
-
-            appendPaymentToHistory(updatedItem);
-            return updatedItem;
-          }
-
-          return item;
-        })
-      );
-
-      setFeedback("Pagamento da base local atualizado com sucesso.");
-      return;
-    }
-
-    setPayments((current) =>
+    const updater = (current: PaymentItem[]) =>
       current.map((item) => {
-        if (item.id !== paymentId) {
-          return item;
-        }
+        if (item.id !== paymentId) return item;
 
         if (item.status === "Aguardando baixa") {
           return {
             ...item,
-            status: "Baixado",
+            status: "Baixado" as PaymentStatus,
             observacaoFinanceira:
               "Baixa confirmada. Item pronto para fechamento e repasse.",
           };
@@ -517,78 +446,50 @@ export default function PagamentosPage() {
         }
 
         return item;
-      })
-    );
+      });
 
+    if (isLocal) {
+      setLocalPayments(updater);
+      setFeedback("Pagamento da base local atualizado com sucesso.");
+      return;
+    }
+
+    setPayments(updater);
     setFeedback("Pagamento da base padrão atualizado com sucesso.");
   }
 
   function backPayment(paymentId: string, isLocal: boolean) {
-    if (isLocal) {
-      setLocalPayments((current) =>
-        current.map((item) => {
-          if (item.id !== paymentId) {
-            return item;
-          }
-
-          if (item.status === "Pago ao motorista") {
-            removePaymentFromHistory(item.osSistema);
-
-            return {
-              ...item,
-              status: "Baixado",
-              observacaoFinanceira:
-                "Repasse voltou para conferência administrativa.",
-            };
-          }
-
-          if (item.status === "Baixado") {
-            return {
-              ...item,
-              status: "Aguardando baixa",
-              observacaoFinanceira:
-                "Baixa revertida para validação financeira.",
-            };
-          }
-
-          return item;
-        })
-      );
-
-      setFeedback("Pagamento da base local voltou uma etapa.");
-      return;
-    }
-
-    setPayments((current) =>
+    const updater = (current: PaymentItem[]) =>
       current.map((item) => {
-        if (item.id !== paymentId) {
-          return item;
-        }
+        if (item.id !== paymentId) return item;
 
         if (item.status === "Pago ao motorista") {
           removePaymentFromHistory(item.osSistema);
-
           return {
             ...item,
-            status: "Baixado",
-            observacaoFinanceira:
-              "Repasse voltou para conferência administrativa.",
+            status: "Baixado" as PaymentStatus,
+            observacaoFinanceira: "Repasse voltou para conferência administrativa.",
           };
         }
 
         if (item.status === "Baixado") {
           return {
             ...item,
-            status: "Aguardando baixa",
-            observacaoFinanceira:
-              "Baixa revertida para validação financeira.",
+            status: "Aguardando baixa" as PaymentStatus,
+            observacaoFinanceira: "Baixa revertida para validação financeira.",
           };
         }
 
         return item;
-      })
-    );
+      });
 
+    if (isLocal) {
+      setLocalPayments(updater);
+      setFeedback("Pagamento da base local voltou uma etapa.");
+      return;
+    }
+
+    setPayments(updater);
     setFeedback("Pagamento da base padrão voltou uma etapa.");
   }
 
@@ -597,43 +498,32 @@ export default function PagamentosPage() {
     newMethod: PaymentMethod,
     isLocal: boolean
   ) {
-    if (isLocal) {
-      setLocalPayments((current) =>
-        current.map((item) =>
-          item.id === paymentId ? { ...item, metodoPagamento: newMethod } : item
-        )
-      );
-      return;
-    }
-
-    setPayments((current) =>
+    const updater = (current: PaymentItem[]) =>
       current.map((item) =>
         item.id === paymentId ? { ...item, metodoPagamento: newMethod } : item
-      )
-    );
-  }
-
-  function changeAdvanceValue(
-    paymentId: string,
-    value: string,
-    isLocal: boolean
-  ) {
-    const parsed = Number(value.replace(",", ".")) || 0;
+      );
 
     if (isLocal) {
-      setLocalPayments((current) =>
-        current.map((item) =>
-          item.id === paymentId ? { ...item, adiantamento: parsed } : item
-        )
-      );
+      setLocalPayments(updater);
       return;
     }
 
-    setPayments((current) =>
+    setPayments(updater);
+  }
+
+  function changeAdvanceValue(paymentId: string, value: string, isLocal: boolean) {
+    const parsed = Number(value.replace(",", ".")) || 0;
+    const updater = (current: PaymentItem[]) =>
       current.map((item) =>
         item.id === paymentId ? { ...item, adiantamento: parsed } : item
-      )
-    );
+      );
+
+    if (isLocal) {
+      setLocalPayments(updater);
+      return;
+    }
+
+    setPayments(updater);
   }
 
   const filteredPayments = useMemo(() => {
@@ -649,1094 +539,863 @@ export default function PagamentosPage() {
   }, [allPayments, search, mostrarFinalizados]);
 
   const stats = useMemo(() => {
-    const aguardando = allPayments.filter(
-      (item) => item.status === "Aguardando baixa"
-    ).length;
-    const baixados = allPayments.filter((item) => item.status === "Baixado").length;
-    const finalizados = allPayments.filter(
-      (item) => item.status === "Pago ao motorista"
-    ).length;
-
     return {
       total: allPayments.length,
-      aguardando,
-      baixados,
-      finalizados,
+      aguardando: allPayments.filter((item) => item.status === "Aguardando baixa")
+        .length,
+      baixados: allPayments.filter((item) => item.status === "Baixado").length,
+      finalizados: allPayments.filter(
+        (item) => item.status === "Pago ao motorista"
+      ).length,
       totalFinanceiro: allPayments.reduce((acc, item) => acc + item.valorTotal, 0),
       totalRepasse: allPayments.reduce((acc, item) => acc + item.valorMotorista, 0),
       totalDespesas: allPayments.reduce((acc, item) => acc + item.despesas, 0),
-      totalAdiantamento: allPayments.reduce((acc, item) => acc + item.adiantamento, 0),
+      totalAdiantamento: allPayments.reduce(
+        (acc, item) => acc + item.adiantamento,
+        0
+      ),
       locais: allPayments.filter(
         (item) =>
           item.origemBase === "Serviço local" ||
           item.origemBase === "Translado local"
       ).length,
-      translados: allPayments.filter(
-        (item) =>
-          item.origemBase === "Translado padrão" ||
-          item.origemBase === "Translado local"
-      ).length,
+      translados: allPayments.filter((item) => item.origemBase.includes("Translado"))
+        .length,
     };
   }, [allPayments]);
 
   return (
     <main style={styles.page}>
-      <section style={styles.heroSection}>
-        <div style={styles.glowOne} />
-        <div style={styles.glowTwo} />
+      <div style={styles.glowA} />
+      <div style={styles.glowB} />
+      <div style={styles.glowC} />
 
-        <div style={styles.heroCard}>
-          <div style={styles.heroGrid}>
-            <div style={styles.heroLeft}>
-              <div style={styles.eyebrow}>AURORA MOTORISTAS • PAGAMENTOS</div>
-              <h1 style={styles.heroTitle}>
-                Baixa financeira, repasse e fechamento com serviços e translados integrados
-              </h1>
-              <p style={styles.heroText}>
-                Esta área agora junta serviços e translados no mesmo financeiro,
-                mantendo baixa, repasse, adiantamento, despesas e leitura clara da
-                origem de cada operação.
-              </p>
+      <section style={styles.shell}>
+        <header style={styles.topBar}>
+          <Link href="/" style={styles.brand}>
+            <span style={styles.brandIcon}>✦</span>
+            <span>
+              <strong>Aurora Motoristas</strong>
+              <small>Financeiro nacional</small>
+            </span>
+          </Link>
 
-              <div style={styles.heroActions}>
-                <Link href="/servicos" style={styles.secondaryButton}>
-                  Voltar para serviços
-                </Link>
+          <nav style={styles.topLinks}>
+            <Link href="/servicos">Serviços</Link>
+            <Link href="/translados">Translados</Link>
+            <Link href="/historico">Histórico</Link>
+            <Link href="/relatorios">Relatórios</Link>
+          </nav>
+        </header>
 
-                <Link href="/historico" style={styles.primaryButton}>
-                  Ir para histórico
-                </Link>
-              </div>
-            </div>
+        <section style={styles.hero}>
+          <div style={styles.heroContent}>
+            <div style={styles.eyebrow}>Aurora Motoristas • Pagamentos</div>
 
-            <div style={styles.heroRightCard}>
-              <span style={styles.sideKicker}>CAMADA FINANCEIRA</span>
-              <h2 style={styles.sideTitle}>Serviços + translados</h2>
-              <p style={styles.sideText}>
-                Aqui o financeiro lê a operação principal e também o módulo de
-                translados, deixando a baixa mais próxima da sua rotina real.
-              </p>
+            <h1 style={styles.heroTitle}>
+              Financeiro claro,
+              <span> inteligente.</span>
+              <br />
+              Repasse sem confusão.
+            </h1>
 
-              <div style={styles.sidePills}>
-                <div style={styles.sidePill}>Aguardando baixa</div>
-                <div style={styles.sidePill}>Baixado</div>
-                <div style={styles.sidePill}>Pago ao motorista</div>
-              </div>
+            <p style={styles.heroText}>
+              Baixa financeira, repasse de motoristas, despesas, adiantamentos,
+              serviços e translados em um painel premium, leve e fácil de enxergar.
+            </p>
+
+            <div style={styles.heroActions}>
+              <Link href="/servicos" style={styles.secondaryButton}>
+                Voltar para serviços
+              </Link>
+              <Link href="/historico" style={styles.primaryButton}>
+                Ir para histórico
+              </Link>
             </div>
           </div>
 
-          <div style={styles.noticeBox}>
-            Sistema em constante atualização. Esta tela já integra serviços,
-            translados, base padrão e base local no mesmo fluxo financeiro.
-          </div>
-        </div>
-      </section>
+          <aside style={styles.heroPanel}>
+            <span>Painel financeiro Aurora</span>
+            <strong>{formatCurrency(stats.totalFinanceiro)}</strong>
+            <small>Total financeiro da base atual</small>
 
-      <section style={styles.statsSection}>
-        <div style={styles.statsGrid}>
-          <article style={styles.statCard}>
-            <span style={styles.statLabel}>Itens financeiros</span>
-            <strong style={styles.statValue}>{stats.total}</strong>
-            <span style={styles.statDetail}>Base unificada</span>
-          </article>
+            <div style={styles.panelMiniGrid}>
+              <div>
+                <strong>{stats.aguardando}</strong>
+                <span>Aguardando</span>
+              </div>
+              <div>
+                <strong>{stats.baixados}</strong>
+                <span>Baixados</span>
+              </div>
+              <div>
+                <strong>{stats.finalizados}</strong>
+                <span>Finalizados</span>
+              </div>
+            </div>
+          </aside>
+        </section>
 
-          <article style={styles.statCard}>
-            <span style={styles.statLabel}>Aguardando baixa</span>
-            <strong style={styles.statValue}>{stats.aguardando}</strong>
-            <span style={styles.statDetail}>Conferência pendente</span>
-          </article>
+        <section style={styles.metricsGrid}>
+          <MetricCard label="Itens financeiros" value={String(stats.total)} detail="Base unificada" />
+          <MetricCard label="Aguardando baixa" value={String(stats.aguardando)} detail="Conferência pendente" />
+          <MetricCard label="Total repasse" value={formatCurrency(stats.totalRepasse)} detail="Motoristas envolvidos" />
+          <MetricCard label="Adiantamentos" value={formatCurrency(stats.totalAdiantamento)} detail="Inclui translados" />
+          <MetricCard label="Despesas" value={formatCurrency(stats.totalDespesas)} detail="Custos somados" />
+          <MetricCard label="Translados" value={String(stats.translados)} detail="Financeiro operacional" />
+        </section>
 
-          <article style={styles.statCard}>
-            <span style={styles.statLabel}>Baixados</span>
-            <strong style={styles.statValue}>{stats.baixados}</strong>
-            <span style={styles.statDetail}>Prontos para repasse</span>
-          </article>
+        <section style={styles.contentGrid}>
+          <div style={styles.mainColumn}>
+            <div style={styles.toolbarCard}>
+              <div>
+                <span style={styles.sectionKicker}>Controle financeiro</span>
+                <h2 style={styles.sectionTitle}>Baixas, repasses e adiantamentos</h2>
+              </div>
 
-          <article style={styles.statCard}>
-            <span style={styles.statLabel}>Finalizados</span>
-            <strong style={styles.statValue}>{stats.finalizados}</strong>
-            <span style={styles.statDetail}>Prontos para histórico</span>
-          </article>
-        </div>
-      </section>
-
-      <section style={styles.statsSection}>
-        <div style={styles.statsGrid}>
-          <article style={styles.statCard}>
-            <span style={styles.statLabel}>Total financeiro</span>
-            <strong style={styles.statValue}>
-              {formatCurrency(stats.totalFinanceiro)}
-            </strong>
-            <span style={styles.statDetail}>Receita desta base</span>
-          </article>
-
-          <article style={styles.statCard}>
-            <span style={styles.statLabel}>Total repasse</span>
-            <strong style={styles.statValue}>
-              {formatCurrency(stats.totalRepasse)}
-            </strong>
-            <span style={styles.statDetail}>Motoristas envolvidos</span>
-          </article>
-
-          <article style={styles.statCard}>
-            <span style={styles.statLabel}>Despesas totais</span>
-            <strong style={styles.statValue}>
-              {formatCurrency(stats.totalDespesas)}
-            </strong>
-            <span style={styles.statDetail}>Custos somados</span>
-          </article>
-
-          <article style={styles.statCard}>
-            <span style={styles.statLabel}>Adiantamento total</span>
-            <strong style={styles.statValue}>
-              {formatCurrency(stats.totalAdiantamento)}
-            </strong>
-            <span style={styles.statDetail}>Inclui translados</span>
-          </article>
-        </div>
-      </section>
-
-      <section style={styles.statsSection}>
-        <div style={styles.statsGrid}>
-          <article style={styles.statCard}>
-            <span style={styles.statLabel}>Base local integrada</span>
-            <strong style={styles.statValue}>{stats.locais}</strong>
-            <span style={styles.statDetail}>Serviços e translados locais</span>
-          </article>
-
-          <article style={styles.statCard}>
-            <span style={styles.statLabel}>Itens de translado</span>
-            <strong style={styles.statValue}>{stats.translados}</strong>
-            <span style={styles.statDetail}>Financeiro do aeroporto</span>
-          </article>
-        </div>
-      </section>
-
-      <section style={styles.contentSection}>
-        <div style={styles.mainGrid}>
-          <div style={styles.leftColumn}>
-            <div style={styles.paymentCard}>
-              <div style={styles.sectionHeader}>
-                <div>
-                  <span style={styles.sectionEyebrow}>CONTROLE FINANCEIRO</span>
-                  <h2 style={styles.sectionTitle}>Baixas, repasses e adiantamentos</h2>
-                </div>
-
-                <div style={styles.filterArea}>
-                  <label style={styles.checkboxWrap}>
-                    <input
-                      type="checkbox"
-                      checked={mostrarFinalizados}
-                      onChange={(e) => setMostrarFinalizados(e.target.checked)}
-                    />
-                    <span>Mostrar finalizados</span>
-                  </label>
-
+              <div style={styles.filterArea}>
+                <label style={styles.toggleBox}>
                   <input
-                    placeholder="Buscar por OS, empresa, cliente, motorista, origem ou status"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    style={styles.searchInput}
+                    type="checkbox"
+                    checked={mostrarFinalizados}
+                    onChange={(e) => setMostrarFinalizados(e.target.checked)}
                   />
-                </div>
+                  <span>Mostrar finalizados</span>
+                </label>
+
+                <input
+                  placeholder="Buscar por OS, empresa, cliente, motorista, origem ou status"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  style={styles.searchInput}
+                />
               </div>
+            </div>
 
-              {feedback ? <div style={styles.feedbackBox}>{feedback}</div> : null}
+            {feedback ? <div style={styles.feedbackBox}>{feedback}</div> : null}
 
-              <div style={styles.paymentList}>
-                {filteredPayments.length === 0 ? (
-                  <div style={styles.emptyState}>
-                    Nenhum pagamento encontrado para este filtro.
-                  </div>
-                ) : (
-                  filteredPayments.map((item) => {
-                    const isLocal =
-                      item.origemBase === "Serviço local" ||
-                      item.origemBase === "Translado local";
+            <div style={styles.paymentList}>
+              {filteredPayments.length === 0 ? (
+                <div style={styles.emptyState}>
+                  Nenhum pagamento encontrado para este filtro.
+                </div>
+              ) : (
+                filteredPayments.map((item) => {
+                  const isLocal =
+                    item.origemBase === "Serviço local" ||
+                    item.origemBase === "Translado local";
 
-                    return (
-                      <article key={item.id} style={styles.paymentItemCard}>
-                        <div style={styles.paymentTop}>
-                          <div>
-                            <div style={styles.metaRow}>
-                              <span
-                                style={{
-                                  ...styles.originTag,
-                                  ...getOriginStyle(item.origemBase),
-                                }}
-                              >
-                                {item.origemBase}
-                              </span>
-                            </div>
-
-                            <h3 style={styles.paymentTitle}>{item.servico}</h3>
-                            <p style={styles.paymentSubline}>
-                              {item.osSistema} • {item.dataServico} • {item.empresa}
-                            </p>
-                          </div>
-
-                          <div style={styles.paymentTopRight}>
-                            <strong style={styles.paymentValue}>
-                              {formatCurrency(item.valorTotal)}
-                            </strong>
+                  return (
+                    <article key={item.id} style={styles.paymentCard}>
+                      <div style={styles.paymentTop}>
+                        <div>
+                          <div style={styles.badgeRow}>
                             <span
                               style={{
-                                ...styles.badge,
+                                ...styles.originBadge,
+                                ...getOriginStyle(item.origemBase),
+                              }}
+                            >
+                              {item.origemBase}
+                            </span>
+
+                            <span
+                              style={{
+                                ...styles.statusBadge,
                                 ...getStatusStyle(item.status),
                               }}
                             >
                               {item.status}
                             </span>
                           </div>
+
+                          <h3 style={styles.paymentTitle}>{item.servico}</h3>
+                          <p style={styles.paymentSubline}>
+                            {item.osSistema} • {item.dataServico} • {item.empresa}
+                          </p>
                         </div>
 
-                        <div style={styles.paymentGrid}>
-                          <div style={styles.dataItem}>
-                            <span style={styles.dataLabel}>Cliente</span>
-                            <strong style={styles.dataValue}>{item.cliente}</strong>
-                          </div>
-
-                          <div style={styles.dataItem}>
-                            <span style={styles.dataLabel}>Motorista</span>
-                            <strong style={styles.dataValue}>{item.motorista}</strong>
-                          </div>
-
-                          <div style={styles.dataItem}>
-                            <span style={styles.dataLabel}>Valor total</span>
-                            <strong style={styles.dataValue}>
-                              {formatCurrency(item.valorTotal)}
-                            </strong>
-                          </div>
-
-                          <div style={styles.dataItem}>
-                            <span style={styles.dataLabel}>Valor transfer</span>
-                            <strong style={styles.dataValue}>
-                              {formatCurrency(item.valorTransfer ?? item.valorTotal)}
-                            </strong>
-                          </div>
-
-                          <div style={styles.dataItem}>
-                            <span style={styles.dataLabel}>Repasse motorista</span>
-                            <strong style={styles.dataValue}>
-                              {formatCurrency(item.valorMotorista)}
-                            </strong>
-                          </div>
-
-                          <div style={styles.dataItem}>
-                            <span style={styles.dataLabel}>Despesas</span>
-                            <strong style={styles.dataValue}>
-                              {formatCurrency(item.despesas)}
-                            </strong>
-                          </div>
-
-                          <div style={styles.dataItem}>
-                            <span style={styles.dataLabel}>Adiantamento</span>
-                            <input
-                              value={String(item.adiantamento)}
-                              onChange={(e) =>
-                                changeAdvanceValue(item.id, e.target.value, isLocal)
-                              }
-                              style={styles.input}
-                              placeholder="0"
-                            />
-                          </div>
-
-                          <div style={styles.dataItem}>
-                            <span style={styles.dataLabel}>Método</span>
-                            <select
-                              value={item.metodoPagamento}
-                              onChange={(e) =>
-                                changeMethod(
-                                  item.id,
-                                  e.target.value as PaymentMethod,
-                                  isLocal
-                                )
-                              }
-                              style={styles.select}
-                            >
-                              <option>PIX</option>
-                              <option>Transferência</option>
-                              <option>Dinheiro</option>
-                              <option>Faturado</option>
-                            </select>
-                          </div>
-
-                          <div style={styles.dataItemWide}>
-                            <span style={styles.dataLabel}>Observação financeira</span>
-                            <strong style={styles.dataValue}>
-                              {item.observacaoFinanceira}
-                            </strong>
-                          </div>
+                        <div style={styles.paymentValueBox}>
+                          <span>Valor total</span>
+                          <strong>{formatCurrency(item.valorTotal)}</strong>
                         </div>
+                      </div>
 
-                        <div style={styles.actionRow}>
-                          {item.status !== "Pago ao motorista" ? (
-                            <button
-                              type="button"
-                              onClick={() => advancePayment(item.id, isLocal)}
-                              style={styles.primaryAction}
-                            >
-                              {item.status === "Aguardando baixa" && "Confirmar baixa"}
-                              {item.status === "Baixado" && "Confirmar repasse"}
-                            </button>
-                          ) : (
-                            <div style={styles.doneBox}>
-                              Registro finalizado. Pronto para histórico interno protegido.
-                            </div>
-                          )}
+                      <div style={styles.dataGrid}>
+                        <DataItem label="Cliente" value={item.cliente} />
+                        <DataItem label="Motorista" value={item.motorista} />
+                        <DataItem
+                          label="Valor transfer"
+                          value={formatCurrency(item.valorTransfer ?? item.valorTotal)}
+                        />
+                        <DataItem
+                          label="Repasse motorista"
+                          value={formatCurrency(item.valorMotorista)}
+                        />
+                        <DataItem label="Despesas" value={formatCurrency(item.despesas)} />
 
-                          {item.status !== "Aguardando baixa" && (
-                            <button
-                              type="button"
-                              onClick={() => backPayment(item.id, isLocal)}
-                              style={styles.secondaryAction}
-                            >
-                              Voltar etapa
-                            </button>
-                          )}
+                        <label style={styles.fieldBox}>
+                          <span>Adiantamento</span>
+                          <input
+                            value={String(item.adiantamento)}
+                            onChange={(e) =>
+                              changeAdvanceValue(item.id, e.target.value, isLocal)
+                            }
+                            style={styles.input}
+                            placeholder="0"
+                          />
+                        </label>
+
+                        <label style={styles.fieldBox}>
+                          <span>Método</span>
+                          <select
+                            value={item.metodoPagamento}
+                            onChange={(e) =>
+                              changeMethod(
+                                item.id,
+                                e.target.value as PaymentMethod,
+                                isLocal
+                              )
+                            }
+                            style={styles.select}
+                          >
+                            <option>PIX</option>
+                            <option>Transferência</option>
+                            <option>Dinheiro</option>
+                            <option>Faturado</option>
+                          </select>
+                        </label>
+
+                        <div style={styles.noteBox}>
+                          <span>Observação financeira</span>
+                          <strong>{item.observacaoFinanceira}</strong>
                         </div>
-                      </article>
-                    );
-                  })
-                )}
-              </div>
+                      </div>
+
+                      <div style={styles.actionRow}>
+                        {item.status !== "Pago ao motorista" ? (
+                          <button
+                            type="button"
+                            onClick={() => advancePayment(item.id, isLocal)}
+                            style={styles.primaryAction}
+                          >
+                            {item.status === "Aguardando baixa"
+                              ? "Confirmar baixa"
+                              : "Confirmar repasse"}
+                          </button>
+                        ) : (
+                          <div style={styles.doneBox}>
+                            Registro finalizado e pronto para histórico protegido.
+                          </div>
+                        )}
+
+                        {item.status !== "Aguardando baixa" && (
+                          <button
+                            type="button"
+                            onClick={() => backPayment(item.id, isLocal)}
+                            style={styles.secondaryAction}
+                          >
+                            Voltar etapa
+                          </button>
+                        )}
+                      </div>
+                    </article>
+                  );
+                })
+              )}
             </div>
           </div>
 
-          <aside style={styles.rightColumn}>
-            <div style={styles.infoCard}>
-              <span style={styles.sectionEyebrow}>O QUE ESTE BLOCO FECHA</span>
-              <h2 style={styles.sidebarTitle}>Leitura financeira real</h2>
-
-              <div style={styles.ruleList}>
-                <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Serviços e translados</strong>
-                  <span style={styles.ruleItemText}>
-                    O financeiro agora lê os dois fluxos no mesmo painel.
-                  </span>
-                </div>
-
-                <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Baixa separada</strong>
-                  <span style={styles.ruleItemText}>
-                    Primeiro confirma entrada e baixa da operação.
-                  </span>
-                </div>
-
-                <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Repasse do motorista</strong>
-                  <span style={styles.ruleItemText}>
-                    Depois confirma o pagamento ao motorista.
-                  </span>
-                </div>
-
-                <div style={styles.ruleItem}>
-                  <strong style={styles.ruleItemTitle}>Origem visível</strong>
-                  <span style={styles.ruleItemText}>
-                    Você sabe se o item veio de serviço ou translado, padrão ou local.
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div style={styles.darkCard}>
-              <div style={styles.robotTag}>ROBÔ AURORA</div>
-              <h2 style={styles.sidebarTitleDark}>Apoio financeiro</h2>
-              <p style={styles.sidebarTextDark}>
-                O Robô Aurora poderá alertar pagamentos travados, repasses
-                atrasados, inconsistências entre valor total, despesas,
-                adiantamentos e origem da operação.
+          <aside style={styles.sideColumn}>
+            <div style={styles.robotCard}>
+              <span style={styles.robotTag}>Robô Aurora</span>
+              <h2 style={styles.robotTitle}>Apoio financeiro inteligente</h2>
+              <p style={styles.robotText}>
+                O Robô Aurora monitora baixas pendentes, repasses atrasados,
+                inconsistências de margem, despesas, adiantamentos e origem da operação.
               </p>
 
               <div style={styles.robotList}>
-                <div style={styles.robotItem}>Ler baixa pendente</div>
-                <div style={styles.robotItem}>Apontar repasse atrasado</div>
-                <div style={styles.robotItem}>Conferir margem</div>
-                <div style={styles.robotItem}>Preparar fechamento</div>
+                <span>Ler baixa pendente</span>
+                <span>Apontar repasse atrasado</span>
+                <span>Conferir margem</span>
+                <span>Preparar fechamento</span>
+              </div>
+            </div>
+
+            <div style={styles.infoCard}>
+              <span style={styles.sectionKicker}>O que este bloco fecha</span>
+              <h2 style={styles.sideTitle}>Leitura financeira real</h2>
+
+              <div style={styles.ruleList}>
+                <Rule title="Serviços e translados" text="O financeiro lê os dois fluxos no mesmo painel." />
+                <Rule title="Baixa separada" text="Primeiro confirma entrada e baixa da operação." />
+                <Rule title="Repasse do motorista" text="Depois confirma o pagamento ao motorista." />
+                <Rule title="Origem visível" text="Você sabe se veio de serviço ou translado, padrão ou local." />
               </div>
             </div>
 
             <div style={styles.navCard}>
-              <span style={styles.sectionEyebrow}>NAVEGAÇÃO</span>
-              <h2 style={styles.sidebarTitle}>Próximos blocos</h2>
+              <span style={styles.sectionKicker}>Navegação</span>
+              <h2 style={styles.sideTitle}>Próximos blocos</h2>
 
               <div style={styles.navList}>
-                <Link href="/translados" style={styles.navItem}>
-                  Abrir translados
-                </Link>
-                <Link href="/translados/escala" style={styles.navItem}>
-                  Abrir escala
-                </Link>
-                <Link href="/historico" style={styles.navItem}>
-                  Abrir histórico
-                </Link>
-                <Link href="/relatorios" style={styles.navItem}>
-                  Abrir relatórios
-                </Link>
+                <Link href="/translados" style={styles.navItem}>Abrir translados</Link>
+                <Link href="/translados/escala" style={styles.navItem}>Abrir escala</Link>
+                <Link href="/historico" style={styles.navItem}>Abrir histórico</Link>
+                <Link href="/relatorios" style={styles.navItem}>Abrir relatórios</Link>
               </div>
             </div>
           </aside>
-        </div>
+        </section>
       </section>
     </main>
   );
 }
 
+function MetricCard({
+  label,
+  value,
+  detail,
+}: {
+  label: string;
+  value: string;
+  detail: string;
+}) {
+  return (
+    <article style={styles.metricCard}>
+      <span>{label}</span>
+      <strong>{value}</strong>
+      <small>{detail}</small>
+    </article>
+  );
+}
+
+function DataItem({ label, value }: { label: string; value: string }) {
+  return (
+    <div style={styles.dataItem}>
+      <span>{label}</span>
+      <strong>{value}</strong>
+    </div>
+  );
+}
+
+function Rule({ title, text }: { title: string; text: string }) {
+  return (
+    <div style={styles.ruleItem}>
+      <strong>{title}</strong>
+      <span>{text}</span>
+    </div>
+  );
+}
+
 const styles: Record<string, React.CSSProperties> = {
   page: {
+    position: "relative",
     minHeight: "100vh",
+    overflow: "hidden",
     background:
-      "linear-gradient(180deg, #f6fbff 0%, #edf8ff 34%, #ffffff 72%, #f8fcff 100%)",
-    color: "#0f172a",
+      "radial-gradient(circle at 10% 8%, rgba(236,72,153,0.18), transparent 28%), radial-gradient(circle at 88% 12%, rgba(124,58,237,0.20), transparent 30%), radial-gradient(circle at 50% 40%, rgba(34,211,238,0.18), transparent 34%), linear-gradient(135deg, #f7f9ff 0%, #eef4ff 36%, #faf0ff 70%, #ecfeff 100%)",
+    color: "#0b1020",
     paddingBottom: 56,
   },
-
-  heroSection: {
-    position: "relative",
-    overflow: "hidden",
-    padding: "32px 20px 18px",
-  },
-
-  glowOne: {
+  glowA: {
     position: "absolute",
     top: -120,
-    left: -120,
-    width: 340,
-    height: 340,
+    left: -90,
+    width: 360,
+    height: 360,
     borderRadius: "50%",
-    background: "rgba(0, 194, 255, 0.18)",
-    filter: "blur(58px)",
-    pointerEvents: "none",
+    background: "rgba(236,72,153,0.18)",
+    filter: "blur(70px)",
   },
-
-  glowTwo: {
+  glowB: {
     position: "absolute",
-    top: -80,
-    right: -100,
-    width: 320,
-    height: 320,
+    top: -100,
+    right: -120,
+    width: 420,
+    height: 420,
     borderRadius: "50%",
-    background: "rgba(37, 99, 235, 0.16)",
-    filter: "blur(58px)",
-    pointerEvents: "none",
+    background: "rgba(124,58,237,0.20)",
+    filter: "blur(76px)",
   },
-
-  heroCard: {
+  glowC: {
+    position: "absolute",
+    bottom: 80,
+    left: "35%",
+    width: 360,
+    height: 360,
+    borderRadius: "50%",
+    background: "rgba(34,211,238,0.16)",
+    filter: "blur(78px)",
+  },
+  shell: {
     position: "relative",
+    zIndex: 1,
     maxWidth: 1240,
     margin: "0 auto",
-    background: "rgba(255,255,255,0.78)",
-    border: "1px solid rgba(125, 211, 252, 0.28)",
-    borderRadius: 30,
-    padding: "28px 22px 24px",
-    boxShadow: "0 24px 60px rgba(14, 165, 233, 0.10)",
-    backdropFilter: "blur(12px)",
+    padding: "24px 18px 0",
   },
-
-  heroGrid: {
+  topBar: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 16,
+    padding: "14px 0 24px",
+  },
+  brand: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 12,
+    color: "#0b1020",
+    textDecoration: "none",
+  },
+  brandIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 14,
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "#ffffff",
+    fontWeight: 900,
+    background: "linear-gradient(135deg, #6366f1 0%, #ec4899 100%)",
+    boxShadow: "0 14px 30px rgba(124,58,237,0.22)",
+  },
+  topLinks: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: 14,
+  },
+  hero: {
     display: "grid",
-    gridTemplateColumns: "minmax(0, 1.15fr) minmax(300px, 0.85fr)",
+    gridTemplateColumns: "minmax(0, 1.25fr) minmax(290px, 0.75fr)",
     gap: 18,
-    alignItems: "start",
+    alignItems: "stretch",
+    padding: 26,
+    borderRadius: 34,
+    background: "rgba(255,255,255,0.70)",
+    border: "1px solid rgba(124,58,237,0.12)",
+    boxShadow: "0 28px 90px rgba(99,102,241,0.16)",
+    backdropFilter: "blur(18px)",
   },
-
-  heroLeft: {
+  heroContent: {
     minWidth: 0,
   },
-
   eyebrow: {
     display: "inline-flex",
     alignItems: "center",
-    minHeight: 32,
+    minHeight: 36,
     padding: "0 16px",
     borderRadius: 999,
-    background: "rgba(6, 182, 212, 0.10)",
-    color: "#0c4a6e",
+    color: "#0f766e",
+    background: "rgba(153,246,228,0.62)",
+    border: "1px solid rgba(20,184,166,0.18)",
     fontSize: 12,
-    fontWeight: 900,
-    letterSpacing: "0.08em",
-    marginBottom: 18,
-  },
-
-  heroTitle: {
-    margin: 0,
-    fontSize: "clamp(1.9rem, 3.7vw, 3.5rem)",
-    lineHeight: 1.03,
     fontWeight: 950,
-    letterSpacing: "-0.05em",
-    maxWidth: 820,
+    letterSpacing: "0.06em",
+    textTransform: "uppercase",
   },
-
+  heroTitle: {
+    margin: "18px 0 0",
+    maxWidth: 840,
+    fontSize: "clamp(2.2rem, 5vw, 5rem)",
+    lineHeight: 0.95,
+    letterSpacing: "-0.07em",
+    fontWeight: 950,
+  },
   heroText: {
-    marginTop: 16,
-    marginBottom: 0,
-    maxWidth: 820,
-    color: "#334155",
-    fontSize: 16,
-    lineHeight: 1.8,
+    margin: "18px 0 0",
+    maxWidth: 760,
+    color: "#64748b",
+    lineHeight: 1.75,
+    fontSize: 17,
+    fontWeight: 650,
   },
-
   heroActions: {
     display: "flex",
     flexWrap: "wrap",
-    gap: 14,
+    gap: 12,
     marginTop: 26,
   },
-
   primaryButton: {
+    minHeight: 54,
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    minHeight: 52,
-    padding: "0 22px",
+    padding: "0 24px",
     borderRadius: 16,
-    textDecoration: "none",
-    fontWeight: 900,
     color: "#ffffff",
-    background: "linear-gradient(135deg, #06b6d4 0%, #2563eb 100%)",
-    boxShadow: "0 14px 30px rgba(37, 99, 235, 0.20)",
+    textDecoration: "none",
+    fontWeight: 950,
+    background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 42%, #ec4899 100%)",
+    boxShadow: "0 18px 42px rgba(124,58,237,0.25)",
   },
-
   secondaryButton: {
+    minHeight: 54,
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    minHeight: 52,
-    padding: "0 22px",
+    padding: "0 24px",
     borderRadius: 16,
+    color: "#111827",
     textDecoration: "none",
-    fontWeight: 900,
-    color: "#0f172a",
-    background: "rgba(255,255,255,0.85)",
-    border: "1px solid rgba(125, 211, 252, 0.34)",
+    fontWeight: 950,
+    background: "rgba(255,255,255,0.86)",
+    border: "1px solid rgba(124,58,237,0.14)",
+    boxShadow: "0 10px 24px rgba(15,23,42,0.05)",
   },
-
-  heroRightCard: {
-    borderRadius: 26,
+  heroPanel: {
+    borderRadius: 28,
     padding: 22,
-    background: "linear-gradient(180deg, #ffffff 0%, #eefaff 100%)",
-    border: "1px solid rgba(125, 211, 252, 0.30)",
-    boxShadow: "0 18px 44px rgba(8, 47, 73, 0.08)",
+    background: "linear-gradient(135deg, rgba(255,255,255,0.92), rgba(238,242,255,0.74))",
+    border: "1px solid rgba(124,58,237,0.14)",
+    boxShadow: "0 18px 46px rgba(99,102,241,0.12)",
   },
-
-  sideKicker: {
-    display: "inline-block",
-    color: "#0891b2",
-    fontSize: 12,
-    fontWeight: 900,
-    letterSpacing: "0.08em",
-    marginBottom: 10,
-  },
-
-  sideTitle: {
-    margin: 0,
-    fontSize: 24,
-    lineHeight: 1.08,
-    fontWeight: 900,
-    letterSpacing: "-0.03em",
-  },
-
-  sideText: {
-    marginTop: 12,
-    marginBottom: 0,
-    color: "#475569",
-    fontSize: 15,
-    lineHeight: 1.7,
-  },
-
-  sidePills: {
-    display: "flex",
-    flexDirection: "column",
+  panelMiniGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)",
     gap: 10,
-    marginTop: 16,
-  },
-
-  sidePill: {
-    padding: "12px 14px",
-    borderRadius: 14,
-    background: "rgba(255,255,255,0.84)",
-    border: "1px solid rgba(125, 211, 252, 0.22)",
-    color: "#0f172a",
-    fontSize: 14,
-    fontWeight: 800,
-    lineHeight: 1.55,
-  },
-
-  noticeBox: {
     marginTop: 20,
-    padding: "14px 16px",
-    borderRadius: 16,
-    background: "rgba(6, 182, 212, 0.08)",
-    border: "1px solid rgba(6, 182, 212, 0.16)",
-    color: "#164e63",
-    lineHeight: 1.7,
-    fontSize: 14,
-    fontWeight: 700,
   },
-
-  statsSection: {
-    maxWidth: 1240,
-    margin: "0 auto",
-    padding: "8px 20px 4px",
-  },
-
-  statsGrid: {
+  metricsGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gridTemplateColumns: "repeat(auto-fit, minmax(185px, 1fr))",
     gap: 14,
+    marginTop: 18,
   },
-
-  statCard: {
-    background: "#ffffff",
-    borderRadius: 22,
-    border: "1px solid rgba(125, 211, 252, 0.24)",
+  metricCard: {
     padding: 18,
-    boxShadow: "0 10px 28px rgba(15, 23, 42, 0.05)",
-  },
-
-  statLabel: {
-    display: "block",
-    color: "#475569",
-    fontSize: 14,
-    fontWeight: 700,
-  },
-
-  statValue: {
-    display: "block",
-    marginTop: 8,
-    fontSize: 30,
-    lineHeight: 1,
-    fontWeight: 900,
-    letterSpacing: "-0.04em",
-  },
-
-  statDetail: {
-    display: "block",
-    marginTop: 8,
-    color: "#0891b2",
-    fontSize: 13,
-    fontWeight: 700,
-  },
-
-  contentSection: {
-    maxWidth: 1240,
-    margin: "0 auto",
-    padding: "18px 20px 0",
-  },
-
-  mainGrid: {
-    display: "grid",
-    gridTemplateColumns: "minmax(0, 1.35fr) minmax(300px, 0.85fr)",
-    gap: 18,
-  },
-
-  leftColumn: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 18,
-    minWidth: 0,
-  },
-
-  rightColumn: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 18,
-    minWidth: 0,
-  },
-
-  paymentCard: {
-    background: "linear-gradient(180deg, #ffffff 0%, #eefaff 100%)",
     borderRadius: 24,
-    border: "1px solid rgba(125, 211, 252, 0.24)",
-    padding: 20,
-    boxShadow: "0 14px 34px rgba(15, 23, 42, 0.04)",
+    background: "rgba(255,255,255,0.72)",
+    border: "1px solid rgba(124,58,237,0.12)",
+    boxShadow: "0 16px 40px rgba(99,102,241,0.10)",
+    backdropFilter: "blur(14px)",
   },
-
-  sectionHeader: {
+  contentGrid: {
+    display: "grid",
+    gridTemplateColumns: "minmax(0, 1.35fr) minmax(300px, 0.75fr)",
+    gap: 18,
+    marginTop: 18,
+  },
+  mainColumn: {
+    minWidth: 0,
+  },
+  sideColumn: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 16,
+    minWidth: 0,
+  },
+  toolbarCard: {
     display: "flex",
     justifyContent: "space-between",
-    gap: 12,
-    alignItems: "flex-start",
+    gap: 14,
     flexWrap: "wrap",
-    marginBottom: 18,
+    padding: 20,
+    borderRadius: 26,
+    background: "rgba(255,255,255,0.76)",
+    border: "1px solid rgba(124,58,237,0.12)",
+    boxShadow: "0 16px 40px rgba(99,102,241,0.09)",
+    backdropFilter: "blur(14px)",
   },
-
-  sectionEyebrow: {
-    display: "inline-block",
-    marginBottom: 8,
-    color: "#0891b2",
+  sectionKicker: {
+    display: "block",
+    color: "#7c3aed",
     fontSize: 12,
-    fontWeight: 900,
+    fontWeight: 950,
     letterSpacing: "0.08em",
+    textTransform: "uppercase",
   },
-
   sectionTitle: {
-    margin: 0,
-    fontSize: "clamp(1.5rem, 2.6vw, 2.3rem)",
-    lineHeight: 1.08,
-    fontWeight: 900,
-    letterSpacing: "-0.03em",
+    margin: "8px 0 0",
+    fontSize: 26,
+    lineHeight: 1.05,
+    fontWeight: 950,
+    letterSpacing: "-0.04em",
   },
-
   filterArea: {
     display: "flex",
     flexWrap: "wrap",
     gap: 10,
     alignItems: "center",
-    minWidth: 320,
   },
-
-  checkboxWrap: {
+  toggleBox: {
     display: "inline-flex",
     alignItems: "center",
     gap: 8,
-    fontSize: 14,
-    fontWeight: 700,
-    color: "#0f172a",
-    background: "#ffffff",
-    border: "1px solid rgba(125, 211, 252, 0.24)",
-    borderRadius: 14,
     minHeight: 46,
     padding: "0 14px",
+    borderRadius: 14,
+    background: "rgba(255,255,255,0.86)",
+    border: "1px solid rgba(124,58,237,0.14)",
+    color: "#111827",
+    fontWeight: 850,
   },
-
   searchInput: {
     minHeight: 46,
-    borderRadius: 14,
-    border: "1px solid rgba(125, 211, 252, 0.28)",
-    padding: "0 14px",
-    fontSize: 14,
-    color: "#0f172a",
-    background: "#ffffff",
-    outline: "none",
     minWidth: 280,
+    borderRadius: 14,
+    border: "1px solid rgba(124,58,237,0.16)",
+    background: "rgba(255,255,255,0.90)",
+    color: "#111827",
+    padding: "0 14px",
+    outline: "none",
   },
-
   feedbackBox: {
-    marginBottom: 16,
-    padding: "14px 16px",
-    borderRadius: 16,
-    background: "rgba(16, 185, 129, 0.08)",
-    border: "1px solid rgba(16, 185, 129, 0.18)",
-    color: "#065f46",
-    lineHeight: 1.7,
-    fontSize: 14,
-    fontWeight: 800,
+    marginTop: 14,
+    padding: 14,
+    borderRadius: 18,
+    color: "#047857",
+    background: "rgba(209,250,229,0.92)",
+    border: "1px solid rgba(16,185,129,0.20)",
+    fontWeight: 850,
   },
-
   paymentList: {
     display: "flex",
     flexDirection: "column",
     gap: 14,
+    marginTop: 14,
   },
-
-  paymentItemCard: {
-    borderRadius: 22,
+  paymentCard: {
     padding: 18,
-    background: "#ffffff",
-    border: "1px solid rgba(125, 211, 252, 0.18)",
-    boxShadow: "0 10px 28px rgba(15, 23, 42, 0.04)",
+    borderRadius: 26,
+    background: "rgba(255,255,255,0.80)",
+    border: "1px solid rgba(124,58,237,0.12)",
+    boxShadow: "0 18px 46px rgba(99,102,241,0.10)",
+    backdropFilter: "blur(14px)",
   },
-
   paymentTop: {
     display: "flex",
     justifyContent: "space-between",
-    gap: 12,
+    gap: 14,
     flexWrap: "wrap",
-    alignItems: "flex-start",
   },
-
-  metaRow: {
+  badgeRow: {
     display: "flex",
+    flexWrap: "wrap",
     gap: 8,
-    marginBottom: 10,
+    marginBottom: 12,
   },
-
-  originTag: {
+  originBadge: {
     display: "inline-flex",
     alignItems: "center",
     minHeight: 28,
     padding: "0 10px",
     borderRadius: 999,
+    border: "1px solid",
     fontSize: 12,
-    fontWeight: 800,
+    fontWeight: 900,
   },
-
+  statusBadge: {
+    display: "inline-flex",
+    alignItems: "center",
+    minHeight: 28,
+    padding: "0 10px",
+    borderRadius: 999,
+    border: "1px solid",
+    fontSize: 12,
+    fontWeight: 900,
+  },
   paymentTitle: {
     margin: 0,
-    fontSize: 20,
-    fontWeight: 900,
+    fontSize: 22,
+    fontWeight: 950,
+    letterSpacing: "-0.03em",
   },
-
   paymentSubline: {
-    marginTop: 8,
-    marginBottom: 0,
-    color: "#475569",
+    margin: "8px 0 0",
+    color: "#64748b",
     lineHeight: 1.6,
-    fontSize: 14,
-    fontWeight: 600,
+    fontWeight: 700,
   },
-
-  paymentTopRight: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-end",
-    gap: 8,
+  paymentValueBox: {
+    minWidth: 170,
+    padding: 14,
+    borderRadius: 18,
+    background: "linear-gradient(135deg, rgba(238,242,255,0.92), rgba(236,253,245,0.78))",
+    border: "1px solid rgba(124,58,237,0.12)",
+    textAlign: "right",
   },
-
-  paymentValue: {
-    fontSize: 24,
-    lineHeight: 1,
-    fontWeight: 900,
-    color: "#0284c7",
-  },
-
-  badge: {
-    display: "inline-flex",
-    alignItems: "center",
-    minHeight: 28,
-    padding: "0 10px",
-    borderRadius: 999,
-    fontSize: 12,
-    fontWeight: 800,
-  },
-
-  paymentGrid: {
+  dataGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: 12,
+    gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))",
+    gap: 10,
     marginTop: 16,
   },
-
   dataItem: {
     display: "flex",
     flexDirection: "column",
     gap: 6,
-    padding: 14,
+    padding: 13,
     borderRadius: 16,
-    background: "#ffffff",
-    border: "1px solid rgba(125, 211, 252, 0.16)",
+    background: "rgba(255,255,255,0.78)",
+    border: "1px solid rgba(124,58,237,0.10)",
   },
-
-  dataItemWide: {
+  fieldBox: {
     display: "flex",
     flexDirection: "column",
     gap: 6,
-    padding: 14,
+    padding: 13,
     borderRadius: 16,
-    background: "#ffffff",
-    border: "1px solid rgba(125, 211, 252, 0.16)",
-    gridColumn: "1 / -1",
+    background: "rgba(255,255,255,0.78)",
+    border: "1px solid rgba(124,58,237,0.10)",
   },
-
-  dataLabel: {
-    color: "#64748b",
-    fontSize: 12,
-    fontWeight: 800,
-    letterSpacing: "0.04em",
-    textTransform: "uppercase",
-  },
-
-  dataValue: {
-    color: "#0f172a",
-    fontSize: 15,
-    lineHeight: 1.5,
-    fontWeight: 800,
-  },
-
   input: {
-    minHeight: 44,
+    minHeight: 42,
     borderRadius: 12,
-    border: "1px solid rgba(125, 211, 252, 0.28)",
-    padding: "0 12px",
-    fontSize: 14,
-    color: "#0f172a",
+    border: "1px solid rgba(124,58,237,0.14)",
     background: "#ffffff",
+    color: "#111827",
+    padding: "0 12px",
     outline: "none",
   },
-
   select: {
-    minHeight: 44,
+    minHeight: 42,
     borderRadius: 12,
-    border: "1px solid rgba(125, 211, 252, 0.28)",
-    padding: "0 12px",
-    fontSize: 14,
-    color: "#0f172a",
+    border: "1px solid rgba(124,58,237,0.14)",
     background: "#ffffff",
+    color: "#111827",
+    padding: "0 12px",
     outline: "none",
   },
-
+  noteBox: {
+    gridColumn: "1 / -1",
+    display: "flex",
+    flexDirection: "column",
+    gap: 6,
+    padding: 13,
+    borderRadius: 16,
+    background: "rgba(240,253,250,0.85)",
+    border: "1px solid rgba(20,184,166,0.14)",
+  },
   actionRow: {
     display: "flex",
     flexWrap: "wrap",
     gap: 10,
     marginTop: 16,
   },
-
   primaryAction: {
+    minHeight: 48,
+    padding: "0 18px",
     border: "none",
-    minHeight: 48,
-    padding: "0 18px",
     borderRadius: 14,
     cursor: "pointer",
-    fontWeight: 900,
     color: "#ffffff",
-    background: "linear-gradient(135deg, #06b6d4 0%, #2563eb 100%)",
-    boxShadow: "0 14px 30px rgba(37, 99, 235, 0.18)",
+    fontWeight: 950,
+    background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 45%, #ec4899 100%)",
+    boxShadow: "0 14px 32px rgba(124,58,237,0.22)",
   },
-
   secondaryAction: {
-    border: "1px solid rgba(125, 211, 252, 0.28)",
     minHeight: 48,
     padding: "0 18px",
     borderRadius: 14,
     cursor: "pointer",
-    fontWeight: 900,
-    color: "#0f172a",
-    background: "#ffffff",
+    color: "#111827",
+    fontWeight: 950,
+    background: "rgba(255,255,255,0.86)",
+    border: "1px solid rgba(124,58,237,0.14)",
   },
-
   doneBox: {
     display: "flex",
     alignItems: "center",
     minHeight: 48,
     padding: "0 16px",
     borderRadius: 14,
-    background: "rgba(16, 185, 129, 0.08)",
-    border: "1px solid rgba(16, 185, 129, 0.18)",
-    color: "#065f46",
-    fontSize: 14,
-    fontWeight: 800,
+    color: "#047857",
+    background: "rgba(209,250,229,0.88)",
+    border: "1px solid rgba(16,185,129,0.20)",
+    fontWeight: 850,
   },
-
   emptyState: {
     padding: 18,
-    borderRadius: 18,
-    background: "#ffffff",
-    border: "1px dashed rgba(125, 211, 252, 0.34)",
-    color: "#475569",
-    fontSize: 15,
-    fontWeight: 700,
+    borderRadius: 22,
+    background: "rgba(255,255,255,0.72)",
+    border: "1px dashed rgba(124,58,237,0.18)",
+    color: "#64748b",
+    fontWeight: 850,
   },
-
-  infoCard: {
-    background: "linear-gradient(180deg, #ffffff 0%, #f4fbff 100%)",
-    borderRadius: 24,
-    border: "1px solid rgba(125, 211, 252, 0.24)",
+  robotCard: {
     padding: 20,
-    boxShadow: "0 14px 34px rgba(15, 23, 42, 0.04)",
+    borderRadius: 26,
+    background: "linear-gradient(135deg, rgba(255,255,255,0.88), rgba(238,242,255,0.72))",
+    border: "1px solid rgba(124,58,237,0.14)",
+    boxShadow: "0 20px 54px rgba(99,102,241,0.12)",
+    backdropFilter: "blur(14px)",
   },
-
-  sidebarTitle: {
-    margin: 0,
-    fontSize: 24,
-    lineHeight: 1.08,
-    fontWeight: 900,
-    color: "#0f172a",
-  },
-
-  ruleList: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 12,
-    marginTop: 16,
-  },
-
-  ruleItem: {
-    padding: 14,
-    borderRadius: 16,
-    background: "#ffffff",
-    border: "1px solid rgba(125, 211, 252, 0.18)",
-  },
-
-  ruleItemTitle: {
-    display: "block",
-    fontSize: 15,
-    fontWeight: 900,
-    color: "#0f172a",
-  },
-
-  ruleItemText: {
-    display: "block",
-    marginTop: 8,
-    fontSize: 14,
-    lineHeight: 1.65,
-    color: "#475569",
-  },
-
-  darkCard: {
-    background: "linear-gradient(135deg, #082f49 0%, #0f172a 58%, #172554 100%)",
-    borderRadius: 24,
-    padding: 20,
-    boxShadow: "0 20px 50px rgba(2, 6, 23, 0.24)",
-  },
-
   robotTag: {
-    display: "inline-block",
-    marginBottom: 10,
-    color: "#7dd3fc",
+    color: "#7c3aed",
     fontSize: 12,
-    fontWeight: 900,
+    fontWeight: 950,
     letterSpacing: "0.08em",
+    textTransform: "uppercase",
   },
-
-  sidebarTitleDark: {
-    margin: 0,
+  robotTitle: {
+    margin: "10px 0 0",
     fontSize: 24,
-    lineHeight: 1.08,
-    fontWeight: 900,
-    color: "#ffffff",
+    lineHeight: 1.05,
+    fontWeight: 950,
   },
-
-  sidebarTextDark: {
-    marginTop: 12,
-    marginBottom: 0,
-    color: "#cbd5e1",
-    lineHeight: 1.75,
-    fontSize: 15,
+  robotText: {
+    margin: "12px 0 0",
+    color: "#64748b",
+    lineHeight: 1.7,
+    fontWeight: 650,
   },
-
   robotList: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
     gap: 10,
-    marginTop: 18,
+    marginTop: 16,
   },
-
-  robotItem: {
-    padding: "12px 14px",
-    borderRadius: 14,
-    background: "rgba(255,255,255,0.08)",
-    border: "1px solid rgba(125, 211, 252, 0.16)",
-    color: "#e2e8f0",
-    fontSize: 13,
-    fontWeight: 700,
-    lineHeight: 1.5,
-  },
-
-  navCard: {
-    background: "linear-gradient(180deg, #ffffff 0%, #eefaff 100%)",
-    borderRadius: 24,
-    border: "1px solid rgba(125, 211, 252, 0.24)",
+  infoCard: {
     padding: 20,
-    boxShadow: "0 14px 34px rgba(15, 23, 42, 0.04)",
+    borderRadius: 26,
+    background: "rgba(255,255,255,0.76)",
+    border: "1px solid rgba(124,58,237,0.12)",
+    boxShadow: "0 16px 40px rgba(99,102,241,0.09)",
   },
-
-  navList: {
+  sideTitle: {
+    margin: "8px 0 0",
+    fontSize: 23,
+    fontWeight: 950,
+    letterSpacing: "-0.03em",
+  },
+  ruleList: {
     display: "flex",
     flexDirection: "column",
     gap: 10,
     marginTop: 16,
   },
-
+  ruleItem: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 7,
+    padding: 13,
+    borderRadius: 16,
+    background: "rgba(255,255,255,0.76)",
+    border: "1px solid rgba(124,58,237,0.10)",
+  },
+  navCard: {
+    padding: 20,
+    borderRadius: 26,
+    background: "rgba(255,255,255,0.76)",
+    border: "1px solid rgba(124,58,237,0.12)",
+    boxShadow: "0 16px 40px rgba(99,102,241,0.09)",
+  },
+  navList: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 10,
+    marginTop: 14,
+  },
   navItem: {
-    display: "block",
+    padding: "13px 14px",
+    borderRadius: 15,
+    color: "#111827",
     textDecoration: "none",
-    color: "#0f172a",
-    fontWeight: 800,
-    padding: "12px 14px",
-    borderRadius: 14,
-    background: "#ffffff",
-    border: "1px solid rgba(125, 211, 252, 0.18)",
+    fontWeight: 900,
+    background: "rgba(255,255,255,0.86)",
+    border: "1px solid rgba(124,58,237,0.12)",
   },
 };

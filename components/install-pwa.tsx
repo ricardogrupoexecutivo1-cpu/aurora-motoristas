@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import {
@@ -64,10 +64,10 @@ export default function InstallPWA() {
       navigator.serviceWorker
         .register("/sw.js")
         .then((registration) => {
-          console.log("[MOVO] Service Worker registrado:", registration.scope);
+          console.log("[Aurora Motoristas] Service Worker registrado:", registration.scope);
         })
         .catch((error) => {
-          console.error("[MOVO] Falha ao registrar Service Worker:", error);
+          console.error("[Aurora Motoristas] Falha ao registrar Service Worker:", error);
         });
     }
 
@@ -104,7 +104,7 @@ export default function InstallPWA() {
   const closeBanner = () => {
     setShowBanner(false);
     // Salvar preferencia
-    localStorage.setItem("movo-install-dismissed", Date.now().toString());
+    localStorage.setItem("Aurora Motoristas-install-dismissed", Date.now().toString());
   };
 
   // Nao mostrar se ja instalado
@@ -121,7 +121,7 @@ export default function InstallPWA() {
                 <Navigation className="w-6 h-6 text-white" />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="font-bold text-foreground mb-1">Instalar MOVO</h3>
+                <h3 className="font-bold text-foreground mb-1">Instalar Aurora Motoristas</h3>
                 <p className="text-sm text-muted-foreground mb-3">
                   Acesso rapido na sua tela inicial. Sem ocupar espaco!
                 </p>
@@ -159,7 +159,7 @@ export default function InstallPWA() {
               <div className="w-16 h-16 mx-auto mb-4 rounded-2xl gradient-premium flex items-center justify-center">
                 <Navigation className="w-8 h-8 text-white" />
               </div>
-              <h2 className="text-xl font-bold mb-1">Instalar MOVO</h2>
+              <h2 className="text-xl font-bold mb-1">Instalar Aurora Motoristas</h2>
               <p className="text-muted-foreground text-sm">
                 Adicione a sua tela inicial para acesso rapido
               </p>
@@ -209,7 +209,7 @@ export default function InstallPWA() {
                       <div>
                         <p className="font-medium mb-1">Pronto!</p>
                         <p className="text-sm text-muted-foreground">
-                          O MOVO estara na sua tela inicial
+                          O Aurora Motoristas estara na sua tela inicial
                         </p>
                       </div>
                     </div>
@@ -279,7 +279,7 @@ export default function InstallPWA() {
         <button
           onClick={handleInstallClick}
           className="fixed bottom-20 right-4 z-40 w-14 h-14 rounded-full gradient-premium shadow-xl flex items-center justify-center btn-premium animate-bounce-slow"
-          title="Instalar MOVO"
+          title="Instalar Aurora Motoristas"
         >
           <Download className="w-6 h-6 text-white" />
         </button>
@@ -287,3 +287,5 @@ export default function InstallPWA() {
     </>
   );
 }
+
+

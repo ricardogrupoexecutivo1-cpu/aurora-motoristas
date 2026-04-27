@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -465,7 +465,7 @@ export default function RelatoriosPage() {
               justifyContent: "space-between",
             }}
           >
-            <span style={chipBlue}>Aurora Motoristas • Relatórios</span>
+            <span style={chipBlue}>Aurora Motoristas â€¢ Relatórios</span>
 
             <div
               style={{
@@ -477,8 +477,8 @@ export default function RelatoriosPage() {
               <Link href="/" style={secondaryButton}>
                 Home
               </Link>
-              <Link href="/admin/servicos" style={secondaryButton}>
-                Admin • Serviços
+              <Link href="/admin/servicos-supabase" style={secondaryButton}>
+                Admin â€¢ Serviços
               </Link>
               <button type="button" onClick={carregar} style={secondaryButtonAsButton}>
                 Atualizar leitura
@@ -534,7 +534,7 @@ export default function RelatoriosPage() {
 
             <span style={miniChipWarning}>
               Sistema em constante atualização e podem ocorrer instabilidades
-              momentâneas.
+              momentÃ¢neas.
             </span>
           </div>
         </section>
@@ -671,7 +671,7 @@ export default function RelatoriosPage() {
               <CellHeader>Valor gasto total</CellHeader>
               <CellHeader>Lucro valor</CellHeader>
               <CellHeader>Lucro %</CellHeader>
-              <CellHeader>Nº nota</CellHeader>
+              <CellHeader>NÂº nota</CellHeader>
               <CellHeader>Valor nota</CellHeader>
               <CellHeader>Vencimento nota</CellHeader>
               <CellHeader>Status fiscal</CellHeader>
@@ -696,7 +696,7 @@ export default function RelatoriosPage() {
                   <CellValue>{formatCurrency(getValorGastoTotal(item))}</CellValue>
                   <CellValue>{formatCurrency(getLucroValor(item))}</CellValue>
                   <CellValue>{formatPercent(getLucroPercentual(item))}</CellValue>
-                  <CellValue>{getNotaNumero(item) || "—"}</CellValue>
+                  <CellValue>{getNotaNumero(item) || "â€”"}</CellValue>
                   <CellValue>{formatCurrency(getNotaValor(item))}</CellValue>
                   <CellValue>{formatDate(getNotaVencimento(item))}</CellValue>
                   <CellValue>{getStatusFiscal(item)}</CellValue>
@@ -968,3 +968,5 @@ const smallAction: React.CSSProperties = {
   fontWeight: 700,
   fontSize: 12,
 };
+
+

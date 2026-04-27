@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
@@ -40,7 +40,7 @@ function formatarCPF(valor?: string | null) {
     .replace(/\D/g, "")
     .slice(0, 11);
 
-  if (!digits) return "—";
+  if (!digits) return "â€”";
   if (digits.length <= 3) return digits;
   if (digits.length <= 6) return digits.replace(/^(\d{3})(\d+)/, "$1.$2");
   if (digits.length <= 9) {
@@ -58,7 +58,7 @@ function formatarTelefone(valor?: string | null) {
     .replace(/\D/g, "")
     .slice(0, 11);
 
-  if (!digits) return "—";
+  if (!digits) return "â€”";
   if (digits.length <= 2) return digits;
   if (digits.length <= 6) return digits.replace(/^(\d{2})(\d+)/, "($1) $2");
   if (digits.length <= 10) {
@@ -69,11 +69,11 @@ function formatarTelefone(valor?: string | null) {
 }
 
 function formatarData(valor?: string | null) {
-  if (!valor) return "—";
+  if (!valor) return "â€”";
 
   const data = new Date(valor);
 
-  if (Number.isNaN(data.getTime())) return "—";
+  if (Number.isNaN(data.getTime())) return "â€”";
 
   return new Intl.DateTimeFormat("pt-BR", {
     dateStyle: "short",
@@ -245,7 +245,7 @@ export default function MotoristasPage() {
               alignItems: isMobile ? "stretch" : "center",
             }}
           >
-            <div style={heroBadge}>Aurora Motoristas • Base premium</div>
+            <div style={heroBadge}>Aurora Motoristas â€¢ Base premium</div>
 
             <div
               style={{
@@ -431,7 +431,7 @@ export default function MotoristasPage() {
                   motorista.estado,
                 ]
                   .filter(Boolean)
-                  .join(" • ");
+                  .join(" â€¢ ");
 
                 const status = obterStatusMotorista(motorista);
                 const origemPublica = inferirOrigemPublica(motorista.observacoes);
@@ -463,7 +463,7 @@ export default function MotoristasPage() {
                             {motorista.nome || "Sem nome"}
                           </div>
                           <div style={itemMetaLineStyle}>
-                            CPF: {formatarCPF(motorista.cpf)} • Telefone:{" "}
+                            CPF: {formatarCPF(motorista.cpf)} â€¢ Telefone:{" "}
                             {formatarTelefone(motorista.telefone)}
                           </div>
                         </div>
@@ -499,17 +499,17 @@ export default function MotoristasPage() {
                               : "Cadastro interno / base"
                           }
                         />
-                        <Detail label="CNH" value={motorista.cnh || "—"} />
-                        <Detail label="E-mail" value={motorista.email || "—"} />
-                        <Detail label="CEP" value={motorista.cep || "—"} />
-                        <Detail label="Endereço" value={endereco || "—"} />
+                        <Detail label="CNH" value={motorista.cnh || "â€”"} />
+                        <Detail label="E-mail" value={motorista.email || "â€”"} />
+                        <Detail label="CEP" value={motorista.cep || "â€”"} />
+                        <Detail label="Endereço" value={endereco || "â€”"} />
                         <Detail
                           label="Complemento"
-                          value={motorista.complemento || "—"}
+                          value={motorista.complemento || "â€”"}
                         />
                         <Detail
                           label="Observações"
-                          value={motorista.observacoes || "—"}
+                          value={motorista.observacoes || "â€”"}
                         />
                         <Detail
                           label="Criado em"
@@ -1017,3 +1017,4 @@ const detailValueStyle: CSSProperties = {
   whiteSpace: "pre-wrap",
   wordBreak: "break-word",
 };
+

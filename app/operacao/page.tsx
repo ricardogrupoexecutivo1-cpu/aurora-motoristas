@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -322,7 +322,7 @@ function getClientPhoneByName(name: string) {
 }
 
 function buildOperationMessage(item: FlowItem) {
-  return `🚗 Aurora Motoristas
+  return `ðŸš— Aurora Motoristas
 
 OS/Operação: ${item.id}
 Empresa: ${item.empresa}
@@ -340,7 +340,7 @@ Mensagem enviada pela operação da Aurora para acompanhamento do atendimento.`;
 }
 
 function buildLocationRequestMessage(item: FlowItem) {
-  return `📍 Aurora Motoristas
+  return `ðŸ“ Aurora Motoristas
 
 Operação: ${item.id}
 Serviço: ${item.servico}
@@ -364,7 +364,7 @@ function mapLocalService(item: LocalService): FlowItem {
     despesas: item.despesas,
     etapa: item.etapa,
     observacao:
-      item.observacao?.trim() || "Serviço local integrado à operação mãe.",
+      item.observacao?.trim() || "Serviço local integrado Ã  operação mãe.",
     origemBase: "Serviço local",
   };
 }
@@ -382,7 +382,7 @@ function mapLocalTransfer(item: LocalTransfer): FlowItem {
     despesas: item.despesas,
     etapa: item.status,
     observacao:
-      item.observacao?.trim() || "Translado local integrado à operação mãe.",
+      item.observacao?.trim() || "Translado local integrado Ã  operação mãe.",
     origemBase: "Translado local",
   };
 }
@@ -505,7 +505,7 @@ export default function OperacaoPage() {
       const historyItem: PaidHistoryItem = {
         ...item,
         etapa: "Pago",
-        observacao: `${item.observacao} • Baixa registrada em ${formatDateTimeNow()}.`,
+        observacao: `${item.observacao} â€¢ Baixa registrada em ${formatDateTimeNow()}.`,
         pagoEm: formatDateTimeNow(),
       };
 
@@ -577,7 +577,7 @@ export default function OperacaoPage() {
         <div style={styles.heroCard}>
           <div style={styles.heroGrid}>
             <div style={styles.heroLeft}>
-              <div style={styles.eyebrow}>AURORA MOTORISTAS • OPERAÇÃO</div>
+              <div style={styles.eyebrow}>AURORA MOTORISTAS â€¢ OPERAÇÃƒO</div>
               <h1 style={styles.heroTitle}>
                 Fluxo completo da operação com serviços e translados em uma visão única
               </h1>
@@ -599,7 +599,7 @@ export default function OperacaoPage() {
             </div>
 
             <div style={styles.heroRightCard}>
-              <span style={styles.sideKicker}>VISÃO MÃE</span>
+              <span style={styles.sideKicker}>VISÃƒO MÃƒE</span>
               <h2 style={styles.sideTitle}>Tudo ligado no mesmo fluxo</h2>
               <p style={styles.sideText}>
                 Cotação, execução, translados, pagamento e histórico passam a
@@ -703,7 +703,7 @@ export default function OperacaoPage() {
 
                           <h3 style={styles.flowTitle}>{item.servico}</h3>
                           <p style={styles.flowSubline}>
-                            {item.id} • {item.data} • {item.empresa}
+                            {item.id} â€¢ {item.data} â€¢ {item.empresa}
                           </p>
                         </div>
 
@@ -869,7 +869,7 @@ export default function OperacaoPage() {
             </div>
 
             <div style={styles.infoCard}>
-              <span style={styles.sectionEyebrow}>COMUNICAÇÃO SEGURA</span>
+              <span style={styles.sectionEyebrow}>COMUNICAÇÃƒO SEGURA</span>
               <h2 style={styles.sidebarTitle}>Contato dentro da operação</h2>
 
               <div style={styles.ruleList}>
@@ -897,10 +897,10 @@ export default function OperacaoPage() {
             </div>
 
             <div style={styles.darkCard}>
-              <div style={styles.robotTag}>ROBÔ AURORA</div>
+              <div style={styles.robotTag}>ROBÃ” AURORA</div>
               <h2 style={styles.sidebarTitleDark}>Apoio ao fluxo inteiro</h2>
               <p style={styles.sidebarTextDark}>
-                O Robô Aurora poderá apontar gargalos, operações paradas em uma
+                O RobÃ´ Aurora poderá apontar gargalos, operações paradas em uma
                 etapa, pendências de baixa e trilhas com risco operacional.
               </p>
 
@@ -913,7 +913,7 @@ export default function OperacaoPage() {
             </div>
 
             <div style={styles.navCard}>
-              <span style={styles.sectionEyebrow}>NAVEGAÇÃO</span>
+              <span style={styles.sectionEyebrow}>NAVEGAÇÃƒO</span>
               <h2 style={styles.sidebarTitle}>Próximos blocos</h2>
 
               <div style={styles.navList}>
@@ -1589,3 +1589,4 @@ const styles: Record<string, React.CSSProperties> = {
     border: "1px solid rgba(125, 211, 252, 0.18)",
   },
 };
+

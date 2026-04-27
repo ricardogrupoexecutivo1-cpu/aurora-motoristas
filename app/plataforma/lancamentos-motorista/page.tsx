@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useMemo, useState } from 'react'
 
@@ -90,7 +90,7 @@ export default function PlataformaLancamentosMotoristaPage() {
   const [empresaNome, setEmpresaNome] = useState('Aurora Operações BH')
   const [motoristaNome, setMotoristaNome] = useState('Ricardo Moreira')
   const [dataServico, setDataServico] = useState('2026-04-19')
-  const [rota, setRota] = useState('Belo Horizonte → Confins')
+  const [rota, setRota] = useState('Belo Horizonte â†’ Confins')
 
   const [valorBrutoMotorista, setValorBrutoMotorista] = useState(500)
 
@@ -190,7 +190,7 @@ export default function PlataformaLancamentosMotoristaPage() {
     setEmpresaNome('Aurora Operações BH')
     setMotoristaNome('Ricardo Moreira')
     setDataServico('2026-04-19')
-    setRota('Belo Horizonte → Confins')
+    setRota('Belo Horizonte â†’ Confins')
     setValorBrutoMotorista(500)
     setAdiantamentos([])
     setDespesas([])
@@ -245,7 +245,7 @@ export default function PlataformaLancamentosMotoristaPage() {
             <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
               <div className="space-y-4">
                 <span className="inline-flex rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-700">
-                  Aurora Motoristas • Lançamentos isolados
+                  Aurora Motoristas â€¢ Lançamentos isolados
                 </span>
 
                 <div>
@@ -304,7 +304,7 @@ export default function PlataformaLancamentosMotoristaPage() {
             </div>
 
             <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-              Sistema em constante atualização e podem ocorrer instabilidades momentâneas
+              Sistema em constante atualização e podem ocorrer instabilidades momentÃ¢neas
               durante melhorias.
             </div>
           </div>
@@ -378,7 +378,7 @@ export default function PlataformaLancamentosMotoristaPage() {
                     value={rota}
                     onChange={(e) => setRota(e.target.value)}
                     className="input"
-                    placeholder="Origem → Destino"
+                    placeholder="Origem â†’ Destino"
                   />
                 </Field>
 
@@ -780,3 +780,4 @@ function RegraCard({
     </div>
   )
 }
+

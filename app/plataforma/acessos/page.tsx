@@ -1,4 +1,4 @@
-const modulos = [
+﻿const modulos = [
   {
     titulo: "Operadoras",
     rota: "/plataforma/operadoras",
@@ -116,7 +116,7 @@ export default function PlataformaAcessosPage() {
           <div className="mt-8 grid gap-8 lg:grid-cols-[1.15fr,0.85fr]">
             <div>
               <span className="inline-flex rounded-full border border-cyan-200 bg-cyan-50 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">
-                Aurora Motoristas • Camada isolada
+                Aurora Motoristas â€¢ Camada isolada
               </span>
 
               <h1 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 md:text-5xl">
@@ -304,7 +304,7 @@ export default function PlataformaAcessosPage() {
         <div className="mx-auto max-w-7xl px-6 py-6 md:px-8">
           <p className="text-sm leading-7 text-slate-500">
             Sistema em constante atualização e podem ocorrer instabilidades
-            momentâneas durante melhorias. Esta central foi criada como camada
+            momentÃ¢neas durante melhorias. Esta central foi criada como camada
             nova e isolada para organizar a expansão da plataforma sem tocar na
             base já publicada.
           </p>
@@ -313,3 +313,4 @@ export default function PlataformaAcessosPage() {
     </main>
   );
 }
+
