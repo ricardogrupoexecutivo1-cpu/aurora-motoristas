@@ -1947,5 +1947,3 @@ function SummaryCard({
     </div>
   )
 }
-
-
