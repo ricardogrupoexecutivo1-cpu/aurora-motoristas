@@ -52,7 +52,8 @@ export default function AdminDashboardPage() {
               <p style={eyebrow}>Aurora Motoristas • Admin</p>
               <h1 style={title}>Dashboard Executivo</h1>
               <p style={subtitle}>
-                Visão geral da operação, receita, comissões e fluxo novo Supabase.
+                Visão oficial da operação, receita, comissões, pagamentos,
+                históricos e fluxo Supabase em produção.
               </p>
             </div>
 
@@ -64,18 +65,18 @@ export default function AdminDashboardPage() {
 
           <div style={grid}>
             <Card titulo="Serviços Supabase" valor={String(dashboard?.totalServices || 0)} />
-            <Card titulo="Receita antiga" valor={moeda(dashboard?.totalRevenue)} destaque />
-            <Card titulo="Comissão antiga" valor={moeda(dashboard?.totalCommission)} />
-            <Card titulo="A receber antigo" valor={moeda(dashboard?.totalPending)} alerta />
-            <Card titulo="Recebido antigo" valor={moeda(dashboard?.totalReceived)} />
+            <Card titulo="Receita total" valor={moeda(dashboard?.totalRevenue)} destaque />
+            <Card titulo="Comissão Aurora" valor={moeda(dashboard?.totalCommission)} />
+            <Card titulo="A receber" valor={moeda(dashboard?.totalPending)} alerta />
+            <Card titulo="Recebido" valor={moeda(dashboard?.totalReceived)} />
           </div>
 
           <div style={panel}>
-            <h2 style={panelTitle}>Fluxo Supabase novo</h2>
+            <h2 style={panelTitle}>Fluxo Supabase oficial</h2>
 
             <p style={{ color: "#cbd5e1", marginBottom: 16 }}>
-              Acessos oficiais para serviços gerados por cotação, pagamento, histórico,
-              nota de débito e recibo administrativo.
+              Acessos principais para serviços gerados por cotação, aprovação,
+              pagamento, histórico, nota de débito e recibo administrativo.
             </p>
 
             <div style={actions}>
@@ -83,12 +84,16 @@ export default function AdminDashboardPage() {
                 Serviços Supabase
               </a>
 
+              <a href="/plataforma/cotacoes/nova" style={actionBtnNovo}>
+                Nova cotação
+              </a>
+
               <a href="/cliente/supabase" style={actionBtnNovo}>
-                Painel Cliente Supabase
+                Painel Cliente
               </a>
 
               <a href="/motorista/supabase" style={actionBtnNovo}>
-                Painel Motorista Supabase
+                Painel Motorista
               </a>
 
               <a href="/motorista/historico-supabase" style={actionBtnNovo}>
@@ -100,27 +105,43 @@ export default function AdminDashboardPage() {
               </a>
 
               <a href="/cliente/nota-debito-supabase" style={actionBtnNovo}>
-                Nota de Débito Cliente
+                Nota de Débito
               </a>
 
               <a href="/admin/recibo-motorista-supabase" style={actionBtnNovo}>
-                Recibo Motorista Admin
+                Recibo Motorista
               </a>
             </div>
           </div>
 
           <div style={panel}>
-            <h2 style={panelTitle}>Rotas antigas preservadas como backup</h2>
+            <h2 style={panelTitle}>Acessos complementares</h2>
 
             <p style={{ color: "#cbd5e1", marginBottom: 16 }}>
-              Mantidas apenas para consulta enquanto o fluxo Supabase novo assume a operação.
+              Atalhos de apoio para operação, financeiro, central e cadastros,
+              mantendo a plataforma pronta para uso oficial.
             </p>
 
             <div style={actions}>
-              <a href="/admin/servicos-supabase" style={actionBtnBackup}>Serviços Supabase</a>
-              <a href="/plataforma/cotacoes/nova" style={actionBtnBackup}>Nova cotação Supabase</a>
-              <a href="/financeiro/aurora" style={actionBtnBackup}>Financeiro antigo</a>
-              <a href="/central" style={actionBtnBackup}>Central antiga</a>
+              <a href="/financeiro/aurora" style={actionBtnBackup}>
+                Financeiro
+              </a>
+
+              <a href="/central" style={actionBtnBackup}>
+                Central operacional
+              </a>
+
+              <a href="/admin/motoristas" style={actionBtnBackup}>
+                Motoristas
+              </a>
+
+              <a href="/admin/motoristas/convites" style={actionBtnBackup}>
+                Convites
+              </a>
+
+              <a href="/admin/clientes-financeiro" style={actionBtnBackup}>
+                Clientes financeiro
+              </a>
             </div>
           </div>
 
@@ -131,7 +152,9 @@ export default function AdminDashboardPage() {
               {(dashboard?.topCities || []).map((item: any, index: number) => (
                 <div key={item.cidade} style={cityRow}>
                   <div>
-                    <strong>{index + 1}. {item.cidade}</strong>
+                    <strong>
+                      {index + 1}. {item.cidade}
+                    </strong>
                     <p style={{ color: "#94a3b8", marginTop: 4 }}>
                       {item.total} serviço(s)
                     </p>
@@ -181,7 +204,13 @@ function Card({
       <p style={{ color: "#94a3b8", fontSize: 13, fontWeight: 800 }}>
         {titulo}
       </p>
-      <h2 style={{ color: alerta ? "#facc15" : "#22c55e", fontSize: 28, marginTop: 10 }}>
+      <h2
+        style={{
+          color: alerta ? "#facc15" : "#22c55e",
+          fontSize: 28,
+          marginTop: 10,
+        }}
+      >
         {valor}
       </h2>
     </div>
@@ -190,7 +219,8 @@ function Card({
 
 const main = {
   minHeight: "100vh",
-  background: "radial-gradient(circle at top, #064e3b 0%, #020617 38%, #000 100%)",
+  background:
+    "radial-gradient(circle at top, #064e3b 0%, #020617 38%, #000 100%)",
   color: "white",
   padding: 24,
 };
