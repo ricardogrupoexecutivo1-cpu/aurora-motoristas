@@ -8,6 +8,8 @@ type FormMotorista = {
   cnh: string;
   telefone: string;
   email: string;
+  senha: string;
+  confirmarSenha: string;
   cep: string;
   endereco: string;
   numero: string;
@@ -25,6 +27,8 @@ const estadoInicial: FormMotorista = {
   cnh: "",
   telefone: "",
   email: "",
+  senha: "",
+  confirmarSenha: "",
   cep: "",
   endereco: "",
   numero: "",
@@ -109,6 +113,8 @@ export default function CadastroMotoristaPrestadorPage() {
     if (!form.cnh.trim()) return "CNH é obrigatória.";
     if (somenteNumeros(form.telefone).length < 10) return "Telefone é obrigatório.";
     if (!form.email.trim() || !form.email.includes("@")) return "E-mail válido é obrigatório.";
+    if (!form.senha || form.senha.length < 6) return "A senha deve ter pelo menos 6 caracteres.";
+    if (form.senha !== form.confirmarSenha) return "As senhas não coincidem.";
     if (somenteNumeros(form.cep).length !== 8) return "CEP é obrigatório.";
     if (!form.endereco.trim()) return "Endereço é obrigatório.";
     if (!form.numero.trim()) return "Número é obrigatório.";
@@ -150,6 +156,7 @@ export default function CadastroMotoristaPrestadorPage() {
         pix_key: form.pix_key.trim(),
         observacoes: "Cadastro público de motorista/prestador operacional Aurora.",
         ativo: false,
+        status: "em_analise",
       };
 
       const response = await fetch("/api/motoristas", {
@@ -173,7 +180,27 @@ export default function CadastroMotoristaPrestadorPage() {
         throw new Error(data?.message || data?.error || data?.erro || "Erro ao enviar cadastro.");
       }
 
-      setMsg("Cadastro enviado com sucesso. O motorista/prestador ficará em análise humana.");
+      const registerResponse = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nome: form.nome.trim(),
+          email: form.email.trim(),
+          senha: form.senha,
+          role: "motorista",
+          documento: somenteNumeros(form.cpf),
+          telefone: somenteNumeros(form.telefone),
+          captchaOk: true,
+        }),
+      });
+
+      const registerData = await registerResponse.json();
+
+      if (!registerResponse.ok || !registerData?.ok) {
+        throw new Error(registerData?.error || "Motorista salvo, mas não foi possível criar o acesso.");
+      }
+
+      setMsg("Cadastro realizado com sucesso. Seu acesso foi criado e ficará em análise operacional.");
       setForm(estadoInicial);
     } catch (error: any) {
       setMsg(error.message || "Erro ao enviar cadastro.");
@@ -200,7 +227,7 @@ export default function CadastroMotoristaPrestadorPage() {
           </p>
 
           <div style={{ marginTop: 18, padding: 14, borderRadius: 16, background: "#111827", border: "1px solid #334155", color: "#cbd5e1" }}>
-            Todos os campos principais são obrigatórios. O motorista cadastrado entra como pendente e não acessa serviços antes da aprovação.
+            Crie também sua senha de acesso. O motorista cadastrado entra como pendente e não acessa serviços antes da aprovação.
           </div>
 
           <div style={{ display: "grid", gap: 14, gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", marginTop: 24 }}>
@@ -208,7 +235,9 @@ export default function CadastroMotoristaPrestadorPage() {
             <Campo obrigatorio label="CPF" value={form.cpf} onChange={(v) => setCampo("cpf", v)} />
             <Campo obrigatorio label="CNH" value={form.cnh} onChange={(v) => setCampo("cnh", v)} />
             <Campo obrigatorio label="Telefone" value={form.telefone} onChange={(v) => setCampo("telefone", v)} />
-            <Campo obrigatorio label="E-mail" value={form.email} onChange={(v) => setCampo("email", v)} />
+            <Campo obrigatorio label="E-mail" value={form.email} onChange={(v) => setCampo("email", v)} type="email" />
+            <Campo obrigatorio label="Senha de acesso" value={form.senha} onChange={(v) => setCampo("senha", v)} type="password" />
+            <Campo obrigatorio label="Confirmar senha" value={form.confirmarSenha} onChange={(v) => setCampo("confirmarSenha", v)} type="password" />
 
             <label style={{ display: "block" }}>
               <span style={{ display: "block", color: "#cbd5e1", fontSize: 13, marginBottom: 6 }}>CEP *</span>
@@ -294,18 +323,20 @@ function Campo({
   value,
   onChange,
   obrigatorio = false,
+  type = "text",
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
   obrigatorio?: boolean;
+  type?: string;
 }) {
   return (
     <label style={{ display: "block" }}>
       <span style={{ display: "block", color: "#cbd5e1", fontSize: 13, marginBottom: 6 }}>
         {label}{obrigatorio ? " *" : ""}
       </span>
-      <input required={obrigatorio} value={value} onChange={(e) => onChange(e.target.value)} style={inputStyle} />
+      <input required={obrigatorio} type={type} value={value} onChange={(e) => onChange(e.target.value)} style={inputStyle} />
     </label>
   );
 }
