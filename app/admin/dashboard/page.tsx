@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import AuroraProtected from "../../components/AuroraProtected";
@@ -71,6 +71,45 @@ export default function AdminDashboardPage() {
           </div>
 
           <div style={panel}>
+            <h2 style={panelTitle}>Fluxo Supabase novo</h2>
+
+            <p style={{ color: "#cbd5e1", marginBottom: 16 }}>
+              Acessos rápidos para serviços gerados por cotação, pagamento, histórico,
+              nota de débito e recibo administrativo.
+            </p>
+
+            <div style={actions}>
+              <a href="/admin/servicos-supabase" style={actionBtnNovo}>
+                Serviços Supabase
+              </a>
+
+              <a href="/cliente/supabase" style={actionBtnNovo}>
+                Painel Cliente Supabase
+              </a>
+
+              <a href="/motorista/supabase" style={actionBtnNovo}>
+                Painel Motorista Supabase
+              </a>
+
+              <a href="/motorista/historico-supabase" style={actionBtnNovo}>
+                Histórico Motorista
+              </a>
+
+              <a href="/cliente/historico-supabase" style={actionBtnNovo}>
+                Histórico Cliente
+              </a>
+
+              <a href="/cliente/nota-debito-supabase" style={actionBtnNovo}>
+                Nota de Débito Cliente
+              </a>
+
+              <a href="/admin/recibo-motorista-supabase" style={actionBtnNovo}>
+                Recibo Motorista Admin
+              </a>
+            </div>
+          </div>
+
+          <div style={panel}>
             <h2 style={panelTitle}>Cidades com maior uso</h2>
 
             <div style={{ display: "grid", gap: 12 }}>
@@ -97,12 +136,12 @@ export default function AdminDashboardPage() {
           </div>
 
           <div style={panel}>
-            <h2 style={panelTitle}>Atalhos executivos</h2>
+            <h2 style={panelTitle}>Atalhos executivos antigos</h2>
 
             <div style={actions}>
-              <a href="/admin/servicos" style={actionBtn}>Serviços</a>
-              <a href="/servicos/novo" style={actionBtn}>Novo serviço</a>
-              <a href="/financeiro/aurora" style={actionBtn}>Financeiro Aurora</a>
+              <a href="/admin/servicos" style={actionBtn}>Serviços antigos</a>
+              <a href="/servicos/novo" style={actionBtn}>Novo serviço antigo</a>
+              <a href="/financeiro/aurora" style={actionBtn}>Financeiro Aurora antigo</a>
               <a href="/central" style={actionBtn}>Central</a>
             </div>
           </div>
@@ -242,4 +281,15 @@ const actionBtn = {
   padding: "12px 16px",
   fontWeight: 900,
   textDecoration: "none",
+};
+
+const actionBtnNovo = {
+  display: "inline-block",
+  background: "#06b6d4",
+  color: "#020617",
+  borderRadius: 16,
+  padding: "12px 16px",
+  fontWeight: 900,
+  textDecoration: "none",
+  boxShadow: "0 0 20px rgba(6, 182, 212, 0.24)",
 };
