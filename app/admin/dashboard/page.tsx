@@ -84,7 +84,7 @@ export default function AdminDashboardPage() {
                 Serviços Supabase
               </a>
 
-              <a href="/plataforma/cotacoes/nova" style={actionBtnNovo}>
+              <a href="/plataforma/cotacoes/novo" style={actionBtnNovo}>
                 Nova cotação
               </a>
 

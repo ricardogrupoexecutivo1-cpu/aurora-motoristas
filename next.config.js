@@ -1,4 +1,4 @@
-/** @type {import('next').NextConfig} */
+﻿/** @type {import('next').NextConfig} */
 const nextConfig = {
   async redirects() {
     return [
@@ -9,7 +9,7 @@ const nextConfig = {
       },
       {
         source: "/servicos/novo",
-        destination: "/plataforma/cotacoes/nova",
+        destination: "/plataforma/cotacoes/novo",
         permanent: true,
       },
     ];

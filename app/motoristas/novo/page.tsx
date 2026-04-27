@@ -638,7 +638,7 @@ export default function AdminServicosPage() {
                 </Link>
 
                 <Link
-                  href="/plataforma/cotacoes/nova"
+                  href="/plataforma/cotacoes/novo"
                   style={{
                     ...topPrimaryStyle,
                     width: isMobile ? "100%" : "auto",

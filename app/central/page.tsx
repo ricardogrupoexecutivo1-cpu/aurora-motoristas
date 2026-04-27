@@ -19,7 +19,7 @@ const atalhos: Atalho[] = [
   {
     titulo: "Criar novo serviço",
     descricao: "Cadastrar serviço com cliente, motorista, valores e rota.",
-    rota: "/plataforma/cotacoes/nova",
+    rota: "/plataforma/cotacoes/novo",
     roles: ["admin"],
   },
   {

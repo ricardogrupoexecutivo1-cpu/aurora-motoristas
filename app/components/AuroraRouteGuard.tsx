@@ -12,7 +12,7 @@ const rotasLivres = ["/", "/entrar", "/login", "/offline"];
 
 const rotasAdmin = [
   "/admin",
-  "/plataforma/cotacoes/nova",
+  "/plataforma/cotacoes/novo",
   "/clientes",
   "/motoristas",
   "/financeiro",
