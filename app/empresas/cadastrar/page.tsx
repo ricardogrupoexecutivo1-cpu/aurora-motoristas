@@ -10,6 +10,8 @@ type EmpresaForm = {
   responsavel: string;
   telefone: string;
   email: string;
+  senha: string;
+  confirmarSenha: string;
   cep: string;
   endereco: string;
   numero: string;
@@ -28,6 +30,8 @@ const initialForm: EmpresaForm = {
   responsavel: "",
   telefone: "",
   email: "",
+  senha: "",
+  confirmarSenha: "",
   cep: "",
   endereco: "",
   numero: "",
@@ -154,9 +158,27 @@ export default function CadastrarEmpresaPage() {
       return;
     }
 
-    if (!form.telefone.trim() && !form.email.trim()) {
+    if (!form.email.trim() || !form.email.includes("@")) {
       setFeedbackType("error");
-      setFeedback("Preencha pelo menos telefone ou e-mail da empresa.");
+      setFeedback("Informe um e-mail válido para criar o acesso da empresa.");
+      return;
+    }
+
+    if (!form.telefone.trim()) {
+      setFeedbackType("error");
+      setFeedback("Preencha o telefone da empresa.");
+      return;
+    }
+
+    if (!form.senha || form.senha.length < 6) {
+      setFeedbackType("error");
+      setFeedback("A senha deve ter pelo menos 6 caracteres.");
+      return;
+    }
+
+    if (form.senha !== form.confirmarSenha) {
+      setFeedbackType("error");
+      setFeedback("As senhas não coincidem.");
       return;
     }
 
@@ -190,11 +212,36 @@ export default function CadastrarEmpresaPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data?.error || "Não foi possível salvar a empresa.");
+        throw new Error(data?.error || data?.message || "Não foi possível salvar a empresa.");
+      }
+
+      const registerResponse = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          role: "cliente",
+          nome: form.razaoSocial.trim() || form.nomeFantasia.trim(),
+          email: form.email.trim(),
+          senha: form.senha,
+          documento: onlyDigits(form.cnpj),
+          telefone: onlyDigits(form.telefone),
+          captchaOk: true,
+        }),
+      });
+
+      const registerData = await registerResponse.json();
+
+      if (!registerResponse.ok || !registerData?.ok) {
+        throw new Error(
+          registerData?.error ||
+            "Empresa salva, mas não foi possível criar o acesso de login."
+        );
       }
 
       setFeedbackType("success");
-      setFeedback("Empresa cadastrada com sucesso na base do Aurora Motoristas.");
+      setFeedback("Empresa cadastrada com sucesso. O acesso foi criado e já pode entrar pelo login.");
       setForm(initialForm);
     } catch (error) {
       const message =
@@ -210,9 +257,8 @@ export default function CadastrarEmpresaPage() {
     <main
       style={{
         minHeight: "100vh",
-        background:
-          "linear-gradient(180deg, #f4faff 0%, #edf6ff 42%, #ffffff 100%)",
-        color: "#0f172a",
+        background: "#020617",
+        color: "#ffffff",
       }}
     >
       <div
@@ -241,15 +287,19 @@ export default function CadastrarEmpresaPage() {
           <a href="/guia" style={pillButton(false)}>
             Guia
           </a>
+
+          <a href="/entrar" style={pillButton(false)}>
+            Entrar
+          </a>
         </div>
 
         <section
           style={{
             borderRadius: 30,
-            border: "1px solid #dbeafe",
+            border: "1px solid rgba(56, 189, 248, 0.24)",
             background:
-              "radial-gradient(circle at top right, rgba(14, 165, 233, 0.18), transparent 24%), linear-gradient(135deg, #ffffff 0%, #f1f8ff 45%, #eef7ff 100%)",
-            boxShadow: "0 24px 70px rgba(15, 23, 42, 0.08)",
+              "radial-gradient(circle at top right, rgba(14, 165, 233, 0.26), transparent 24%), linear-gradient(135deg, #0f172a 0%, #020617 60%, #0f172a 100%)",
+            boxShadow: "0 24px 70px rgba(14, 165, 233, 0.12)",
             padding: "24px 18px",
             marginBottom: 18,
           }}
@@ -261,16 +311,16 @@ export default function CadastrarEmpresaPage() {
               gap: 8,
               padding: "8px 12px",
               borderRadius: 999,
-              background: "#e0f2fe",
-              border: "1px solid #bae6fd",
-              color: "#0369a1",
+              background: "rgba(14, 165, 233, 0.14)",
+              border: "1px solid rgba(56, 189, 248, 0.30)",
+              color: "#7dd3fc",
               fontSize: 12,
               fontWeight: 800,
               letterSpacing: 0.4,
               textTransform: "uppercase",
             }}
           >
-            Aurora Motoristas â€¢ Empresas
+            Aurora Motoristas • Empresas
           </div>
 
           <h1
@@ -279,24 +329,23 @@ export default function CadastrarEmpresaPage() {
               fontSize: "clamp(30px, 5vw, 48px)",
               lineHeight: 1.02,
               letterSpacing: "-0.03em",
+              color: "#ffffff",
             }}
           >
-            Cadastro de empresas com leitura forte no mobile e busca por CNPJ
+            Cadastro de empresas com acesso próprio
           </h1>
 
           <p
             style={{
               margin: 0,
               maxWidth: 920,
-              color: "#334155",
+              color: "#cbd5e1",
               lineHeight: 1.7,
               fontSize: 16,
             }}
           >
-            Cadastre empresas, locadoras e operações com visual claro premium,
-            preenchimento mais simples e consulta automática por CNPJ.
-            Sistema em constante atualização e podem ocorrer instabilidades
-            momentÃ¢neas durante melhorias.
+            Cadastre empresas, locadoras e operações. A empresa será salva na base
+            operacional e também receberá acesso próprio para entrar pelo login oficial.
           </p>
         </section>
 
@@ -309,10 +358,10 @@ export default function CadastrarEmpresaPage() {
         >
           <div
             style={{
-              background: "#ffffff",
-              border: "1px solid #dbeafe",
+              background: "#0f172a",
+              border: "1px solid rgba(56, 189, 248, 0.20)",
               borderRadius: 28,
-              boxShadow: "0 20px 60px rgba(15, 23, 42, 0.08)",
+              boxShadow: "0 20px 60px rgba(2, 6, 23, 0.55)",
               padding: 18,
             }}
           >
@@ -332,6 +381,7 @@ export default function CadastrarEmpresaPage() {
                     margin: 0,
                     fontSize: 24,
                     lineHeight: 1.1,
+                    color: "#ffffff",
                   }}
                 >
                   Dados da empresa
@@ -339,12 +389,12 @@ export default function CadastrarEmpresaPage() {
                 <p
                   style={{
                     margin: "8px 0 0",
-                    color: "#475569",
+                    color: "#94a3b8",
                     fontSize: 15,
                     lineHeight: 1.6,
                   }}
                 >
-                  Estruture a base empresarial antes de ligar clientes, motoristas e serviços.
+                  Estruture a base empresarial e crie o acesso de login da empresa.
                 </p>
               </div>
 
@@ -355,10 +405,10 @@ export default function CadastrarEmpresaPage() {
                   gap: 10,
                   padding: "10px 14px",
                   borderRadius: 999,
-                  background: "#f8fafc",
-                  border: "1px solid #e2e8f0",
+                  background: "#111827",
+                  border: "1px solid #334155",
                   fontWeight: 800,
-                  color: "#0f172a",
+                  color: "#e2e8f0",
                   fontSize: 14,
                 }}
               >
@@ -392,7 +442,7 @@ export default function CadastrarEmpresaPage() {
                     display: "block",
                     marginBottom: 8,
                     fontWeight: 700,
-                    color: "#0f172a",
+                    color: "#e2e8f0",
                     fontSize: 14,
                   }}
                 >
@@ -411,19 +461,7 @@ export default function CadastrarEmpresaPage() {
                     value={form.cnpj}
                     onChange={(e) => updateField("cnpj", formatCnpj(e.target.value))}
                     placeholder="00.000.000/0001-00"
-                    style={{
-                      flex: "1 1 220px",
-                      minWidth: 0,
-                      height: 50,
-                      borderRadius: 16,
-                      border: "1px solid #cbd5e1",
-                      background: "#f8fbff",
-                      padding: "0 16px",
-                      fontSize: 15,
-                      color: "#0f172a",
-                      outline: "none",
-                      boxSizing: "border-box",
-                    }}
+                    style={inputStyle}
                   />
 
                   <button
@@ -431,15 +469,15 @@ export default function CadastrarEmpresaPage() {
                     onClick={buscarCnpj}
                     disabled={loadingReceita}
                     style={{
-                      border: "1px solid #0ea5e9",
+                      border: "1px solid #38bdf8",
                       cursor: loadingReceita ? "not-allowed" : "pointer",
                       opacity: loadingReceita ? 0.7 : 1,
                       padding: "0 16px",
                       height: 50,
                       borderRadius: 16,
-                      background: "#e0f2fe",
-                      color: "#0369a1",
-                      fontWeight: 800,
+                      background: "#38bdf8",
+                      color: "#020617",
+                      fontWeight: 900,
                       fontSize: 14,
                       whiteSpace: "nowrap",
                     }}
@@ -476,14 +514,34 @@ export default function CadastrarEmpresaPage() {
                 value={form.telefone}
                 onChange={(value) => updateField("telefone", formatPhone(value))}
                 placeholder="(31) 99999-9999"
+                required
               />
 
               <Field
-                label="E-mail"
+                label="E-mail de acesso"
                 value={form.email}
                 onChange={(value) => updateField("email", value)}
                 placeholder="contato@empresa.com"
                 type="email"
+                required
+              />
+
+              <Field
+                label="Senha de acesso"
+                value={form.senha}
+                onChange={(value) => updateField("senha", value)}
+                placeholder="Crie uma senha"
+                type="password"
+                required
+              />
+
+              <Field
+                label="Confirmar senha"
+                value={form.confirmarSenha}
+                onChange={(value) => updateField("confirmarSenha", value)}
+                placeholder="Repita a senha"
+                type="password"
+                required
               />
 
               <Field
@@ -535,7 +593,7 @@ export default function CadastrarEmpresaPage() {
                   display: "block",
                   marginBottom: 8,
                   fontWeight: 700,
-                  color: "#0f172a",
+                  color: "#e2e8f0",
                   fontSize: 14,
                 }}
               >
@@ -551,8 +609,9 @@ export default function CadastrarEmpresaPage() {
                   width: "100%",
                   resize: "vertical",
                   borderRadius: 18,
-                  border: "1px solid #cbd5e1",
-                  background: "#f8fbff",
+                  border: "1px solid #334155",
+                  background: "#020617",
+                  color: "#ffffff",
                   padding: "14px 16px",
                   fontSize: 15,
                   outline: "none",
@@ -569,23 +628,23 @@ export default function CadastrarEmpresaPage() {
                   padding: "14px 16px",
                   border:
                     feedbackType === "success"
-                      ? "1px solid #bbf7d0"
+                      ? "1px solid #22c55e"
                       : feedbackType === "error"
-                      ? "1px solid #fecaca"
-                      : "1px solid #bae6fd",
+                      ? "1px solid #ef4444"
+                      : "1px solid #38bdf8",
                   background:
                     feedbackType === "success"
-                      ? "#f0fdf4"
+                      ? "rgba(34, 197, 94, 0.12)"
                       : feedbackType === "error"
-                      ? "#fef2f2"
-                      : "#f0f9ff",
+                      ? "rgba(239, 68, 68, 0.12)"
+                      : "rgba(56, 189, 248, 0.12)",
                   color:
                     feedbackType === "success"
-                      ? "#166534"
+                      ? "#86efac"
                       : feedbackType === "error"
-                      ? "#991b1b"
-                      : "#0c4a6e",
-                  fontWeight: 700,
+                      ? "#fca5a5"
+                      : "#7dd3fc",
+                  fontWeight: 800,
                   lineHeight: 1.55,
                 }}
               >
@@ -614,12 +673,12 @@ export default function CadastrarEmpresaPage() {
                   borderRadius: 16,
                   background: "linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%)",
                   color: "#ffffff",
-                  fontWeight: 800,
+                  fontWeight: 900,
                   fontSize: 15,
                   boxShadow: "0 16px 35px rgba(37, 99, 235, 0.28)",
                 }}
               >
-                {loading ? "Salvando empresa..." : "Salvar empresa"}
+                {loading ? "Salvando empresa..." : "Salvar empresa e criar acesso"}
               </button>
 
               <button
@@ -630,12 +689,12 @@ export default function CadastrarEmpresaPage() {
                   setFonteReceita("");
                 }}
                 style={{
-                  border: "1px solid #cbd5e1",
+                  border: "1px solid #334155",
                   cursor: "pointer",
                   padding: "14px 20px",
                   borderRadius: 16,
-                  background: "#ffffff",
-                  color: "#0f172a",
+                  background: "#111827",
+                  color: "#e2e8f0",
                   fontWeight: 800,
                   fontSize: 15,
                 }}
@@ -658,13 +717,13 @@ export default function CadastrarEmpresaPage() {
             />
 
             <InfoCard
-              title="Consulta por CNPJ"
-              text="A busca automática ajuda a preencher razão social, nome fantasia, contato e endereço sem perder agilidade."
+              title="Acesso próprio"
+              text="O e-mail e senha informados serão usados pela empresa na tela oficial de login."
             />
 
             <InfoCard
               title="Padrão Aurora"
-              text="Visual claro premium, leitura forte no celular e navegação mais limpa para uso diário."
+              text="Visual premium escuro, leitura forte no celular e navegação limpa para uso diário."
             />
           </aside>
         </section>
@@ -673,15 +732,30 @@ export default function CadastrarEmpresaPage() {
   );
 }
 
+const inputStyle: React.CSSProperties = {
+  flex: "1 1 220px",
+  minWidth: 0,
+  width: "100%",
+  height: 50,
+  borderRadius: 16,
+  border: "1px solid #334155",
+  background: "#020617",
+  padding: "0 16px",
+  fontSize: 15,
+  color: "#ffffff",
+  outline: "none",
+  boxSizing: "border-box",
+};
+
 function pillButton(primary: boolean) {
   return {
     textDecoration: "none",
     padding: "10px 14px",
     borderRadius: 999,
-    background: primary ? "#eff6ff" : "#ffffff",
-    border: primary ? "1px solid #bfdbfe" : "1px solid #dbeafe",
-    color: primary ? "#1d4ed8" : "#0f172a",
-    fontWeight: 700,
+    background: primary ? "#38bdf8" : "#0f172a",
+    border: primary ? "1px solid #38bdf8" : "1px solid #334155",
+    color: primary ? "#020617" : "#e2e8f0",
+    fontWeight: 800,
     fontSize: 14,
   } as const;
 }
@@ -708,11 +782,11 @@ function Field({
           display: "block",
           marginBottom: 8,
           fontWeight: 700,
-          color: "#0f172a",
+          color: "#e2e8f0",
           fontSize: 14,
         }}
       >
-        {label} {required ? <span style={{ color: "#dc2626" }}>*</span> : null}
+        {label} {required ? <span style={{ color: "#f87171" }}>*</span> : null}
       </span>
 
       <input
@@ -720,18 +794,7 @@ function Field({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        style={{
-          width: "100%",
-          height: 50,
-          borderRadius: 16,
-          border: "1px solid #cbd5e1",
-          background: "#f8fbff",
-          padding: "0 16px",
-          fontSize: 15,
-          color: "#0f172a",
-          outline: "none",
-          boxSizing: "border-box",
-        }}
+        style={inputStyle}
       />
     </label>
   );
@@ -741,19 +804,19 @@ function InfoCard({ title, text }: { title: string; text: string }) {
   return (
     <div
       style={{
-        background: "#ffffff",
-        border: "1px solid #dbeafe",
+        background: "#0f172a",
+        border: "1px solid rgba(56, 189, 248, 0.18)",
         borderRadius: 24,
-        boxShadow: "0 20px 60px rgba(15, 23, 42, 0.08)",
+        boxShadow: "0 20px 60px rgba(2, 6, 23, 0.40)",
         padding: 18,
       }}
     >
       <div
         style={{
           fontSize: 13,
-          fontWeight: 800,
+          fontWeight: 900,
           textTransform: "uppercase",
-          color: "#1d4ed8",
+          color: "#7dd3fc",
           marginBottom: 8,
         }}
       >
@@ -762,7 +825,7 @@ function InfoCard({ title, text }: { title: string; text: string }) {
 
       <div
         style={{
-          color: "#475569",
+          color: "#cbd5e1",
           lineHeight: 1.65,
           fontSize: 15,
         }}
@@ -772,4 +835,3 @@ function InfoCard({ title, text }: { title: string; text: string }) {
     </div>
   );
 }
-
