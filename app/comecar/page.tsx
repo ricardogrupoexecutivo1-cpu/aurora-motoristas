@@ -1,4 +1,4 @@
-ï»¿"use client";
+"use client";
 
 import Link from "next/link";
 
@@ -12,11 +12,11 @@ export default function Comecar() {
     }}>
       <div style={{ maxWidth: 900, margin: "0 auto" }}>
         <h1 style={{ fontSize: 32, fontWeight: 900, marginBottom: 10 }}>
-          Escolha como vocÃª quer usar a Aurora
+          Escolha como você quer usar a Aurora
         </h1>
 
         <p style={{ color: "#94a3b8", marginBottom: 30 }}>
-          A Aurora possui dois fluxos principais. Escolha o caminho correto para evitar erros e comeÃ§ar mais rÃ¡pido.
+          A Aurora possui dois fluxos principais. Escolha o caminho correto para evitar erros e começar mais rápido.
         </p>
 
         <div style={{
@@ -24,12 +24,12 @@ export default function Comecar() {
           gap: 20
         }}>
 
-          {/* OPERAÃ‡Ã•ES */}
-          <Link href="/cadastros/clientes">
+          {/* OPERAÇÕES */}
+          <Link href="/empresas/cadastrar">
             <div style={card("#22c55e")}>
-              <h2 style={titulo}>Aurora OperaÃ§Ãµes</h2>
+              <h2 style={titulo}>Aurora Operações</h2>
               <p style={texto}>
-                Para locadoras, empresas, mobilizaÃ§Ã£o, desmobilizaÃ§Ã£o, transfer e serviÃ§os com motorista.
+                Para locadoras, empresas, mobilização, desmobilização, transfer e serviços com motorista.
               </p>
               <span style={botao}>Entrar como empresa / locadora</span>
             </div>
@@ -40,7 +40,7 @@ export default function Comecar() {
             <div style={card("#0ea5e9")}>
               <h2 style={titulo}>Aurora Express</h2>
               <p style={texto}>
-                Para entregas, coletas, documentos, pacotes, moto, carro, van e caminhÃ£o.
+                Para entregas, coletas, documentos, pacotes, moto, carro, van e caminhão.
               </p>
               <span style={botao}>Fazer envio / entrega</span>
             </div>
@@ -51,7 +51,7 @@ export default function Comecar() {
             <div style={card("#f59e0b")}>
               <h2 style={titulo}>Motorista Operacional</h2>
               <p style={texto}>
-                Para motoristas que querem atender locadoras, empresas, mobilizaÃ§Ã£o e operaÃ§Ãµes Aurora.
+                Para motoristas que querem atender locadoras, empresas, mobilização e operações Aurora.
               </p>
               <span style={botao}>Cadastrar como motorista</span>
             </div>
@@ -60,7 +60,7 @@ export default function Comecar() {
           {/* LOGIN */}
           <Link href="/entrar">
             <div style={card("#8b5cf6")}>
-              <h2 style={titulo}>JÃ¡ tenho acesso</h2>
+              <h2 style={titulo}>Já tenho acesso</h2>
               <p style={texto}>
                 Entrar no painel seguro da plataforma.
               </p>

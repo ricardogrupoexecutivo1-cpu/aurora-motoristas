@@ -1,4 +1,4 @@
-Ôªø"use client";
+"use client";
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -112,7 +112,7 @@ export default function HomePage() {
   const chatSugestoes = [
     "Como pedir uma corrida?",
     "Como enviar uma entrega?",
-    "Como cadastrar opera√ß√£o no Brasil?",
+    "Como cadastrar operaÁ„o no Brasil?",
     "Como ser motorista parceiro?",
     "Como acessar minha empresa?",
   ];
@@ -130,8 +130,8 @@ export default function HomePage() {
       features: [
         "Moto, carro, conforto, black e van",
         "GPS em tempo real",
-        "Pre√ßo competitivo",
-        "Atendimento em expans√£o nacional",
+        "PreÁo competitivo",
+        "Atendimento em expans„o nacional",
       ],
     },
     {
@@ -145,25 +145,25 @@ export default function HomePage() {
       card: "text-white",
       features: [
         "Buscar + entregar",
-        "S√≥ buscar ou s√≥ entregar",
-        "Moto, carro, van e caminh√£o",
+        "SÛ buscar ou sÛ entregar",
+        "Moto, carro, van e caminh„o",
         "Rastreio em tempo real",
       ],
     },
     {
       href: "/entrar",
       titulo: "Aurora Business",
-      subtitulo: "Gest√£o completa da opera√ß√£o",
-      badge: "√ÅREA SEGURA",
+      subtitulo: "Gest„o completa da operaÁ„o",
+      badge: "¡REA SEGURA",
       icon: Briefcase,
-      cta: "Entrar com seguran√ßa",
+      cta: "Entrar com seguranÁa",
       destaque: "gradient-premium",
       card: "text-white",
       features: [
-        "Cota√ß√µes autom√°ticas",
-        "Controle de servi√ßos",
+        "CotaÁıes autom·ticas",
+        "Controle de serviÁos",
         "Dashboard completo",
-        "IA para otimizar opera√ß√£o",
+        "IA para otimizar operaÁ„o",
       ],
     },
     {
@@ -178,7 +178,7 @@ export default function HomePage() {
       features: [
         "Cadastro para todo o Brasil",
         "Clientes, motoristas, empresas e parceiros",
-        "Mobiliza√ß√£o e desmobiliza√ß√£o de frotas",
+        "MobilizaÁ„o e desmobilizaÁ„o de frotas",
         "Todas as atividades da plataforma",
       ],
     },
@@ -213,10 +213,10 @@ export default function HomePage() {
 
             <nav className="hidden lg:flex items-center gap-1">
               {[
-                { href: "#plataformas", label: "Servi√ßos" },
+                { href: "#plataformas", label: "ServiÁos" },
                 { href: "#motoristas", label: "Seja parceiro" },
-                { href: "#empresas", label: "Opera√ß√µes" },
-                { href: "#seguranca", label: "Seguran√ßa" },
+                { href: "#empresas", label: "OperaÁıes" },
+                { href: "#seguranca", label: "SeguranÁa" },
               ].map((link) => (
                 <Link
                   key={`${link.label}-${link.href}`}
@@ -237,10 +237,10 @@ export default function HomePage() {
               </Link>
 
               <Link
-                href="/cadastros/clientes"
+                href="/empresas/cadastrar"
                 className="px-5 lg:px-7 py-2.5 lg:py-3 text-sm font-bold text-white gradient-premium rounded-xl btn-premium shadow-xl"
               >
-                Come√ßar agora
+                ComeÁar agora
               </Link>
 
               <button
@@ -283,7 +283,7 @@ export default function HomePage() {
                 { href: "/entregas", label: "Enviar entrega", icon: Package, desc: "Busca e entrega Brasil" },
                 { href: "/comecar", label: "Cadastro nacional", icon: Globe, desc: "Todas as atividades da plataforma" },
                 { href: "/comecar", label: "Ser parceiro", icon: TrendingUp, desc: "Cadastro de motorista" },
-                { href: "/entrar", label: "√Årea segura", icon: Lock, desc: "Empresas, motoristas e admin" },
+                { href: "/entrar", label: "¡rea segura", icon: Lock, desc: "Empresas, motoristas e admin" },
               ].map((item) => (
                 <Link
                   key={item.href}
@@ -333,12 +333,12 @@ export default function HomePage() {
               <br />
               <span className="gradient-text">Entregas.</span>
               <br />
-              <span className="text-foreground">Opera√ß√£o Brasil.</span>
+              <span className="text-foreground">OperaÁ„o Brasil.</span>
             </h1>
 
             <p className="text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">
-              A Aurora Motoristas √© uma plataforma completa que une mobilidade, entregas,
-              gest√£o, servi√ßos, motoristas, clientes, empresas, parceiros e opera√ß√µes em todo o Brasil.
+              A Aurora Motoristas È uma plataforma completa que une mobilidade, entregas,
+              gest„o, serviÁos, motoristas, clientes, empresas, parceiros e operaÁıes em todo o Brasil.
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-6 lg:gap-10">
@@ -372,16 +372,16 @@ export default function HomePage() {
                 cor: "from-emerald-500 via-green-500 to-lime-500",
               },
               {
-                href: "/cadastros/clientes",
+                href: "/empresas/cadastrar",
                 titulo: "Sou cliente / empresa / locadora",
-                texto: "Cadastre sua opera√ß√£o, solicite servi√ßos e acompanhe tudo pela plataforma.",
+                texto: "Cadastre sua operaÁ„o, solicite serviÁos e acompanhe tudo pela plataforma.",
                 icon: Building2,
                 cor: "from-blue-600 via-cyan-500 to-sky-500",
               },
               {
                 href: "/entrar",
                 titulo: "Entrar na plataforma",
-                texto: "Acesse seu painel seguro para servi√ßos, financeiro, motoristas e gest√£o.",
+                texto: "Acesse seu painel seguro para serviÁos, financeiro, motoristas e gest„o.",
                 icon: Lock,
                 cor: "from-purple-600 via-pink-500 to-rose-500",
               },
@@ -455,7 +455,7 @@ export default function HomePage() {
               { value: formatNumber(stats.corridas), label: "Corridas", icon: Car, color: "text-primary" },
               { value: formatNumber(stats.entregas), label: "Entregas", icon: Package, color: "text-silicon-orange" },
               { value: formatNumber(stats.motoristas), label: "Parceiros", icon: Users, color: "text-success" },
-              { value: formatNumber(stats.clientes), label: "Usu√°rios", icon: Globe, color: "text-silicon-cyan" },
+              { value: formatNumber(stats.clientes), label: "Usu·rios", icon: Globe, color: "text-silicon-cyan" },
               { value: "5%", label: "Taxa parceiro", icon: Percent, color: "text-warning" },
             ].map((stat) => (
               <div key={stat.label} className="text-center group">
@@ -479,11 +479,11 @@ export default function HomePage() {
             </div>
 
             <h2 className="text-3xl lg:text-4xl font-black mb-4">
-              Busca, entrega e opera√ß√£o em todo Brasil
+              Busca, entrega e operaÁ„o em todo Brasil
             </h2>
 
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Escolha buscar, entregar, fazer ida e volta ou integrar a opera√ß√£o dentro da plataforma. Uma solu√ß√£o flex√≠vel para pessoas, empresas, parceiros, documentos, compras e encomendas.
+              Escolha buscar, entregar, fazer ida e volta ou integrar a operaÁ„o dentro da plataforma. Uma soluÁ„o flexÌvel para pessoas, empresas, parceiros, documentos, compras e encomendas.
             </p>
           </div>
 
@@ -492,19 +492,19 @@ export default function HomePage() {
               {
                 icon: ArrowDownUp,
                 title: "Buscar e entregar",
-                desc: "Buscamos no endere√ßo A e entregamos no B.",
+                desc: "Buscamos no endereÁo A e entregamos no B.",
                 color: "bg-silicon-orange",
               },
               {
                 icon: MapPinned,
                 title: "Apenas buscar",
-                desc: "Buscamos no local indicado e levamos at√© voc√™.",
+                desc: "Buscamos no local indicado e levamos atÈ vocÍ.",
                 color: "bg-success",
               },
               {
                 icon: Send,
                 title: "Apenas entregar",
-                desc: "Coletamos com voc√™ e entregamos no destino.",
+                desc: "Coletamos com vocÍ e entregamos no destino.",
                 color: "bg-primary",
               },
             ].map((item) => (
@@ -520,10 +520,10 @@ export default function HomePage() {
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { icon: Bike, name: "Moto", desc: "At√© 10kg", time: "Mais r√°pido" },
-              { icon: Car, name: "Carro", desc: "At√© 50kg", time: "Econ√¥mico" },
-              { icon: Truck, name: "Van", desc: "At√© 300kg", time: "Volumes grandes" },
-              { icon: Package, name: "Caminh√£o", desc: "At√© 3 ton", time: "Mudan√ßas e cargas" },
+              { icon: Bike, name: "Moto", desc: "AtÈ 10kg", time: "Mais r·pido" },
+              { icon: Car, name: "Carro", desc: "AtÈ 50kg", time: "EconÙmico" },
+              { icon: Truck, name: "Van", desc: "AtÈ 300kg", time: "Volumes grandes" },
+              { icon: Package, name: "Caminh„o", desc: "AtÈ 3 ton", time: "MudanÁas e cargas" },
             ].map((vehicle) => (
               <div key={vehicle.name} className="p-4 rounded-xl bg-secondary/50 hover:bg-secondary transition-colors text-center">
                 <vehicle.icon className="w-8 h-8 mx-auto mb-2 text-silicon-orange" />
@@ -552,28 +552,28 @@ export default function HomePage() {
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-success/10 rounded-full mb-4">
               <Shield className="w-4 h-4 text-success" />
-              <span className="text-sm font-semibold text-success">SEGURAN√áA OPERACIONAL</span>
+              <span className="text-sm font-semibold text-success">SEGURAN«A OPERACIONAL</span>
             </div>
 
             <h2 className="text-3xl lg:text-4xl font-black mb-4">
-              Seguran√ßa como prioridade
+              SeguranÁa como prioridade
             </h2>
 
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              A experi√™ncia p√∫blica apresenta os servi√ßos. √Åreas de opera√ß√£o, painel, motoristas e administra√ß√£o ficam protegidas por login e regras de acesso.
+              A experiÍncia p˙blica apresenta os serviÁos. ¡reas de operaÁ„o, painel, motoristas e administraÁ„o ficam protegidas por login e regras de acesso.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { icon: BadgeCheck, title: "Verifica√ß√£o completa", desc: "Motoristas e parceiros passam por valida√ß√£o." },
+              { icon: BadgeCheck, title: "VerificaÁ„o completa", desc: "Motoristas e parceiros passam por validaÁ„o." },
               { icon: MapPin, title: "GPS em tempo real", desc: "Acompanhe corrida ou entrega no mapa." },
-              { icon: Lock, title: "√Årea protegida", desc: "Pain√©is internos s√≥ via login." },
-              { icon: AlertTriangle, title: "Bot√£o SOS", desc: "Camada de emerg√™ncia e suporte." },
-              { icon: Camera, title: "Foto do pacote", desc: "Registro visual para comprova√ß√£o." },
-              { icon: Star, title: "Avalia√ß√£o dupla", desc: "Qualidade monitorada por cliente e parceiro." },
-              { icon: Share2, title: "Compartilhar rota", desc: "Envio de localiza√ß√£o para confian√ßa." },
-              { icon: Mic, title: "√Åudio de seguran√ßa", desc: "Op√ß√£o de registro durante viagem." },
+              { icon: Lock, title: "¡rea protegida", desc: "PainÈis internos sÛ via login." },
+              { icon: AlertTriangle, title: "Bot„o SOS", desc: "Camada de emergÍncia e suporte." },
+              { icon: Camera, title: "Foto do pacote", desc: "Registro visual para comprovaÁ„o." },
+              { icon: Star, title: "AvaliaÁ„o dupla", desc: "Qualidade monitorada por cliente e parceiro." },
+              { icon: Share2, title: "Compartilhar rota", desc: "Envio de localizaÁ„o para confianÁa." },
+              { icon: Mic, title: "¡udio de seguranÁa", desc: "OpÁ„o de registro durante viagem." },
             ].map((item) => (
               <div key={item.title} className="p-5 rounded-xl bg-background border border-border hover:border-success/30 transition-colors">
                 <div className="w-12 h-12 rounded-xl bg-success/10 flex items-center justify-center mb-4">
@@ -601,16 +601,16 @@ export default function HomePage() {
               </h2>
 
               <p className="text-lg text-muted-foreground mb-8">
-                Na Aurora Motoristas, o parceiro tem uma proposta simples: taxa de apenas 5%, rotina flex√≠vel e oportunidade de atender corridas, entregas e servi√ßos operacionais em todo o Brasil.
+                Na Aurora Motoristas, o parceiro tem uma proposta simples: taxa de apenas 5%, rotina flexÌvel e oportunidade de atender corridas, entregas e serviÁos operacionais em todo o Brasil.
               </p>
 
               <div className="space-y-4 mb-8">
                 {[
                   { icon: Percent, text: "Taxa de apenas 5%" },
                   { icon: Wallet, text: "Recebimento via PIX conforme regra operacional" },
-                  { icon: Clock, text: "Hor√°rios flex√≠veis" },
+                  { icon: Clock, text: "Hor·rios flexÌveis" },
                   { icon: Gift, text: "Campanhas e incentivos" },
-                  { icon: Shield, text: "Camada de seguran√ßa para parceiros" },
+                  { icon: Shield, text: "Camada de seguranÁa para parceiros" },
                 ].map((item) => (
                   <div key={item.text} className="flex items-center gap-4">
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -672,26 +672,26 @@ export default function HomePage() {
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-4">
               <Building2 className="w-4 h-4 text-primary" />
-              <span className="text-sm font-semibold text-primary">AURORA OPERA√á√ïES</span>
+              <span className="text-sm font-semibold text-primary">AURORA OPERA«’ES</span>
             </div>
 
             <h2 className="text-3xl lg:text-4xl font-black mb-4">
-              Solu√ß√µes para toda a plataforma
+              SoluÁıes para toda a plataforma
             </h2>
 
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Gest√£o completa de servi√ßos, cota√ß√µes, motoristas, financeiro, clientes, parceiros, mobiliza√ß√£o, desmobiliza√ß√£o e opera√ß√£o nacional. Acesso protegido para usu√°rios cadastrados.
+              Gest„o completa de serviÁos, cotaÁıes, motoristas, financeiro, clientes, parceiros, mobilizaÁ„o, desmobilizaÁ„o e operaÁ„o nacional. Acesso protegido para usu·rios cadastrados.
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { icon: FileText, title: "Cota√ß√µes autom√°ticas", desc: "Or√ßamentos em segundos." },
-              { icon: BarChart3, title: "Dashboard completo", desc: "M√©tricas e performance em tempo real." },
-              { icon: Bot, title: "IA integrada", desc: "Assistente virtual para opera√ß√£o." },
-              { icon: Users, title: "Gest√£o de usu√°rios", desc: "Controle de motoristas, clientes, parceiros e servi√ßos." },
-              { icon: CreditCard, title: "Financeiro", desc: "Pagamentos, comiss√µes e faturamento." },
-              { icon: Bell, title: "Notifica√ß√µes", desc: "Alertas operacionais em tempo real." },
+              { icon: FileText, title: "CotaÁıes autom·ticas", desc: "OrÁamentos em segundos." },
+              { icon: BarChart3, title: "Dashboard completo", desc: "MÈtricas e performance em tempo real." },
+              { icon: Bot, title: "IA integrada", desc: "Assistente virtual para operaÁ„o." },
+              { icon: Users, title: "Gest„o de usu·rios", desc: "Controle de motoristas, clientes, parceiros e serviÁos." },
+              { icon: CreditCard, title: "Financeiro", desc: "Pagamentos, comissıes e faturamento." },
+              { icon: Bell, title: "NotificaÁıes", desc: "Alertas operacionais em tempo real." },
             ].map((item) => (
               <div key={item.title} className="p-6 rounded-xl bg-background border border-border hover:border-primary/30 transition-colors">
                 <div className="w-12 h-12 rounded-xl gradient-premium flex items-center justify-center mb-4">
@@ -705,11 +705,11 @@ export default function HomePage() {
 
           <div className="text-center mt-10">
             <Link
-              href="/cadastros/clientes"
+              href="/empresas/cadastrar"
               className="inline-flex items-center gap-3 px-8 py-4 gradient-premium text-white font-bold rounded-xl btn-premium shadow-xl"
             >
               <Globe className="w-5 h-5" />
-              Cadastrar opera√ß√£o no Brasil
+              Cadastrar operaÁ„o no Brasil
               <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
@@ -725,18 +725,18 @@ export default function HomePage() {
             <div className="relative grid lg:grid-cols-2 gap-8 items-center">
               <div>
                 <h2 className="text-3xl lg:text-4xl font-black text-white mb-4">
-                  Aurora Motoristas na palma da m√£o
+                  Aurora Motoristas na palma da m„o
                 </h2>
 
                 <p className="text-white/80 text-lg mb-8">
-                  Pe√ßa corridas, envie entregas, acompanhe servi√ßos, cadastre opera√ß√µes nacionais e acesse a plataforma com uma experi√™ncia simples, r√°pida e segura.
+                  PeÁa corridas, envie entregas, acompanhe serviÁos, cadastre operaÁıes nacionais e acesse a plataforma com uma experiÍncia simples, r·pida e segura.
                 </p>
 
                 <div className="flex flex-wrap gap-4">
                   <button className="flex items-center gap-3 px-6 py-3 bg-white/10 backdrop-blur rounded-xl hover:bg-white/20 transition-colors">
                     <Play className="w-6 h-6 text-white" />
                     <div className="text-left">
-                      <p className="text-[10px] text-white/70">Dispon√≠vel na</p>
+                      <p className="text-[10px] text-white/70">DisponÌvel na</p>
                       <p className="font-bold text-white">Google Play</p>
                     </div>
                   </button>
@@ -776,7 +776,7 @@ export default function HomePage() {
               </div>
               <div>
                 <p className="font-bold">Assistente Aurora</p>
-                <p className="text-xs text-white/75">Ajuda r√°pida do sistema</p>
+                <p className="text-xs text-white/75">Ajuda r·pida do sistema</p>
               </div>
             </div>
 
@@ -788,7 +788,7 @@ export default function HomePage() {
           <div className="p-4 space-y-4">
             <div className="p-4 rounded-2xl bg-secondary">
               <p className="text-sm text-muted-foreground">
-                Ol√°! Eu posso te orientar sobre corrida, entrega, cadastro nacional, parceiro, empresa ou acesso seguro.
+                Ol·! Eu posso te orientar sobre corrida, entrega, cadastro nacional, parceiro, empresa ou acesso seguro.
               </p>
             </div>
 
@@ -809,13 +809,13 @@ export default function HomePage() {
               <input
                 value={chatText}
                 onChange={(e) => setChatText(e.target.value)}
-                placeholder="Digite sua d√∫vida..."
+                placeholder="Digite sua d˙vida..."
                 className="flex-1 px-4 py-3 rounded-xl bg-background border border-border text-sm outline-none focus:border-primary"
               />
 
               <a
                 href={`https://wa.me/5531997490074?text=${encodeURIComponent(
-                  chatText || "Ol√°, preciso de ajuda com a Aurora Motoristas."
+                  chatText || "Ol·, preciso de ajuda com a Aurora Motoristas."
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -849,21 +849,21 @@ export default function HomePage() {
               </div>
 
               <p className="text-sm text-muted-foreground mb-4">
-                Transporte, entregas, gest√£o e opera√ß√µes em uma plataforma preparada para todo o Brasil.
+                Transporte, entregas, gest„o e operaÁıes em uma plataforma preparada para todo o Brasil.
               </p>
 
               <p className="text-xs text-muted-foreground">www.appmotoristas.com.br</p>
             </div>
 
             <div>
-              <h4 className="font-bold mb-4">Servi√ßos</h4>
+              <h4 className="font-bold mb-4">ServiÁos</h4>
               <div className="space-y-2">
                 {[
                   { label: "Aurora Ride", href: "/solicitar" },
                   { label: "Aurora Express", href: "/entregas" },
                   { label: "Cadastro nacional", href: "/comecar" },
                   { label: "Seja parceiro", href: "/comecar" },
-                  { label: "√Årea segura", href: "/entrar" },
+                  { label: "¡rea segura", href: "/entrar" },
                 ].map((link) => (
                   <Link key={`${link.label}-${link.href}`} href={link.href} className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
                     {link.label}
@@ -875,7 +875,7 @@ export default function HomePage() {
             <div>
               <h4 className="font-bold mb-4">Suporte</h4>
               <div className="space-y-2">
-                {["Central de ajuda", "Seguran√ßa", "Termos de uso", "Privacidade"].map((item) => (
+                {["Central de ajuda", "SeguranÁa", "Termos de uso", "Privacidade"].map((item) => (
                   <p key={item} className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
                     {item}
                   </p>
