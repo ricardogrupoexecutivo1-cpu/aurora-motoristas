@@ -99,6 +99,16 @@ export default function ServicosSupabasePage() {
           Leitura limpa dos serviços gerados pela aprovação das cotações.
         </p>
 
+        <div style={navBox}>
+          <a href="/admin/dashboard" style={navBtn}>Dashboard</a>
+          <a href="/cliente/supabase" style={navBtn}>Painel Cliente</a>
+          <a href="/motorista/supabase" style={navBtn}>Painel Motorista</a>
+          <a href="/motorista/historico-supabase" style={navBtn}>Histórico Motorista</a>
+          <a href="/cliente/historico-supabase" style={navBtn}>Histórico Cliente</a>
+          <a href="/cliente/nota-debito-supabase" style={navBtn}>Nota de Débito</a>
+          <a href="/admin/recibo-motorista-supabase" style={navBtn}>Recibo Motorista</a>
+        </div>
+
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 14, marginTop: 24 }}>
           <Card titulo="Serviços" valor={String(resumo.total)} />
           <Card titulo="Total cliente" valor={moeda(resumo.cliente)} />
@@ -110,19 +120,7 @@ export default function ServicosSupabasePage() {
           <Card titulo="Status" valor={msg} />
         </div>
 
-        <button
-          onClick={carregar}
-          style={{
-            marginTop: 24,
-            background: "#06b6d4",
-            color: "#020617",
-            border: 0,
-            borderRadius: 14,
-            padding: "12px 18px",
-            fontWeight: 900,
-            cursor: "pointer",
-          }}
-        >
+        <button onClick={carregar} style={primaryBtn}>
           Atualizar
         </button>
 
@@ -172,15 +170,7 @@ export default function ServicosSupabasePage() {
                           type="button"
                           onClick={() => marcarPago(s.id)}
                           disabled={pagandoId === s.id}
-                          style={{
-                            background: "#22c55e",
-                            color: "#020617",
-                            border: 0,
-                            borderRadius: 10,
-                            padding: "8px 12px",
-                            fontWeight: 900,
-                            cursor: "pointer",
-                          }}
+                          style={payBtn}
                         >
                           {pagandoId === s.id ? "Pagando..." : "Marcar pago"}
                         </button>
@@ -205,6 +195,48 @@ function Card({ titulo, valor }: { titulo: string; valor: string }) {
     </div>
   );
 }
+
+const navBox = {
+  display: "flex",
+  flexWrap: "wrap" as const,
+  gap: 10,
+  marginTop: 22,
+  padding: 14,
+  border: "1px solid #164e63",
+  borderRadius: 18,
+  background: "#082f49",
+};
+
+const navBtn = {
+  display: "inline-block",
+  background: "#06b6d4",
+  color: "#020617",
+  borderRadius: 12,
+  padding: "10px 14px",
+  fontWeight: 900,
+  textDecoration: "none",
+};
+
+const primaryBtn = {
+  marginTop: 24,
+  background: "#06b6d4",
+  color: "#020617",
+  border: 0,
+  borderRadius: 14,
+  padding: "12px 18px",
+  fontWeight: 900,
+  cursor: "pointer",
+};
+
+const payBtn = {
+  background: "#22c55e",
+  color: "#020617",
+  border: 0,
+  borderRadius: 10,
+  padding: "8px 12px",
+  fontWeight: 900,
+  cursor: "pointer",
+};
 
 const th = {
   padding: 10,
