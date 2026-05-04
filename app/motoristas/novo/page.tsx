@@ -57,7 +57,7 @@ type ServiceRow = {
   created_at?: string | null;
   updated_at?: string | null;
 
-  // Campos fiscais opcionais — leitura segura
+  // Campos fiscais opcionais â€” leitura segura
   numero_nota_fiscal?: string | null;
   nota_fiscal_numero?: string | null;
   data_emissao_nota?: string | null;
@@ -93,7 +93,7 @@ function formatDate(value?: string | null) {
 }
 
 function formatDateTime(value?: string | null) {
-  if (!value) return "—";
+  if (!value) return "â€”";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
   return date.toLocaleString("pt-BR");
@@ -586,7 +586,7 @@ export default function AdminServicosPage() {
                 justifyContent: "space-between",
               }}
             >
-              <div style={heroBadge}>Admin • Serviços</div>
+              <div style={heroBadge}>Admin â€¢ Serviços</div>
 
               <div
                 style={{
@@ -638,7 +638,7 @@ export default function AdminServicosPage() {
                 </Link>
 
                 <Link
-                  href="/servicos/novo"
+                  href="/plataforma/cotacoes/novo"
                   style={{
                     ...topPrimaryStyle,
                     width: isMobile ? "100%" : "auto",
@@ -677,7 +677,7 @@ export default function AdminServicosPage() {
               </span>
               <span style={chipWarning}>
                 Sistema em constante atualização e podem ocorrer instabilidades
-                momentâneas.
+                momentÃ¢neas.
               </span>
             </div>
           </div>
@@ -909,7 +909,7 @@ export default function AdminServicosPage() {
                         {service.servico || "Serviço sem título"}
                       </strong>
                       <span style={serviceMetaStyle}>
-                        {getDisplayOS(service)} • {formatDate(service.data_servico)}
+                        {getDisplayOS(service)} â€¢ {formatDate(service.data_servico)}
                       </span>
                     </div>
 
@@ -1059,7 +1059,7 @@ export default function AdminServicosPage() {
                       <>
                         <div style={lockedNoteStyle}>
                           Este item está no histórico protegido. Aqui você pode
-                          reabrir o serviço para voltar à operação ativa quando
+                          reabrir o serviço para voltar Ã  operação ativa quando
                           precisar corrigir uma baixa, um pagamento ou uma
                           visibilidade indevida.
                         </div>
@@ -1749,3 +1749,4 @@ const emptyStateStyle: CSSProperties = {
   textAlign: "center",
   padding: 20,
 };
+

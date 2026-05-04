@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -519,7 +519,7 @@ export default function AdminMasterPage() {
                 </Link>
 
                 <Link
-                  href="/servicos/novo"
+                  href="/plataforma/cotacoes"
                   className="p-4 bg-card rounded-xl border border-border hover:border-primary/50 transition-colors group"
                 >
                   <div className="flex items-center gap-3">
@@ -769,7 +769,7 @@ export default function AdminMasterPage() {
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold">{servicos.length} serviços</h3>
                 <Link
-                  href="/servicos/novo"
+                  href="/plataforma/cotacoes"
                   className="px-4 py-2 bg-primary text-primary-foreground rounded-xl font-medium hover:bg-primary/90 transition-colors"
                 >
                   Novo serviço
@@ -1003,3 +1003,6 @@ function StatCard({
     </div>
   );
 }
+
+
+

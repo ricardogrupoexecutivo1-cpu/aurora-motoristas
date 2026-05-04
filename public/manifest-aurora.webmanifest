@@ -1,6 +1,6 @@
-{
-  "name": "MOVO - Mobilidade do Futuro",
-  "short_name": "MOVO",
+﻿{
+  "name": "Aurora Motoristas",
+  "short_name": "Aurora",
   "description": "Transporte, Entregas e Gestao com a menor taxa do mercado - apenas 5%",
   "start_url": "/",
   "display": "standalone",
@@ -66,7 +66,7 @@
       "sizes": "1080x1920",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Tela inicial do MOVO"
+      "label": "Tela inicial do Aurora Motoristas"
     },
     {
       "src": "/screenshots/ride.png",

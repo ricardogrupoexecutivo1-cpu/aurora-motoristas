@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 
@@ -9,7 +9,7 @@ export default function PainelPage() {
         {/* ALERTA DO PROJETO */}
         <section style={alertBox}>
           <strong style={{ color: "#b91c1c" }}>
-            ⚠️ Regra de ouro do projeto Aurora Motoristas
+            âš ï¸ Regra de ouro do projeto Aurora Motoristas
           </strong>
 
           <p style={alertText}>
@@ -19,7 +19,7 @@ export default function PainelPage() {
           </p>
         </section>
 
-        {/* TÍTULO */}
+        {/* TÃTULO */}
         <section style={hero}>
           <h1 style={title}>Painel de Acessos Aurora Motoristas</h1>
           <p style={subtitle}>
@@ -39,15 +39,15 @@ export default function PainelPage() {
           </Card>
 
           <Card title="Novo serviço" desc="Cadastro direto de serviço">
-            <Link href="/servicos/novo" style={btnPrimary}>Cadastrar</Link>
+            <Link href="/plataforma/cotacoes" style={btnPrimary}>Cadastrar</Link>
           </Card>
 
           <Card title="Operação" desc="Visão operacional ativa">
             <Link href="/servicos" style={btn}>Abrir</Link>
           </Card>
 
-          <Card title="Admin • Serviços" desc="Controle total da base">
-            <Link href="/admin/servicos" style={btn}>Abrir</Link>
+          <Card title="Admin â€¢ Serviços" desc="Controle total da base">
+            <Link href="/admin/servicos-supabase" style={btn}>Abrir</Link>
           </Card>
 
           <Card title="Relatórios" desc="Visão financeira estilo Excel">
@@ -184,3 +184,5 @@ const future = {
   padding: 16,
   border: "1px solid #e5edf5",
 };
+
+

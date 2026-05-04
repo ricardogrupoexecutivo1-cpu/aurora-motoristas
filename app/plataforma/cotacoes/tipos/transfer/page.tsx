@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
@@ -88,7 +88,7 @@ function PageContent() {
         <div className="bg-white p-6 rounded-2xl border">
           <h1 className="text-2xl font-bold">Transfer (cotação enxuta)</h1>
           <p className="text-sm text-gray-600 mt-2">
-            Fluxo rápido para origem → destino com cálculo direto.
+            Fluxo rápido para origem â†’ destino com cálculo direto.
           </p>
         </div>
 
@@ -152,3 +152,4 @@ export default function Page() {
     </Suspense>
   )
 }
+

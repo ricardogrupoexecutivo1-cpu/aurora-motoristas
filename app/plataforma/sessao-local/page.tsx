@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 
@@ -170,7 +170,7 @@ export default function PlataformaSessaoLocalPage() {
 
   function labelBotaoSalvar() {
     if (feedback === "saving") return "Salvando...";
-    if (feedback === "success") return "Salvo ✓";
+    if (feedback === "success") return "Salvo âœ“";
     if (feedback === "error") return "Tentar salvar novamente";
     return "Salvar sessão local";
   }
@@ -275,7 +275,7 @@ export default function PlataformaSessaoLocalPage() {
           <div className="mt-8 grid gap-8 lg:grid-cols-[1.1fr,0.9fr]">
             <div>
               <span className="inline-flex rounded-full border border-cyan-200 bg-cyan-50 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">
-                Aurora Motoristas • Sessão local isolada
+                Aurora Motoristas â€¢ Sessão local isolada
               </span>
 
               <h1 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 md:text-5xl">
@@ -284,7 +284,7 @@ export default function PlataformaSessaoLocalPage() {
 
               <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600 md:text-lg">
                 Esta página salva localmente no navegador o perfil e a empresa
-                usados na nova camada da plataforma. É um passo seguro para
+                usados na nova camada da plataforma. É um passo Ambiente seguro para
                 preparar a futura ligação com sessão real, ainda sem tocar no
                 login oficial, na API ou no banco.
               </p>
@@ -401,7 +401,7 @@ export default function PlataformaSessaoLocalPage() {
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-7 text-slate-700">
                 <strong>Leitura do botão:</strong>{" "}
                 ao clicar em salvar, ele muda para <strong>Salvando...</strong>,
-                depois mostra <strong>Salvo ✓</strong> quando a sessão for
+                depois mostra <strong>Salvo âœ“</strong> quando a sessão for
                 gravada corretamente.
               </div>
             </div>
@@ -505,7 +505,7 @@ export default function PlataformaSessaoLocalPage() {
         <div className="mx-auto max-w-7xl px-6 py-6 md:px-8">
           <p className="text-sm leading-7 text-slate-500">
             Sistema em constante atualização e podem ocorrer instabilidades
-            momentâneas durante melhorias. Esta página foi criada como camada
+            momentÃ¢neas durante melhorias. Esta página foi criada como camada
             nova e isolada para validar persistência local de perfil sem tocar
             na base já publicada.
           </p>
@@ -514,3 +514,4 @@ export default function PlataformaSessaoLocalPage() {
     </main>
   );
 }
+

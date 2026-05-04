@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -82,7 +82,7 @@ function formatDate(value?: string | null) {
 }
 
 function formatDateTime(value?: string | null) {
-  if (!value) return "—";
+  if (!value) return "â€”";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
   return date.toLocaleString("pt-BR");
@@ -499,7 +499,7 @@ export default function ServicosPage() {
               Voltar
             </Link>
 
-            <Link href="/servicos/novo" style={topPrimaryStyle}>
+            <Link href="/plataforma/cotacoes" style={topPrimaryStyle}>
               Novo serviço
             </Link>
           </div>
@@ -573,7 +573,7 @@ export default function ServicosPage() {
 
               <span style={chipWarning}>
                 Sistema em constante atualização e podem ocorrer instabilidades
-                momentâneas.
+                momentÃ¢neas.
               </span>
             </div>
           </div>
@@ -816,7 +816,7 @@ export default function ServicosPage() {
                               wordBreak: "break-word",
                             }}
                           >
-                            {getDisplayOS(service)} •{" "}
+                            {getDisplayOS(service)} â€¢{" "}
                             {formatDate(service.data_servico)}
                           </span>
                         </div>
@@ -1027,7 +1027,7 @@ export default function ServicosPage() {
                           value={
                             service.pago_em
                               ? formatDateTime(service.pago_em)
-                              : "—"
+                              : "â€”"
                           }
                         />
                         <Info
@@ -1161,8 +1161,8 @@ export default function ServicosPage() {
                             fontWeight: 700,
                           }}
                         >
-                          Sistema em constante atualização • podem ocorrer
-                          instabilidades momentâneas
+                          Sistema em constante atualização â€¢ podem ocorrer
+                          instabilidades momentÃ¢neas
                         </div>
 
                         <div
@@ -1667,3 +1667,5 @@ const quickActionPrimaryStyle: React.CSSProperties = {
   cursor: "pointer",
   boxShadow: "0 12px 24px rgba(22, 163, 74, 0.18)",
 };
+
+

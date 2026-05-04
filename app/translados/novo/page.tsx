@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -269,7 +269,7 @@ export default function NovoTransladoPage() {
         <div style={styles.heroCard}>
           <div style={styles.heroGrid}>
             <div style={styles.heroLeft}>
-              <div style={styles.eyebrow}>AURORA MOTORISTAS • NOVO TRANSLADO</div>
+              <div style={styles.eyebrow}>AURORA MOTORISTAS â€¢ NOVO TRANSLADO</div>
               <h1 style={styles.heroTitle}>
                 Cadastro real de translado com persistência local, ETA, risco e reserva
               </h1>
@@ -482,7 +482,7 @@ export default function NovoTransladoPage() {
                 </div>
 
                 <div style={styles.field}>
-                  <label style={styles.label}>Acréscimo trânsito (min)</label>
+                  <label style={styles.label}>Acréscimo trÃ¢nsito (min)</label>
                   <input
                     value={form.acrescimoTransitoMin}
                     onChange={(e) => updateField("acrescimoTransitoMin", e.target.value)}
@@ -655,16 +655,16 @@ export default function NovoTransladoPage() {
                         {item.origem} x {item.destino}
                       </strong>
                       <span style={styles.savedText}>
-                        {item.id} • {item.horarioAtualizado}
+                        {item.id} â€¢ {item.horarioAtualizado}
                       </span>
                       <span style={styles.savedText}>
-                        {item.empresa} • {item.locadora}
+                        {item.empresa} â€¢ {item.locadora}
                       </span>
                       <span style={styles.savedText}>
-                        {item.motorista} • {item.status} • risco {item.risco}
+                        {item.motorista} â€¢ {item.status} â€¢ risco {item.risco}
                       </span>
                       <span style={styles.savedText}>
-                        {formatCurrency(item.valorTransfer)} • motorista{" "}
+                        {formatCurrency(item.valorTransfer)} â€¢ motorista{" "}
                         {formatCurrency(item.valorMotorista)}
                       </span>
                     </article>
@@ -1173,3 +1173,4 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 700,
   },
 };
+

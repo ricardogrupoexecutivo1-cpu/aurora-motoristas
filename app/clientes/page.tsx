@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 
@@ -22,7 +22,7 @@ type Cliente = {
 };
 
 function formatDate(value: string | null) {
-  if (!value) return "—";
+  if (!value) return "â€”";
 
   try {
     return new Intl.DateTimeFormat("pt-BR", {
@@ -159,7 +159,7 @@ export default function ClientesListPage() {
               textTransform: "uppercase",
             }}
           >
-            Aurora Motoristas • Clientes
+            Aurora Motoristas â€¢ Clientes
           </div>
 
           <h1
@@ -401,7 +401,7 @@ export default function ClientesListPage() {
                     label="Cidade"
                     value={
                       cliente.cidade || cliente.estado
-                        ? `${cliente.cidade || "—"}${cliente.estado ? ` • ${cliente.estado}` : ""}`
+                        ? `${cliente.cidade || "â€”"}${cliente.estado ? ` â€¢ ${cliente.estado}` : ""}`
                         : null
                     }
                   />
@@ -530,8 +530,9 @@ function InfoLine({
           wordBreak: "break-word",
         }}
       >
-        {value || "—"}
+        {value || "â€”"}
       </div>
     </div>
   );
 }
+

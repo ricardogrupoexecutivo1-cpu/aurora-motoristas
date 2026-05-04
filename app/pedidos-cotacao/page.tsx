@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
@@ -111,13 +111,13 @@ function moneyDisplay(value?: number | null) {
   });
 }
 
-function safeText(value?: string | null, fallback = "—") {
+function safeText(value?: string | null, fallback = "â€”") {
   if (!value || !String(value).trim()) return fallback;
   return String(value);
 }
 
 function formatDate(value?: string | null) {
-  if (!value) return "—";
+  if (!value) return "â€”";
 
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
@@ -402,7 +402,7 @@ export default function PedidosCotacaoPage() {
                   fontSize: 15,
                 }}
               >
-                Área interna para leitura dos pedidos aprovados pelo cliente.
+                Ãrea interna para leitura dos pedidos aprovados pelo cliente.
                 Esta tela organiza a entrada comercial antes da conversão em
                 operação interna, sem mexer no disparo dos motoristas.
               </p>
@@ -530,7 +530,7 @@ export default function PedidosCotacaoPage() {
                           marginBottom: 6,
                         }}
                       >
-                        {getTipoLabel(item.tipo_servico)} •{" "}
+                        {getTipoLabel(item.tipo_servico)} â€¢{" "}
                         {getModoLabel(item.modo_cobranca)}
                       </div>
                       <h2
@@ -540,7 +540,7 @@ export default function PedidosCotacaoPage() {
                           lineHeight: 1.2,
                         }}
                       >
-                        {safeText(item.contratante)} → {safeText(item.cliente_final)}
+                        {safeText(item.contratante)} â†’ {safeText(item.cliente_final)}
                       </h2>
                       <p
                         style={{
@@ -549,7 +549,7 @@ export default function PedidosCotacaoPage() {
                           fontSize: 14,
                         }}
                       >
-                        Protocolo: {safeText(item.id)} • Aprovado em:{" "}
+                        Protocolo: {safeText(item.id)} â€¢ Aprovado em:{" "}
                         {formatDate(item.approved_at || item.created_at)}
                       </p>
                     </div>
@@ -848,3 +848,4 @@ const linkPrimaryStyle: React.CSSProperties = {
   fontWeight: 700,
   background: "#f0f9ff",
 };
+

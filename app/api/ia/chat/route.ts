@@ -1,4 +1,4 @@
-import {
+﻿import {
   consumeStream,
   convertToModelMessages,
   streamText,
@@ -10,37 +10,29 @@ import { z } from "zod";
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
-  const { messages, context }: { messages: UIMessage[]; context?: Record<string, unknown> } = await req.json();
+  const { messages, context }: { messages: UIMessage[]; context?: Record<string, unknown> } =
+    await req.json();
 
-  const systemPrompt = `Você é a MIA (MOVO Inteligência Artificial), a assistente virtual inteligente do MOVO - o app de mobilidade com a menor taxa do Brasil (apenas 5%).
+  const systemPrompt = `Você é a MIA, assistente virtual da Aurora Motoristas.
 
-PERSONALIDADE:
-- Simpática, profissional e eficiente
-- Usa linguagem clara e acessível
-- Sempre responde em português brasileiro
-- É proativa em oferecer ajuda
-
-CAPACIDADES:
-- Ajudar passageiros a solicitar corridas
-- Auxiliar motoristas com dúvidas sobre ganhos e taxa
-- Responder dúvidas sobre pagamentos e métodos aceitos
-- Calcular estimativas de corridas
-- Explicar como funciona a taxa de 5% do MOVO
-- Ajudar com problemas técnicos
-- Responder sobre segurança e verificação de motoristas
-
-INFORMAÇÕES DO MOVO:
-- Taxa de apenas 5% para motoristas (a menor do Brasil)
-- Pagamentos via PIX, cartão de crédito/débito e dinheiro
-- Motoristas recebem em até 24h via PIX
-- Todos os motoristas são verificados com antecedentes
-- Disponível em todo o Brasil
-- Corridas executivas, econômicas e compartilhadas
+REGRAS PRINCIPAIS:
+- Sempre responda em português brasileiro.
+- Não prometa seguro. Seguro, quando existir, é responsabilidade do cliente/contratante.
+- Não exponha informações internas de motorista para cliente.
+- Cliente vê somente a própria solicitação, nunca dados de outros clientes.
+- Motorista vê somente os próprios serviços ativos/pendentes.
+- Depois de pago/finalizado, o serviço sai da visão do motorista e fica no histórico/admin.
+- Somente admin master vê tudo.
+- A operação pode ser por diária, por valor por KM ou por valor fechado do serviço.
+- A cobrança pode ter KM com reembolso ou sem reembolso.
+- O pagamento ao motorista pode ser por valor do serviço.
+- Adiantamento + despesas = valor a receber/descontar do motorista, conforme operação.
+- A taxa comercial pública da Aurora pode ser 5% quando aplicada ao fluxo parceiro.
 
 CONTEXTO DO USUÁRIO:
 ${context ? JSON.stringify(context, null, 2) : "Não disponível"}
 
-Sempre seja útil e direcione o usuário para as soluções corretas dentro do app MOVO.`;
+Ajude com clareza, sem expor dados sensíveis e direcionando para a área correta do sistema.`;
 
   const result = streamText({
     model: "openai/gpt-5-mini",
@@ -49,116 +41,128 @@ Sempre seja útil e direcione o usuário para as soluções corretas dentro do a
     abortSignal: req.signal,
     tools: {
       calcularCorrida: tool({
-        description: "Calcula o valor estimado de uma corrida",
+        description: "Calcula valor estimado por KM para corrida ou deslocamento.",
         inputSchema: z.object({
           distanciaKm: z.number().describe("Distância em quilômetros"),
-          categoria: z.enum(["economico", "comfort", "executivo", "luxo"]).describe("Categoria do veículo"),
+          valorKm: z.number().optional().describe("Valor por KM em reais"),
+          valorBase: z.number().optional().describe("Valor base em reais"),
         }),
-        execute: async ({ distanciaKm, categoria }) => {
-          const precos = {
-            economico: { base: 5, km: 1.5 },
-            comfort: { base: 7, km: 2.0 },
-            executivo: { base: 10, km: 2.8 },
-            luxo: { base: 15, km: 4.0 },
-          };
-          
-          const preco = precos[categoria];
-          const valor = preco.base + (distanciaKm * preco.km);
-          
+        execute: async ({ distanciaKm, valorKm = 2.5, valorBase = 0 }) => {
+          const valorEstimado = valorBase + distanciaKm * valorKm;
+
           return {
-            categoria,
             distanciaKm,
-            valorBase: preco.base,
-            valorPorKm: preco.km,
-            valorEstimado: valor.toFixed(2),
-            tempoEstimado: Math.ceil(distanciaKm * 2.5) + " min",
+            valorBase: valorBase.toFixed(2),
+            valorKm: valorKm.toFixed(2),
+            valorEstimado: valorEstimado.toFixed(2),
+            observacao:
+              "Estimativa operacional. Valores finais dependem da regra cadastrada: diária, KM ou valor fechado do serviço.",
           };
         },
       }),
-      calcularGanhoMotorista: tool({
-        description: "Calcula quanto um motorista ganha em uma corrida após a taxa de 5%",
+
+      calcularServicoMotorista: tool({
+        description:
+          "Calcula resumo operacional do serviço do motorista com valor do serviço, adiantamento e despesas.",
         inputSchema: z.object({
-          valorCorrida: z.number().describe("Valor total da corrida em reais"),
+          valorServico: z.number().describe("Valor bruto do serviço"),
+          adiantamento: z.number().optional().describe("Valor adiantado ao motorista"),
+          despesas: z.number().optional().describe("Despesas lançadas no serviço"),
+          taxaPercentual: z.number().optional().describe("Taxa percentual da Aurora quando aplicável"),
         }),
-        execute: async ({ valorCorrida }) => {
-          const taxaMovo = valorCorrida * 0.05;
-          const ganhoMotorista = valorCorrida - taxaMovo;
-          
+        execute: async ({
+          valorServico,
+          adiantamento = 0,
+          despesas = 0,
+          taxaPercentual = 5,
+        }) => {
+          const taxaAurora = valorServico * (taxaPercentual / 100);
+          const valorLiquidoServico = valorServico - taxaAurora;
+          const valorAReceberDoMotorista = adiantamento + despesas;
+          const saldoMotorista = valorLiquidoServico - valorAReceberDoMotorista;
+
           return {
-            valorCorrida: valorCorrida.toFixed(2),
-            taxaMovo: taxaMovo.toFixed(2),
-            percentualTaxa: "5%",
-            ganhoMotorista: ganhoMotorista.toFixed(2),
-            percentualGanho: "95%",
+            valorServico: valorServico.toFixed(2),
+            taxaPercentual: `${taxaPercentual}%`,
+            taxaAurora: taxaAurora.toFixed(2),
+            valorLiquidoServico: valorLiquidoServico.toFixed(2),
+            adiantamento: adiantamento.toFixed(2),
+            despesas: despesas.toFixed(2),
+            valorAReceberDoMotorista: valorAReceberDoMotorista.toFixed(2),
+            saldoMotorista: saldoMotorista.toFixed(2),
+            regra:
+              "Adiantamento + despesas compõem valor a receber/descontar do motorista conforme a operação.",
+            visibilidade:
+              "Cliente não vê esta parte. Motorista vê apenas o que for dele. Admin master vê tudo.",
           };
         },
       }),
-      simularGanhosMensais: tool({
-        description: "Simula ganhos mensais de um motorista",
+
+      simularDiaria: tool({
+        description: "Simula cobrança ou pagamento por diária.",
         inputSchema: z.object({
-          corridasPorDia: z.number().describe("Número médio de corridas por dia"),
-          valorMedioCorrida: z.number().describe("Valor médio por corrida"),
-          diasPorSemana: z.number().describe("Dias trabalhados por semana"),
+          quantidadeDiarias: z.number().describe("Quantidade de diárias"),
+          valorDiaria: z.number().describe("Valor de cada diária"),
+          despesas: z.number().optional().describe("Despesas adicionais"),
         }),
-        execute: async ({ corridasPorDia, valorMedioCorrida, diasPorSemana }) => {
-          const corridasSemana = corridasPorDia * diasPorSemana;
-          const corridasMes = corridasSemana * 4;
-          const faturamentoSemana = corridasSemana * valorMedioCorrida;
-          const faturamentoMes = corridasMes * valorMedioCorrida;
-          const ganhoLiquidoMes = faturamentoMes * 0.95; // 95% após taxa de 5%
-          
+        execute: async ({ quantidadeDiarias, valorDiaria, despesas = 0 }) => {
+          const totalDiarias = quantidadeDiarias * valorDiaria;
+          const totalComDespesas = totalDiarias + despesas;
+
           return {
-            corridasSemana,
-            corridasMes,
-            faturamentoBrutoSemana: faturamentoSemana.toFixed(2),
-            faturamentoBrutoMes: faturamentoMes.toFixed(2),
-            taxaTotalMes: (faturamentoMes * 0.05).toFixed(2),
-            ganhoLiquidoMes: ganhoLiquidoMes.toFixed(2),
+            quantidadeDiarias,
+            valorDiaria: valorDiaria.toFixed(2),
+            totalDiarias: totalDiarias.toFixed(2),
+            despesas: despesas.toFixed(2),
+            totalComDespesas: totalComDespesas.toFixed(2),
           };
         },
       }),
-      buscarCategoria: tool({
-        description: "Busca informações sobre categorias de veículos",
+
+      simularKm: tool({
+        description: "Simula operação por KM com ou sem reembolso.",
         inputSchema: z.object({
-          categoria: z.enum(["economico", "comfort", "executivo", "luxo"]).describe("Categoria do veículo"),
+          km: z.number().describe("Quantidade de quilômetros"),
+          valorKm: z.number().describe("Valor por KM"),
+          reembolso: z.number().optional().describe("Valor de reembolso quando existir"),
+          incluirReembolso: z.boolean().optional().describe("Se o reembolso entra no total"),
         }),
-        execute: async ({ categoria }) => {
-          const categorias = {
-            economico: {
-              nome: "MOVO X",
-              descricao: "Carros populares, opção mais acessível",
-              capacidade: "4 passageiros",
-              exemplos: "Onix, HB20, Gol, Ka",
-              precoBase: "R$ 5,00",
-              precoKm: "R$ 1,50/km",
-            },
-            comfort: {
-              nome: "MOVO Comfort",
-              descricao: "Carros mais espaçosos e confortáveis",
-              capacidade: "4 passageiros",
-              exemplos: "Corolla, Civic, Cruze, Sentra",
-              precoBase: "R$ 7,00",
-              precoKm: "R$ 2,00/km",
-            },
-            executivo: {
-              nome: "MOVO Black",
-              descricao: "Carros executivos de alto padrão",
-              capacidade: "4 passageiros",
-              exemplos: "BMW Série 3, Mercedes Classe C, Audi A4",
-              precoBase: "R$ 10,00",
-              precoKm: "R$ 2,80/km",
-            },
-            luxo: {
-              nome: "MOVO Lux",
-              descricao: "Carros de luxo para ocasiões especiais",
-              capacidade: "4 passageiros",
-              exemplos: "BMW Série 7, Mercedes Classe S, Audi A8",
-              precoBase: "R$ 15,00",
-              precoKm: "R$ 4,00/km",
-            },
+        execute: async ({ km, valorKm, reembolso = 0, incluirReembolso = false }) => {
+          const subtotalKm = km * valorKm;
+          const total = incluirReembolso ? subtotalKm + reembolso : subtotalKm;
+
+          return {
+            km,
+            valorKm: valorKm.toFixed(2),
+            subtotalKm: subtotalKm.toFixed(2),
+            reembolso: reembolso.toFixed(2),
+            incluirReembolso,
+            total: total.toFixed(2),
           };
-          
-          return categorias[categoria];
+        },
+      }),
+
+      explicarVisibilidade: tool({
+        description: "Explica regras de visibilidade por perfil.",
+        inputSchema: z.object({
+          perfil: z.enum(["cliente", "motorista", "empresa", "admin"]).describe("Perfil do usuário"),
+        }),
+        execute: async ({ perfil }) => {
+          const regras = {
+            cliente:
+              "Cliente vê somente os próprios serviços, status, informações de atendimento e dados necessários da própria operação. Nunca vê dados internos do motorista, valores internos, outros clientes ou visão administrativa.",
+            motorista:
+              "Motorista vê somente serviços atribuídos a ele. Após pagamento/finalização, o serviço sai da visão operacional do motorista e fica em histórico/admin.",
+            empresa:
+              "Empresa vê somente a própria operação, solicitações, serviços e relatórios autorizados. Não vê dados de outras empresas.",
+            admin:
+              "Admin master vê tudo: clientes, empresas, motoristas, serviços, financeiro, histórico, adiantamentos, despesas e auditoria.",
+          };
+
+          return {
+            perfil,
+            regra: regras[perfil],
+          };
         },
       }),
     },
@@ -169,3 +173,4 @@ Sempre seja útil e direcione o usuário para as soluções corretas dentro do a
     consumeSseStream: consumeStream,
   });
 }
+

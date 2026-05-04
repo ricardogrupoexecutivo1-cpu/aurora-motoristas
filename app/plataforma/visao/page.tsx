@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useMemo, useState } from 'react'
 
@@ -199,7 +199,7 @@ export default function PlataformaVisaoBlindadaPage() {
             <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
               <div className="space-y-4">
                 <span className="inline-flex rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-700">
-                  Aurora Motoristas • Camada isolada
+                  Aurora Motoristas â€¢ Camada isolada
                 </span>
 
                 <div>
@@ -258,7 +258,7 @@ export default function PlataformaVisaoBlindadaPage() {
             </div>
 
             <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-              Sistema em constante atualização e podem ocorrer instabilidades momentâneas
+              Sistema em constante atualização e podem ocorrer instabilidades momentÃ¢neas
               durante melhorias.
             </div>
           </div>
@@ -413,3 +413,4 @@ function RegraCard({
     </div>
   )
 }
+

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -91,7 +91,7 @@ function buildOfferMessage(
     observacao: string;
   }
 ) {
-  return `🚗 Aurora Motoristas
+  return `ðŸš— Aurora Motoristas
 
 Oferta de serviço
 OS: ${service.os}
@@ -167,7 +167,7 @@ export default function OfertasPage() {
   const [service, setService] = useState({
     os: "OS-2026-000201",
     cliente: "Cliente Aero Business",
-    rota: "Confins → Belvedere",
+    rota: "Confins â†’ Belvedere",
     dataHora: "10/04/2026 18:20",
     valor: "R$ 320,00",
     observacao:
@@ -318,7 +318,7 @@ export default function OfertasPage() {
           <div style={styles.heroGrid}>
             <div style={styles.heroLeft}>
               <div style={styles.eyebrow}>
-                AURORA MOTORISTAS • OFERTA DE SERVIÇO
+                AURORA MOTORISTAS â€¢ OFERTA DE SERVIÇO
               </div>
 
               <h1 style={styles.heroTitle}>
@@ -359,7 +359,7 @@ export default function OfertasPage() {
           </div>
 
           <div style={styles.noticeBox}>
-            Sistema em constante atualização. Esta camada prepara o fluxo seguro
+            Sistema em constante atualização. Esta camada prepara o fluxo Ambiente seguro
             de oferta para serviços esporádicos, com mais controle da operação e
             menos atravessamento.
           </div>
@@ -424,7 +424,7 @@ export default function OfertasPage() {
 
           <article style={styles.statCard}>
             <span style={styles.statLabel}>Fechado com</span>
-            <strong style={styles.statValue}>{closedWith || "—"}</strong>
+            <strong style={styles.statValue}>{closedWith || "â€”"}</strong>
             <span style={styles.statDetail}>Primeiro aceite válido</span>
           </article>
         </div>
@@ -574,7 +574,7 @@ export default function OfertasPage() {
                         <div style={styles.driverInfo}>
                           <h3 style={styles.driverTitle}>{driver.nome}</h3>
                           <p style={styles.driverSubline}>
-                            {driver.base} • {driver.cidade}
+                            {driver.base} â€¢ {driver.cidade}
                           </p>
                           <p style={styles.driverSubline}>
                             {driver.categoria}
@@ -654,7 +654,7 @@ export default function OfertasPage() {
 
                       {log?.respondedAt ? (
                         <div style={styles.logBox}>
-                          Última atualização: {log.respondedAt}
+                          Ãšltima atualização: {log.respondedAt}
                         </div>
                       ) : null}
                     </article>
@@ -737,17 +737,17 @@ export default function OfertasPage() {
                   </strong>
                   <span style={styles.ruleItemText}>
                     Se o veículo tiver telemetria, a condução deve seguir os
-                    parâmetros informados para a operação.
+                    parÃ¢metros informados para a operação.
                   </span>
                 </div>
               </div>
             </div>
 
             <div style={styles.darkCard}>
-              <div style={styles.robotTag}>ROBÔ AURORA</div>
-              <h2 style={styles.sidebarTitleDark}>Apoio à distribuição</h2>
+              <div style={styles.robotTag}>ROBÃ” AURORA</div>
+              <h2 style={styles.sidebarTitleDark}>Apoio Ã  distribuição</h2>
               <p style={styles.sidebarTextDark}>
-                O Robô Aurora poderá sugerir qual motorista acionar primeiro,
+                O RobÃ´ Aurora poderá sugerir qual motorista acionar primeiro,
                 ler histórico de aceite, separar base por cidade e reduzir tempo
                 de resposta.
               </p>
@@ -761,7 +761,7 @@ export default function OfertasPage() {
             </div>
 
             <div style={styles.navCard}>
-              <span style={styles.sectionEyebrow}>NAVEGAÇÃO</span>
+              <span style={styles.sectionEyebrow}>NAVEGAÇÃƒO</span>
               <h2 style={styles.sidebarTitle}>Próximos blocos</h2>
 
               <div style={styles.navList}>
@@ -1481,3 +1481,4 @@ const styles: Record<string, React.CSSProperties> = {
     border: "1px solid rgba(125, 211, 252, 0.18)",
   },
 };
+

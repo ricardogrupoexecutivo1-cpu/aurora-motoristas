@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -314,7 +314,7 @@ export default function HistoricoPage() {
         <div style={styles.heroCard}>
           <div style={styles.heroGrid}>
             <div style={styles.heroLeft}>
-              <div style={styles.eyebrow}>AURORA MOTORISTAS • HISTÓRICO</div>
+              <div style={styles.eyebrow}>AURORA MOTORISTAS â€¢ HISTÃ“RICO</div>
               <h1 style={styles.heroTitle}>
                 Histórico interno protegido com serviços e translados no fechamento final
               </h1>
@@ -420,7 +420,7 @@ export default function HistoricoPage() {
             <div style={styles.historyCard}>
               <div style={styles.sectionHeader}>
                 <div>
-                  <span style={styles.sectionEyebrow}>HISTÓRICO CONSOLIDADO</span>
+                  <span style={styles.sectionEyebrow}>HISTÃ“RICO CONSOLIDADO</span>
                   <h2 style={styles.sectionTitle}>Registros internos protegidos</h2>
                 </div>
 
@@ -452,7 +452,7 @@ export default function HistoricoPage() {
 
                           <h3 style={styles.historyTitle}>{item.servico}</h3>
                           <p style={styles.historySubline}>
-                            {item.id} • {item.osSistema} • {item.dataBaixa}
+                            {item.id} â€¢ {item.osSistema} â€¢ {item.dataBaixa}
                           </p>
                         </div>
 
@@ -591,10 +591,10 @@ export default function HistoricoPage() {
             </div>
 
             <div style={styles.darkCard}>
-              <div style={styles.robotTag}>ROBÔ AURORA</div>
+              <div style={styles.robotTag}>ROBÃ” AURORA</div>
               <h2 style={styles.sidebarTitleDark}>Apoio ao histórico</h2>
               <p style={styles.sidebarTextDark}>
-                O Robô Aurora poderá localizar baixas antigas, comparar método de
+                O RobÃ´ Aurora poderá localizar baixas antigas, comparar método de
                 pagamento, identificar fechamento incompleto e reforçar a trilha de auditoria.
               </p>
 
@@ -607,7 +607,7 @@ export default function HistoricoPage() {
             </div>
 
             <div style={styles.navCard}>
-              <span style={styles.sectionEyebrow}>NAVEGAÇÃO</span>
+              <span style={styles.sectionEyebrow}>NAVEGAÇÃƒO</span>
               <h2 style={styles.sidebarTitle}>Próximos blocos</h2>
 
               <div style={styles.navList}>
@@ -1195,3 +1195,4 @@ const styles: Record<string, React.CSSProperties> = {
     border: "1px solid rgba(125, 211, 252, 0.18)",
   },
 };
+

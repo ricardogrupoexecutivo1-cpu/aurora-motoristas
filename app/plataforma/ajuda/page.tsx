@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 
@@ -10,7 +10,7 @@ export default function PlataformaAjudaPage() {
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="space-y-3">
               <span className="inline-flex rounded-full bg-cyan-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">
-                Aurora Motoristas • Central de ajuda
+                Aurora Motoristas â€¢ Central de ajuda
               </span>
 
               <div>
@@ -42,7 +42,7 @@ export default function PlataformaAjudaPage() {
                 href="/plataforma"
                 className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
               >
-                Voltar à plataforma
+                Voltar Ã  plataforma
               </Link>
 
               <Link
@@ -224,3 +224,4 @@ function InfoCard({
     </article>
   )
 }
+

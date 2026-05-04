@@ -1,4 +1,4 @@
-export default function GuiaPage() {
+﻿export default function GuiaPage() {
   return (
     <main
       style={{
@@ -49,7 +49,7 @@ export default function GuiaPage() {
               color: "#0f172a",
             }}
           >
-            Guia completo • Aurora Motoristas
+            Guia completo â€¢ Aurora Motoristas
           </h1>
 
           <p style={{ color: "#4b6478", lineHeight: 1.7 }}>
@@ -162,3 +162,4 @@ const grid = {
   gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
   gap: 12,
 };
+

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -124,8 +124,8 @@ const CATEGORIAS: Category[] = [
   },
   { 
     id: "padrao", 
-    nome: "MOVO", 
-    descricao: "Economico e seguro", 
+    nome: "Aurora Motoristas", 
+    descricao: "Economico e Ambiente seguro", 
     icon: Car, 
     multiplicador: 1, 
     tempoEstimado: 5,
@@ -172,15 +172,15 @@ const RECURSOS_ESPECIAIS = [
 ];
 
 const LOCAIS_SALVOS = [
-  { id: "1", nome: "Casa", endereco: "Rua das Flores, 123 - Jardim Primavera", icon: Home, tipo: "casa" },
-  { id: "2", nome: "Trabalho", endereco: "Av. Paulista, 1000 - Bela Vista", icon: Briefcase, tipo: "trabalho" },
+  { id: "1", nome: "Casa", endereco: "Endereço residencial em qualquer cidade do Brasil", icon: Home, tipo: "casa" },
+  { id: "2", nome: "Trabalho", endereco: "Empresa, base operacional ou ponto comercial em todo o Brasil", icon: Briefcase, tipo: "trabalho" },
 ];
 
 const LOCAIS_RECENTES = [
-  { id: "1", endereco: "Shopping Ibirapuera - Moema", lat: -23.5876, lng: -46.6611 },
-  { id: "2", endereco: "Aeroporto de Congonhas - Campo Belo", lat: -23.6261, lng: -46.6558 },
-  { id: "3", endereco: "Parque do Ibirapuera - Vila Mariana", lat: -23.5874, lng: -46.6576 },
-  { id: "4", endereco: "Hospital Albert Einstein - Morumbi", lat: -23.5988, lng: -46.7135 },
+  { id: "1", endereco: "Aeroporto, rodoviária ou terminal em qualquer estado do Brasil", lat: -15.7939, lng: -47.8828 },
+  { id: "2", endereco: "Base de locadora, garagem ou pátio de veículos em qualquer cidade", lat: -19.9167, lng: -43.9345 },
+  { id: "3", endereco: "Cliente, empresa, hotel ou residência em território nacional", lat: -22.9068, lng: -43.1729 },
+  { id: "4", endereco: "Mobilização ou desmobilização de veículos entre cidades e estados", lat: -3.7319, lng: -38.5267 },
 ];
 
 // Precos de mercado (para comparacao)
@@ -193,7 +193,7 @@ export default function SolicitarCorridaPage() {
   const [step, setStep] = useState<Step>("origem");
   const [origem, setOrigem] = useState<Location | null>(null);
   const [destino, setDestino] = useState<Location | null>(null);
-  const [categoria, setCategoria] = useState<Category>(CATEGORIAS[1]); // MOVO padrao
+  const [categoria, setCategoria] = useState<Category>(CATEGORIAS[1]); // Aurora Motoristas padrao
   const [formaPagamento, setFormaPagamento] = useState<"dinheiro" | "pix" | "cartao" | "saldo">("pix");
   const [searchQuery, setSearchQuery] = useState("");
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -245,7 +245,7 @@ export default function SolicitarCorridaPage() {
         valorTotal: total,
       });
 
-      // Calcular precos de mercado (MOVO e mais barato)
+      // Calcular precos de mercado (Aurora Motoristas e mais barato)
       setPrecoMercado(Math.round(total * PRECOS_MERCADO.concorrenciaA * 100) / 100);
       setPrecoMercado2(Math.round(total * PRECOS_MERCADO.concorrenciaB * 100) / 100);
     }
@@ -401,7 +401,7 @@ export default function SolicitarCorridaPage() {
                 <Navigation className="w-5 h-5 text-white" />
               </div>
               <div>
-                <span className="font-black text-2xl gradient-text tracking-tight">MOVO</span>
+                <span className="font-black text-2xl gradient-text tracking-tight">Aurora Motoristas</span>
                 <div className="flex items-center gap-1 -mt-0.5">
                   <span className="text-[9px] text-muted-foreground tracking-[0.2em] font-medium">RIDE</span>
                   <Sparkles className="w-2.5 h-2.5 text-primary" />
@@ -503,7 +503,7 @@ export default function SolicitarCorridaPage() {
                 <div className="flex-1">
                   <p className="text-xs text-muted-foreground font-medium">ORIGEM</p>
                   <p className={`font-semibold ${origem ? "text-foreground" : "text-muted-foreground"}`}>
-                    {origem?.endereco || "De onde voce vai?"}
+                    {origem?.endereco || "Informe a origem em qualquer cidade do Brasil"}
                   </p>
                 </div>
                 {origem && <CheckCircle className="w-5 h-5 text-success" />}
@@ -524,7 +524,7 @@ export default function SolicitarCorridaPage() {
                 <div className="flex-1">
                   <p className="text-xs text-muted-foreground font-medium">DESTINO</p>
                   <p className={`font-semibold ${destino ? "text-foreground" : "text-muted-foreground"}`}>
-                    {destino?.endereco || "Para onde voce vai?"}
+                    {destino?.endereco || "Informe o destino em qualquer região do Brasil"}
                   </p>
                 </div>
                 {destino && <CheckCircle className="w-5 h-5 text-success" />}
@@ -562,7 +562,7 @@ export default function SolicitarCorridaPage() {
                     <div className="flex-1">
                       <p className="font-bold text-success">Economize ate {economiaPercentual}%!</p>
                       <p className="text-sm text-muted-foreground">
-                        MOVO: <span className="font-bold text-foreground">{formatCurrency(preco.valorTotal)}</span>
+                        Aurora Motoristas: <span className="font-bold text-foreground">{formatCurrency(preco.valorTotal)}</span>
                         {" "}vs mercado: <span className="line-through text-muted-foreground">{formatCurrency(precoMercado)}</span>
                       </p>
                     </div>
@@ -574,7 +574,7 @@ export default function SolicitarCorridaPage() {
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <h3 className="font-bold text-foreground">Escolha seu MOVO</h3>
+                  <h3 className="font-bold text-foreground">Escolha seu Aurora Motoristas</h3>
                   <div className="flex items-center gap-1 text-xs text-muted-foreground">
                     <Shield className="w-3.5 h-3.5" />
                     <span>Taxa de apenas 5%</span>
@@ -796,7 +796,7 @@ export default function SolicitarCorridaPage() {
                 </div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground flex items-center gap-1">
-                    Taxa MOVO 
+                    Taxa Aurora Motoristas 
                     <span className="text-xs text-success font-medium">(apenas 5%)</span>
                   </span>
                   <span>{formatCurrency(preco.taxaPlataforma)}</span>
@@ -817,7 +817,7 @@ export default function SolicitarCorridaPage() {
             <div className="bg-gradient-to-br from-success/10 to-emerald-500/5 rounded-2xl p-4 border border-success/20">
               <div className="flex items-center gap-3 mb-3">
                 <ShieldCheck className="w-6 h-6 text-success" />
-                <h3 className="font-bold text-success">Seguranca MOVO</h3>
+                <h3 className="font-bold text-success">Seguranca Aurora Motoristas</h3>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 {[
@@ -1363,7 +1363,7 @@ export default function SolicitarCorridaPage() {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder={searchType === "origem" ? "De onde voce vai?" : "Para onde voce vai?"}
+                    placeholder={searchType === "origem" ? "Informe a origem em qualquer cidade do Brasil" : "Informe o destino em qualquer região do Brasil"}
                     className="w-full pl-12 pr-4 py-3.5 bg-secondary rounded-xl border border-border focus:border-primary outline-none font-medium"
                     autoFocus
                   />
@@ -1374,7 +1374,7 @@ export default function SolicitarCorridaPage() {
             <div className="flex-1 overflow-auto p-4">
               {searchType === "origem" && (
                 <button
-                  onClick={() => handleSelectLocation("Minha localizacao atual", -23.55, -46.63)}
+                  onClick={() => handleSelectLocation("Minha localização atual em todo o Brasil", -23.55, -46.63)}
                   className="w-full flex items-center gap-3 p-4 bg-gradient-to-r from-primary/10 to-cyan-500/10 rounded-xl mb-4 border border-primary/20"
                 >
                   <div className="w-10 h-10 gradient-premium rounded-xl flex items-center justify-center">
@@ -1440,7 +1440,7 @@ export default function SolicitarCorridaPage() {
             <div className="space-y-3">
               {[
                 { id: "pix", label: "PIX", desc: "5% de cashback", icon: Zap, color: "text-primary", badge: "Recomendado" },
-                { id: "saldo", label: "Saldo MOVO", desc: "R$ 150,00 disponivel", icon: Wallet, color: "text-cyan-500" },
+                { id: "saldo", label: "Saldo Aurora Motoristas", desc: "R$ 150,00 disponivel", icon: Wallet, color: "text-cyan-500" },
                 { id: "cartao", label: "Cartao", desc: "Credito ou debito", icon: CreditCard, color: "text-warning" },
                 { id: "dinheiro", label: "Dinheiro", desc: "Pague ao motorista", icon: Banknote, color: "text-success" },
               ].map((opt) => (
@@ -1602,3 +1602,5 @@ export default function SolicitarCorridaPage() {
     </div>
   );
 }
+
+

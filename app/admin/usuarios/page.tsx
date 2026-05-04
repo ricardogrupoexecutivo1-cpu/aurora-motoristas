@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -612,8 +612,8 @@ export default function AdminUsuariosPage() {
             fontWeight: 700,
           }}
         >
-          Sistema em constante atualização • cadastro ADM controlado para acesso
-          empresarial mais seguro.
+          Sistema em constante atualização â€¢ cadastro ADM controlado para acesso
+          empresarial mais Ambiente seguro.
         </footer>
       </div>
     </main>
@@ -820,3 +820,4 @@ const counterBadge: React.CSSProperties = {
   fontWeight: 800,
   fontSize: 13,
 };
+

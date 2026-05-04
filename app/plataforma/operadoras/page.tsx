@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /*
   Regra de ouro do projeto Aurora Motoristas:
@@ -21,7 +21,7 @@ export default function PlataformaOperadorasPage() {
     <main style={page}>
       <div style={container}>
         <section style={hero}>
-          <span style={chip}>Aurora Motoristas • Operadoras</span>
+          <span style={chip}>Aurora Motoristas â€¢ Operadoras</span>
 
           <h1 style={title}>
             Regras de acesso para operadoras internas e externas
@@ -117,17 +117,17 @@ export default function PlataformaOperadorasPage() {
             />
 
             <RuleItem
-              title="3. Uso limitado à própria base"
-              text="A operadora externa só pode visualizar, cadastrar e operar serviços vinculados à própria estrutura e à própria base de motoristas."
+              title="3. Uso limitado Ã  própria base"
+              text="A operadora externa só pode visualizar, cadastrar e operar serviços vinculados Ã  própria estrutura e Ã  própria base de motoristas."
             />
 
             <RuleItem
-              title="4. Proibição absoluta de acesso à base interna"
+              title="4. Proibição absoluta de acesso Ã  base interna"
               text="A base de motoristas internos da operação principal não pode ser pesquisada, exportada, listada ou sugerida para operadoras externas."
             />
 
             <RuleItem
-              title="5. Sem acesso à inteligência comercial"
+              title="5. Sem acesso Ã  inteligência comercial"
               text="Operadora externa não deve acessar relatórios estratégicos, margens consolidadas globais, bases internas ou visão total da operação master."
             />
 
@@ -168,7 +168,7 @@ export default function PlataformaOperadorasPage() {
           </strong>
 
           <p style={warningText}>
-            O uso da plataforma por operadoras externas não concede acesso à
+            O uso da plataforma por operadoras externas não concede acesso Ã 
             rede interna de freelancers, motoristas, documentos, contatos,
             avaliações, histórico ou qualquer base que permita aproveitamento da
             estrutura da operação principal.
@@ -218,7 +218,7 @@ export default function PlataformaOperadorasPage() {
 
         <section style={footerNote}>
           Sistema em constante atualização e podem ocorrer instabilidades
-          momentâneas durante melhorias. Esta página foi criada como camada nova
+          momentÃ¢neas durante melhorias. Esta página foi criada como camada nova
           e isolada para evoluir a governança da plataforma sem tocar na base já
           publicada.
         </section>
@@ -640,3 +640,4 @@ const footerNote: React.CSSProperties = {
   fontSize: 13,
   lineHeight: 1.75,
 };
+

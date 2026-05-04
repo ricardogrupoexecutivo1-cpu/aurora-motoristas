@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -234,7 +234,7 @@ export default function SegurancaPage() {
         <div style={styles.heroCard}>
           <div style={styles.heroGrid}>
             <div style={styles.heroLeft}>
-              <div style={styles.eyebrow}>AURORA MOTORISTAS • SEGURANÇA</div>
+              <div style={styles.eyebrow}>AURORA MOTORISTAS â€¢ SEGURANÇA</div>
               <h1 style={styles.heroTitle}>
                 Blindagem de acesso por administrador e usuários autorizados
               </h1>
@@ -326,7 +326,7 @@ export default function SegurancaPage() {
             <div style={styles.formCard}>
               <div style={styles.sectionHeader}>
                 <div>
-                  <span style={styles.sectionEyebrow}>NOVA LIBERAÇÃO</span>
+                  <span style={styles.sectionEyebrow}>NOVA LIBERAÇÃƒO</span>
                   <h2 style={styles.sectionTitle}>Cadastrar autorizado</h2>
                 </div>
               </div>
@@ -450,7 +450,7 @@ export default function SegurancaPage() {
             <div style={styles.listCard}>
               <div style={styles.sectionHeader}>
                 <div>
-                  <span style={styles.sectionEyebrow}>BASE DE PERMISSÕES</span>
+                  <span style={styles.sectionEyebrow}>BASE DE PERMISSÃ•ES</span>
                   <h2 style={styles.sectionTitle}>Usuários autorizados</h2>
                 </div>
 
@@ -478,7 +478,7 @@ export default function SegurancaPage() {
 
                           <h3 style={styles.itemTitle}>{item.nome}</h3>
                           <p style={styles.itemSubline}>
-                            {item.email} • {item.id}
+                            {item.email} â€¢ {item.id}
                           </p>
                         </div>
 
@@ -609,10 +609,10 @@ export default function SegurancaPage() {
             </div>
 
             <div style={styles.darkCard}>
-              <div style={styles.robotTag}>ROBÔ AURORA</div>
-              <h2 style={styles.sidebarTitleDark}>Apoio à segurança</h2>
+              <div style={styles.robotTag}>ROBÃ” AURORA</div>
+              <h2 style={styles.sidebarTitleDark}>Apoio Ã  segurança</h2>
               <p style={styles.sidebarTextDark}>
-                O Robô Aurora poderá apontar acesso excessivo, usuário sem perfil claro,
+                O RobÃ´ Aurora poderá apontar acesso excessivo, usuário sem perfil claro,
                 módulo sensível exposto e distribuição ruim de permissões.
               </p>
 
@@ -625,7 +625,7 @@ export default function SegurancaPage() {
             </div>
 
             <div style={styles.navCard}>
-              <span style={styles.sectionEyebrow}>NAVEGAÇÃO</span>
+              <span style={styles.sectionEyebrow}>NAVEGAÇÃƒO</span>
               <h2 style={styles.sidebarTitle}>Próximos blocos</h2>
 
               <div style={styles.navList}>
@@ -1353,3 +1353,4 @@ const styles: Record<string, React.CSSProperties> = {
     border: "1px solid rgba(125, 211, 252, 0.18)",
   },
 };
+

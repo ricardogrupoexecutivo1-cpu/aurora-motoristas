@@ -1,4 +1,4 @@
-import { ImageResponse } from "next/og";
+﻿import { ImageResponse } from "next/og";
 
 export const size = {
   width: 192,
@@ -34,3 +34,4 @@ export default function Icon() {
     }
   );
 }
+

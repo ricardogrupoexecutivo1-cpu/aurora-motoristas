@@ -1,0 +1,105 @@
+﻿"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+
+type Status =
+  | "Agendado"
+  | "Em deslocamento"
+  | "Aguardando passageiro"
+  | "Concluído";
+
+type TransferItem = {
+  id: string;
+  empresa: string;
+  locadora: string;
+  origem: string;
+  destino: string;
+  cliente: string;
+  motorista: string;
+  motoristaReserva: string;
+  horarioPrevisto: string;
+  horarioAtualizado: string;
+  valorTransfer: number;
+  valorMotorista: number;
+  despesas: number;
+  status: Status;
+  observacao: string;
+};
+
+const initialTransfers: TransferItem[] = [
+  {
+    id: "TRA-BR-0001",
+    empresa: "Operação Nacional Aurora",
+    locadora: "Rede Brasil Frotas",
+    origem: "São Paulo - SP",
+    destino: "Rio de Janeiro - RJ",
+    cliente: "Transferência entre bases",
+    motorista: "Carlos Henrique",
+    motoristaReserva: "João Pedro",
+    horarioPrevisto: "10/04/2026 08:30",
+    horarioAtualizado: "10/04/2026 09:00",
+    valorTransfer: 1800,
+    valorMotorista: 900,
+    despesas: 220,
+    status: "Em deslocamento",
+    observacao: "Operação interestadual",
+  },
+  {
+    id: "TRA-BR-0002",
+    empresa: "Grupo Logístico",
+    locadora: "Frotas Brasil",
+    origem: "Belo Horizonte - MG",
+    destino: "Brasília - DF",
+    cliente: "Mobilização de equipe",
+    motorista: "Maria Fernanda",
+    motoristaReserva: "Carlos Henrique",
+    horarioPrevisto: "10/04/2026 11:00",
+    horarioAtualizado: "10/04/2026 11:00",
+    valorTransfer: 2100,
+    valorMotorista: 1000,
+    despesas: 180,
+    status: "Agendado",
+    observacao: "Operação programada",
+  },
+];
+
+export default function TransladosPage() {
+  const [data, setData] = useState<TransferItem[]>([]);
+
+  useEffect(() => {
+    setData(initialTransfers);
+  }, []);
+
+  const total = useMemo(() => {
+    return data.reduce((acc, item) => acc + item.valorTransfer, 0);
+  }, [data]);
+
+  return (
+    <main style={{ padding: 20 }}>
+      <h1>🚛 FROTAS BRASIL</h1>
+
+      <p>
+        Operação nacional de mobilização, desmobilização e transferência de
+        veículos e passageiros em todo o Brasil.
+      </p>
+
+      <h2>Total de operações: {data.length}</h2>
+      <h2>Receita total: R$ {total}</h2>
+
+      <hr />
+
+      {data.map((item) => (
+        <div key={item.id} style={{ marginBottom: 20 }}>
+          <h3>{item.id}</h3>
+          <p>{item.origem} → {item.destino}</p>
+          <p>Motorista: {item.motorista}</p>
+          <p>Status: {item.status}</p>
+          <p>Valor: R$ {item.valorTransfer}</p>
+        </div>
+      ))}
+
+      <Link href="/solicitar">← Voltar</Link>
+    </main>
+  );
+}

@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 
 export const metadata = {
   title: "Cadastros | Aurora Motoristas",
@@ -130,7 +130,7 @@ const profileCards = [
     cannotView: [
       "Nada fora do nível concedido pelo master",
       "Permissões não autorizadas",
-      "Áreas acima do nível delegado",
+      "Ãreas acima do nível delegado",
       "Escopos removidos ou bloqueados",
       "Dados sem vínculo ao acesso concedido",
     ],
@@ -223,7 +223,7 @@ export default function CadastrosPage() {
         <div style={styles.heroCard}>
           <div style={styles.heroTop}>
             <div style={styles.heroTextBlock}>
-              <div style={styles.eyebrow}>AURORA MOTORISTAS • CADASTROS</div>
+              <div style={styles.eyebrow}>AURORA MOTORISTAS â€¢ CADASTROS</div>
               <h1 style={styles.heroTitle}>
                 Cadastros com segregação real, privacidade forte e operação sem mistura
               </h1>
@@ -376,7 +376,7 @@ export default function CadastrosPage() {
           </div>
 
           <div style={styles.suggestionsCard}>
-            <div style={styles.robotTag}>SUGESTÕES EXTRAS</div>
+            <div style={styles.robotTag}>SUGESTÃ•ES EXTRAS</div>
             <h2 style={styles.sidebarTitle}>Ajustes que fortalecem muito o app</h2>
 
             <div style={styles.suggestionList}>
@@ -393,7 +393,7 @@ export default function CadastrosPage() {
       <section style={styles.bottomSection}>
         <div style={styles.bottomCard}>
           <div style={styles.bottomTextBlock}>
-            <span style={styles.sectionEyebrow}>PRÓXIMA ETAPA</span>
+            <span style={styles.sectionEyebrow}>PRÃ“XIMA ETAPA</span>
             <h2 style={styles.bottomTitle}>
               Depois daqui, a área de motoristas já pode nascer com essas travas
             </h2>
@@ -961,3 +961,4 @@ const styles: Record<string, React.CSSProperties> = {
     gap: 12,
   },
 };
+

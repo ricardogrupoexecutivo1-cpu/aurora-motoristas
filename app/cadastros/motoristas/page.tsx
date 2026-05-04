@@ -1,30 +1,19 @@
-"use client";
+﻿"use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-export default function MotoristasPage() {
-  const [nome, setNome] = useState("");
-  const [telefone, setTelefone] = useState("");
-  const [cidade, setCidade] = useState("");
+export default function RedirectMotoristas() {
+  const router = useRouter();
 
-  function salvar() {
-    alert("Motorista salvo (versão inicial)");
-    setNome("");
-    setTelefone("");
-    setCidade("");
-  }
+  useEffect(() => {
+    router.replace("/motoristas/novo");
+  }, [router]);
 
   return (
-    <main style={{ padding: 20 }}>
-      <h1>Cadastrar Motorista</h1>
-
-      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-        <input placeholder="Nome" value={nome} onChange={(e) => setNome(e.target.value)} />
-        <input placeholder="Telefone" value={telefone} onChange={(e) => setTelefone(e.target.value)} />
-        <input placeholder="Cidade" value={cidade} onChange={(e) => setCidade(e.target.value)} />
-
-        <button onClick={salvar}>Salvar</button>
-      </div>
-    </main>
+    <div style={{ padding: 40, textAlign: "center" }}>
+      <h1>Redirecionando...</h1>
+      <p>Você será levado para o cadastro profissional de motoristas.</p>
+    </div>
   );
 }

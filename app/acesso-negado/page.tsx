@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 
 export default function AcessoNegadoPage() {
   return (
@@ -134,8 +134,8 @@ export default function AcessoNegadoPage() {
             paddingTop: 4,
           }}
         >
-          Sistema em constante atualização • podem ocorrer instabilidades
-          momentâneas durante melhorias.
+          Sistema em constante atualização â€¢ podem ocorrer instabilidades
+          momentÃ¢neas durante melhorias.
         </div>
       </div>
     </main>
@@ -202,3 +202,4 @@ const secondaryLink: React.CSSProperties = {
   padding: "12px 16px",
   fontWeight: 800,
 };
+
